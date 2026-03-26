@@ -1,0 +1,136 @@
+.markdown-content {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+  @apply scroll-mt-20;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  contain: layout style paint;
+}
+
+.markdown-content p {
+  @apply mb-3 leading-7 text-foreground/90;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+}
+
+.markdown-content a {
+  @apply text-blue-600 dark:text-blue-400 hover:underline font-medium transition-colors;
+  word-break: break-word;
+}
+
+.markdown-content code {
+  word-break: break-all;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.markdown-content pre {
+  @apply overflow-x-auto rounded-lg border border-border/50;
+  background-color: #282c34;
+}
+
+.markdown-content pre code {
+  @apply block p-4;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  word-break: break-all;
+}
+
+.markdown-content table {
+  @apply w-full border-collapse;
+  min-width: 100%;
+  table-layout: auto;
+}
+
+.markdown-content table thead {
+  @apply bg-muted/70;
+}
+
+.markdown-content table th,
+.markdown-content table td {
+  @apply px-4 py-3 border border-border/50 text-left;
+  vertical-align: top;
+  word-break: break-word;
+}
+
+.markdown-content table th {
+  @apply font-bold bg-muted/50 border-b-2;
+}
+
+.markdown-content table tbody tr {
+  @apply border-b border-border/50 hover:bg-muted/20 transition-colors;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  @apply my-4 ml-6 space-y-2;
+}
+
+.markdown-content ul {
+  @apply list-disc;
+}
+
+.markdown-content ol {
+  @apply list-decimal;
+}
+
+.markdown-content li {
+  @apply leading-7 text-foreground/90;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.markdown-content blockquote {
+  @apply border-l-4 border-primary/60 pl-4 my-4 text-foreground/80 italic;
+}
+
+.markdown-content strong {
+  @apply font-bold text-foreground;
+}
+
+.markdown-content em {
+  @apply italic text-foreground/90;
+}
+
+.markdown-content del {
+  @apply line-through text-muted-foreground;
+}
+
+.markdown-content img {
+  @apply w-full h-auto max-h-[500px] object-contain rounded-lg border border-border/50;
+}
+
+/* Code block styling for terminal */
+.markdown-content pre.terminal {
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+}
+
+.markdown-content pre.terminal code {
+  color: #d4d4d4;
+}
+
+/* Prevent layout shift during content updates */
+.markdown-content * {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Ensure proper display of elements during streaming */
+.markdown-content > * {
+  min-width: 0; /* Allow flex/grid items to shrink */
+}

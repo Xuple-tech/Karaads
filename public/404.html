@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+        <title>404 - Page Not Found</title>
+        <style>
+            :root {
+                --primary: #f1f1f1;
+            }
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            /* For Firefox */
+            * {
+                scrollbar-width: thin;
+                scrollbar-color: hsl(var(--primary) / 0.3) transparent;
+            }
+
+            /* Optional: Darker variant for dark mode */
+            .dark *::-webkit-scrollbar-thumb {
+                background: hsl(var(--primary) / 0.4);
+            }
+
+            .dark *::-webkit-scrollbar-thumb:hover {
+                background: hsl(var(--primary) / 0.6);
+            }
+
+            /* Optional: Thin variant (add this class to elements for thinner scrollbar) */
+            .scrollbar-thin::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+
+            /* Optional: Hide scrollbar (add this class to hide scrollbar while keeping scroll functionality) */
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                background: #000;
+                color: #fff;
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                overflow: hidden;
+                position: relative;
+            }
+
+            #stars-canvas {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 0;
+            }
+
+            .container {
+                position: relative;
+                z-index: 1;
+                max-width: 600px;
+                width: 90%;
+                padding: 40px 20px;
+                text-align: center;
+            }
+
+            .error-code {
+                font-size: 120px;
+                font-weight: 700;
+                letter-spacing: -2px;
+                margin-bottom: 16px;
+                background: linear-gradient(135deg, #fff 0%, #888 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+            .title {
+                font-size: 24px;
+                font-weight: 600;
+                margin-bottom: 12px;
+                color: #fff;
+            }
+
+            .description {
+                font-size: 16px;
+                line-height: 1.6;
+                color: #999;
+                margin-bottom: 40px;
+            }
+
+            .chat-form {
+                background: rgba(255, 255, 255, 0.05);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 16px;
+                padding: 8px;
+                display: flex;
+                gap: 8px;
+                transition: all 0.3s ease;
+            }
+
+            .chat-form:focus-within {
+                border-color: rgba(255, 255, 255, 0.3);
+                box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+            }
+
+            textarea {
+                flex: 1;
+                background: transparent;
+                border: none;
+                color: #fff;
+                font-size: 16px;
+                font-family: inherit;
+                padding: 12px 16px;
+                resize: none;
+                outline: none;
+                min-height: 50px;
+                max-height: 150px;
+            }
+
+            textarea::placeholder {
+                color: #666;
+            }
+
+            button {
+                background: #fff;
+                color: #000;
+                border: none;
+                border-radius: 12px;
+                padding: 12px;
+                width: 44px;
+                height: 44px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                align-self: flex-end;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                right: 19px;
+            }
+
+            button:hover {
+                background: #e5e5e5;
+                transform: translateY(-1px);
+            }
+
+            button:active {
+                transform: translateY(0);
+            }
+
+            button svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            @media (max-width: 600px) {
+                .error-code {
+                    font-size: 80px;
+                }
+                .title {
+                    font-size: 20px;
+                }
+                .description {
+                    font-size: 14px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="stars-canvas"></canvas>
+
+        <div class="container">
+            <div class="error-code">404</div>
+            <h1 class="title">Page Not Found</h1>
+            <p class="description">
+                The page you are looking for does not exist, but you could try asking Kwatia AI or just speak what's on your mind.
+            </p>
+
+            <form action="/new" class="chat-form" method="GET">
+                <textarea placeholder="Ask Kwatia AI" rows="1" name="s"></textarea>
+                <button type="submit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 2L11 13"></path>
+                        <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+        <script>
+            const canvas = document.getElementById('stars-canvas');
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const stars = [];
+            const starCount = 200;
+
+            class Star {
+                constructor() {
+                    this.reset();
+                }
+
+                reset() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 2;
+                    this.speedX = (Math.random() - 0.5) * 0.2;
+                    this.speedY = (Math.random() - 0.5) * 0.2;
+                    this.opacity = Math.random();
+                    this.fadeSpeed = Math.random() * 0.02 + 0.005;
+                    this.fadeDirection = Math.random() > 0.5 ? 1 : -1;
+                }
+
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+
+                    this.opacity += this.fadeSpeed * this.fadeDirection;
+                    if (this.opacity <= 0 || this.opacity >= 1) {
+                        this.fadeDirection *= -1;
+                    }
+
+                    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                        this.reset();
+                    }
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < starCount; i++) {
+                stars.push(new Star());
+            }
+
+            function animate() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                stars.forEach((star) => {
+                    star.update();
+                    star.draw();
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+
+            // Auto-resize textarea
+            const textarea = document.querySelector('textarea');
+            textarea.addEventListener('input', function () {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+            });
+        </script>
+    </body>
+</html>
