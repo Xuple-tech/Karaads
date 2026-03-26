@@ -1,10 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../wayfinder'
 import legal from './legal'
 import agents from './agents'
-import subscription from './subscription'
+import api from './api'
 /**
-* @see \App\Http\Controllers\Docs\MainController::main
- * @see app/Http/Controllers/Docs/MainController.php:11
+ * @see routes/docs.php:18
  * @route '/docs'
  */
 export const main = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -18,8 +17,7 @@ main.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\Docs\MainController::main
- * @see app/Http/Controllers/Docs/MainController.php:11
+ * @see routes/docs.php:18
  * @route '/docs'
  */
 main.url = (options?: RouteQueryOptions) => {
@@ -27,8 +25,7 @@ main.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\Docs\MainController::main
- * @see app/Http/Controllers/Docs/MainController.php:11
+ * @see routes/docs.php:18
  * @route '/docs'
  */
 main.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -36,8 +33,7 @@ main.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\Docs\MainController::main
- * @see app/Http/Controllers/Docs/MainController.php:11
+ * @see routes/docs.php:18
  * @route '/docs'
  */
 main.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -46,7 +42,7 @@ main.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
- * @see routes/docs.php:45
+ * @see routes/docs.php:34
  * @route '/docs/developer-api'
  */
 export const developerApi = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -60,7 +56,7 @@ developerApi.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/docs.php:45
+ * @see routes/docs.php:34
  * @route '/docs/developer-api'
  */
 developerApi.url = (options?: RouteQueryOptions) => {
@@ -68,7 +64,7 @@ developerApi.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/docs.php:45
+ * @see routes/docs.php:34
  * @route '/docs/developer-api'
  */
 developerApi.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -76,7 +72,7 @@ developerApi.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/docs.php:45
+ * @see routes/docs.php:34
  * @route '/docs/developer-api'
  */
 developerApi.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -87,8 +83,8 @@ const docs = {
     main: Object.assign(main, main),
 legal: Object.assign(legal, legal),
 agents: Object.assign(agents, agents),
-subscription: Object.assign(subscription, subscription),
 developerApi: Object.assign(developerApi, developerApi),
+api: Object.assign(api, api),
 }
 
 export default docs

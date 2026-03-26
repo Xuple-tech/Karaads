@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
  * @see app/Http/Controllers/User/AgentApiKeyController.php:14
  * @route '/ai-agents/agents/{agent}/api-keys'
  */
-export const index = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const index = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ index.definition = {
  * @see app/Http/Controllers/User/AgentApiKeyController.php:14
  * @route '/ai-agents/agents/{agent}/api-keys'
  */
-index.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+index.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -52,7 +52,7 @@ index.url = (args: { agent: string | number | { id: string | number } } | [agent
  * @see app/Http/Controllers/User/AgentApiKeyController.php:14
  * @route '/ai-agents/agents/{agent}/api-keys'
  */
-index.get = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+index.get = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -61,7 +61,7 @@ index.get = (args: { agent: string | number | { id: string | number } } | [agent
  * @see app/Http/Controllers/User/AgentApiKeyController.php:14
  * @route '/ai-agents/agents/{agent}/api-keys'
  */
-index.head = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+index.head = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(args, options),
     method: 'head',
 })
@@ -71,7 +71,7 @@ index.head = (args: { agent: string | number | { id: string | number } } | [agen
  * @see app/Http/Controllers/User/AgentApiKeyController.php:28
  * @route '/ai-agents/agents/{agent}/api-keys/create'
  */
-export const create = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const create = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(args, options),
     method: 'get',
 })
@@ -86,7 +86,7 @@ create.definition = {
  * @see app/Http/Controllers/User/AgentApiKeyController.php:28
  * @route '/ai-agents/agents/{agent}/api-keys/create'
  */
-create.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+create.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -119,7 +119,7 @@ create.url = (args: { agent: string | number | { id: string | number } } | [agen
  * @see app/Http/Controllers/User/AgentApiKeyController.php:28
  * @route '/ai-agents/agents/{agent}/api-keys/create'
  */
-create.get = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+create.get = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(args, options),
     method: 'get',
 })
@@ -128,7 +128,7 @@ create.get = (args: { agent: string | number | { id: string | number } } | [agen
  * @see app/Http/Controllers/User/AgentApiKeyController.php:28
  * @route '/ai-agents/agents/{agent}/api-keys/create'
  */
-create.head = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+create.head = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: create.url(args, options),
     method: 'head',
 })
@@ -138,7 +138,7 @@ create.head = (args: { agent: string | number | { id: string | number } } | [age
  * @see app/Http/Controllers/User/AgentApiKeyController.php:37
  * @route '/ai-agents/agents/{agent}/api-keys'
  */
-export const store = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const store = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
 })
@@ -153,7 +153,7 @@ store.definition = {
  * @see app/Http/Controllers/User/AgentApiKeyController.php:37
  * @route '/ai-agents/agents/{agent}/api-keys'
  */
-store.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+store.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -186,7 +186,7 @@ store.url = (args: { agent: string | number | { id: string | number } } | [agent
  * @see app/Http/Controllers/User/AgentApiKeyController.php:37
  * @route '/ai-agents/agents/{agent}/api-keys'
  */
-store.post = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+store.post = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
 })
@@ -196,7 +196,7 @@ store.post = (args: { agent: string | number | { id: string | number } } | [agen
  * @see app/Http/Controllers/User/AgentApiKeyController.php:71
  * @route '/ai-agents/agents/{agent}/api-keys/{apiKey}'
  */
-export const destroy = (args: { agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { agent: string | { id: string }, apiKey: string | { id: string } } | [agent: string | { id: string }, apiKey: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -211,7 +211,7 @@ destroy.definition = {
  * @see app/Http/Controllers/User/AgentApiKeyController.php:71
  * @route '/ai-agents/agents/{agent}/api-keys/{apiKey}'
  */
-destroy.url = (args: { agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
+destroy.url = (args: { agent: string | { id: string }, apiKey: string | { id: string } } | [agent: string | { id: string }, apiKey: string | { id: string } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     agent: args[0],
@@ -241,7 +241,7 @@ destroy.url = (args: { agent: string | number | { id: string | number }, apiKey:
  * @see app/Http/Controllers/User/AgentApiKeyController.php:71
  * @route '/ai-agents/agents/{agent}/api-keys/{apiKey}'
  */
-destroy.delete = (args: { agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { agent: string | { id: string }, apiKey: string | { id: string } } | [agent: string | { id: string }, apiKey: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -251,7 +251,7 @@ destroy.delete = (args: { agent: string | number | { id: string | number }, apiK
  * @see app/Http/Controllers/User/AgentApiKeyController.php:84
  * @route '/ai-agents/agents/{agent}/api-keys/{apiKey}/toggle-active'
  */
-export const toggleActive = (args: { agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const toggleActive = (args: { agent: string | { id: string }, apiKey: string | { id: string } } | [agent: string | { id: string }, apiKey: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: toggleActive.url(args, options),
     method: 'post',
 })
@@ -266,7 +266,7 @@ toggleActive.definition = {
  * @see app/Http/Controllers/User/AgentApiKeyController.php:84
  * @route '/ai-agents/agents/{agent}/api-keys/{apiKey}/toggle-active'
  */
-toggleActive.url = (args: { agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
+toggleActive.url = (args: { agent: string | { id: string }, apiKey: string | { id: string } } | [agent: string | { id: string }, apiKey: string | { id: string } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     agent: args[0],
@@ -296,7 +296,7 @@ toggleActive.url = (args: { agent: string | number | { id: string | number }, ap
  * @see app/Http/Controllers/User/AgentApiKeyController.php:84
  * @route '/ai-agents/agents/{agent}/api-keys/{apiKey}/toggle-active'
  */
-toggleActive.post = (args: { agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+toggleActive.post = (args: { agent: string | { id: string }, apiKey: string | { id: string } } | [agent: string | { id: string }, apiKey: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: toggleActive.url(args, options),
     method: 'post',
 })
@@ -306,7 +306,7 @@ toggleActive.post = (args: { agent: string | number | { id: string | number }, a
  * @see app/Http/Controllers/User/AgentApiKeyController.php:99
  * @route '/ai-agents/agents/{agent}/api-keys/{apiKey}/regenerate'
  */
-export const regenerate = (args: { agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const regenerate = (args: { agent: string | { id: string }, apiKey: string | { id: string } } | [agent: string | { id: string }, apiKey: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: regenerate.url(args, options),
     method: 'post',
 })
@@ -321,7 +321,7 @@ regenerate.definition = {
  * @see app/Http/Controllers/User/AgentApiKeyController.php:99
  * @route '/ai-agents/agents/{agent}/api-keys/{apiKey}/regenerate'
  */
-regenerate.url = (args: { agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
+regenerate.url = (args: { agent: string | { id: string }, apiKey: string | { id: string } } | [agent: string | { id: string }, apiKey: string | { id: string } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     agent: args[0],
@@ -351,7 +351,7 @@ regenerate.url = (args: { agent: string | number | { id: string | number }, apiK
  * @see app/Http/Controllers/User/AgentApiKeyController.php:99
  * @route '/ai-agents/agents/{agent}/api-keys/{apiKey}/regenerate'
  */
-regenerate.post = (args: { agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, apiKey: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+regenerate.post = (args: { agent: string | { id: string }, apiKey: string | { id: string } } | [agent: string | { id: string }, apiKey: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: regenerate.url(args, options),
     method: 'post',
 })

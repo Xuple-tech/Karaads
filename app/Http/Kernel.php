@@ -3,9 +3,12 @@
 namespace App\Http;
 
 use App\Http\Middleware\ImageGenerationRateLimit;
+use App\Http\Middleware\AuthenticateConsole;
+use App\Http\Middleware\SetConsoleSessionConfig;
 use App\Http\Middleware\TrackRequest;
 use App\Http\Middleware\BotDetection;
 use App\Http\Middleware\CorsMiddleware;
+use App\Http\Middleware\UseConsoleGuard;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -45,6 +48,19 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ],
+        'console-web' => [
+            SetConsoleSessionConfig::class,
+            \Illuminate\Cookie\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            UseConsoleGuard::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\HandleAppearance::class,
+            \App\Http\Middleware\HandleInertiaRequests::class,
+            \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
+        ],
 
         'api' => [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
@@ -80,5 +96,6 @@ class Kernel extends HttpKernel
         'widget.auth' => \App\Http\Middleware\WidgetAuthMiddleware::class,
         'check-agent-trial' => \App\Http\Middleware\CheckAgentTrialExpiry::class,
         'cors' => CorsMiddleware::class,
+        'auth.console' => AuthenticateConsole::class,
     ];
 }

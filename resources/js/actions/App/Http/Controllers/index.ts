@@ -26,7 +26,6 @@ import Settings from './Settings'
 import SubscriptionController from './SubscriptionController'
 import StripeWebhookController from './StripeWebhookController'
 import StripePaymentController from './StripePaymentController'
-import Developer from './Developer'
 import CurrencyController from './CurrencyController'
 import ProjectAgentController from './ProjectAgentController'
 import AgentMemoryController from './AgentMemoryController'
@@ -35,7 +34,8 @@ import AgentScheduleController from './AgentScheduleController'
 import AgentToolController from './AgentToolController'
 import StudioController from './StudioController'
 import PodcastController from './PodcastController'
-import Docs from './Docs'
+import Console from './Console'
+import Developer from './Developer'
 import DeveloperApi from './DeveloperApi'
 const Controllers = {
     Api: Object.assign(Api, Api),
@@ -66,7 +66,6 @@ Settings: Object.assign(Settings, Settings),
 SubscriptionController: Object.assign(SubscriptionController, SubscriptionController),
 StripeWebhookController: Object.assign(StripeWebhookController, StripeWebhookController),
 StripePaymentController: Object.assign(StripePaymentController, StripePaymentController),
-Developer: Object.assign(Developer, Developer),
 CurrencyController: Object.assign(CurrencyController, CurrencyController),
 ProjectAgentController: Object.assign(ProjectAgentController, ProjectAgentController),
 AgentMemoryController: Object.assign(AgentMemoryController, AgentMemoryController),
@@ -75,7 +74,8 @@ AgentScheduleController: Object.assign(AgentScheduleController, AgentScheduleCon
 AgentToolController: Object.assign(AgentToolController, AgentToolController),
 StudioController: Object.assign(StudioController, StudioController),
 PodcastController: Object.assign(PodcastController, PodcastController),
-Docs: Object.assign(Docs, Docs),
+Console: Object.assign(Console, Console),
+Developer: Object.assign(Developer, Developer),
 DeveloperApi: Object.assign(DeveloperApi, DeveloperApi),
 }
 

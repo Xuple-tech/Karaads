@@ -124,7 +124,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/Admin/SiteController.php:121
  * @route '/admin/sites/{site}'
  */
-export const show = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -139,7 +139,7 @@ show.definition = {
  * @see app/Http/Controllers/Admin/SiteController.php:121
  * @route '/admin/sites/{site}'
  */
-show.url = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+show.url = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { site: args }
     }
@@ -172,7 +172,7 @@ show.url = (args: { site: string | number | { id: string | number } } | [site: s
  * @see app/Http/Controllers/Admin/SiteController.php:121
  * @route '/admin/sites/{site}'
  */
-show.get = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -181,7 +181,7 @@ show.get = (args: { site: string | number | { id: string | number } } | [site: s
  * @see app/Http/Controllers/Admin/SiteController.php:121
  * @route '/admin/sites/{site}'
  */
-show.head = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -191,7 +191,7 @@ show.head = (args: { site: string | number | { id: string | number } } | [site: 
  * @see app/Http/Controllers/Admin/SiteController.php:152
  * @route '/admin/sites/{site}/edit'
  */
-export const edit = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -206,7 +206,7 @@ edit.definition = {
  * @see app/Http/Controllers/Admin/SiteController.php:152
  * @route '/admin/sites/{site}/edit'
  */
-edit.url = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { site: args }
     }
@@ -239,7 +239,7 @@ edit.url = (args: { site: string | number | { id: string | number } } | [site: s
  * @see app/Http/Controllers/Admin/SiteController.php:152
  * @route '/admin/sites/{site}/edit'
  */
-edit.get = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -248,7 +248,7 @@ edit.get = (args: { site: string | number | { id: string | number } } | [site: s
  * @see app/Http/Controllers/Admin/SiteController.php:152
  * @route '/admin/sites/{site}/edit'
  */
-edit.head = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -258,7 +258,7 @@ edit.head = (args: { site: string | number | { id: string | number } } | [site: 
  * @see app/Http/Controllers/Admin/SiteController.php:171
  * @route '/admin/sites/{site}'
  */
-export const update = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -273,7 +273,7 @@ update.definition = {
  * @see app/Http/Controllers/Admin/SiteController.php:171
  * @route '/admin/sites/{site}'
  */
-update.url = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { site: args }
     }
@@ -306,7 +306,7 @@ update.url = (args: { site: string | number | { id: string | number } } | [site:
  * @see app/Http/Controllers/Admin/SiteController.php:171
  * @route '/admin/sites/{site}'
  */
-update.put = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -316,7 +316,7 @@ update.put = (args: { site: string | number | { id: string | number } } | [site:
  * @see app/Http/Controllers/Admin/SiteController.php:204
  * @route '/admin/sites/{site}'
  */
-export const destroy = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -331,7 +331,7 @@ destroy.definition = {
  * @see app/Http/Controllers/Admin/SiteController.php:204
  * @route '/admin/sites/{site}'
  */
-destroy.url = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { site: args }
     }
@@ -364,7 +364,7 @@ destroy.url = (args: { site: string | number | { id: string | number } } | [site
  * @see app/Http/Controllers/Admin/SiteController.php:204
  * @route '/admin/sites/{site}'
  */
-destroy.delete = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -374,7 +374,7 @@ destroy.delete = (args: { site: string | number | { id: string | number } } | [s
  * @see app/Http/Controllers/Admin/SiteController.php:221
  * @route '/admin/sites/{site}/toggle'
  */
-export const toggleStatus = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const toggleStatus = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleStatus.url(args, options),
     method: 'patch',
 })
@@ -389,7 +389,7 @@ toggleStatus.definition = {
  * @see app/Http/Controllers/Admin/SiteController.php:221
  * @route '/admin/sites/{site}/toggle'
  */
-toggleStatus.url = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+toggleStatus.url = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { site: args }
     }
@@ -422,7 +422,7 @@ toggleStatus.url = (args: { site: string | number | { id: string | number } } | 
  * @see app/Http/Controllers/Admin/SiteController.php:221
  * @route '/admin/sites/{site}/toggle'
  */
-toggleStatus.patch = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+toggleStatus.patch = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleStatus.url(args, options),
     method: 'patch',
 })
@@ -432,7 +432,7 @@ toggleStatus.patch = (args: { site: string | number | { id: string | number } } 
  * @see app/Http/Controllers/Admin/SiteController.php:237
  * @route '/admin/sites/{site}/toggle-widget'
  */
-export const toggleWidget = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const toggleWidget = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleWidget.url(args, options),
     method: 'patch',
 })
@@ -447,7 +447,7 @@ toggleWidget.definition = {
  * @see app/Http/Controllers/Admin/SiteController.php:237
  * @route '/admin/sites/{site}/toggle-widget'
  */
-toggleWidget.url = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+toggleWidget.url = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { site: args }
     }
@@ -480,7 +480,7 @@ toggleWidget.url = (args: { site: string | number | { id: string | number } } | 
  * @see app/Http/Controllers/Admin/SiteController.php:237
  * @route '/admin/sites/{site}/toggle-widget'
  */
-toggleWidget.patch = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+toggleWidget.patch = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleWidget.url(args, options),
     method: 'patch',
 })
@@ -490,7 +490,7 @@ toggleWidget.patch = (args: { site: string | number | { id: string | number } } 
  * @see app/Http/Controllers/Admin/SiteController.php:250
  * @route '/admin/sites/{site}/verify'
  */
-export const verify = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const verify = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: verify.url(args, options),
     method: 'post',
 })
@@ -505,7 +505,7 @@ verify.definition = {
  * @see app/Http/Controllers/Admin/SiteController.php:250
  * @route '/admin/sites/{site}/verify'
  */
-verify.url = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+verify.url = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { site: args }
     }
@@ -538,7 +538,7 @@ verify.url = (args: { site: string | number | { id: string | number } } | [site:
  * @see app/Http/Controllers/Admin/SiteController.php:250
  * @route '/admin/sites/{site}/verify'
  */
-verify.post = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+verify.post = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: verify.url(args, options),
     method: 'post',
 })
@@ -548,7 +548,7 @@ verify.post = (args: { site: string | number | { id: string | number } } | [site
  * @see app/Http/Controllers/Admin/SiteController.php:264
  * @route '/admin/sites/{site}/resend-verification'
  */
-export const resendVerification = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const resendVerification = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: resendVerification.url(args, options),
     method: 'post',
 })
@@ -563,7 +563,7 @@ resendVerification.definition = {
  * @see app/Http/Controllers/Admin/SiteController.php:264
  * @route '/admin/sites/{site}/resend-verification'
  */
-resendVerification.url = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+resendVerification.url = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { site: args }
     }
@@ -596,7 +596,7 @@ resendVerification.url = (args: { site: string | number | { id: string | number 
  * @see app/Http/Controllers/Admin/SiteController.php:264
  * @route '/admin/sites/{site}/resend-verification'
  */
-resendVerification.post = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+resendVerification.post = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: resendVerification.url(args, options),
     method: 'post',
 })
@@ -606,7 +606,7 @@ resendVerification.post = (args: { site: string | number | { id: string | number
  * @see app/Http/Controllers/Admin/SiteController.php:282
  * @route '/admin/sites/{site}/embed-code'
  */
-export const embedCode = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const embedCode = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: embedCode.url(args, options),
     method: 'get',
 })
@@ -621,7 +621,7 @@ embedCode.definition = {
  * @see app/Http/Controllers/Admin/SiteController.php:282
  * @route '/admin/sites/{site}/embed-code'
  */
-embedCode.url = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+embedCode.url = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { site: args }
     }
@@ -654,7 +654,7 @@ embedCode.url = (args: { site: string | number | { id: string | number } } | [si
  * @see app/Http/Controllers/Admin/SiteController.php:282
  * @route '/admin/sites/{site}/embed-code'
  */
-embedCode.get = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+embedCode.get = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: embedCode.url(args, options),
     method: 'get',
 })
@@ -663,7 +663,7 @@ embedCode.get = (args: { site: string | number | { id: string | number } } | [si
  * @see app/Http/Controllers/Admin/SiteController.php:282
  * @route '/admin/sites/{site}/embed-code'
  */
-embedCode.head = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+embedCode.head = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: embedCode.url(args, options),
     method: 'head',
 })
@@ -673,7 +673,7 @@ embedCode.head = (args: { site: string | number | { id: string | number } } | [s
  * @see app/Http/Controllers/Admin/SiteController.php:304
  * @route '/admin/sites/{site}/analytics'
  */
-export const analytics = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const analytics = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: analytics.url(args, options),
     method: 'get',
 })
@@ -688,7 +688,7 @@ analytics.definition = {
  * @see app/Http/Controllers/Admin/SiteController.php:304
  * @route '/admin/sites/{site}/analytics'
  */
-analytics.url = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+analytics.url = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { site: args }
     }
@@ -721,7 +721,7 @@ analytics.url = (args: { site: string | number | { id: string | number } } | [si
  * @see app/Http/Controllers/Admin/SiteController.php:304
  * @route '/admin/sites/{site}/analytics'
  */
-analytics.get = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+analytics.get = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: analytics.url(args, options),
     method: 'get',
 })
@@ -730,7 +730,7 @@ analytics.get = (args: { site: string | number | { id: string | number } } | [si
  * @see app/Http/Controllers/Admin/SiteController.php:304
  * @route '/admin/sites/{site}/analytics'
  */
-analytics.head = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+analytics.head = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: analytics.url(args, options),
     method: 'head',
 })

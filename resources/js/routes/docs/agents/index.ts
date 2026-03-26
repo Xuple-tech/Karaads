@@ -1,6 +1,6 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../wayfinder'
 /**
- * @see routes/docs.php:18
+ * @see routes/docs.php:26
  * @route '/docs/agents'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -14,7 +14,7 @@ index.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/docs.php:18
+ * @see routes/docs.php:26
  * @route '/docs/agents'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -22,7 +22,7 @@ index.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/docs.php:18
+ * @see routes/docs.php:26
  * @route '/docs/agents'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -30,7 +30,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/docs.php:18
+ * @see routes/docs.php:26
  * @route '/docs/agents'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -39,7 +39,46 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
- * @see routes/docs.php:21
+ * @see routes/docs.php:27
+ * @route '/docs/agents/widget'
+ */
+export const widget = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: widget.url(options),
+    method: 'get',
+})
+
+widget.definition = {
+    methods: ["get","head"],
+    url: '/docs/agents/widget',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+ * @see routes/docs.php:27
+ * @route '/docs/agents/widget'
+ */
+widget.url = (options?: RouteQueryOptions) => {
+    return widget.definition.url + queryParams(options)
+}
+
+/**
+ * @see routes/docs.php:27
+ * @route '/docs/agents/widget'
+ */
+widget.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: widget.url(options),
+    method: 'get',
+})
+/**
+ * @see routes/docs.php:27
+ * @route '/docs/agents/widget'
+ */
+widget.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: widget.url(options),
+    method: 'head',
+})
+
+/**
+ * @see routes/docs.php:28
  * @route '/docs/agents/configuration'
  */
 export const configuration = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -53,7 +92,7 @@ configuration.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/docs.php:21
+ * @see routes/docs.php:28
  * @route '/docs/agents/configuration'
  */
 configuration.url = (options?: RouteQueryOptions) => {
@@ -61,7 +100,7 @@ configuration.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/docs.php:21
+ * @see routes/docs.php:28
  * @route '/docs/agents/configuration'
  */
 configuration.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -69,7 +108,7 @@ configuration.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/docs.php:21
+ * @see routes/docs.php:28
  * @route '/docs/agents/configuration'
  */
 configuration.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -78,7 +117,7 @@ configuration.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 })
 
 /**
- * @see routes/docs.php:24
+ * @see routes/docs.php:29
  * @route '/docs/agents/templates'
  */
 export const templates = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -92,7 +131,7 @@ templates.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/docs.php:24
+ * @see routes/docs.php:29
  * @route '/docs/agents/templates'
  */
 templates.url = (options?: RouteQueryOptions) => {
@@ -100,7 +139,7 @@ templates.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/docs.php:24
+ * @see routes/docs.php:29
  * @route '/docs/agents/templates'
  */
 templates.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -108,7 +147,7 @@ templates.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/docs.php:24
+ * @see routes/docs.php:29
  * @route '/docs/agents/templates'
  */
 templates.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -117,7 +156,7 @@ templates.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
- * @see routes/docs.php:27
+ * @see routes/docs.php:30
  * @route '/docs/agents/knowledge-base'
  */
 export const knowledgeBase = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -131,7 +170,7 @@ knowledgeBase.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/docs.php:27
+ * @see routes/docs.php:30
  * @route '/docs/agents/knowledge-base'
  */
 knowledgeBase.url = (options?: RouteQueryOptions) => {
@@ -139,7 +178,7 @@ knowledgeBase.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/docs.php:27
+ * @see routes/docs.php:30
  * @route '/docs/agents/knowledge-base'
  */
 knowledgeBase.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -147,7 +186,7 @@ knowledgeBase.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/docs.php:27
+ * @see routes/docs.php:30
  * @route '/docs/agents/knowledge-base'
  */
 knowledgeBase.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -156,7 +195,7 @@ knowledgeBase.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 })
 
 /**
- * @see routes/docs.php:30
+ * @see routes/docs.php:31
  * @route '/docs/agents/tools'
  */
 export const tools = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -170,7 +209,7 @@ tools.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/docs.php:30
+ * @see routes/docs.php:31
  * @route '/docs/agents/tools'
  */
 tools.url = (options?: RouteQueryOptions) => {
@@ -178,7 +217,7 @@ tools.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/docs.php:30
+ * @see routes/docs.php:31
  * @route '/docs/agents/tools'
  */
 tools.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -186,7 +225,7 @@ tools.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/docs.php:30
+ * @see routes/docs.php:31
  * @route '/docs/agents/tools'
  */
 tools.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -195,6 +234,7 @@ tools.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 const agents = {
     index: Object.assign(index, index),
+widget: Object.assign(widget, widget),
 configuration: Object.assign(configuration, configuration),
 templates: Object.assign(templates, templates),
 knowledgeBase: Object.assign(knowledgeBase, knowledgeBase),

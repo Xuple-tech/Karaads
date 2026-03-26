@@ -131,7 +131,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/User/AIAgentController.php:148
  * @route '/ai-agents/agents/{agent}'
  */
-export const show = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -146,7 +146,7 @@ show.definition = {
  * @see app/Http/Controllers/User/AIAgentController.php:148
  * @route '/ai-agents/agents/{agent}'
  */
-show.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+show.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -179,7 +179,7 @@ show.url = (args: { agent: string | number | { id: string | number } } | [agent:
  * @see app/Http/Controllers/User/AIAgentController.php:148
  * @route '/ai-agents/agents/{agent}'
  */
-show.get = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -188,7 +188,7 @@ show.get = (args: { agent: string | number | { id: string | number } } | [agent:
  * @see app/Http/Controllers/User/AIAgentController.php:148
  * @route '/ai-agents/agents/{agent}'
  */
-show.head = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -198,7 +198,7 @@ show.head = (args: { agent: string | number | { id: string | number } } | [agent
  * @see app/Http/Controllers/User/AIAgentController.php:188
  * @route '/ai-agents/agents/{agent}/edit'
  */
-export const edit = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -213,7 +213,7 @@ edit.definition = {
  * @see app/Http/Controllers/User/AIAgentController.php:188
  * @route '/ai-agents/agents/{agent}/edit'
  */
-edit.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -246,7 +246,7 @@ edit.url = (args: { agent: string | number | { id: string | number } } | [agent:
  * @see app/Http/Controllers/User/AIAgentController.php:188
  * @route '/ai-agents/agents/{agent}/edit'
  */
-edit.get = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -255,7 +255,7 @@ edit.get = (args: { agent: string | number | { id: string | number } } | [agent:
  * @see app/Http/Controllers/User/AIAgentController.php:188
  * @route '/ai-agents/agents/{agent}/edit'
  */
-edit.head = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -265,7 +265,7 @@ edit.head = (args: { agent: string | number | { id: string | number } } | [agent
  * @see app/Http/Controllers/User/AIAgentController.php:199
  * @route '/ai-agents/agents/{agent}'
  */
-export const update = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -280,7 +280,7 @@ update.definition = {
  * @see app/Http/Controllers/User/AIAgentController.php:199
  * @route '/ai-agents/agents/{agent}'
  */
-update.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -313,7 +313,7 @@ update.url = (args: { agent: string | number | { id: string | number } } | [agen
  * @see app/Http/Controllers/User/AIAgentController.php:199
  * @route '/ai-agents/agents/{agent}'
  */
-update.put = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -323,7 +323,7 @@ update.put = (args: { agent: string | number | { id: string | number } } | [agen
  * @see app/Http/Controllers/User/AIAgentController.php:231
  * @route '/ai-agents/agents/{agent}'
  */
-export const destroy = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -338,7 +338,7 @@ destroy.definition = {
  * @see app/Http/Controllers/User/AIAgentController.php:231
  * @route '/ai-agents/agents/{agent}'
  */
-destroy.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -371,7 +371,7 @@ destroy.url = (args: { agent: string | number | { id: string | number } } | [age
  * @see app/Http/Controllers/User/AIAgentController.php:231
  * @route '/ai-agents/agents/{agent}'
  */
-destroy.delete = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -381,7 +381,7 @@ destroy.delete = (args: { agent: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/User/AIAgentController.php:243
  * @route '/ai-agents/agents/{agent}/toggle-active'
  */
-export const toggleActive = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const toggleActive = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: toggleActive.url(args, options),
     method: 'post',
 })
@@ -396,7 +396,7 @@ toggleActive.definition = {
  * @see app/Http/Controllers/User/AIAgentController.php:243
  * @route '/ai-agents/agents/{agent}/toggle-active'
  */
-toggleActive.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+toggleActive.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -429,7 +429,7 @@ toggleActive.url = (args: { agent: string | number | { id: string | number } } |
  * @see app/Http/Controllers/User/AIAgentController.php:243
  * @route '/ai-agents/agents/{agent}/toggle-active'
  */
-toggleActive.post = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+toggleActive.post = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: toggleActive.url(args, options),
     method: 'post',
 })
@@ -439,7 +439,7 @@ toggleActive.post = (args: { agent: string | number | { id: string | number } } 
  * @see app/Http/Controllers/User/AIAgentController.php:254
  * @route '/ai-agents/agents/{agent}/duplicate'
  */
-export const duplicate = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const duplicate = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: duplicate.url(args, options),
     method: 'post',
 })
@@ -454,7 +454,7 @@ duplicate.definition = {
  * @see app/Http/Controllers/User/AIAgentController.php:254
  * @route '/ai-agents/agents/{agent}/duplicate'
  */
-duplicate.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+duplicate.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -487,7 +487,7 @@ duplicate.url = (args: { agent: string | number | { id: string | number } } | [a
  * @see app/Http/Controllers/User/AIAgentController.php:254
  * @route '/ai-agents/agents/{agent}/duplicate'
  */
-duplicate.post = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+duplicate.post = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: duplicate.url(args, options),
     method: 'post',
 })

@@ -124,7 +124,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/Admin/AgentToolController.php:79
  * @route '/admin/agent-tools/{agentTool}'
  */
-export const show = (args: { agentTool: string | number | { id: string | number } } | [agentTool: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { agentTool: string | { id: string } } | [agentTool: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -139,7 +139,7 @@ show.definition = {
  * @see app/Http/Controllers/Admin/AgentToolController.php:79
  * @route '/admin/agent-tools/{agentTool}'
  */
-show.url = (args: { agentTool: string | number | { id: string | number } } | [agentTool: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+show.url = (args: { agentTool: string | { id: string } } | [agentTool: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentTool: args }
     }
@@ -172,7 +172,7 @@ show.url = (args: { agentTool: string | number | { id: string | number } } | [ag
  * @see app/Http/Controllers/Admin/AgentToolController.php:79
  * @route '/admin/agent-tools/{agentTool}'
  */
-show.get = (args: { agentTool: string | number | { id: string | number } } | [agentTool: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { agentTool: string | { id: string } } | [agentTool: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -181,7 +181,7 @@ show.get = (args: { agentTool: string | number | { id: string | number } } | [ag
  * @see app/Http/Controllers/Admin/AgentToolController.php:79
  * @route '/admin/agent-tools/{agentTool}'
  */
-show.head = (args: { agentTool: string | number | { id: string | number } } | [agentTool: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { agentTool: string | { id: string } } | [agentTool: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -191,7 +191,7 @@ show.head = (args: { agentTool: string | number | { id: string | number } } | [a
  * @see app/Http/Controllers/Admin/AgentToolController.php:91
  * @route '/admin/agent-tools/{agentTool}/edit'
  */
-export const edit = (args: { agentTool: string | number | { id: string | number } } | [agentTool: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { agentTool: string | { id: string } } | [agentTool: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -206,7 +206,7 @@ edit.definition = {
  * @see app/Http/Controllers/Admin/AgentToolController.php:91
  * @route '/admin/agent-tools/{agentTool}/edit'
  */
-edit.url = (args: { agentTool: string | number | { id: string | number } } | [agentTool: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { agentTool: string | { id: string } } | [agentTool: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentTool: args }
     }
@@ -239,7 +239,7 @@ edit.url = (args: { agentTool: string | number | { id: string | number } } | [ag
  * @see app/Http/Controllers/Admin/AgentToolController.php:91
  * @route '/admin/agent-tools/{agentTool}/edit'
  */
-edit.get = (args: { agentTool: string | number | { id: string | number } } | [agentTool: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { agentTool: string | { id: string } } | [agentTool: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -248,7 +248,7 @@ edit.get = (args: { agentTool: string | number | { id: string | number } } | [ag
  * @see app/Http/Controllers/Admin/AgentToolController.php:91
  * @route '/admin/agent-tools/{agentTool}/edit'
  */
-edit.head = (args: { agentTool: string | number | { id: string | number } } | [agentTool: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { agentTool: string | { id: string } } | [agentTool: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -258,7 +258,7 @@ edit.head = (args: { agentTool: string | number | { id: string | number } } | [a
  * @see app/Http/Controllers/Admin/AgentToolController.php:103
  * @route '/admin/agent-tools/{agentTool}'
  */
-export const update = (args: { agentTool: string | number | { id: string | number } } | [agentTool: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { agentTool: string | { id: string } } | [agentTool: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -273,7 +273,7 @@ update.definition = {
  * @see app/Http/Controllers/Admin/AgentToolController.php:103
  * @route '/admin/agent-tools/{agentTool}'
  */
-update.url = (args: { agentTool: string | number | { id: string | number } } | [agentTool: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { agentTool: string | { id: string } } | [agentTool: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentTool: args }
     }
@@ -306,7 +306,7 @@ update.url = (args: { agentTool: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/Admin/AgentToolController.php:103
  * @route '/admin/agent-tools/{agentTool}'
  */
-update.put = (args: { agentTool: string | number | { id: string | number } } | [agentTool: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { agentTool: string | { id: string } } | [agentTool: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -316,7 +316,7 @@ update.put = (args: { agentTool: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/Admin/AgentToolController.php:124
  * @route '/admin/agent-tools/{agentTool}'
  */
-export const destroy = (args: { agentTool: string | number | { id: string | number } } | [agentTool: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { agentTool: string | { id: string } } | [agentTool: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -331,7 +331,7 @@ destroy.definition = {
  * @see app/Http/Controllers/Admin/AgentToolController.php:124
  * @route '/admin/agent-tools/{agentTool}'
  */
-destroy.url = (args: { agentTool: string | number | { id: string | number } } | [agentTool: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { agentTool: string | { id: string } } | [agentTool: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentTool: args }
     }
@@ -364,7 +364,7 @@ destroy.url = (args: { agentTool: string | number | { id: string | number } } | 
  * @see app/Http/Controllers/Admin/AgentToolController.php:124
  * @route '/admin/agent-tools/{agentTool}'
  */
-destroy.delete = (args: { agentTool: string | number | { id: string | number } } | [agentTool: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { agentTool: string | { id: string } } | [agentTool: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -374,7 +374,7 @@ destroy.delete = (args: { agentTool: string | number | { id: string | number } }
  * @see app/Http/Controllers/Admin/AgentToolController.php:135
  * @route '/admin/agent-tools/{agentTool}/test'
  */
-export const test = (args: { agentTool: string | number | { id: string | number } } | [agentTool: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const test = (args: { agentTool: string | { id: string } } | [agentTool: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: test.url(args, options),
     method: 'post',
 })
@@ -389,7 +389,7 @@ test.definition = {
  * @see app/Http/Controllers/Admin/AgentToolController.php:135
  * @route '/admin/agent-tools/{agentTool}/test'
  */
-test.url = (args: { agentTool: string | number | { id: string | number } } | [agentTool: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+test.url = (args: { agentTool: string | { id: string } } | [agentTool: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentTool: args }
     }
@@ -422,7 +422,7 @@ test.url = (args: { agentTool: string | number | { id: string | number } } | [ag
  * @see app/Http/Controllers/Admin/AgentToolController.php:135
  * @route '/admin/agent-tools/{agentTool}/test'
  */
-test.post = (args: { agentTool: string | number | { id: string | number } } | [agentTool: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+test.post = (args: { agentTool: string | { id: string } } | [agentTool: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: test.url(args, options),
     method: 'post',
 })

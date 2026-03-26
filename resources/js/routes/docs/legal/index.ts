@@ -1,6 +1,6 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../wayfinder'
 /**
- * @see routes/docs.php:10
+ * @see routes/docs.php:21
  * @route '/docs/legal/terms'
  */
 export const terms = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -14,7 +14,7 @@ terms.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/docs.php:10
+ * @see routes/docs.php:21
  * @route '/docs/legal/terms'
  */
 terms.url = (options?: RouteQueryOptions) => {
@@ -22,7 +22,7 @@ terms.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/docs.php:10
+ * @see routes/docs.php:21
  * @route '/docs/legal/terms'
  */
 terms.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -30,7 +30,7 @@ terms.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/docs.php:10
+ * @see routes/docs.php:21
  * @route '/docs/legal/terms'
  */
 terms.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -39,7 +39,7 @@ terms.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
- * @see routes/docs.php:13
+ * @see routes/docs.php:22
  * @route '/docs/legal/privacy-policy'
  */
 export const privacy_policy = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -53,7 +53,7 @@ privacy_policy.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/docs.php:13
+ * @see routes/docs.php:22
  * @route '/docs/legal/privacy-policy'
  */
 privacy_policy.url = (options?: RouteQueryOptions) => {
@@ -61,7 +61,7 @@ privacy_policy.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/docs.php:13
+ * @see routes/docs.php:22
  * @route '/docs/legal/privacy-policy'
  */
 privacy_policy.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -69,7 +69,7 @@ privacy_policy.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/docs.php:13
+ * @see routes/docs.php:22
  * @route '/docs/legal/privacy-policy'
  */
 privacy_policy.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({

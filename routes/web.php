@@ -368,6 +368,7 @@ require __DIR__ . '/currency.php';
 require __DIR__ . '/project-chats.php';
 require __DIR__ . '/studio.php';
 require __DIR__ . '/docs.php';
+require __DIR__ . '/console-web.php';
 require __DIR__ . '/developer-api.php';
 
 require __DIR__ . '/aiaidgetfeatures.php';

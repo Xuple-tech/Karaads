@@ -124,7 +124,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:98
  * @route '/admin/agent-api-keys/{agentApiKey}'
  */
-export const show = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -139,7 +139,7 @@ show.definition = {
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:98
  * @route '/admin/agent-api-keys/{agentApiKey}'
  */
-show.url = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+show.url = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentApiKey: args }
     }
@@ -172,7 +172,7 @@ show.url = (args: { agentApiKey: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:98
  * @route '/admin/agent-api-keys/{agentApiKey}'
  */
-show.get = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -181,7 +181,7 @@ show.get = (args: { agentApiKey: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:98
  * @route '/admin/agent-api-keys/{agentApiKey}'
  */
-show.head = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -191,7 +191,7 @@ show.head = (args: { agentApiKey: string | number | { id: string | number } } | 
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:117
  * @route '/admin/agent-api-keys/{agentApiKey}/edit'
  */
-export const edit = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -206,7 +206,7 @@ edit.definition = {
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:117
  * @route '/admin/agent-api-keys/{agentApiKey}/edit'
  */
-edit.url = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentApiKey: args }
     }
@@ -239,7 +239,7 @@ edit.url = (args: { agentApiKey: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:117
  * @route '/admin/agent-api-keys/{agentApiKey}/edit'
  */
-edit.get = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -248,7 +248,7 @@ edit.get = (args: { agentApiKey: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:117
  * @route '/admin/agent-api-keys/{agentApiKey}/edit'
  */
-edit.head = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -258,7 +258,7 @@ edit.head = (args: { agentApiKey: string | number | { id: string | number } } | 
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:137
  * @route '/admin/agent-api-keys/{agentApiKey}'
  */
-export const update = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -273,7 +273,7 @@ update.definition = {
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:137
  * @route '/admin/agent-api-keys/{agentApiKey}'
  */
-update.url = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentApiKey: args }
     }
@@ -306,7 +306,7 @@ update.url = (args: { agentApiKey: string | number | { id: string | number } } |
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:137
  * @route '/admin/agent-api-keys/{agentApiKey}'
  */
-update.put = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -316,7 +316,7 @@ update.put = (args: { agentApiKey: string | number | { id: string | number } } |
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:156
  * @route '/admin/agent-api-keys/{agentApiKey}'
  */
-export const destroy = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -331,7 +331,7 @@ destroy.definition = {
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:156
  * @route '/admin/agent-api-keys/{agentApiKey}'
  */
-destroy.url = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentApiKey: args }
     }
@@ -364,7 +364,7 @@ destroy.url = (args: { agentApiKey: string | number | { id: string | number } } 
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:156
  * @route '/admin/agent-api-keys/{agentApiKey}'
  */
-destroy.delete = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -374,7 +374,7 @@ destroy.delete = (args: { agentApiKey: string | number | { id: string | number }
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:167
  * @route '/admin/agent-api-keys/{agentApiKey}/regenerate'
  */
-export const regenerate = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const regenerate = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: regenerate.url(args, options),
     method: 'post',
 })
@@ -389,7 +389,7 @@ regenerate.definition = {
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:167
  * @route '/admin/agent-api-keys/{agentApiKey}/regenerate'
  */
-regenerate.url = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+regenerate.url = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentApiKey: args }
     }
@@ -422,7 +422,7 @@ regenerate.url = (args: { agentApiKey: string | number | { id: string | number }
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:167
  * @route '/admin/agent-api-keys/{agentApiKey}/regenerate'
  */
-regenerate.post = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+regenerate.post = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: regenerate.url(args, options),
     method: 'post',
 })
@@ -432,7 +432,7 @@ regenerate.post = (args: { agentApiKey: string | number | { id: string | number 
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:188
  * @route '/admin/agent-api-keys/{agentApiKey}/regenerate-secret'
  */
-export const regenerateSecret = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const regenerateSecret = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: regenerateSecret.url(args, options),
     method: 'post',
 })
@@ -447,7 +447,7 @@ regenerateSecret.definition = {
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:188
  * @route '/admin/agent-api-keys/{agentApiKey}/regenerate-secret'
  */
-regenerateSecret.url = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+regenerateSecret.url = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentApiKey: args }
     }
@@ -480,7 +480,7 @@ regenerateSecret.url = (args: { agentApiKey: string | number | { id: string | nu
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:188
  * @route '/admin/agent-api-keys/{agentApiKey}/regenerate-secret'
  */
-regenerateSecret.post = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+regenerateSecret.post = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: regenerateSecret.url(args, options),
     method: 'post',
 })
@@ -490,7 +490,7 @@ regenerateSecret.post = (args: { agentApiKey: string | number | { id: string | n
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:209
  * @route '/admin/agent-api-keys/{agentApiKey}/revoke'
  */
-export const revoke = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const revoke = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: revoke.url(args, options),
     method: 'post',
 })
@@ -505,7 +505,7 @@ revoke.definition = {
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:209
  * @route '/admin/agent-api-keys/{agentApiKey}/revoke'
  */
-revoke.url = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+revoke.url = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentApiKey: args }
     }
@@ -538,7 +538,7 @@ revoke.url = (args: { agentApiKey: string | number | { id: string | number } } |
  * @see app/Http/Controllers/Admin/AgentApiKeyController.php:209
  * @route '/admin/agent-api-keys/{agentApiKey}/revoke'
  */
-revoke.post = (args: { agentApiKey: string | number | { id: string | number } } | [agentApiKey: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+revoke.post = (args: { agentApiKey: string | { id: string } } | [agentApiKey: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: revoke.url(args, options),
     method: 'post',
 })

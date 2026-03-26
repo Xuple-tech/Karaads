@@ -94,7 +94,7 @@ settings.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
- * @see routes/user.php:24
+ * @see routes/user.php:25
  * @route '/user/help'
  */
 export const help = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -108,7 +108,7 @@ help.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/user.php:24
+ * @see routes/user.php:25
  * @route '/user/help'
  */
 help.url = (options?: RouteQueryOptions) => {
@@ -116,7 +116,7 @@ help.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/user.php:24
+ * @see routes/user.php:25
  * @route '/user/help'
  */
 help.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -124,7 +124,7 @@ help.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/user.php:24
+ * @see routes/user.php:25
  * @route '/user/help'
  */
 help.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -133,7 +133,7 @@ help.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
- * @see routes/user.php:29
+ * @see routes/user.php:30
  * @route '/user/subscription'
  */
 export const subscription = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -147,7 +147,7 @@ subscription.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/user.php:29
+ * @see routes/user.php:30
  * @route '/user/subscription'
  */
 subscription.url = (options?: RouteQueryOptions) => {
@@ -155,7 +155,7 @@ subscription.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/user.php:29
+ * @see routes/user.php:30
  * @route '/user/subscription'
  */
 subscription.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -163,7 +163,7 @@ subscription.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/user.php:29
+ * @see routes/user.php:30
  * @route '/user/subscription'
  */
 subscription.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({

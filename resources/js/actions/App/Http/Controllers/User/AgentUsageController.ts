@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
  * @see app/Http/Controllers/User/AgentUsageController.php:17
  * @route '/ai-agents/agents/{agent}/analytics'
  */
-export const index = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const index = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ index.definition = {
  * @see app/Http/Controllers/User/AgentUsageController.php:17
  * @route '/ai-agents/agents/{agent}/analytics'
  */
-index.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+index.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -52,7 +52,7 @@ index.url = (args: { agent: string | number | { id: string | number } } | [agent
  * @see app/Http/Controllers/User/AgentUsageController.php:17
  * @route '/ai-agents/agents/{agent}/analytics'
  */
-index.get = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+index.get = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -61,7 +61,7 @@ index.get = (args: { agent: string | number | { id: string | number } } | [agent
  * @see app/Http/Controllers/User/AgentUsageController.php:17
  * @route '/ai-agents/agents/{agent}/analytics'
  */
-index.head = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+index.head = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(args, options),
     method: 'head',
 })
@@ -71,7 +71,7 @@ index.head = (args: { agent: string | number | { id: string | number } } | [agen
  * @see app/Http/Controllers/User/AgentUsageController.php:62
  * @route '/ai-agents/agents/{agent}/analytics/export'
  */
-export const exportMethod = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const exportMethod = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: exportMethod.url(args, options),
     method: 'get',
 })
@@ -86,7 +86,7 @@ exportMethod.definition = {
  * @see app/Http/Controllers/User/AgentUsageController.php:62
  * @route '/ai-agents/agents/{agent}/analytics/export'
  */
-exportMethod.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+exportMethod.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -119,7 +119,7 @@ exportMethod.url = (args: { agent: string | number | { id: string | number } } |
  * @see app/Http/Controllers/User/AgentUsageController.php:62
  * @route '/ai-agents/agents/{agent}/analytics/export'
  */
-exportMethod.get = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+exportMethod.get = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: exportMethod.url(args, options),
     method: 'get',
 })
@@ -128,7 +128,7 @@ exportMethod.get = (args: { agent: string | number | { id: string | number } } |
  * @see app/Http/Controllers/User/AgentUsageController.php:62
  * @route '/ai-agents/agents/{agent}/analytics/export'
  */
-exportMethod.head = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+exportMethod.head = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: exportMethod.url(args, options),
     method: 'head',
 })

@@ -11,30 +11,28 @@ export function AppSidebarHeader({ breadcrumbs = [] }: { breadcrumbs?: Breadcrum
     // This useLang now gets the shared state from context
     const { lang, changeLanguage } = useLang();
     return (
-        <header className="border-sidebar-border/50 sticky top-0 z-30 flex h-16 shrink-0 items-center gap-2 rounded-t-[inherit] border-b px-6 backdrop-blur-xl transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:px-4">
+        <header className="border-sidebar-border/50 sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 rounded-t-[inherit] border-b bg-background/80 px-4 backdrop-blur-xl transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
             <div className="flex w-full items-center gap-2">
-                <SidebarTrigger className="-ml-1" />
+                <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground" />
+                <div className="h-4 w-px bg-border" />
                 <Link href="/new" prefetch>
-                    <Button variant="ghost" title="New chat" size="icon" className="h-8 w-8 p-0">
-                        <SquarePenIcon size={24} />
+                    <Button variant="ghost" title="New chat" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                        <SquarePenIcon size={16} />
                     </Button>
                 </Link>
-                {/* <Breadcrumbs breadcrumbs={breadcrumbs} /> */}
-                <div className="ms-auto">
+                <div className="ms-auto flex items-center gap-2">
                     <Select
                         onValueChange={(e) => {
                             changeLanguage(e);
                         }}
                         defaultValue={lang}
                     >
-                        <SelectTrigger>
-                            <Globe className='me-2'/>
-                            <SelectValue placeholder="Select Language" />
+                        <SelectTrigger className="h-8 gap-1.5 border-0 bg-transparent px-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground focus:ring-0">
+                            <Globe className="h-3.5 w-3.5" />
+                            <SelectValue placeholder="Language" />
                         </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="ENGLISH">
-                                English
-                            </SelectItem>
+                        <SelectContent align="end">
+                            <SelectItem value="ENGLISH">English</SelectItem>
                             <SelectItem value="HAUSA">Hausa</SelectItem>
                             <SelectItem value="IGBO">Igbo</SelectItem>
                             <SelectItem value="YORUBA">Yoruba</SelectItem>

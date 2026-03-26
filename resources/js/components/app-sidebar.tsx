@@ -98,10 +98,9 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent className="custom-scrollbar">
-                {/* <NavMain items={mainNavItems} /> */}
-                <div className="gap-1 px-1">
-                    <small className="text-muted-foreground"> last 7 days</small>
-                    <div className="conversation-content px-2">
+                <div className="gap-1 px-2 pb-2">
+                    <p className="px-2 py-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">Recent</p>
+                    <div className="conversation-content">
                         {isLoadingConversations ? (
                             <>
                                 <Skeleton className="mb-1 grid grid-cols-1 bg-none">
@@ -136,20 +135,15 @@ export function AppSidebar() {
                 </div>
             </SidebarContent>
 
-            <SidebarFooter>
-                {isFreePlan && <>
-                    <Button asChild>
-                        <Link
-                            className="block w-full bg-gradient-to-r from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100 dark:from-amber-950 dark:to-orange-950 dark:hover:from-amber-900 dark:hover:to-orange-900 font-semibold"
-                            href="/pricing"
-                            as="button"
-                            prefetch
-                        >
-                            <Zap className="mr-2 h-4 w-4 text-amber-600 dark:text-amber-400" />
-                            <span className="text-amber-900 dark:text-amber-100">Upgrade to Pro</span>
+            <SidebarFooter className="border-t border-sidebar-border/50 pt-2">
+                {isFreePlan && (
+                    <Button asChild variant="outline" className="w-full border-amber-200/60 bg-gradient-to-r from-amber-50 to-orange-50 font-semibold text-amber-900 hover:from-amber-100 hover:to-orange-100 dark:border-amber-800/60 dark:from-amber-950/60 dark:to-orange-950/60 dark:text-amber-100 dark:hover:from-amber-900/60 dark:hover:to-orange-900/60">
+                        <Link href="/pricing" as="button" prefetch>
+                            <Zap className="mr-1.5 h-3.5 w-3.5 text-amber-500" />
+                            Upgrade to Pro
                         </Link>
                     </Button>
-                </>}
+                )}
                 <NavFooter items={footerNavItems} className="mt-auto" />
                 <NavUser />
             </SidebarFooter>

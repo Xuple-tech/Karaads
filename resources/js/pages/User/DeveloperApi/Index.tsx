@@ -93,6 +93,7 @@ type Props = {
     ledger: Paginated<LedgerRow>;
     models: ApiModel[];
     apiBaseUrl: string;
+    docsUrl: string;
     topupConfig: { default_amount_usd: number; min_amount_usd: number; max_amount_usd: number };
     filters: {
         section?: string;
@@ -108,6 +109,11 @@ type Props = {
 };
 
 type FlashProps = {
+    console: {
+        base_url: string;
+        docs_base_url: string;
+        uses_path_prefix: boolean;
+    };
     flash?: {
         success?: string;
         error?: string;
@@ -133,11 +139,13 @@ export default function DeveloperApiIndex({
     ledger,
     models,
     apiBaseUrl,
+    docsUrl,
     topupConfig,
     filters,
 }: Props) {
     const page = usePage<FlashProps>();
     const flash = page.props.flash || {};
+    const consoleBaseUrl = page.props.console.base_url;
     const activeSection = filters.section || 'overview';
     const [keyDrafts, setKeyDrafts] = useState<Record<string, KeyDraft>>({});
 
@@ -184,11 +192,11 @@ export default function DeveloperApiIndex({
     }, [stats.requests, stats.success_requests]);
 
     const navigate = (section: string) => {
-        router.get('/user/developer-api', { ...filterForm.data, section }, { preserveState: true, preserveScroll: true });
+        router.get(consoleBaseUrl, { ...filterForm.data, section }, { preserveState: true, preserveScroll: true });
     };
 
     const applyFilters = (section = activeSection) => {
-        router.get('/user/developer-api', { ...filterForm.data, section }, { preserveState: true, preserveScroll: true });
+        router.get(consoleBaseUrl, { ...filterForm.data, section }, { preserveState: true, preserveScroll: true });
     };
 
     const toggleCreateModel = (publicId: string) => {
@@ -217,7 +225,7 @@ export default function DeveloperApiIndex({
                             <div className="text-muted-foreground">Base URL</div>
                             <code>{apiBaseUrl}</code>
                         </div>
-                        <Link href="/docs/developer-api" className="rounded border bg-white px-4 py-3 text-sm">
+                        <Link href={docsUrl} className="rounded border bg-white px-4 py-3 text-sm">
                             <div className="text-muted-foreground">Docs</div>
                             <div className="font-medium">Open integration docs</div>
                         </Link>
@@ -303,7 +311,7 @@ export default function DeveloperApiIndex({
                                     </div>
                                 </Field>
                             </div>
-                            <div className="mt-4"><button className="rounded bg-black px-4 py-2 text-white" onClick={() => createKeyForm.post('/user/developer-api/keys')}>Create key</button></div>
+                            <div className="mt-4"><button className="rounded bg-black px-4 py-2 text-white" onClick={() => createKeyForm.post(`${consoleBaseUrl}/keys`)}>Create key</button></div>
                         </Panel>
 
                         <Panel title="Manage Keys">
@@ -347,9 +355,9 @@ export default function DeveloperApiIndex({
                                                 </Field>
                                             </div>
                                             <div className="mt-4 flex flex-wrap gap-2">
-                                                <button className="rounded bg-black px-4 py-2 text-white" onClick={() => router.put(`/user/developer-api/keys/${key.id}`, draft)}>Save</button>
-                                                <button className="rounded border px-4 py-2" onClick={() => router.post(`/user/developer-api/keys/${key.id}/regenerate`)}>Regenerate</button>
-                                                {key.is_active && <button className="rounded border border-red-300 px-4 py-2 text-red-700" onClick={() => router.post(`/user/developer-api/keys/${key.id}/revoke`)}>Revoke</button>}
+                                                <button className="rounded bg-black px-4 py-2 text-white" onClick={() => router.put(`${consoleBaseUrl}/keys/${key.id}`, draft)}>Save</button>
+                                                <button className="rounded border px-4 py-2" onClick={() => router.post(`${consoleBaseUrl}/keys/${key.id}/regenerate`)}>Regenerate</button>
+                                                {key.is_active && <button className="rounded border border-red-300 px-4 py-2 text-red-700" onClick={() => router.post(`${consoleBaseUrl}/keys/${key.id}/revoke`)}>Revoke</button>}
                                             </div>
                                             <div className="mt-3 text-xs text-muted-foreground">Last used: {formatDate(key.last_used_at)} | Rotated: {formatDate(key.last_rotated_at)}</div>
                                         </div>
@@ -397,7 +405,7 @@ export default function DeveloperApiIndex({
                         <Panel title="Top Up">
                             <div className="flex gap-3">
                                 <input className="rounded border px-3 py-2" type="number" min={topupConfig.min_amount_usd} max={topupConfig.max_amount_usd} step="0.01" value={topupForm.data.amount_usd} onChange={(e) => topupForm.setData('amount_usd', Number(e.target.value))} />
-                                <button className="rounded bg-black px-4 py-2 text-white" onClick={() => topupForm.post('/user/developer-api/top-up')}>Checkout</button>
+                                <button className="rounded bg-black px-4 py-2 text-white" onClick={() => topupForm.post(`${consoleBaseUrl}/top-up`)}>Checkout</button>
                             </div>
                         </Panel>
                         <Panel title="Ledger">

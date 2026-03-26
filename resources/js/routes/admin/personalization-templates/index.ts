@@ -124,7 +124,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/Admin/PersonalizationController.php:293
  * @route '/admin/personalization-templates/{template}'
  */
-export const edit = (args: { template: string | number | { id: string | number } } | [template: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { template: string | { id: string } } | [template: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -139,7 +139,7 @@ edit.definition = {
  * @see app/Http/Controllers/Admin/PersonalizationController.php:293
  * @route '/admin/personalization-templates/{template}'
  */
-edit.url = (args: { template: string | number | { id: string | number } } | [template: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { template: string | { id: string } } | [template: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { template: args }
     }
@@ -172,7 +172,7 @@ edit.url = (args: { template: string | number | { id: string | number } } | [tem
  * @see app/Http/Controllers/Admin/PersonalizationController.php:293
  * @route '/admin/personalization-templates/{template}'
  */
-edit.get = (args: { template: string | number | { id: string | number } } | [template: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { template: string | { id: string } } | [template: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -181,7 +181,7 @@ edit.get = (args: { template: string | number | { id: string | number } } | [tem
  * @see app/Http/Controllers/Admin/PersonalizationController.php:293
  * @route '/admin/personalization-templates/{template}'
  */
-edit.head = (args: { template: string | number | { id: string | number } } | [template: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { template: string | { id: string } } | [template: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -191,7 +191,7 @@ edit.head = (args: { template: string | number | { id: string | number } } | [te
  * @see app/Http/Controllers/Admin/PersonalizationController.php:308
  * @route '/admin/personalization-templates/{template}'
  */
-export const update = (args: { template: string | number | { id: string | number } } | [template: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { template: string | { id: string } } | [template: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -206,7 +206,7 @@ update.definition = {
  * @see app/Http/Controllers/Admin/PersonalizationController.php:308
  * @route '/admin/personalization-templates/{template}'
  */
-update.url = (args: { template: string | number | { id: string | number } } | [template: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { template: string | { id: string } } | [template: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { template: args }
     }
@@ -239,7 +239,7 @@ update.url = (args: { template: string | number | { id: string | number } } | [t
  * @see app/Http/Controllers/Admin/PersonalizationController.php:308
  * @route '/admin/personalization-templates/{template}'
  */
-update.put = (args: { template: string | number | { id: string | number } } | [template: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { template: string | { id: string } } | [template: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -249,7 +249,7 @@ update.put = (args: { template: string | number | { id: string | number } } | [t
  * @see app/Http/Controllers/Admin/PersonalizationController.php:362
  * @route '/admin/personalization-templates/{template}'
  */
-export const destroy = (args: { template: string | number | { id: string | number } } | [template: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { template: string | { id: string } } | [template: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -264,7 +264,7 @@ destroy.definition = {
  * @see app/Http/Controllers/Admin/PersonalizationController.php:362
  * @route '/admin/personalization-templates/{template}'
  */
-destroy.url = (args: { template: string | number | { id: string | number } } | [template: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { template: string | { id: string } } | [template: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { template: args }
     }
@@ -297,7 +297,7 @@ destroy.url = (args: { template: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/Admin/PersonalizationController.php:362
  * @route '/admin/personalization-templates/{template}'
  */
-destroy.delete = (args: { template: string | number | { id: string | number } } | [template: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { template: string | { id: string } } | [template: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })

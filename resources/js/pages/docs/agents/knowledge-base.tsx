@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DocsLayout } from '@/layouts/docs-layout';
+import docs from '@/routes/docs';
 import { Link } from '@inertiajs/react';
 import { AlertCircle, BookOpen, Edit, Eye, Plus, Settings, Trash2 } from 'lucide-react';
 
@@ -326,10 +327,10 @@ export default function KnowledgeBaseIndex() {
                 {/* Navigation */}
                 <div className="flex gap-4 pt-6">
                     <Button asChild>
-                        <Link href={route('docs.agents.index')}>← Back to Agents</Link>
+                        <Link href={docs.agents.index.url()}>← Back to Agents</Link>
                     </Button>
                     <Button asChild variant="outline">
-                        <Link href={route('docs.agents.tools')}>Tools Management →</Link>
+                        <Link href={docs.agents.tools.url()}>Tools Management →</Link>
                     </Button>
                 </div>
             </div>

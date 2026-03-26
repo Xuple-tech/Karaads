@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Developer;
 use App\Http\Controllers\Controller;
 use App\Models\ApiModel;
 use App\Models\DeveloperApiKey;
+use App\Support\ConsoleUrl;
 use App\Services\DeveloperApiBillingService;
 use App\Services\DeveloperApiTokenService;
 use App\Services\StripeService;
@@ -104,6 +105,7 @@ class DeveloperPortalController extends Controller
             }),
             'models' => ApiModel::where('is_active', true)->orderBy('public_id')->get(),
             'apiBaseUrl' => 'https://' . config('developer-api.domain') . '/v1',
+            'docsUrl' => ConsoleUrl::docsUrl($request) . '/api',
             'topupConfig' => [
                 'default_amount_usd' => (float) config('developer-api.default_topup_amount_usd'),
                 'min_amount_usd' => (float) config('developer-api.min_topup_amount_usd'),
@@ -188,8 +190,8 @@ class DeveloperPortalController extends Controller
         $url = $this->stripeService->createOneTimeCheckoutSession(
             $request->user(),
             (float) $validated['amount_usd'],
-            route('user.developer-api.index', [], true),
-            route('user.developer-api.index', [], true),
+            route('console.index', ['section' => 'billing'], true),
+            route('console.index', ['section' => 'billing'], true),
             [
                 'purpose' => 'developer_wallet_topup',
                 'user_id' => $request->user()->id,

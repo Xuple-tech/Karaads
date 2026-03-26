@@ -1,48 +1,36 @@
 <?php
 
-use App\Http\Controllers\Docs\MainController;
+use App\Support\ConsoleUrl;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::prefix('/docs')->name('docs.')->group(function () {
-   Route::get('/', [MainController::class, 'index'])->name('main');
-   Route::prefix('/legal')->group(function () {
-      Route::get('/terms', function () {
-         return  Inertia::render('docs/legal/terms');
-      })->name('legal.terms');
-      Route::get('/privacy-policy', function () {
-         return Inertia::render('docs/legal/privacy');
-      })->name('legal.privacy_policy');
-   });
-   Route::prefix('/agents')->group(function () {
-      Route::get('/', function () {
-         return Inertia::render('docs/agents/index');
-      })->name('agents.index');
-      Route::get('/configuration', function () {
-         return Inertia::render('docs/agents/configuration');
-      })->name('agents.configuration');
-      Route::get('/templates', function () {
-         return Inertia::render('docs/agents/templates');
-      })->name('agents.templates');
-      Route::get('/knowledge-base', function () {
-         return Inertia::render('docs/agents/knowledge-base');
-      })->name('agents.knowledge-base');
-      Route::get('/tools', function () {
-         return Inertia::render('docs/agents/tools');
-      })->name('agents.tools');
-   });
-   Route::prefix('/subscription')->group(function () {
-      Route::get('/', function () {
-         return Inertia::render('docs/subscription/overview');
-      })->name('subscription.overview');
-      Route::get('/features', function () {
-         return Inertia::render('docs/subscription/features');
-      })->name('subscription.features');
-      Route::get('/faq', function () {
-         return Inertia::render('docs/subscription/faq');
-      })->name('subscription.faq');
-   });
-   Route::get('/developer-api', function () {
-      return Inertia::render('docs/developer-api');
-   })->name('developer-api');
+$redirectToConsoleDocs = function (Request $request, string $suffix = '') {
+    $target = ConsoleUrl::docsUrl($request);
+
+    if ($suffix !== '') {
+        $target .= '/' . ltrim($suffix, '/');
+    }
+
+    return redirect()->away($target, 302);
+};
+
+Route::prefix('/docs')->name('docs.')->group(function () use ($redirectToConsoleDocs) {
+    Route::get('/', fn (Request $request) => $redirectToConsoleDocs($request))->name('main');
+
+    Route::prefix('/legal')->name('legal.')->group(function () use ($redirectToConsoleDocs) {
+        Route::get('/terms', fn (Request $request) => $redirectToConsoleDocs($request, 'legal/terms'))->name('terms');
+        Route::get('/privacy-policy', fn (Request $request) => $redirectToConsoleDocs($request, 'legal/privacy-policy'))->name('privacy_policy');
+    });
+
+    Route::prefix('/agents')->name('agents.')->group(function () use ($redirectToConsoleDocs) {
+        Route::get('/', fn (Request $request) => $redirectToConsoleDocs($request, 'agents'))->name('index');
+        Route::get('/widget', fn (Request $request) => $redirectToConsoleDocs($request, 'agents/widget'))->name('widget');
+        Route::get('/configuration', fn (Request $request) => $redirectToConsoleDocs($request, 'agents/configuration'))->name('configuration');
+        Route::get('/templates', fn (Request $request) => $redirectToConsoleDocs($request, 'agents/templates'))->name('templates');
+        Route::get('/knowledge-base', fn (Request $request) => $redirectToConsoleDocs($request, 'agents/knowledge-base'))->name('knowledge-base');
+        Route::get('/tools', fn (Request $request) => $redirectToConsoleDocs($request, 'agents/tools'))->name('tools');
+    });
+
+    Route::get('/developer-api', fn (Request $request) => $redirectToConsoleDocs($request, 'api'))->name('developer-api');
+    Route::get('/api', fn (Request $request) => $redirectToConsoleDocs($request, 'api'))->name('api.index');
 });

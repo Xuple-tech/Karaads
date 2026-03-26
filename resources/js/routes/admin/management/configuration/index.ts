@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
  * @see app/Http/Controllers/Admin/AdminDashboardController.php:185
  * @route '/admin/management/configuration/{config}'
  */
-export const update = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -19,7 +19,7 @@ update.definition = {
  * @see app/Http/Controllers/Admin/AdminDashboardController.php:185
  * @route '/admin/management/configuration/{config}'
  */
-update.url = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { config: args }
     }
@@ -52,7 +52,7 @@ update.url = (args: { config: string | number | { id: string | number } } | [con
  * @see app/Http/Controllers/Admin/AdminDashboardController.php:185
  * @route '/admin/management/configuration/{config}'
  */
-update.put = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })

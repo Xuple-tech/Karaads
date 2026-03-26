@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
  * @see app/Http/Controllers/ProjectController.php:270
  * @route '/projects/{project}/members'
  */
-export const add = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const add = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: add.url(args, options),
     method: 'post',
 })
@@ -19,7 +19,7 @@ add.definition = {
  * @see app/Http/Controllers/ProjectController.php:270
  * @route '/projects/{project}/members'
  */
-add.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+add.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -52,7 +52,7 @@ add.url = (args: { project: string | number | { id: string | number } } | [proje
  * @see app/Http/Controllers/ProjectController.php:270
  * @route '/projects/{project}/members'
  */
-add.post = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+add.post = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: add.url(args, options),
     method: 'post',
 })
@@ -62,7 +62,7 @@ add.post = (args: { project: string | number | { id: string | number } } | [proj
  * @see app/Http/Controllers/ProjectController.php:298
  * @route '/projects/{project}/members/{member}'
  */
-export const update = (args: { project: string | number | { id: string | number }, member: string | number | { id: string | number } } | [project: string | number | { id: string | number }, member: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { project: string | { id: string }, member: string | { id: string } } | [project: string | { id: string }, member: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -77,7 +77,7 @@ update.definition = {
  * @see app/Http/Controllers/ProjectController.php:298
  * @route '/projects/{project}/members/{member}'
  */
-update.url = (args: { project: string | number | { id: string | number }, member: string | number | { id: string | number } } | [project: string | number | { id: string | number }, member: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
+update.url = (args: { project: string | { id: string }, member: string | { id: string } } | [project: string | { id: string }, member: string | { id: string } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -107,7 +107,7 @@ update.url = (args: { project: string | number | { id: string | number }, member
  * @see app/Http/Controllers/ProjectController.php:298
  * @route '/projects/{project}/members/{member}'
  */
-update.put = (args: { project: string | number | { id: string | number }, member: string | number | { id: string | number } } | [project: string | number | { id: string | number }, member: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { project: string | { id: string }, member: string | { id: string } } | [project: string | { id: string }, member: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -117,7 +117,7 @@ update.put = (args: { project: string | number | { id: string | number }, member
  * @see app/Http/Controllers/ProjectController.php:329
  * @route '/projects/{project}/members/{member}'
  */
-export const remove = (args: { project: string | number | { id: string | number }, member: string | number | { id: string | number } } | [project: string | number | { id: string | number }, member: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const remove = (args: { project: string | { id: string }, member: string | { id: string } } | [project: string | { id: string }, member: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: remove.url(args, options),
     method: 'delete',
 })
@@ -132,7 +132,7 @@ remove.definition = {
  * @see app/Http/Controllers/ProjectController.php:329
  * @route '/projects/{project}/members/{member}'
  */
-remove.url = (args: { project: string | number | { id: string | number }, member: string | number | { id: string | number } } | [project: string | number | { id: string | number }, member: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
+remove.url = (args: { project: string | { id: string }, member: string | { id: string } } | [project: string | { id: string }, member: string | { id: string } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -162,7 +162,7 @@ remove.url = (args: { project: string | number | { id: string | number }, member
  * @see app/Http/Controllers/ProjectController.php:329
  * @route '/projects/{project}/members/{member}'
  */
-remove.delete = (args: { project: string | number | { id: string | number }, member: string | number | { id: string | number } } | [project: string | number | { id: string | number }, member: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+remove.delete = (args: { project: string | { id: string }, member: string | { id: string } } | [project: string | { id: string }, member: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: remove.url(args, options),
     method: 'delete',
 })

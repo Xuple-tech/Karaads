@@ -168,7 +168,7 @@ export const store = {
  * @see app/Http/Controllers/TeamController.php:75
  * @route '/api/teams/{team}'
  */
-const showc5f89d94ac432ff385523f6e0b292476 = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const showc5f89d94ac432ff385523f6e0b292476 = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: showc5f89d94ac432ff385523f6e0b292476.url(args, options),
     method: 'get',
 })
@@ -183,7 +183,7 @@ showc5f89d94ac432ff385523f6e0b292476.definition = {
  * @see app/Http/Controllers/TeamController.php:75
  * @route '/api/teams/{team}'
  */
-showc5f89d94ac432ff385523f6e0b292476.url = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+showc5f89d94ac432ff385523f6e0b292476.url = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { team: args }
     }
@@ -216,7 +216,7 @@ showc5f89d94ac432ff385523f6e0b292476.url = (args: { team: string | number | { id
  * @see app/Http/Controllers/TeamController.php:75
  * @route '/api/teams/{team}'
  */
-showc5f89d94ac432ff385523f6e0b292476.get = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+showc5f89d94ac432ff385523f6e0b292476.get = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: showc5f89d94ac432ff385523f6e0b292476.url(args, options),
     method: 'get',
 })
@@ -225,7 +225,7 @@ showc5f89d94ac432ff385523f6e0b292476.get = (args: { team: string | number | { id
  * @see app/Http/Controllers/TeamController.php:75
  * @route '/api/teams/{team}'
  */
-showc5f89d94ac432ff385523f6e0b292476.head = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+showc5f89d94ac432ff385523f6e0b292476.head = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: showc5f89d94ac432ff385523f6e0b292476.url(args, options),
     method: 'head',
 })
@@ -653,7 +653,7 @@ export const members = {
  * @see app/Http/Controllers/TeamController.php:87
  * @route '/api/teams/{team}/members/invite'
  */
-const inviteMember86493ac9fe3e6993db4a617d5748f555 = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+const inviteMember86493ac9fe3e6993db4a617d5748f555 = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: inviteMember86493ac9fe3e6993db4a617d5748f555.url(args, options),
     method: 'post',
 })
@@ -668,7 +668,7 @@ inviteMember86493ac9fe3e6993db4a617d5748f555.definition = {
  * @see app/Http/Controllers/TeamController.php:87
  * @route '/api/teams/{team}/members/invite'
  */
-inviteMember86493ac9fe3e6993db4a617d5748f555.url = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+inviteMember86493ac9fe3e6993db4a617d5748f555.url = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { team: args }
     }
@@ -701,7 +701,7 @@ inviteMember86493ac9fe3e6993db4a617d5748f555.url = (args: { team: string | numbe
  * @see app/Http/Controllers/TeamController.php:87
  * @route '/api/teams/{team}/members/invite'
  */
-inviteMember86493ac9fe3e6993db4a617d5748f555.post = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+inviteMember86493ac9fe3e6993db4a617d5748f555.post = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: inviteMember86493ac9fe3e6993db4a617d5748f555.url(args, options),
     method: 'post',
 })
@@ -769,7 +769,7 @@ export const inviteMember = {
  * @see app/Http/Controllers/TeamController.php:152
  * @route '/api/teams/{team}/members/{member}'
  */
-const removeMember28d3d6ea8599c16e42d9df5e7bab58a0 = (args: { team: string | number, member: string | number | { id: string | number } } | [team: string | number, member: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+const removeMember28d3d6ea8599c16e42d9df5e7bab58a0 = (args: { team: string | number, member: number | { id: number } } | [team: string | number, member: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: removeMember28d3d6ea8599c16e42d9df5e7bab58a0.url(args, options),
     method: 'delete',
 })
@@ -784,7 +784,7 @@ removeMember28d3d6ea8599c16e42d9df5e7bab58a0.definition = {
  * @see app/Http/Controllers/TeamController.php:152
  * @route '/api/teams/{team}/members/{member}'
  */
-removeMember28d3d6ea8599c16e42d9df5e7bab58a0.url = (args: { team: string | number, member: string | number | { id: string | number } } | [team: string | number, member: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
+removeMember28d3d6ea8599c16e42d9df5e7bab58a0.url = (args: { team: string | number, member: number | { id: number } } | [team: string | number, member: number | { id: number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     team: args[0],
@@ -812,7 +812,7 @@ removeMember28d3d6ea8599c16e42d9df5e7bab58a0.url = (args: { team: string | numbe
  * @see app/Http/Controllers/TeamController.php:152
  * @route '/api/teams/{team}/members/{member}'
  */
-removeMember28d3d6ea8599c16e42d9df5e7bab58a0.delete = (args: { team: string | number, member: string | number | { id: string | number } } | [team: string | number, member: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+removeMember28d3d6ea8599c16e42d9df5e7bab58a0.delete = (args: { team: string | number, member: number | { id: number } } | [team: string | number, member: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: removeMember28d3d6ea8599c16e42d9df5e7bab58a0.url(args, options),
     method: 'delete',
 })
@@ -878,7 +878,7 @@ export const removeMember = {
  * @see app/Http/Controllers/TeamController.php:133
  * @route '/api/teams/{team}/members/{member}/role'
  */
-const updateMemberRole6773bb5bb5f2e9d1e79c32b7faf87463 = (args: { team: string | number, member: string | number | { id: string | number } } | [team: string | number, member: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+const updateMemberRole6773bb5bb5f2e9d1e79c32b7faf87463 = (args: { team: string | number, member: number | { id: number } } | [team: string | number, member: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateMemberRole6773bb5bb5f2e9d1e79c32b7faf87463.url(args, options),
     method: 'put',
 })
@@ -893,7 +893,7 @@ updateMemberRole6773bb5bb5f2e9d1e79c32b7faf87463.definition = {
  * @see app/Http/Controllers/TeamController.php:133
  * @route '/api/teams/{team}/members/{member}/role'
  */
-updateMemberRole6773bb5bb5f2e9d1e79c32b7faf87463.url = (args: { team: string | number, member: string | number | { id: string | number } } | [team: string | number, member: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
+updateMemberRole6773bb5bb5f2e9d1e79c32b7faf87463.url = (args: { team: string | number, member: number | { id: number } } | [team: string | number, member: number | { id: number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     team: args[0],
@@ -921,7 +921,7 @@ updateMemberRole6773bb5bb5f2e9d1e79c32b7faf87463.url = (args: { team: string | n
  * @see app/Http/Controllers/TeamController.php:133
  * @route '/api/teams/{team}/members/{member}/role'
  */
-updateMemberRole6773bb5bb5f2e9d1e79c32b7faf87463.put = (args: { team: string | number, member: string | number | { id: string | number } } | [team: string | number, member: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+updateMemberRole6773bb5bb5f2e9d1e79c32b7faf87463.put = (args: { team: string | number, member: number | { id: number } } | [team: string | number, member: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateMemberRole6773bb5bb5f2e9d1e79c32b7faf87463.url(args, options),
     method: 'put',
 })

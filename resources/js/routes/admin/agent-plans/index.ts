@@ -124,7 +124,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/Admin/AgentPlanController.php:83
  * @route '/admin/agent-plans/{agentPlan}'
  */
-export const show = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -139,7 +139,7 @@ show.definition = {
  * @see app/Http/Controllers/Admin/AgentPlanController.php:83
  * @route '/admin/agent-plans/{agentPlan}'
  */
-show.url = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+show.url = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentPlan: args }
     }
@@ -172,7 +172,7 @@ show.url = (args: { agentPlan: string | number | { id: string | number } } | [ag
  * @see app/Http/Controllers/Admin/AgentPlanController.php:83
  * @route '/admin/agent-plans/{agentPlan}'
  */
-show.get = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -181,7 +181,7 @@ show.get = (args: { agentPlan: string | number | { id: string | number } } | [ag
  * @see app/Http/Controllers/Admin/AgentPlanController.php:83
  * @route '/admin/agent-plans/{agentPlan}'
  */
-show.head = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -191,7 +191,7 @@ show.head = (args: { agentPlan: string | number | { id: string | number } } | [a
  * @see app/Http/Controllers/Admin/AgentPlanController.php:99
  * @route '/admin/agent-plans/{agentPlan}/edit'
  */
-export const edit = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -206,7 +206,7 @@ edit.definition = {
  * @see app/Http/Controllers/Admin/AgentPlanController.php:99
  * @route '/admin/agent-plans/{agentPlan}/edit'
  */
-edit.url = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentPlan: args }
     }
@@ -239,7 +239,7 @@ edit.url = (args: { agentPlan: string | number | { id: string | number } } | [ag
  * @see app/Http/Controllers/Admin/AgentPlanController.php:99
  * @route '/admin/agent-plans/{agentPlan}/edit'
  */
-edit.get = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -248,7 +248,7 @@ edit.get = (args: { agentPlan: string | number | { id: string | number } } | [ag
  * @see app/Http/Controllers/Admin/AgentPlanController.php:99
  * @route '/admin/agent-plans/{agentPlan}/edit'
  */
-edit.head = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -258,7 +258,7 @@ edit.head = (args: { agentPlan: string | number | { id: string | number } } | [a
  * @see app/Http/Controllers/Admin/AgentPlanController.php:110
  * @route '/admin/agent-plans/{agentPlan}'
  */
-export const update = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -273,7 +273,7 @@ update.definition = {
  * @see app/Http/Controllers/Admin/AgentPlanController.php:110
  * @route '/admin/agent-plans/{agentPlan}'
  */
-update.url = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentPlan: args }
     }
@@ -306,7 +306,7 @@ update.url = (args: { agentPlan: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/Admin/AgentPlanController.php:110
  * @route '/admin/agent-plans/{agentPlan}'
  */
-update.put = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -316,7 +316,7 @@ update.put = (args: { agentPlan: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/Admin/AgentPlanController.php:153
  * @route '/admin/agent-plans/{agentPlan}'
  */
-export const destroy = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -331,7 +331,7 @@ destroy.definition = {
  * @see app/Http/Controllers/Admin/AgentPlanController.php:153
  * @route '/admin/agent-plans/{agentPlan}'
  */
-destroy.url = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentPlan: args }
     }
@@ -364,7 +364,7 @@ destroy.url = (args: { agentPlan: string | number | { id: string | number } } | 
  * @see app/Http/Controllers/Admin/AgentPlanController.php:153
  * @route '/admin/agent-plans/{agentPlan}'
  */
-destroy.delete = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -374,7 +374,7 @@ destroy.delete = (args: { agentPlan: string | number | { id: string | number } }
  * @see app/Http/Controllers/Admin/AgentPlanController.php:169
  * @route '/admin/agent-plans/{agentPlan}/toggle'
  */
-export const toggle = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const toggle = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggle.url(args, options),
     method: 'patch',
 })
@@ -389,7 +389,7 @@ toggle.definition = {
  * @see app/Http/Controllers/Admin/AgentPlanController.php:169
  * @route '/admin/agent-plans/{agentPlan}/toggle'
  */
-toggle.url = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+toggle.url = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentPlan: args }
     }
@@ -422,7 +422,7 @@ toggle.url = (args: { agentPlan: string | number | { id: string | number } } | [
  * @see app/Http/Controllers/Admin/AgentPlanController.php:169
  * @route '/admin/agent-plans/{agentPlan}/toggle'
  */
-toggle.patch = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+toggle.patch = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggle.url(args, options),
     method: 'patch',
 })
@@ -432,7 +432,7 @@ toggle.patch = (args: { agentPlan: string | number | { id: string | number } } |
  * @see app/Http/Controllers/Admin/AgentPlanController.php:182
  * @route '/admin/agent-plans/{agentPlan}/sync-stripe'
  */
-export const syncStripe = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const syncStripe = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: syncStripe.url(args, options),
     method: 'post',
 })
@@ -447,7 +447,7 @@ syncStripe.definition = {
  * @see app/Http/Controllers/Admin/AgentPlanController.php:182
  * @route '/admin/agent-plans/{agentPlan}/sync-stripe'
  */
-syncStripe.url = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+syncStripe.url = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentPlan: args }
     }
@@ -480,7 +480,7 @@ syncStripe.url = (args: { agentPlan: string | number | { id: string | number } }
  * @see app/Http/Controllers/Admin/AgentPlanController.php:182
  * @route '/admin/agent-plans/{agentPlan}/sync-stripe'
  */
-syncStripe.post = (args: { agentPlan: string | number | { id: string | number } } | [agentPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+syncStripe.post = (args: { agentPlan: string | { id: string } } | [agentPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: syncStripe.url(args, options),
     method: 'post',
 })

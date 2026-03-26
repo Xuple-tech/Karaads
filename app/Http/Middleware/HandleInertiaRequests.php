@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\ConsoleUrl;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -45,13 +46,22 @@ class HandleInertiaRequests extends Middleware
 
         // Add current plan if user is authenticated
         if ($request->user()) {
-            $auth['user']['current_plan'] = $request->user()->getCurrentPlan();
+            try {
+                $auth['user']['current_plan'] = $request->user()->getCurrentPlan();
+            } catch (\Throwable) {
+                $auth['user']['current_plan'] = null;
+            }
         }
 
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => $auth,
+            'console' => [
+                'base_url' => ConsoleUrl::consoleUrl($request),
+                'docs_base_url' => ConsoleUrl::docsUrl($request),
+                'uses_path_prefix' => ConsoleUrl::usesPathPrefix(),
+            ],
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),
