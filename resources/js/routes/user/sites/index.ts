@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\User\SiteController::index
-* @see app/Http/Controllers/User/SiteController.php:14
-* @route '/ai-agents/sites'
-*/
+ * @see app/Http/Controllers/User/SiteController.php:14
+ * @route '/ai-agents/sites'
+ */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
     method: 'get',
@@ -16,28 +16,27 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\User\SiteController::index
-* @see app/Http/Controllers/User/SiteController.php:14
-* @route '/ai-agents/sites'
-*/
+ * @see app/Http/Controllers/User/SiteController.php:14
+ * @route '/ai-agents/sites'
+ */
 index.url = (options?: RouteQueryOptions) => {
     return index.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\User\SiteController::index
-* @see app/Http/Controllers/User/SiteController.php:14
-* @route '/ai-agents/sites'
-*/
+ * @see app/Http/Controllers/User/SiteController.php:14
+ * @route '/ai-agents/sites'
+ */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\User\SiteController::index
-* @see app/Http/Controllers/User/SiteController.php:14
-* @route '/ai-agents/sites'
-*/
+ * @see app/Http/Controllers/User/SiteController.php:14
+ * @route '/ai-agents/sites'
+ */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
     method: 'head',
@@ -45,9 +44,9 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\User\SiteController::create
-* @see app/Http/Controllers/User/SiteController.php:28
-* @route '/ai-agents/sites/create'
-*/
+ * @see app/Http/Controllers/User/SiteController.php:28
+ * @route '/ai-agents/sites/create'
+ */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(options),
     method: 'get',
@@ -60,28 +59,27 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\User\SiteController::create
-* @see app/Http/Controllers/User/SiteController.php:28
-* @route '/ai-agents/sites/create'
-*/
+ * @see app/Http/Controllers/User/SiteController.php:28
+ * @route '/ai-agents/sites/create'
+ */
 create.url = (options?: RouteQueryOptions) => {
     return create.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\User\SiteController::create
-* @see app/Http/Controllers/User/SiteController.php:28
-* @route '/ai-agents/sites/create'
-*/
+ * @see app/Http/Controllers/User/SiteController.php:28
+ * @route '/ai-agents/sites/create'
+ */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\User\SiteController::create
-* @see app/Http/Controllers/User/SiteController.php:28
-* @route '/ai-agents/sites/create'
-*/
+ * @see app/Http/Controllers/User/SiteController.php:28
+ * @route '/ai-agents/sites/create'
+ */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: create.url(options),
     method: 'head',
@@ -89,9 +87,9 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\User\SiteController::store
-* @see app/Http/Controllers/User/SiteController.php:33
-* @route '/ai-agents/sites'
-*/
+ * @see app/Http/Controllers/User/SiteController.php:33
+ * @route '/ai-agents/sites'
+ */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
@@ -104,18 +102,18 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\User\SiteController::store
-* @see app/Http/Controllers/User/SiteController.php:33
-* @route '/ai-agents/sites'
-*/
+ * @see app/Http/Controllers/User/SiteController.php:33
+ * @route '/ai-agents/sites'
+ */
 store.url = (options?: RouteQueryOptions) => {
     return store.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\User\SiteController::store
-* @see app/Http/Controllers/User/SiteController.php:33
-* @route '/ai-agents/sites'
-*/
+ * @see app/Http/Controllers/User/SiteController.php:33
+ * @route '/ai-agents/sites'
+ */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
@@ -123,10 +121,10 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\User\SiteController::show
-* @see app/Http/Controllers/User/SiteController.php:69
-* @route '/ai-agents/sites/{site}'
-*/
-export const show = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/User/SiteController.php:69
+ * @route '/ai-agents/sites/{site}'
+ */
+export const show = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -138,31 +136,31 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\User\SiteController::show
-* @see app/Http/Controllers/User/SiteController.php:69
-* @route '/ai-agents/sites/{site}'
-*/
-show.url = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/User/SiteController.php:69
+ * @route '/ai-agents/sites/{site}'
+ */
+show.url = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { site: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { site: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { site: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            site: args[0],
-        }
+                    site: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        site: typeof args.site === 'object'
-        ? args.site.id
-        : args.site,
-    }
+                        site: typeof args.site === 'object'
+                ? args.site.id
+                : args.site,
+                }
 
     return show.definition.url
             .replace('{site}', parsedArgs.site.toString())
@@ -171,30 +169,29 @@ show.url = (args: { site: string | { id: string } } | [site: string | { id: stri
 
 /**
 * @see \App\Http\Controllers\User\SiteController::show
-* @see app/Http/Controllers/User/SiteController.php:69
-* @route '/ai-agents/sites/{site}'
-*/
-show.get = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/User/SiteController.php:69
+ * @route '/ai-agents/sites/{site}'
+ */
+show.get = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\User\SiteController::show
-* @see app/Http/Controllers/User/SiteController.php:69
-* @route '/ai-agents/sites/{site}'
-*/
-show.head = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+ * @see app/Http/Controllers/User/SiteController.php:69
+ * @route '/ai-agents/sites/{site}'
+ */
+show.head = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\User\SiteController::edit
-* @see app/Http/Controllers/User/SiteController.php:87
-* @route '/ai-agents/sites/{site}/edit'
-*/
-export const edit = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/User/SiteController.php:87
+ * @route '/ai-agents/sites/{site}/edit'
+ */
+export const edit = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -206,31 +203,31 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\User\SiteController::edit
-* @see app/Http/Controllers/User/SiteController.php:87
-* @route '/ai-agents/sites/{site}/edit'
-*/
-edit.url = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/User/SiteController.php:87
+ * @route '/ai-agents/sites/{site}/edit'
+ */
+edit.url = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { site: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { site: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { site: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            site: args[0],
-        }
+                    site: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        site: typeof args.site === 'object'
-        ? args.site.id
-        : args.site,
-    }
+                        site: typeof args.site === 'object'
+                ? args.site.id
+                : args.site,
+                }
 
     return edit.definition.url
             .replace('{site}', parsedArgs.site.toString())
@@ -239,30 +236,29 @@ edit.url = (args: { site: string | { id: string } } | [site: string | { id: stri
 
 /**
 * @see \App\Http\Controllers\User\SiteController::edit
-* @see app/Http/Controllers/User/SiteController.php:87
-* @route '/ai-agents/sites/{site}/edit'
-*/
-edit.get = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/User/SiteController.php:87
+ * @route '/ai-agents/sites/{site}/edit'
+ */
+edit.get = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\User\SiteController::edit
-* @see app/Http/Controllers/User/SiteController.php:87
-* @route '/ai-agents/sites/{site}/edit'
-*/
-edit.head = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+ * @see app/Http/Controllers/User/SiteController.php:87
+ * @route '/ai-agents/sites/{site}/edit'
+ */
+edit.head = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\User\SiteController::update
-* @see app/Http/Controllers/User/SiteController.php:96
-* @route '/ai-agents/sites/{site}'
-*/
-export const update = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+ * @see app/Http/Controllers/User/SiteController.php:96
+ * @route '/ai-agents/sites/{site}'
+ */
+export const update = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -274,31 +270,31 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\User\SiteController::update
-* @see app/Http/Controllers/User/SiteController.php:96
-* @route '/ai-agents/sites/{site}'
-*/
-update.url = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/User/SiteController.php:96
+ * @route '/ai-agents/sites/{site}'
+ */
+update.url = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { site: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { site: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { site: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            site: args[0],
-        }
+                    site: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        site: typeof args.site === 'object'
-        ? args.site.id
-        : args.site,
-    }
+                        site: typeof args.site === 'object'
+                ? args.site.id
+                : args.site,
+                }
 
     return update.definition.url
             .replace('{site}', parsedArgs.site.toString())
@@ -307,20 +303,20 @@ update.url = (args: { site: string | { id: string } } | [site: string | { id: st
 
 /**
 * @see \App\Http\Controllers\User\SiteController::update
-* @see app/Http/Controllers/User/SiteController.php:96
-* @route '/ai-agents/sites/{site}'
-*/
-update.put = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+ * @see app/Http/Controllers/User/SiteController.php:96
+ * @route '/ai-agents/sites/{site}'
+ */
+update.put = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
 
 /**
 * @see \App\Http\Controllers\User\SiteController::destroy
-* @see app/Http/Controllers/User/SiteController.php:119
-* @route '/ai-agents/sites/{site}'
-*/
-export const destroy = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+ * @see app/Http/Controllers/User/SiteController.php:119
+ * @route '/ai-agents/sites/{site}'
+ */
+export const destroy = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -332,31 +328,31 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\User\SiteController::destroy
-* @see app/Http/Controllers/User/SiteController.php:119
-* @route '/ai-agents/sites/{site}'
-*/
-destroy.url = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/User/SiteController.php:119
+ * @route '/ai-agents/sites/{site}'
+ */
+destroy.url = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { site: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { site: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { site: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            site: args[0],
-        }
+                    site: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        site: typeof args.site === 'object'
-        ? args.site.id
-        : args.site,
-    }
+                        site: typeof args.site === 'object'
+                ? args.site.id
+                : args.site,
+                }
 
     return destroy.definition.url
             .replace('{site}', parsedArgs.site.toString())
@@ -365,20 +361,20 @@ destroy.url = (args: { site: string | { id: string } } | [site: string | { id: s
 
 /**
 * @see \App\Http\Controllers\User\SiteController::destroy
-* @see app/Http/Controllers/User/SiteController.php:119
-* @route '/ai-agents/sites/{site}'
-*/
-destroy.delete = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+ * @see app/Http/Controllers/User/SiteController.php:119
+ * @route '/ai-agents/sites/{site}'
+ */
+destroy.delete = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
 
 /**
 * @see \App\Http\Controllers\User\SiteController::verify
-* @see app/Http/Controllers/User/SiteController.php:133
-* @route '/ai-agents/sites/{site}/verify'
-*/
-export const verify = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/User/SiteController.php:133
+ * @route '/ai-agents/sites/{site}/verify'
+ */
+export const verify = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: verify.url(args, options),
     method: 'post',
 })
@@ -390,31 +386,31 @@ verify.definition = {
 
 /**
 * @see \App\Http\Controllers\User\SiteController::verify
-* @see app/Http/Controllers/User/SiteController.php:133
-* @route '/ai-agents/sites/{site}/verify'
-*/
-verify.url = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/User/SiteController.php:133
+ * @route '/ai-agents/sites/{site}/verify'
+ */
+verify.url = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { site: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { site: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { site: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            site: args[0],
-        }
+                    site: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        site: typeof args.site === 'object'
-        ? args.site.id
-        : args.site,
-    }
+                        site: typeof args.site === 'object'
+                ? args.site.id
+                : args.site,
+                }
 
     return verify.definition.url
             .replace('{site}', parsedArgs.site.toString())
@@ -423,20 +419,20 @@ verify.url = (args: { site: string | { id: string } } | [site: string | { id: st
 
 /**
 * @see \App\Http\Controllers\User\SiteController::verify
-* @see app/Http/Controllers/User/SiteController.php:133
-* @route '/ai-agents/sites/{site}/verify'
-*/
-verify.post = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/User/SiteController.php:133
+ * @route '/ai-agents/sites/{site}/verify'
+ */
+verify.post = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: verify.url(args, options),
     method: 'post',
 })
 
 /**
 * @see \App\Http\Controllers\User\SiteController::toggleWidget
-* @see app/Http/Controllers/User/SiteController.php:146
-* @route '/ai-agents/sites/{site}/toggle-widget'
-*/
-export const toggleWidget = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/User/SiteController.php:146
+ * @route '/ai-agents/sites/{site}/toggle-widget'
+ */
+export const toggleWidget = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: toggleWidget.url(args, options),
     method: 'post',
 })
@@ -448,31 +444,31 @@ toggleWidget.definition = {
 
 /**
 * @see \App\Http\Controllers\User\SiteController::toggleWidget
-* @see app/Http/Controllers/User/SiteController.php:146
-* @route '/ai-agents/sites/{site}/toggle-widget'
-*/
-toggleWidget.url = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/User/SiteController.php:146
+ * @route '/ai-agents/sites/{site}/toggle-widget'
+ */
+toggleWidget.url = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { site: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { site: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { site: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            site: args[0],
-        }
+                    site: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        site: typeof args.site === 'object'
-        ? args.site.id
-        : args.site,
-    }
+                        site: typeof args.site === 'object'
+                ? args.site.id
+                : args.site,
+                }
 
     return toggleWidget.definition.url
             .replace('{site}', parsedArgs.site.toString())
@@ -481,20 +477,20 @@ toggleWidget.url = (args: { site: string | { id: string } } | [site: string | { 
 
 /**
 * @see \App\Http\Controllers\User\SiteController::toggleWidget
-* @see app/Http/Controllers/User/SiteController.php:146
-* @route '/ai-agents/sites/{site}/toggle-widget'
-*/
-toggleWidget.post = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/User/SiteController.php:146
+ * @route '/ai-agents/sites/{site}/toggle-widget'
+ */
+toggleWidget.post = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: toggleWidget.url(args, options),
     method: 'post',
 })
 
 /**
 * @see \App\Http\Controllers\User\SiteController::agents
-* @see app/Http/Controllers/User/SiteController.php:157
-* @route '/ai-agents/sites/{site}/agents'
-*/
-export const agents = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/User/SiteController.php:157
+ * @route '/ai-agents/sites/{site}/agents'
+ */
+export const agents = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: agents.url(args, options),
     method: 'get',
 })
@@ -506,31 +502,31 @@ agents.definition = {
 
 /**
 * @see \App\Http\Controllers\User\SiteController::agents
-* @see app/Http/Controllers/User/SiteController.php:157
-* @route '/ai-agents/sites/{site}/agents'
-*/
-agents.url = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/User/SiteController.php:157
+ * @route '/ai-agents/sites/{site}/agents'
+ */
+agents.url = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { site: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { site: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { site: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            site: args[0],
-        }
+                    site: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        site: typeof args.site === 'object'
-        ? args.site.id
-        : args.site,
-    }
+                        site: typeof args.site === 'object'
+                ? args.site.id
+                : args.site,
+                }
 
     return agents.definition.url
             .replace('{site}', parsedArgs.site.toString())
@@ -539,35 +535,33 @@ agents.url = (args: { site: string | { id: string } } | [site: string | { id: st
 
 /**
 * @see \App\Http\Controllers\User\SiteController::agents
-* @see app/Http/Controllers/User/SiteController.php:157
-* @route '/ai-agents/sites/{site}/agents'
-*/
-agents.get = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/User/SiteController.php:157
+ * @route '/ai-agents/sites/{site}/agents'
+ */
+agents.get = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: agents.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\User\SiteController::agents
-* @see app/Http/Controllers/User/SiteController.php:157
-* @route '/ai-agents/sites/{site}/agents'
-*/
-agents.head = (args: { site: string | { id: string } } | [site: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+ * @see app/Http/Controllers/User/SiteController.php:157
+ * @route '/ai-agents/sites/{site}/agents'
+ */
+agents.head = (args: { site: string | number | { id: string | number } } | [site: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: agents.url(args, options),
     method: 'head',
 })
-
 const sites = {
     index: Object.assign(index, index),
-    create: Object.assign(create, create),
-    store: Object.assign(store, store),
-    show: Object.assign(show, show),
-    edit: Object.assign(edit, edit),
-    update: Object.assign(update, update),
-    destroy: Object.assign(destroy, destroy),
-    verify: Object.assign(verify, verify),
-    toggleWidget: Object.assign(toggleWidget, toggleWidget),
-    agents: Object.assign(agents, agents),
+create: Object.assign(create, create),
+store: Object.assign(store, store),
+show: Object.assign(show, show),
+edit: Object.assign(edit, edit),
+update: Object.assign(update, update),
+destroy: Object.assign(destroy, destroy),
+verify: Object.assign(verify, verify),
+toggleWidget: Object.assign(toggleWidget, toggleWidget),
+agents: Object.assign(agents, agents),
 }
 
 export default sites

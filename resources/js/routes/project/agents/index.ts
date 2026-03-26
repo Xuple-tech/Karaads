@@ -1,10 +1,10 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\ProjectAgentController::index
-* @see app/Http/Controllers/ProjectAgentController.php:21
-* @route '/api/projects/{project}/agents'
-*/
-export const index = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/ProjectAgentController.php:21
+ * @route '/api/projects/{project}/agents'
+ */
+export const index = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -16,31 +16,31 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\ProjectAgentController::index
-* @see app/Http/Controllers/ProjectAgentController.php:21
-* @route '/api/projects/{project}/agents'
-*/
-index.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/ProjectAgentController.php:21
+ * @route '/api/projects/{project}/agents'
+ */
+index.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { project: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { project: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-        }
+                    project: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: typeof args.project === 'object'
-        ? args.project.id
-        : args.project,
-    }
+                        project: typeof args.project === 'object'
+                ? args.project.id
+                : args.project,
+                }
 
     return index.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -49,30 +49,29 @@ index.url = (args: { project: string | { id: string } } | [project: string | { i
 
 /**
 * @see \App\Http\Controllers\ProjectAgentController::index
-* @see app/Http/Controllers/ProjectAgentController.php:21
-* @route '/api/projects/{project}/agents'
-*/
-index.get = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/ProjectAgentController.php:21
+ * @route '/api/projects/{project}/agents'
+ */
+index.get = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ProjectAgentController::index
-* @see app/Http/Controllers/ProjectAgentController.php:21
-* @route '/api/projects/{project}/agents'
-*/
-index.head = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+ * @see app/Http/Controllers/ProjectAgentController.php:21
+ * @route '/api/projects/{project}/agents'
+ */
+index.head = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\ProjectAgentController::create
-* @see app/Http/Controllers/ProjectAgentController.php:43
-* @route '/api/projects/{project}/agents'
-*/
-export const create = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/ProjectAgentController.php:43
+ * @route '/api/projects/{project}/agents'
+ */
+export const create = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: create.url(args, options),
     method: 'post',
 })
@@ -84,31 +83,31 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\ProjectAgentController::create
-* @see app/Http/Controllers/ProjectAgentController.php:43
-* @route '/api/projects/{project}/agents'
-*/
-create.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/ProjectAgentController.php:43
+ * @route '/api/projects/{project}/agents'
+ */
+create.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { project: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { project: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-        }
+                    project: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: typeof args.project === 'object'
-        ? args.project.id
-        : args.project,
-    }
+                        project: typeof args.project === 'object'
+                ? args.project.id
+                : args.project,
+                }
 
     return create.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -117,17 +116,16 @@ create.url = (args: { project: string | { id: string } } | [project: string | { 
 
 /**
 * @see \App\Http\Controllers\ProjectAgentController::create
-* @see app/Http/Controllers/ProjectAgentController.php:43
-* @route '/api/projects/{project}/agents'
-*/
-create.post = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/ProjectAgentController.php:43
+ * @route '/api/projects/{project}/agents'
+ */
+create.post = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: create.url(args, options),
     method: 'post',
 })
-
 const agents = {
     index: Object.assign(index, index),
-    create: Object.assign(create, create),
+create: Object.assign(create, create),
 }
 
 export default agents

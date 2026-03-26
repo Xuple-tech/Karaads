@@ -1,10 +1,10 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\ProjectController::upload
-* @see app/Http/Controllers/ProjectController.php:604
-* @route '/projects/{project}/files/upload'
-*/
-export const upload = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/ProjectController.php:604
+ * @route '/projects/{project}/files/upload'
+ */
+export const upload = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: upload.url(args, options),
     method: 'post',
 })
@@ -16,31 +16,31 @@ upload.definition = {
 
 /**
 * @see \App\Http\Controllers\ProjectController::upload
-* @see app/Http/Controllers/ProjectController.php:604
-* @route '/projects/{project}/files/upload'
-*/
-upload.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/ProjectController.php:604
+ * @route '/projects/{project}/files/upload'
+ */
+upload.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { project: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { project: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-        }
+                    project: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: typeof args.project === 'object'
-        ? args.project.id
-        : args.project,
-    }
+                        project: typeof args.project === 'object'
+                ? args.project.id
+                : args.project,
+                }
 
     return upload.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -49,20 +49,20 @@ upload.url = (args: { project: string | { id: string } } | [project: string | { 
 
 /**
 * @see \App\Http\Controllers\ProjectController::upload
-* @see app/Http/Controllers/ProjectController.php:604
-* @route '/projects/{project}/files/upload'
-*/
-upload.post = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/ProjectController.php:604
+ * @route '/projects/{project}/files/upload'
+ */
+upload.post = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: upload.url(args, options),
     method: 'post',
 })
 
 /**
 * @see \App\Http\Controllers\ProjectController::deleteMethod
-* @see app/Http/Controllers/ProjectController.php:653
-* @route '/projects/{project}/files/{file}'
-*/
-export const deleteMethod = (args: { project: string | { id: string }, file: string | { id: string } } | [project: string | { id: string }, file: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+ * @see app/Http/Controllers/ProjectController.php:653
+ * @route '/projects/{project}/files/{file}'
+ */
+export const deleteMethod = (args: { project: string | number | { id: string | number }, file: string | number | { id: string | number } } | [project: string | number | { id: string | number }, file: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteMethod.url(args, options),
     method: 'delete',
 })
@@ -74,27 +74,27 @@ deleteMethod.definition = {
 
 /**
 * @see \App\Http\Controllers\ProjectController::deleteMethod
-* @see app/Http/Controllers/ProjectController.php:653
-* @route '/projects/{project}/files/{file}'
-*/
-deleteMethod.url = (args: { project: string | { id: string }, file: string | { id: string } } | [project: string | { id: string }, file: string | { id: string } ], options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/ProjectController.php:653
+ * @route '/projects/{project}/files/{file}'
+ */
+deleteMethod.url = (args: { project: string | number | { id: string | number }, file: string | number | { id: string | number } } | [project: string | number | { id: string | number }, file: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-            file: args[1],
-        }
+                    project: args[0],
+                    file: args[1],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: typeof args.project === 'object'
-        ? args.project.id
-        : args.project,
-        file: typeof args.file === 'object'
-        ? args.file.id
-        : args.file,
-    }
+                        project: typeof args.project === 'object'
+                ? args.project.id
+                : args.project,
+                                file: typeof args.file === 'object'
+                ? args.file.id
+                : args.file,
+                }
 
     return deleteMethod.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -104,17 +104,16 @@ deleteMethod.url = (args: { project: string | { id: string }, file: string | { i
 
 /**
 * @see \App\Http\Controllers\ProjectController::deleteMethod
-* @see app/Http/Controllers/ProjectController.php:653
-* @route '/projects/{project}/files/{file}'
-*/
-deleteMethod.delete = (args: { project: string | { id: string }, file: string | { id: string } } | [project: string | { id: string }, file: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+ * @see app/Http/Controllers/ProjectController.php:653
+ * @route '/projects/{project}/files/{file}'
+ */
+deleteMethod.delete = (args: { project: string | number | { id: string | number }, file: string | number | { id: string | number } } | [project: string | number | { id: string | number }, file: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteMethod.url(args, options),
     method: 'delete',
 })
-
 const files = {
     upload: Object.assign(upload, upload),
-    delete: Object.assign(deleteMethod, deleteMethod),
+delete: Object.assign(deleteMethod, deleteMethod),
 }
 
 export default files

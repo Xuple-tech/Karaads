@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Api\EmailController::listAccounts
-* @see app/Http/Controllers/Api/EmailController.php:22
-* @route '/api/email/accounts'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:22
+ * @route '/api/email/accounts'
+ */
 const listAccountscf87ae050231dacf0d116ae92ff46eff = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: listAccountscf87ae050231dacf0d116ae92ff46eff.url(options),
     method: 'get',
@@ -16,38 +16,37 @@ listAccountscf87ae050231dacf0d116ae92ff46eff.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::listAccounts
-* @see app/Http/Controllers/Api/EmailController.php:22
-* @route '/api/email/accounts'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:22
+ * @route '/api/email/accounts'
+ */
 listAccountscf87ae050231dacf0d116ae92ff46eff.url = (options?: RouteQueryOptions) => {
     return listAccountscf87ae050231dacf0d116ae92ff46eff.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::listAccounts
-* @see app/Http/Controllers/Api/EmailController.php:22
-* @route '/api/email/accounts'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:22
+ * @route '/api/email/accounts'
+ */
 listAccountscf87ae050231dacf0d116ae92ff46eff.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: listAccountscf87ae050231dacf0d116ae92ff46eff.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Api\EmailController::listAccounts
-* @see app/Http/Controllers/Api/EmailController.php:22
-* @route '/api/email/accounts'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:22
+ * @route '/api/email/accounts'
+ */
 listAccountscf87ae050231dacf0d116ae92ff46eff.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: listAccountscf87ae050231dacf0d116ae92ff46eff.url(options),
     method: 'head',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Api\EmailController::listAccounts
-* @see app/Http/Controllers/Api/EmailController.php:22
-* @route '/api/email/mgmt/b6n9m2k5/accounts/list/v8c1x4z7'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:22
+ * @route '/api/email/mgmt/b6n9m2k5/accounts/list/v8c1x4z7'
+ */
 const listAccounts24053069b6966e5b7cb08517ed01ff35 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: listAccounts24053069b6966e5b7cb08517ed01ff35.url(options),
     method: 'get',
@@ -60,28 +59,27 @@ listAccounts24053069b6966e5b7cb08517ed01ff35.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::listAccounts
-* @see app/Http/Controllers/Api/EmailController.php:22
-* @route '/api/email/mgmt/b6n9m2k5/accounts/list/v8c1x4z7'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:22
+ * @route '/api/email/mgmt/b6n9m2k5/accounts/list/v8c1x4z7'
+ */
 listAccounts24053069b6966e5b7cb08517ed01ff35.url = (options?: RouteQueryOptions) => {
     return listAccounts24053069b6966e5b7cb08517ed01ff35.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::listAccounts
-* @see app/Http/Controllers/Api/EmailController.php:22
-* @route '/api/email/mgmt/b6n9m2k5/accounts/list/v8c1x4z7'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:22
+ * @route '/api/email/mgmt/b6n9m2k5/accounts/list/v8c1x4z7'
+ */
 listAccounts24053069b6966e5b7cb08517ed01ff35.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: listAccounts24053069b6966e5b7cb08517ed01ff35.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Api\EmailController::listAccounts
-* @see app/Http/Controllers/Api/EmailController.php:22
-* @route '/api/email/mgmt/b6n9m2k5/accounts/list/v8c1x4z7'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:22
+ * @route '/api/email/mgmt/b6n9m2k5/accounts/list/v8c1x4z7'
+ */
 listAccounts24053069b6966e5b7cb08517ed01ff35.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: listAccounts24053069b6966e5b7cb08517ed01ff35.url(options),
     method: 'head',
@@ -94,9 +92,9 @@ export const listAccounts = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::addAccount
-* @see app/Http/Controllers/Api/EmailController.php:51
-* @route '/api/email/accounts'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:51
+ * @route '/api/email/accounts'
+ */
 const addAccountcf87ae050231dacf0d116ae92ff46eff = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: addAccountcf87ae050231dacf0d116ae92ff46eff.url(options),
     method: 'post',
@@ -109,28 +107,28 @@ addAccountcf87ae050231dacf0d116ae92ff46eff.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::addAccount
-* @see app/Http/Controllers/Api/EmailController.php:51
-* @route '/api/email/accounts'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:51
+ * @route '/api/email/accounts'
+ */
 addAccountcf87ae050231dacf0d116ae92ff46eff.url = (options?: RouteQueryOptions) => {
     return addAccountcf87ae050231dacf0d116ae92ff46eff.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::addAccount
-* @see app/Http/Controllers/Api/EmailController.php:51
-* @route '/api/email/accounts'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:51
+ * @route '/api/email/accounts'
+ */
 addAccountcf87ae050231dacf0d116ae92ff46eff.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: addAccountcf87ae050231dacf0d116ae92ff46eff.url(options),
     method: 'post',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Api\EmailController::addAccount
-* @see app/Http/Controllers/Api/EmailController.php:51
-* @route '/api/email/mgmt/b6n9m2k5/accounts/add/q3w6e9r2'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:51
+ * @route '/api/email/mgmt/b6n9m2k5/accounts/add/q3w6e9r2'
+ */
 const addAccountd7763015bcb0f9a953fbfaf6b8bd388d = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: addAccountd7763015bcb0f9a953fbfaf6b8bd388d.url(options),
     method: 'post',
@@ -143,18 +141,18 @@ addAccountd7763015bcb0f9a953fbfaf6b8bd388d.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::addAccount
-* @see app/Http/Controllers/Api/EmailController.php:51
-* @route '/api/email/mgmt/b6n9m2k5/accounts/add/q3w6e9r2'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:51
+ * @route '/api/email/mgmt/b6n9m2k5/accounts/add/q3w6e9r2'
+ */
 addAccountd7763015bcb0f9a953fbfaf6b8bd388d.url = (options?: RouteQueryOptions) => {
     return addAccountd7763015bcb0f9a953fbfaf6b8bd388d.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::addAccount
-* @see app/Http/Controllers/Api/EmailController.php:51
-* @route '/api/email/mgmt/b6n9m2k5/accounts/add/q3w6e9r2'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:51
+ * @route '/api/email/mgmt/b6n9m2k5/accounts/add/q3w6e9r2'
+ */
 addAccountd7763015bcb0f9a953fbfaf6b8bd388d.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: addAccountd7763015bcb0f9a953fbfaf6b8bd388d.url(options),
     method: 'post',
@@ -167,9 +165,9 @@ export const addAccount = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::updateAccount
-* @see app/Http/Controllers/Api/EmailController.php:96
-* @route '/api/email/accounts/{id}'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:96
+ * @route '/api/email/accounts/{id}'
+ */
 const updateAccount96e2910cbbb67e98b7e070534f1df0a3 = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateAccount96e2910cbbb67e98b7e070534f1df0a3.url(args, options),
     method: 'put',
@@ -182,25 +180,26 @@ updateAccount96e2910cbbb67e98b7e070534f1df0a3.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::updateAccount
-* @see app/Http/Controllers/Api/EmailController.php:96
-* @route '/api/email/accounts/{id}'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:96
+ * @route '/api/email/accounts/{id}'
+ */
 updateAccount96e2910cbbb67e98b7e070534f1df0a3.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { id: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            id: args[0],
-        }
+                    id: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        id: args.id,
-    }
+                        id: args.id,
+                }
 
     return updateAccount96e2910cbbb67e98b7e070534f1df0a3.definition.url
             .replace('{id}', parsedArgs.id.toString())
@@ -209,19 +208,19 @@ updateAccount96e2910cbbb67e98b7e070534f1df0a3.url = (args: { id: string | number
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::updateAccount
-* @see app/Http/Controllers/Api/EmailController.php:96
-* @route '/api/email/accounts/{id}'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:96
+ * @route '/api/email/accounts/{id}'
+ */
 updateAccount96e2910cbbb67e98b7e070534f1df0a3.put = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateAccount96e2910cbbb67e98b7e070534f1df0a3.url(args, options),
     method: 'put',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Api\EmailController::updateAccount
-* @see app/Http/Controllers/Api/EmailController.php:96
-* @route '/api/email/mgmt/b6n9m2k5/accounts/update/{uuid}/t5y8u1i4'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:96
+ * @route '/api/email/mgmt/b6n9m2k5/accounts/update/{uuid}/t5y8u1i4'
+ */
 const updateAccount5ac1e47112ed667af85434cda0862a98 = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateAccount5ac1e47112ed667af85434cda0862a98.url(args, options),
     method: 'put',
@@ -234,25 +233,26 @@ updateAccount5ac1e47112ed667af85434cda0862a98.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::updateAccount
-* @see app/Http/Controllers/Api/EmailController.php:96
-* @route '/api/email/mgmt/b6n9m2k5/accounts/update/{uuid}/t5y8u1i4'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:96
+ * @route '/api/email/mgmt/b6n9m2k5/accounts/update/{uuid}/t5y8u1i4'
+ */
 updateAccount5ac1e47112ed667af85434cda0862a98.url = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { uuid: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            uuid: args[0],
-        }
+                    uuid: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        uuid: args.uuid,
-    }
+                        uuid: args.uuid,
+                }
 
     return updateAccount5ac1e47112ed667af85434cda0862a98.definition.url
             .replace('{uuid}', parsedArgs.uuid.toString())
@@ -261,9 +261,9 @@ updateAccount5ac1e47112ed667af85434cda0862a98.url = (args: { uuid: string | numb
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::updateAccount
-* @see app/Http/Controllers/Api/EmailController.php:96
-* @route '/api/email/mgmt/b6n9m2k5/accounts/update/{uuid}/t5y8u1i4'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:96
+ * @route '/api/email/mgmt/b6n9m2k5/accounts/update/{uuid}/t5y8u1i4'
+ */
 updateAccount5ac1e47112ed667af85434cda0862a98.put = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateAccount5ac1e47112ed667af85434cda0862a98.url(args, options),
     method: 'put',
@@ -276,9 +276,9 @@ export const updateAccount = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::deleteAccount
-* @see app/Http/Controllers/Api/EmailController.php:155
-* @route '/api/email/accounts/{id}'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:155
+ * @route '/api/email/accounts/{id}'
+ */
 const deleteAccount96e2910cbbb67e98b7e070534f1df0a3 = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteAccount96e2910cbbb67e98b7e070534f1df0a3.url(args, options),
     method: 'delete',
@@ -291,25 +291,26 @@ deleteAccount96e2910cbbb67e98b7e070534f1df0a3.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::deleteAccount
-* @see app/Http/Controllers/Api/EmailController.php:155
-* @route '/api/email/accounts/{id}'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:155
+ * @route '/api/email/accounts/{id}'
+ */
 deleteAccount96e2910cbbb67e98b7e070534f1df0a3.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { id: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            id: args[0],
-        }
+                    id: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        id: args.id,
-    }
+                        id: args.id,
+                }
 
     return deleteAccount96e2910cbbb67e98b7e070534f1df0a3.definition.url
             .replace('{id}', parsedArgs.id.toString())
@@ -318,19 +319,19 @@ deleteAccount96e2910cbbb67e98b7e070534f1df0a3.url = (args: { id: string | number
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::deleteAccount
-* @see app/Http/Controllers/Api/EmailController.php:155
-* @route '/api/email/accounts/{id}'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:155
+ * @route '/api/email/accounts/{id}'
+ */
 deleteAccount96e2910cbbb67e98b7e070534f1df0a3.delete = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteAccount96e2910cbbb67e98b7e070534f1df0a3.url(args, options),
     method: 'delete',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Api\EmailController::deleteAccount
-* @see app/Http/Controllers/Api/EmailController.php:155
-* @route '/api/email/mgmt/b6n9m2k5/accounts/delete/{uuid}/o7p0a3s6'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:155
+ * @route '/api/email/mgmt/b6n9m2k5/accounts/delete/{uuid}/o7p0a3s6'
+ */
 const deleteAccountc7f7dc6e29a9c5e526afda9a01faf8db = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteAccountc7f7dc6e29a9c5e526afda9a01faf8db.url(args, options),
     method: 'delete',
@@ -343,25 +344,26 @@ deleteAccountc7f7dc6e29a9c5e526afda9a01faf8db.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::deleteAccount
-* @see app/Http/Controllers/Api/EmailController.php:155
-* @route '/api/email/mgmt/b6n9m2k5/accounts/delete/{uuid}/o7p0a3s6'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:155
+ * @route '/api/email/mgmt/b6n9m2k5/accounts/delete/{uuid}/o7p0a3s6'
+ */
 deleteAccountc7f7dc6e29a9c5e526afda9a01faf8db.url = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { uuid: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            uuid: args[0],
-        }
+                    uuid: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        uuid: args.uuid,
-    }
+                        uuid: args.uuid,
+                }
 
     return deleteAccountc7f7dc6e29a9c5e526afda9a01faf8db.definition.url
             .replace('{uuid}', parsedArgs.uuid.toString())
@@ -370,9 +372,9 @@ deleteAccountc7f7dc6e29a9c5e526afda9a01faf8db.url = (args: { uuid: string | numb
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::deleteAccount
-* @see app/Http/Controllers/Api/EmailController.php:155
-* @route '/api/email/mgmt/b6n9m2k5/accounts/delete/{uuid}/o7p0a3s6'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:155
+ * @route '/api/email/mgmt/b6n9m2k5/accounts/delete/{uuid}/o7p0a3s6'
+ */
 deleteAccountc7f7dc6e29a9c5e526afda9a01faf8db.delete = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteAccountc7f7dc6e29a9c5e526afda9a01faf8db.url(args, options),
     method: 'delete',
@@ -385,9 +387,9 @@ export const deleteAccount = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::listEmails
-* @see app/Http/Controllers/Api/EmailController.php:174
-* @route '/api/email/emails'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:174
+ * @route '/api/email/emails'
+ */
 const listEmails8241db442ab9ef2404fb396663a34250 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: listEmails8241db442ab9ef2404fb396663a34250.url(options),
     method: 'get',
@@ -400,38 +402,37 @@ listEmails8241db442ab9ef2404fb396663a34250.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::listEmails
-* @see app/Http/Controllers/Api/EmailController.php:174
-* @route '/api/email/emails'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:174
+ * @route '/api/email/emails'
+ */
 listEmails8241db442ab9ef2404fb396663a34250.url = (options?: RouteQueryOptions) => {
     return listEmails8241db442ab9ef2404fb396663a34250.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::listEmails
-* @see app/Http/Controllers/Api/EmailController.php:174
-* @route '/api/email/emails'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:174
+ * @route '/api/email/emails'
+ */
 listEmails8241db442ab9ef2404fb396663a34250.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: listEmails8241db442ab9ef2404fb396663a34250.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Api\EmailController::listEmails
-* @see app/Http/Controllers/Api/EmailController.php:174
-* @route '/api/email/emails'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:174
+ * @route '/api/email/emails'
+ */
 listEmails8241db442ab9ef2404fb396663a34250.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: listEmails8241db442ab9ef2404fb396663a34250.url(options),
     method: 'head',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Api\EmailController::listEmails
-* @see app/Http/Controllers/Api/EmailController.php:174
-* @route '/api/email/mgmt/b6n9m2k5/emails/list/d9f2g5h8'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:174
+ * @route '/api/email/mgmt/b6n9m2k5/emails/list/d9f2g5h8'
+ */
 const listEmails5e8e10d25bfee516acdd733a5ea69ee3 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: listEmails5e8e10d25bfee516acdd733a5ea69ee3.url(options),
     method: 'get',
@@ -444,28 +445,27 @@ listEmails5e8e10d25bfee516acdd733a5ea69ee3.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::listEmails
-* @see app/Http/Controllers/Api/EmailController.php:174
-* @route '/api/email/mgmt/b6n9m2k5/emails/list/d9f2g5h8'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:174
+ * @route '/api/email/mgmt/b6n9m2k5/emails/list/d9f2g5h8'
+ */
 listEmails5e8e10d25bfee516acdd733a5ea69ee3.url = (options?: RouteQueryOptions) => {
     return listEmails5e8e10d25bfee516acdd733a5ea69ee3.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::listEmails
-* @see app/Http/Controllers/Api/EmailController.php:174
-* @route '/api/email/mgmt/b6n9m2k5/emails/list/d9f2g5h8'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:174
+ * @route '/api/email/mgmt/b6n9m2k5/emails/list/d9f2g5h8'
+ */
 listEmails5e8e10d25bfee516acdd733a5ea69ee3.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: listEmails5e8e10d25bfee516acdd733a5ea69ee3.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Api\EmailController::listEmails
-* @see app/Http/Controllers/Api/EmailController.php:174
-* @route '/api/email/mgmt/b6n9m2k5/emails/list/d9f2g5h8'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:174
+ * @route '/api/email/mgmt/b6n9m2k5/emails/list/d9f2g5h8'
+ */
 listEmails5e8e10d25bfee516acdd733a5ea69ee3.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: listEmails5e8e10d25bfee516acdd733a5ea69ee3.url(options),
     method: 'head',
@@ -478,9 +478,9 @@ export const listEmails = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::showEmail
-* @see app/Http/Controllers/Api/EmailController.php:214
-* @route '/api/email/emails/{id}'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:214
+ * @route '/api/email/emails/{id}'
+ */
 const showEmail758a4684b2cf04d7239aa007ce42e074 = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: showEmail758a4684b2cf04d7239aa007ce42e074.url(args, options),
     method: 'get',
@@ -493,25 +493,26 @@ showEmail758a4684b2cf04d7239aa007ce42e074.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::showEmail
-* @see app/Http/Controllers/Api/EmailController.php:214
-* @route '/api/email/emails/{id}'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:214
+ * @route '/api/email/emails/{id}'
+ */
 showEmail758a4684b2cf04d7239aa007ce42e074.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { id: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            id: args[0],
-        }
+                    id: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        id: args.id,
-    }
+                        id: args.id,
+                }
 
     return showEmail758a4684b2cf04d7239aa007ce42e074.definition.url
             .replace('{id}', parsedArgs.id.toString())
@@ -520,29 +521,28 @@ showEmail758a4684b2cf04d7239aa007ce42e074.url = (args: { id: string | number } |
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::showEmail
-* @see app/Http/Controllers/Api/EmailController.php:214
-* @route '/api/email/emails/{id}'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:214
+ * @route '/api/email/emails/{id}'
+ */
 showEmail758a4684b2cf04d7239aa007ce42e074.get = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: showEmail758a4684b2cf04d7239aa007ce42e074.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Api\EmailController::showEmail
-* @see app/Http/Controllers/Api/EmailController.php:214
-* @route '/api/email/emails/{id}'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:214
+ * @route '/api/email/emails/{id}'
+ */
 showEmail758a4684b2cf04d7239aa007ce42e074.head = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: showEmail758a4684b2cf04d7239aa007ce42e074.url(args, options),
     method: 'head',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Api\EmailController::showEmail
-* @see app/Http/Controllers/Api/EmailController.php:214
-* @route '/api/email/mgmt/b6n9m2k5/emails/show/{uuid}/j1k4l7z0'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:214
+ * @route '/api/email/mgmt/b6n9m2k5/emails/show/{uuid}/j1k4l7z0'
+ */
 const showEmail3730fb2b37d0b5d16452ebeaf8ddb861 = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: showEmail3730fb2b37d0b5d16452ebeaf8ddb861.url(args, options),
     method: 'get',
@@ -555,25 +555,26 @@ showEmail3730fb2b37d0b5d16452ebeaf8ddb861.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::showEmail
-* @see app/Http/Controllers/Api/EmailController.php:214
-* @route '/api/email/mgmt/b6n9m2k5/emails/show/{uuid}/j1k4l7z0'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:214
+ * @route '/api/email/mgmt/b6n9m2k5/emails/show/{uuid}/j1k4l7z0'
+ */
 showEmail3730fb2b37d0b5d16452ebeaf8ddb861.url = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { uuid: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            uuid: args[0],
-        }
+                    uuid: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        uuid: args.uuid,
-    }
+                        uuid: args.uuid,
+                }
 
     return showEmail3730fb2b37d0b5d16452ebeaf8ddb861.definition.url
             .replace('{uuid}', parsedArgs.uuid.toString())
@@ -582,19 +583,18 @@ showEmail3730fb2b37d0b5d16452ebeaf8ddb861.url = (args: { uuid: string | number }
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::showEmail
-* @see app/Http/Controllers/Api/EmailController.php:214
-* @route '/api/email/mgmt/b6n9m2k5/emails/show/{uuid}/j1k4l7z0'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:214
+ * @route '/api/email/mgmt/b6n9m2k5/emails/show/{uuid}/j1k4l7z0'
+ */
 showEmail3730fb2b37d0b5d16452ebeaf8ddb861.get = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: showEmail3730fb2b37d0b5d16452ebeaf8ddb861.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Api\EmailController::showEmail
-* @see app/Http/Controllers/Api/EmailController.php:214
-* @route '/api/email/mgmt/b6n9m2k5/emails/show/{uuid}/j1k4l7z0'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:214
+ * @route '/api/email/mgmt/b6n9m2k5/emails/show/{uuid}/j1k4l7z0'
+ */
 showEmail3730fb2b37d0b5d16452ebeaf8ddb861.head = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: showEmail3730fb2b37d0b5d16452ebeaf8ddb861.url(args, options),
     method: 'head',
@@ -607,9 +607,9 @@ export const showEmail = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::sendEmail
-* @see app/Http/Controllers/Api/EmailController.php:234
-* @route '/api/email/send'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:234
+ * @route '/api/email/send'
+ */
 const sendEmailcfa8a3bacc5f4b2d91acf67c1eab0dd0 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: sendEmailcfa8a3bacc5f4b2d91acf67c1eab0dd0.url(options),
     method: 'post',
@@ -622,28 +622,28 @@ sendEmailcfa8a3bacc5f4b2d91acf67c1eab0dd0.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::sendEmail
-* @see app/Http/Controllers/Api/EmailController.php:234
-* @route '/api/email/send'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:234
+ * @route '/api/email/send'
+ */
 sendEmailcfa8a3bacc5f4b2d91acf67c1eab0dd0.url = (options?: RouteQueryOptions) => {
     return sendEmailcfa8a3bacc5f4b2d91acf67c1eab0dd0.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::sendEmail
-* @see app/Http/Controllers/Api/EmailController.php:234
-* @route '/api/email/send'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:234
+ * @route '/api/email/send'
+ */
 sendEmailcfa8a3bacc5f4b2d91acf67c1eab0dd0.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: sendEmailcfa8a3bacc5f4b2d91acf67c1eab0dd0.url(options),
     method: 'post',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Api\EmailController::sendEmail
-* @see app/Http/Controllers/Api/EmailController.php:234
-* @route '/api/email/mgmt/b6n9m2k5/send/msg/x3c6v9b2'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:234
+ * @route '/api/email/mgmt/b6n9m2k5/send/msg/x3c6v9b2'
+ */
 const sendEmailefd3c6678ac2eb4786c45be1ba5f1846 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: sendEmailefd3c6678ac2eb4786c45be1ba5f1846.url(options),
     method: 'post',
@@ -656,18 +656,18 @@ sendEmailefd3c6678ac2eb4786c45be1ba5f1846.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::sendEmail
-* @see app/Http/Controllers/Api/EmailController.php:234
-* @route '/api/email/mgmt/b6n9m2k5/send/msg/x3c6v9b2'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:234
+ * @route '/api/email/mgmt/b6n9m2k5/send/msg/x3c6v9b2'
+ */
 sendEmailefd3c6678ac2eb4786c45be1ba5f1846.url = (options?: RouteQueryOptions) => {
     return sendEmailefd3c6678ac2eb4786c45be1ba5f1846.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::sendEmail
-* @see app/Http/Controllers/Api/EmailController.php:234
-* @route '/api/email/mgmt/b6n9m2k5/send/msg/x3c6v9b2'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:234
+ * @route '/api/email/mgmt/b6n9m2k5/send/msg/x3c6v9b2'
+ */
 sendEmailefd3c6678ac2eb4786c45be1ba5f1846.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: sendEmailefd3c6678ac2eb4786c45be1ba5f1846.url(options),
     method: 'post',
@@ -680,9 +680,9 @@ export const sendEmail = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::markAsRead
-* @see app/Http/Controllers/Api/EmailController.php:282
-* @route '/api/email/emails/{id}/read'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:282
+ * @route '/api/email/emails/{id}/read'
+ */
 const markAsReadc3eba7bd809dc309a61845a738f03235 = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: markAsReadc3eba7bd809dc309a61845a738f03235.url(args, options),
     method: 'put',
@@ -695,25 +695,26 @@ markAsReadc3eba7bd809dc309a61845a738f03235.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::markAsRead
-* @see app/Http/Controllers/Api/EmailController.php:282
-* @route '/api/email/emails/{id}/read'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:282
+ * @route '/api/email/emails/{id}/read'
+ */
 markAsReadc3eba7bd809dc309a61845a738f03235.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { id: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            id: args[0],
-        }
+                    id: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        id: args.id,
-    }
+                        id: args.id,
+                }
 
     return markAsReadc3eba7bd809dc309a61845a738f03235.definition.url
             .replace('{id}', parsedArgs.id.toString())
@@ -722,19 +723,19 @@ markAsReadc3eba7bd809dc309a61845a738f03235.url = (args: { id: string | number } 
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::markAsRead
-* @see app/Http/Controllers/Api/EmailController.php:282
-* @route '/api/email/emails/{id}/read'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:282
+ * @route '/api/email/emails/{id}/read'
+ */
 markAsReadc3eba7bd809dc309a61845a738f03235.put = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: markAsReadc3eba7bd809dc309a61845a738f03235.url(args, options),
     method: 'put',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Api\EmailController::markAsRead
-* @see app/Http/Controllers/Api/EmailController.php:282
-* @route '/api/email/mgmt/b6n9m2k5/emails/read/{uuid}/n5m8k1j4'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:282
+ * @route '/api/email/mgmt/b6n9m2k5/emails/read/{uuid}/n5m8k1j4'
+ */
 const markAsRead8a7cfd33ccde49a42d34330e39557d02 = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: markAsRead8a7cfd33ccde49a42d34330e39557d02.url(args, options),
     method: 'put',
@@ -747,25 +748,26 @@ markAsRead8a7cfd33ccde49a42d34330e39557d02.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::markAsRead
-* @see app/Http/Controllers/Api/EmailController.php:282
-* @route '/api/email/mgmt/b6n9m2k5/emails/read/{uuid}/n5m8k1j4'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:282
+ * @route '/api/email/mgmt/b6n9m2k5/emails/read/{uuid}/n5m8k1j4'
+ */
 markAsRead8a7cfd33ccde49a42d34330e39557d02.url = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { uuid: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            uuid: args[0],
-        }
+                    uuid: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        uuid: args.uuid,
-    }
+                        uuid: args.uuid,
+                }
 
     return markAsRead8a7cfd33ccde49a42d34330e39557d02.definition.url
             .replace('{uuid}', parsedArgs.uuid.toString())
@@ -774,9 +776,9 @@ markAsRead8a7cfd33ccde49a42d34330e39557d02.url = (args: { uuid: string | number 
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::markAsRead
-* @see app/Http/Controllers/Api/EmailController.php:282
-* @route '/api/email/mgmt/b6n9m2k5/emails/read/{uuid}/n5m8k1j4'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:282
+ * @route '/api/email/mgmt/b6n9m2k5/emails/read/{uuid}/n5m8k1j4'
+ */
 markAsRead8a7cfd33ccde49a42d34330e39557d02.put = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: markAsRead8a7cfd33ccde49a42d34330e39557d02.url(args, options),
     method: 'put',
@@ -789,9 +791,9 @@ export const markAsRead = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::syncEmails
-* @see app/Http/Controllers/Api/EmailController.php:307
-* @route '/api/email/accounts/{accountId}/sync'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:307
+ * @route '/api/email/accounts/{accountId}/sync'
+ */
 const syncEmails079104696772ef8a5f26eda3bf7a0553 = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: syncEmails079104696772ef8a5f26eda3bf7a0553.url(args, options),
     method: 'post',
@@ -804,25 +806,26 @@ syncEmails079104696772ef8a5f26eda3bf7a0553.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::syncEmails
-* @see app/Http/Controllers/Api/EmailController.php:307
-* @route '/api/email/accounts/{accountId}/sync'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:307
+ * @route '/api/email/accounts/{accountId}/sync'
+ */
 syncEmails079104696772ef8a5f26eda3bf7a0553.url = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { accountId: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            accountId: args[0],
-        }
+                    accountId: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        accountId: args.accountId,
-    }
+                        accountId: args.accountId,
+                }
 
     return syncEmails079104696772ef8a5f26eda3bf7a0553.definition.url
             .replace('{accountId}', parsedArgs.accountId.toString())
@@ -831,19 +834,19 @@ syncEmails079104696772ef8a5f26eda3bf7a0553.url = (args: { accountId: string | nu
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::syncEmails
-* @see app/Http/Controllers/Api/EmailController.php:307
-* @route '/api/email/accounts/{accountId}/sync'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:307
+ * @route '/api/email/accounts/{accountId}/sync'
+ */
 syncEmails079104696772ef8a5f26eda3bf7a0553.post = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: syncEmails079104696772ef8a5f26eda3bf7a0553.url(args, options),
     method: 'post',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Api\EmailController::syncEmails
-* @see app/Http/Controllers/Api/EmailController.php:307
-* @route '/api/email/mgmt/b6n9m2k5/accounts/sync/{uuid}/w7e0r3t6'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:307
+ * @route '/api/email/mgmt/b6n9m2k5/accounts/sync/{uuid}/w7e0r3t6'
+ */
 const syncEmails4fefcb19324c4e73a99545da7be5e1db = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: syncEmails4fefcb19324c4e73a99545da7be5e1db.url(args, options),
     method: 'post',
@@ -856,25 +859,26 @@ syncEmails4fefcb19324c4e73a99545da7be5e1db.definition = {
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::syncEmails
-* @see app/Http/Controllers/Api/EmailController.php:307
-* @route '/api/email/mgmt/b6n9m2k5/accounts/sync/{uuid}/w7e0r3t6'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:307
+ * @route '/api/email/mgmt/b6n9m2k5/accounts/sync/{uuid}/w7e0r3t6'
+ */
 syncEmails4fefcb19324c4e73a99545da7be5e1db.url = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { uuid: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            uuid: args[0],
-        }
+                    uuid: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        uuid: args.uuid,
-    }
+                        uuid: args.uuid,
+                }
 
     return syncEmails4fefcb19324c4e73a99545da7be5e1db.definition.url
             .replace('{uuid}', parsedArgs.uuid.toString())
@@ -883,9 +887,9 @@ syncEmails4fefcb19324c4e73a99545da7be5e1db.url = (args: { uuid: string | number 
 
 /**
 * @see \App\Http\Controllers\Api\EmailController::syncEmails
-* @see app/Http/Controllers/Api/EmailController.php:307
-* @route '/api/email/mgmt/b6n9m2k5/accounts/sync/{uuid}/w7e0r3t6'
-*/
+ * @see app/Http/Controllers/Api/EmailController.php:307
+ * @route '/api/email/mgmt/b6n9m2k5/accounts/sync/{uuid}/w7e0r3t6'
+ */
 syncEmails4fefcb19324c4e73a99545da7be5e1db.post = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: syncEmails4fefcb19324c4e73a99545da7be5e1db.url(args, options),
     method: 'post',

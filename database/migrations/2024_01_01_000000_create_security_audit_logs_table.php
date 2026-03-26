@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('security_audit_logs', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('user_id')->nullable();
+            $table->foreignUuid('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('action', 100)->index();
             $table->string('resource', 100)->index();
             $table->ipAddress('ip_address')->index();
@@ -25,9 +25,6 @@ return new class extends Migration
             $table->enum('severity', ['low', 'medium', 'high', 'critical'])->default('low')->index();
             $table->timestamp('created_at')->index();
             $table->timestamp('updated_at')->nullable();
-
-            // Foreign key constraint
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
 
             // Indexes for performance
             $table->index(['action', 'created_at']);

@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::update
-* @see app/Http/Controllers/Meta/MetaMessageController.php:234
-* @route '/meta/drafts/{metaMessageDraft}'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:234
+ * @route '/meta/drafts/{metaMessageDraft}'
+ */
 export const update = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
@@ -16,25 +16,26 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::update
-* @see app/Http/Controllers/Meta/MetaMessageController.php:234
-* @route '/meta/drafts/{metaMessageDraft}'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:234
+ * @route '/meta/drafts/{metaMessageDraft}'
+ */
 update.url = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { metaMessageDraft: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            metaMessageDraft: args[0],
-        }
+                    metaMessageDraft: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        metaMessageDraft: args.metaMessageDraft,
-    }
+                        metaMessageDraft: args.metaMessageDraft,
+                }
 
     return update.definition.url
             .replace('{metaMessageDraft}', parsedArgs.metaMessageDraft.toString())
@@ -43,9 +44,9 @@ update.url = (args: { metaMessageDraft: string | number } | [metaMessageDraft: s
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::update
-* @see app/Http/Controllers/Meta/MetaMessageController.php:234
-* @route '/meta/drafts/{metaMessageDraft}'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:234
+ * @route '/meta/drafts/{metaMessageDraft}'
+ */
 update.put = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
@@ -53,9 +54,9 @@ update.put = (args: { metaMessageDraft: string | number } | [metaMessageDraft: s
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::send
-* @see app/Http/Controllers/Meta/MetaMessageController.php:262
-* @route '/meta/drafts/{metaMessageDraft}/send'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:262
+ * @route '/meta/drafts/{metaMessageDraft}/send'
+ */
 export const send = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: send.url(args, options),
     method: 'post',
@@ -68,25 +69,26 @@ send.definition = {
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::send
-* @see app/Http/Controllers/Meta/MetaMessageController.php:262
-* @route '/meta/drafts/{metaMessageDraft}/send'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:262
+ * @route '/meta/drafts/{metaMessageDraft}/send'
+ */
 send.url = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { metaMessageDraft: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            metaMessageDraft: args[0],
-        }
+                    metaMessageDraft: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        metaMessageDraft: args.metaMessageDraft,
-    }
+                        metaMessageDraft: args.metaMessageDraft,
+                }
 
     return send.definition.url
             .replace('{metaMessageDraft}', parsedArgs.metaMessageDraft.toString())
@@ -95,9 +97,9 @@ send.url = (args: { metaMessageDraft: string | number } | [metaMessageDraft: str
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::send
-* @see app/Http/Controllers/Meta/MetaMessageController.php:262
-* @route '/meta/drafts/{metaMessageDraft}/send'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:262
+ * @route '/meta/drafts/{metaMessageDraft}/send'
+ */
 send.post = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: send.url(args, options),
     method: 'post',
@@ -105,9 +107,9 @@ send.post = (args: { metaMessageDraft: string | number } | [metaMessageDraft: st
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::reject
-* @see app/Http/Controllers/Meta/MetaMessageController.php:281
-* @route '/meta/drafts/{metaMessageDraft}/reject'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:281
+ * @route '/meta/drafts/{metaMessageDraft}/reject'
+ */
 export const reject = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: reject.url(args, options),
     method: 'post',
@@ -120,25 +122,26 @@ reject.definition = {
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::reject
-* @see app/Http/Controllers/Meta/MetaMessageController.php:281
-* @route '/meta/drafts/{metaMessageDraft}/reject'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:281
+ * @route '/meta/drafts/{metaMessageDraft}/reject'
+ */
 reject.url = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { metaMessageDraft: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            metaMessageDraft: args[0],
-        }
+                    metaMessageDraft: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        metaMessageDraft: args.metaMessageDraft,
-    }
+                        metaMessageDraft: args.metaMessageDraft,
+                }
 
     return reject.definition.url
             .replace('{metaMessageDraft}', parsedArgs.metaMessageDraft.toString())
@@ -147,18 +150,17 @@ reject.url = (args: { metaMessageDraft: string | number } | [metaMessageDraft: s
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::reject
-* @see app/Http/Controllers/Meta/MetaMessageController.php:281
-* @route '/meta/drafts/{metaMessageDraft}/reject'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:281
+ * @route '/meta/drafts/{metaMessageDraft}/reject'
+ */
 reject.post = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: reject.url(args, options),
     method: 'post',
 })
-
 const drafts = {
     update: Object.assign(update, update),
-    send: Object.assign(send, send),
-    reject: Object.assign(reject, reject),
+send: Object.assign(send, send),
+reject: Object.assign(reject, reject),
 }
 
 export default drafts

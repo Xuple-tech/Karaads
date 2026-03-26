@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\ToolChainController::index
-* @see app/Http/Controllers/ToolChainController.php:21
-* @route '/api/projects/{project}/agents/{agent}/workflows'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:21
+ * @route '/api/projects/{project}/agents/{agent}/workflows'
+ */
 export const index = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
@@ -16,23 +16,23 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\ToolChainController::index
-* @see app/Http/Controllers/ToolChainController.php:21
-* @route '/api/projects/{project}/agents/{agent}/workflows'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:21
+ * @route '/api/projects/{project}/agents/{agent}/workflows'
+ */
 index.url = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-            agent: args[1],
-        }
+                    project: args[0],
+                    agent: args[1],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: args.project,
-        agent: args.agent,
-    }
+                        project: args.project,
+                                agent: args.agent,
+                }
 
     return index.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -42,19 +42,18 @@ index.url = (args: { project: string | number, agent: string | number } | [proje
 
 /**
 * @see \App\Http\Controllers\ToolChainController::index
-* @see app/Http/Controllers/ToolChainController.php:21
-* @route '/api/projects/{project}/agents/{agent}/workflows'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:21
+ * @route '/api/projects/{project}/agents/{agent}/workflows'
+ */
 index.get = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ToolChainController::index
-* @see app/Http/Controllers/ToolChainController.php:21
-* @route '/api/projects/{project}/agents/{agent}/workflows'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:21
+ * @route '/api/projects/{project}/agents/{agent}/workflows'
+ */
 index.head = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(args, options),
     method: 'head',
@@ -62,9 +61,9 @@ index.head = (args: { project: string | number, agent: string | number } | [proj
 
 /**
 * @see \App\Http\Controllers\ToolChainController::store
-* @see app/Http/Controllers/ToolChainController.php:80
-* @route '/api/projects/{project}/agents/{agent}/workflows'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:80
+ * @route '/api/projects/{project}/agents/{agent}/workflows'
+ */
 export const store = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
@@ -77,23 +76,23 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\ToolChainController::store
-* @see app/Http/Controllers/ToolChainController.php:80
-* @route '/api/projects/{project}/agents/{agent}/workflows'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:80
+ * @route '/api/projects/{project}/agents/{agent}/workflows'
+ */
 store.url = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-            agent: args[1],
-        }
+                    project: args[0],
+                    agent: args[1],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: args.project,
-        agent: args.agent,
-    }
+                        project: args.project,
+                                agent: args.agent,
+                }
 
     return store.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -103,9 +102,9 @@ store.url = (args: { project: string | number, agent: string | number } | [proje
 
 /**
 * @see \App\Http\Controllers\ToolChainController::store
-* @see app/Http/Controllers/ToolChainController.php:80
-* @route '/api/projects/{project}/agents/{agent}/workflows'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:80
+ * @route '/api/projects/{project}/agents/{agent}/workflows'
+ */
 store.post = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
@@ -113,9 +112,9 @@ store.post = (args: { project: string | number, agent: string | number } | [proj
 
 /**
 * @see \App\Http\Controllers\ToolChainController::show
-* @see app/Http/Controllers/ToolChainController.php:50
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:50
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
+ */
 export const show = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
@@ -128,25 +127,25 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\ToolChainController::show
-* @see app/Http/Controllers/ToolChainController.php:50
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:50
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
+ */
 show.url = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-            agent: args[1],
-            chain: args[2],
-        }
+                    project: args[0],
+                    agent: args[1],
+                    chain: args[2],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: args.project,
-        agent: args.agent,
-        chain: args.chain,
-    }
+                        project: args.project,
+                                agent: args.agent,
+                                chain: args.chain,
+                }
 
     return show.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -157,19 +156,18 @@ show.url = (args: { project: string | number, agent: string | number, chain: str
 
 /**
 * @see \App\Http\Controllers\ToolChainController::show
-* @see app/Http/Controllers/ToolChainController.php:50
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:50
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
+ */
 show.get = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ToolChainController::show
-* @see app/Http/Controllers/ToolChainController.php:50
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:50
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
+ */
 show.head = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
@@ -177,9 +175,9 @@ show.head = (args: { project: string | number, agent: string | number, chain: st
 
 /**
 * @see \App\Http\Controllers\ToolChainController::update
-* @see app/Http/Controllers/ToolChainController.php:123
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:123
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
+ */
 export const update = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
@@ -192,25 +190,25 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\ToolChainController::update
-* @see app/Http/Controllers/ToolChainController.php:123
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:123
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
+ */
 update.url = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-            agent: args[1],
-            chain: args[2],
-        }
+                    project: args[0],
+                    agent: args[1],
+                    chain: args[2],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: args.project,
-        agent: args.agent,
-        chain: args.chain,
-    }
+                        project: args.project,
+                                agent: args.agent,
+                                chain: args.chain,
+                }
 
     return update.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -221,9 +219,9 @@ update.url = (args: { project: string | number, agent: string | number, chain: s
 
 /**
 * @see \App\Http\Controllers\ToolChainController::update
-* @see app/Http/Controllers/ToolChainController.php:123
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:123
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
+ */
 update.put = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
@@ -231,9 +229,9 @@ update.put = (args: { project: string | number, agent: string | number, chain: s
 
 /**
 * @see \App\Http\Controllers\ToolChainController::destroy
-* @see app/Http/Controllers/ToolChainController.php:150
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:150
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
+ */
 export const destroy = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
@@ -246,25 +244,25 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\ToolChainController::destroy
-* @see app/Http/Controllers/ToolChainController.php:150
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:150
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
+ */
 destroy.url = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-            agent: args[1],
-            chain: args[2],
-        }
+                    project: args[0],
+                    agent: args[1],
+                    chain: args[2],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: args.project,
-        agent: args.agent,
-        chain: args.chain,
-    }
+                        project: args.project,
+                                agent: args.agent,
+                                chain: args.chain,
+                }
 
     return destroy.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -275,9 +273,9 @@ destroy.url = (args: { project: string | number, agent: string | number, chain: 
 
 /**
 * @see \App\Http\Controllers\ToolChainController::destroy
-* @see app/Http/Controllers/ToolChainController.php:150
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:150
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}'
+ */
 destroy.delete = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
@@ -285,9 +283,9 @@ destroy.delete = (args: { project: string | number, agent: string | number, chai
 
 /**
 * @see \App\Http\Controllers\ToolChainController::validateChain
-* @see app/Http/Controllers/ToolChainController.php:161
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/validate'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:161
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/validate'
+ */
 export const validateChain = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: validateChain.url(args, options),
     method: 'get',
@@ -300,25 +298,25 @@ validateChain.definition = {
 
 /**
 * @see \App\Http\Controllers\ToolChainController::validateChain
-* @see app/Http/Controllers/ToolChainController.php:161
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/validate'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:161
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/validate'
+ */
 validateChain.url = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-            agent: args[1],
-            chain: args[2],
-        }
+                    project: args[0],
+                    agent: args[1],
+                    chain: args[2],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: args.project,
-        agent: args.agent,
-        chain: args.chain,
-    }
+                        project: args.project,
+                                agent: args.agent,
+                                chain: args.chain,
+                }
 
     return validateChain.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -329,19 +327,18 @@ validateChain.url = (args: { project: string | number, agent: string | number, c
 
 /**
 * @see \App\Http\Controllers\ToolChainController::validateChain
-* @see app/Http/Controllers/ToolChainController.php:161
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/validate'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:161
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/validate'
+ */
 validateChain.get = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: validateChain.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ToolChainController::validateChain
-* @see app/Http/Controllers/ToolChainController.php:161
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/validate'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:161
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/validate'
+ */
 validateChain.head = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: validateChain.url(args, options),
     method: 'head',
@@ -349,9 +346,9 @@ validateChain.head = (args: { project: string | number, agent: string | number, 
 
 /**
 * @see \App\Http\Controllers\ToolChainController::plan
-* @see app/Http/Controllers/ToolChainController.php:175
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/plan'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:175
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/plan'
+ */
 export const plan = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: plan.url(args, options),
     method: 'get',
@@ -364,25 +361,25 @@ plan.definition = {
 
 /**
 * @see \App\Http\Controllers\ToolChainController::plan
-* @see app/Http/Controllers/ToolChainController.php:175
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/plan'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:175
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/plan'
+ */
 plan.url = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-            agent: args[1],
-            chain: args[2],
-        }
+                    project: args[0],
+                    agent: args[1],
+                    chain: args[2],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: args.project,
-        agent: args.agent,
-        chain: args.chain,
-    }
+                        project: args.project,
+                                agent: args.agent,
+                                chain: args.chain,
+                }
 
     return plan.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -393,19 +390,18 @@ plan.url = (args: { project: string | number, agent: string | number, chain: str
 
 /**
 * @see \App\Http\Controllers\ToolChainController::plan
-* @see app/Http/Controllers/ToolChainController.php:175
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/plan'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:175
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/plan'
+ */
 plan.get = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: plan.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ToolChainController::plan
-* @see app/Http/Controllers/ToolChainController.php:175
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/plan'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:175
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/plan'
+ */
 plan.head = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: plan.url(args, options),
     method: 'head',
@@ -413,9 +409,9 @@ plan.head = (args: { project: string | number, agent: string | number, chain: st
 
 /**
 * @see \App\Http\Controllers\ToolChainController::execute
-* @see app/Http/Controllers/ToolChainController.php:189
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/execute'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:189
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/execute'
+ */
 export const execute = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: execute.url(args, options),
     method: 'post',
@@ -428,25 +424,25 @@ execute.definition = {
 
 /**
 * @see \App\Http\Controllers\ToolChainController::execute
-* @see app/Http/Controllers/ToolChainController.php:189
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/execute'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:189
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/execute'
+ */
 execute.url = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-            agent: args[1],
-            chain: args[2],
-        }
+                    project: args[0],
+                    agent: args[1],
+                    chain: args[2],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: args.project,
-        agent: args.agent,
-        chain: args.chain,
-    }
+                        project: args.project,
+                                agent: args.agent,
+                                chain: args.chain,
+                }
 
     return execute.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -457,14 +453,13 @@ execute.url = (args: { project: string | number, agent: string | number, chain: 
 
 /**
 * @see \App\Http\Controllers\ToolChainController::execute
-* @see app/Http/Controllers/ToolChainController.php:189
-* @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/execute'
-*/
+ * @see app/Http/Controllers/ToolChainController.php:189
+ * @route '/api/projects/{project}/agents/{agent}/workflows/{chain}/execute'
+ */
 execute.post = (args: { project: string | number, agent: string | number, chain: string | number } | [project: string | number, agent: string | number, chain: string | number ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: execute.url(args, options),
     method: 'post',
 })
-
 const ToolChainController = { index, store, show, update, destroy, validateChain, plan, execute }
 
 export default ToolChainController

@@ -9,19 +9,18 @@ import PersonalizationController from './PersonalizationController'
 import SubscriptionLimitsController from './SubscriptionLimitsController'
 import Widget from './Widget'
 import Demo from './Demo'
-
 const Api = {
     AuthController: Object.assign(AuthController, AuthController),
-    ChatController: Object.assign(ChatController, ChatController),
-    VoiceConversationController: Object.assign(VoiceConversationController, VoiceConversationController),
-    EmailController: Object.assign(EmailController, EmailController),
-    ImageGenerationController: Object.assign(ImageGenerationController, ImageGenerationController),
-    SettingsController: Object.assign(SettingsController, SettingsController),
-    ChatPreferenceController: Object.assign(ChatPreferenceController, ChatPreferenceController),
-    PersonalizationController: Object.assign(PersonalizationController, PersonalizationController),
-    SubscriptionLimitsController: Object.assign(SubscriptionLimitsController, SubscriptionLimitsController),
-    Widget: Object.assign(Widget, Widget),
-    Demo: Object.assign(Demo, Demo),
+ChatController: Object.assign(ChatController, ChatController),
+VoiceConversationController: Object.assign(VoiceConversationController, VoiceConversationController),
+EmailController: Object.assign(EmailController, EmailController),
+ImageGenerationController: Object.assign(ImageGenerationController, ImageGenerationController),
+SettingsController: Object.assign(SettingsController, SettingsController),
+ChatPreferenceController: Object.assign(ChatPreferenceController, ChatPreferenceController),
+PersonalizationController: Object.assign(PersonalizationController, PersonalizationController),
+SubscriptionLimitsController: Object.assign(SubscriptionLimitsController, SubscriptionLimitsController),
+Widget: Object.assign(Widget, Widget),
+Demo: Object.assign(Demo, Demo),
 }
 
 export default Api

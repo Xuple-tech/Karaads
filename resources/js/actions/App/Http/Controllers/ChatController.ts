@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\ChatController::index
-* @see app/Http/Controllers/ChatController.php:31
-* @route '/'
-*/
+ * @see app/Http/Controllers/ChatController.php:31
+ * @route '/'
+ */
 const index980bb49ee7ae63891f1d891d2fbcf1c9 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index980bb49ee7ae63891f1d891d2fbcf1c9.url(options),
     method: 'get',
@@ -16,38 +16,37 @@ index980bb49ee7ae63891f1d891d2fbcf1c9.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::index
-* @see app/Http/Controllers/ChatController.php:31
-* @route '/'
-*/
+ * @see app/Http/Controllers/ChatController.php:31
+ * @route '/'
+ */
 index980bb49ee7ae63891f1d891d2fbcf1c9.url = (options?: RouteQueryOptions) => {
     return index980bb49ee7ae63891f1d891d2fbcf1c9.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\ChatController::index
-* @see app/Http/Controllers/ChatController.php:31
-* @route '/'
-*/
+ * @see app/Http/Controllers/ChatController.php:31
+ * @route '/'
+ */
 index980bb49ee7ae63891f1d891d2fbcf1c9.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index980bb49ee7ae63891f1d891d2fbcf1c9.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ChatController::index
-* @see app/Http/Controllers/ChatController.php:31
-* @route '/'
-*/
+ * @see app/Http/Controllers/ChatController.php:31
+ * @route '/'
+ */
 index980bb49ee7ae63891f1d891d2fbcf1c9.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index980bb49ee7ae63891f1d891d2fbcf1c9.url(options),
     method: 'head',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\ChatController::index
-* @see app/Http/Controllers/ChatController.php:31
-* @route '/app'
-*/
+ * @see app/Http/Controllers/ChatController.php:31
+ * @route '/app'
+ */
 const index66c7f35ef69d84111bb599576cd05b30 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index66c7f35ef69d84111bb599576cd05b30.url(options),
     method: 'get',
@@ -60,38 +59,37 @@ index66c7f35ef69d84111bb599576cd05b30.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::index
-* @see app/Http/Controllers/ChatController.php:31
-* @route '/app'
-*/
+ * @see app/Http/Controllers/ChatController.php:31
+ * @route '/app'
+ */
 index66c7f35ef69d84111bb599576cd05b30.url = (options?: RouteQueryOptions) => {
     return index66c7f35ef69d84111bb599576cd05b30.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\ChatController::index
-* @see app/Http/Controllers/ChatController.php:31
-* @route '/app'
-*/
+ * @see app/Http/Controllers/ChatController.php:31
+ * @route '/app'
+ */
 index66c7f35ef69d84111bb599576cd05b30.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index66c7f35ef69d84111bb599576cd05b30.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ChatController::index
-* @see app/Http/Controllers/ChatController.php:31
-* @route '/app'
-*/
+ * @see app/Http/Controllers/ChatController.php:31
+ * @route '/app'
+ */
 index66c7f35ef69d84111bb599576cd05b30.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index66c7f35ef69d84111bb599576cd05b30.url(options),
     method: 'head',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\ChatController::index
-* @see app/Http/Controllers/ChatController.php:31
-* @route '/new'
-*/
+ * @see app/Http/Controllers/ChatController.php:31
+ * @route '/new'
+ */
 const index7a022a9b96cb47bd7a175c7742311b98 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index7a022a9b96cb47bd7a175c7742311b98.url(options),
     method: 'get',
@@ -104,28 +102,27 @@ index7a022a9b96cb47bd7a175c7742311b98.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::index
-* @see app/Http/Controllers/ChatController.php:31
-* @route '/new'
-*/
+ * @see app/Http/Controllers/ChatController.php:31
+ * @route '/new'
+ */
 index7a022a9b96cb47bd7a175c7742311b98.url = (options?: RouteQueryOptions) => {
     return index7a022a9b96cb47bd7a175c7742311b98.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\ChatController::index
-* @see app/Http/Controllers/ChatController.php:31
-* @route '/new'
-*/
+ * @see app/Http/Controllers/ChatController.php:31
+ * @route '/new'
+ */
 index7a022a9b96cb47bd7a175c7742311b98.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index7a022a9b96cb47bd7a175c7742311b98.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ChatController::index
-* @see app/Http/Controllers/ChatController.php:31
-* @route '/new'
-*/
+ * @see app/Http/Controllers/ChatController.php:31
+ * @route '/new'
+ */
 index7a022a9b96cb47bd7a175c7742311b98.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index7a022a9b96cb47bd7a175c7742311b98.url(options),
     method: 'head',
@@ -139,9 +136,9 @@ export const index = {
 
 /**
 * @see \App\Http\Controllers\ChatController::privacyPolicy
-* @see app/Http/Controllers/ChatController.php:52
-* @route '/privacy-policy'
-*/
+ * @see app/Http/Controllers/ChatController.php:52
+ * @route '/privacy-policy'
+ */
 export const privacyPolicy = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: privacyPolicy.url(options),
     method: 'get',
@@ -154,28 +151,27 @@ privacyPolicy.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::privacyPolicy
-* @see app/Http/Controllers/ChatController.php:52
-* @route '/privacy-policy'
-*/
+ * @see app/Http/Controllers/ChatController.php:52
+ * @route '/privacy-policy'
+ */
 privacyPolicy.url = (options?: RouteQueryOptions) => {
     return privacyPolicy.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\ChatController::privacyPolicy
-* @see app/Http/Controllers/ChatController.php:52
-* @route '/privacy-policy'
-*/
+ * @see app/Http/Controllers/ChatController.php:52
+ * @route '/privacy-policy'
+ */
 privacyPolicy.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: privacyPolicy.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ChatController::privacyPolicy
-* @see app/Http/Controllers/ChatController.php:52
-* @route '/privacy-policy'
-*/
+ * @see app/Http/Controllers/ChatController.php:52
+ * @route '/privacy-policy'
+ */
 privacyPolicy.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: privacyPolicy.url(options),
     method: 'head',
@@ -183,9 +179,9 @@ privacyPolicy.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 
 /**
 * @see \App\Http\Controllers\ChatController::list
-* @see app/Http/Controllers/ChatController.php:137
-* @route '/api/conversations/new-api-new-users0request'
-*/
+ * @see app/Http/Controllers/ChatController.php:137
+ * @route '/api/conversations/new-api-new-users0request'
+ */
 const listbbb70c82437ce45affa5741480c58d20 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: listbbb70c82437ce45affa5741480c58d20.url(options),
     method: 'get',
@@ -198,38 +194,37 @@ listbbb70c82437ce45affa5741480c58d20.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::list
-* @see app/Http/Controllers/ChatController.php:137
-* @route '/api/conversations/new-api-new-users0request'
-*/
+ * @see app/Http/Controllers/ChatController.php:137
+ * @route '/api/conversations/new-api-new-users0request'
+ */
 listbbb70c82437ce45affa5741480c58d20.url = (options?: RouteQueryOptions) => {
     return listbbb70c82437ce45affa5741480c58d20.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\ChatController::list
-* @see app/Http/Controllers/ChatController.php:137
-* @route '/api/conversations/new-api-new-users0request'
-*/
+ * @see app/Http/Controllers/ChatController.php:137
+ * @route '/api/conversations/new-api-new-users0request'
+ */
 listbbb70c82437ce45affa5741480c58d20.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: listbbb70c82437ce45affa5741480c58d20.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ChatController::list
-* @see app/Http/Controllers/ChatController.php:137
-* @route '/api/conversations/new-api-new-users0request'
-*/
+ * @see app/Http/Controllers/ChatController.php:137
+ * @route '/api/conversations/new-api-new-users0request'
+ */
 listbbb70c82437ce45affa5741480c58d20.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: listbbb70c82437ce45affa5741480c58d20.url(options),
     method: 'head',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\ChatController::list
-* @see app/Http/Controllers/ChatController.php:137
-* @route '/api/conversations/list'
-*/
+ * @see app/Http/Controllers/ChatController.php:137
+ * @route '/api/conversations/list'
+ */
 const listc657702fdf6e10a7ec5be12f0f45f280 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: listc657702fdf6e10a7ec5be12f0f45f280.url(options),
     method: 'get',
@@ -242,28 +237,27 @@ listc657702fdf6e10a7ec5be12f0f45f280.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::list
-* @see app/Http/Controllers/ChatController.php:137
-* @route '/api/conversations/list'
-*/
+ * @see app/Http/Controllers/ChatController.php:137
+ * @route '/api/conversations/list'
+ */
 listc657702fdf6e10a7ec5be12f0f45f280.url = (options?: RouteQueryOptions) => {
     return listc657702fdf6e10a7ec5be12f0f45f280.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\ChatController::list
-* @see app/Http/Controllers/ChatController.php:137
-* @route '/api/conversations/list'
-*/
+ * @see app/Http/Controllers/ChatController.php:137
+ * @route '/api/conversations/list'
+ */
 listc657702fdf6e10a7ec5be12f0f45f280.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: listc657702fdf6e10a7ec5be12f0f45f280.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ChatController::list
-* @see app/Http/Controllers/ChatController.php:137
-* @route '/api/conversations/list'
-*/
+ * @see app/Http/Controllers/ChatController.php:137
+ * @route '/api/conversations/list'
+ */
 listc657702fdf6e10a7ec5be12f0f45f280.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: listc657702fdf6e10a7ec5be12f0f45f280.url(options),
     method: 'head',
@@ -276,9 +270,9 @@ export const list = {
 
 /**
 * @see \App\Http\Controllers\ChatController::create
-* @see app/Http/Controllers/ChatController.php:60
-* @route '/api/conversations/c-sdnsnd-smmsm'
-*/
+ * @see app/Http/Controllers/ChatController.php:60
+ * @route '/api/conversations/c-sdnsnd-smmsm'
+ */
 const create8514a20e67f8436407d8b923f9880924 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: create8514a20e67f8436407d8b923f9880924.url(options),
     method: 'post',
@@ -291,28 +285,28 @@ create8514a20e67f8436407d8b923f9880924.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::create
-* @see app/Http/Controllers/ChatController.php:60
-* @route '/api/conversations/c-sdnsnd-smmsm'
-*/
+ * @see app/Http/Controllers/ChatController.php:60
+ * @route '/api/conversations/c-sdnsnd-smmsm'
+ */
 create8514a20e67f8436407d8b923f9880924.url = (options?: RouteQueryOptions) => {
     return create8514a20e67f8436407d8b923f9880924.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\ChatController::create
-* @see app/Http/Controllers/ChatController.php:60
-* @route '/api/conversations/c-sdnsnd-smmsm'
-*/
+ * @see app/Http/Controllers/ChatController.php:60
+ * @route '/api/conversations/c-sdnsnd-smmsm'
+ */
 create8514a20e67f8436407d8b923f9880924.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: create8514a20e67f8436407d8b923f9880924.url(options),
     method: 'post',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\ChatController::create
-* @see app/Http/Controllers/ChatController.php:60
-* @route '/c/new'
-*/
+ * @see app/Http/Controllers/ChatController.php:60
+ * @route '/c/new'
+ */
 const createc7bc79bc93669ce210dffd0b836367d8 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: createc7bc79bc93669ce210dffd0b836367d8.url(options),
     method: 'get',
@@ -325,28 +319,27 @@ createc7bc79bc93669ce210dffd0b836367d8.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::create
-* @see app/Http/Controllers/ChatController.php:60
-* @route '/c/new'
-*/
+ * @see app/Http/Controllers/ChatController.php:60
+ * @route '/c/new'
+ */
 createc7bc79bc93669ce210dffd0b836367d8.url = (options?: RouteQueryOptions) => {
     return createc7bc79bc93669ce210dffd0b836367d8.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\ChatController::create
-* @see app/Http/Controllers/ChatController.php:60
-* @route '/c/new'
-*/
+ * @see app/Http/Controllers/ChatController.php:60
+ * @route '/c/new'
+ */
 createc7bc79bc93669ce210dffd0b836367d8.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: createc7bc79bc93669ce210dffd0b836367d8.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ChatController::create
-* @see app/Http/Controllers/ChatController.php:60
-* @route '/c/new'
-*/
+ * @see app/Http/Controllers/ChatController.php:60
+ * @route '/c/new'
+ */
 createc7bc79bc93669ce210dffd0b836367d8.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: createc7bc79bc93669ce210dffd0b836367d8.url(options),
     method: 'head',
@@ -359,9 +352,9 @@ export const create = {
 
 /**
 * @see \App\Http\Controllers\ChatController::update
-* @see app/Http/Controllers/ChatController.php:158
-* @route '/api/conversations/{id}'
-*/
+ * @see app/Http/Controllers/ChatController.php:158
+ * @route '/api/conversations/{id}'
+ */
 export const update = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
@@ -374,25 +367,26 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::update
-* @see app/Http/Controllers/ChatController.php:158
-* @route '/api/conversations/{id}'
-*/
+ * @see app/Http/Controllers/ChatController.php:158
+ * @route '/api/conversations/{id}'
+ */
 update.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { id: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            id: args[0],
-        }
+                    id: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        id: args.id,
-    }
+                        id: args.id,
+                }
 
     return update.definition.url
             .replace('{id}', parsedArgs.id.toString())
@@ -401,9 +395,9 @@ update.url = (args: { id: string | number } | [id: string | number ] | string | 
 
 /**
 * @see \App\Http\Controllers\ChatController::update
-* @see app/Http/Controllers/ChatController.php:158
-* @route '/api/conversations/{id}'
-*/
+ * @see app/Http/Controllers/ChatController.php:158
+ * @route '/api/conversations/{id}'
+ */
 update.put = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
@@ -411,9 +405,9 @@ update.put = (args: { id: string | number } | [id: string | number ] | string | 
 
 /**
 * @see \App\Http\Controllers\ChatController::destroy
-* @see app/Http/Controllers/ChatController.php:188
-* @route '/api/conversations/{id}'
-*/
+ * @see app/Http/Controllers/ChatController.php:188
+ * @route '/api/conversations/{id}'
+ */
 export const destroy = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
@@ -426,25 +420,26 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::destroy
-* @see app/Http/Controllers/ChatController.php:188
-* @route '/api/conversations/{id}'
-*/
+ * @see app/Http/Controllers/ChatController.php:188
+ * @route '/api/conversations/{id}'
+ */
 destroy.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { id: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            id: args[0],
-        }
+                    id: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        id: args.id,
-    }
+                        id: args.id,
+                }
 
     return destroy.definition.url
             .replace('{id}', parsedArgs.id.toString())
@@ -453,9 +448,9 @@ destroy.url = (args: { id: string | number } | [id: string | number ] | string |
 
 /**
 * @see \App\Http\Controllers\ChatController::destroy
-* @see app/Http/Controllers/ChatController.php:188
-* @route '/api/conversations/{id}'
-*/
+ * @see app/Http/Controllers/ChatController.php:188
+ * @route '/api/conversations/{id}'
+ */
 destroy.delete = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
@@ -463,9 +458,9 @@ destroy.delete = (args: { id: string | number } | [id: string | number ] | strin
 
 /**
 * @see \App\Http\Controllers\ChatController::clearAll
-* @see app/Http/Controllers/ChatController.php:218
-* @route '/api/conversations/clear'
-*/
+ * @see app/Http/Controllers/ChatController.php:218
+ * @route '/api/conversations/clear'
+ */
 export const clearAll = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: clearAll.url(options),
     method: 'delete',
@@ -478,18 +473,18 @@ clearAll.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::clearAll
-* @see app/Http/Controllers/ChatController.php:218
-* @route '/api/conversations/clear'
-*/
+ * @see app/Http/Controllers/ChatController.php:218
+ * @route '/api/conversations/clear'
+ */
 clearAll.url = (options?: RouteQueryOptions) => {
     return clearAll.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\ChatController::clearAll
-* @see app/Http/Controllers/ChatController.php:218
-* @route '/api/conversations/clear'
-*/
+ * @see app/Http/Controllers/ChatController.php:218
+ * @route '/api/conversations/clear'
+ */
 clearAll.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: clearAll.url(options),
     method: 'delete',
@@ -497,9 +492,9 @@ clearAll.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
 
 /**
 * @see \App\Http\Controllers\ChatController::exportMethod
-* @see app/Http/Controllers/ChatController.php:982
-* @route '/api/conversations/{id}/export'
-*/
+ * @see app/Http/Controllers/ChatController.php:982
+ * @route '/api/conversations/{id}/export'
+ */
 export const exportMethod = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: exportMethod.url(args, options),
     method: 'get',
@@ -512,25 +507,26 @@ exportMethod.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::exportMethod
-* @see app/Http/Controllers/ChatController.php:982
-* @route '/api/conversations/{id}/export'
-*/
+ * @see app/Http/Controllers/ChatController.php:982
+ * @route '/api/conversations/{id}/export'
+ */
 exportMethod.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { id: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            id: args[0],
-        }
+                    id: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        id: args.id,
-    }
+                        id: args.id,
+                }
 
     return exportMethod.definition.url
             .replace('{id}', parsedArgs.id.toString())
@@ -539,19 +535,18 @@ exportMethod.url = (args: { id: string | number } | [id: string | number ] | str
 
 /**
 * @see \App\Http\Controllers\ChatController::exportMethod
-* @see app/Http/Controllers/ChatController.php:982
-* @route '/api/conversations/{id}/export'
-*/
+ * @see app/Http/Controllers/ChatController.php:982
+ * @route '/api/conversations/{id}/export'
+ */
 exportMethod.get = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: exportMethod.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ChatController::exportMethod
-* @see app/Http/Controllers/ChatController.php:982
-* @route '/api/conversations/{id}/export'
-*/
+ * @see app/Http/Controllers/ChatController.php:982
+ * @route '/api/conversations/{id}/export'
+ */
 exportMethod.head = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: exportMethod.url(args, options),
     method: 'head',
@@ -559,9 +554,9 @@ exportMethod.head = (args: { id: string | number } | [id: string | number ] | st
 
 /**
 * @see \App\Http\Controllers\ChatController::statistics
-* @see app/Http/Controllers/ChatController.php:924
-* @route '/api/conversations/statistics'
-*/
+ * @see app/Http/Controllers/ChatController.php:924
+ * @route '/api/conversations/statistics'
+ */
 export const statistics = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: statistics.url(options),
     method: 'get',
@@ -574,28 +569,27 @@ statistics.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::statistics
-* @see app/Http/Controllers/ChatController.php:924
-* @route '/api/conversations/statistics'
-*/
+ * @see app/Http/Controllers/ChatController.php:924
+ * @route '/api/conversations/statistics'
+ */
 statistics.url = (options?: RouteQueryOptions) => {
     return statistics.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\ChatController::statistics
-* @see app/Http/Controllers/ChatController.php:924
-* @route '/api/conversations/statistics'
-*/
+ * @see app/Http/Controllers/ChatController.php:924
+ * @route '/api/conversations/statistics'
+ */
 statistics.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: statistics.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ChatController::statistics
-* @see app/Http/Controllers/ChatController.php:924
-* @route '/api/conversations/statistics'
-*/
+ * @see app/Http/Controllers/ChatController.php:924
+ * @route '/api/conversations/statistics'
+ */
 statistics.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: statistics.url(options),
     method: 'head',
@@ -603,9 +597,9 @@ statistics.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\ChatController::chat
-* @see app/Http/Controllers/ChatController.php:246
-* @route '/api/create/challenge/message'
-*/
+ * @see app/Http/Controllers/ChatController.php:246
+ * @route '/api/create/challenge/message'
+ */
 const chat4471953a02b2058754c28dca30a0f064 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: chat4471953a02b2058754c28dca30a0f064.url(options),
     method: 'post',
@@ -618,28 +612,28 @@ chat4471953a02b2058754c28dca30a0f064.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::chat
-* @see app/Http/Controllers/ChatController.php:246
-* @route '/api/create/challenge/message'
-*/
+ * @see app/Http/Controllers/ChatController.php:246
+ * @route '/api/create/challenge/message'
+ */
 chat4471953a02b2058754c28dca30a0f064.url = (options?: RouteQueryOptions) => {
     return chat4471953a02b2058754c28dca30a0f064.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\ChatController::chat
-* @see app/Http/Controllers/ChatController.php:246
-* @route '/api/create/challenge/message'
-*/
+ * @see app/Http/Controllers/ChatController.php:246
+ * @route '/api/create/challenge/message'
+ */
 chat4471953a02b2058754c28dca30a0f064.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: chat4471953a02b2058754c28dca30a0f064.url(options),
     method: 'post',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\ChatController::chat
-* @see app/Http/Controllers/ChatController.php:246
-* @route '/create-two-step-challagene'
-*/
+ * @see app/Http/Controllers/ChatController.php:246
+ * @route '/create-two-step-challagene'
+ */
 const chata079fca5f78406da3f809c4458862471 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: chata079fca5f78406da3f809c4458862471.url(options),
     method: 'post',
@@ -652,18 +646,18 @@ chata079fca5f78406da3f809c4458862471.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::chat
-* @see app/Http/Controllers/ChatController.php:246
-* @route '/create-two-step-challagene'
-*/
+ * @see app/Http/Controllers/ChatController.php:246
+ * @route '/create-two-step-challagene'
+ */
 chata079fca5f78406da3f809c4458862471.url = (options?: RouteQueryOptions) => {
     return chata079fca5f78406da3f809c4458862471.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\ChatController::chat
-* @see app/Http/Controllers/ChatController.php:246
-* @route '/create-two-step-challagene'
-*/
+ * @see app/Http/Controllers/ChatController.php:246
+ * @route '/create-two-step-challagene'
+ */
 chata079fca5f78406da3f809c4458862471.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: chata079fca5f78406da3f809c4458862471.url(options),
     method: 'post',
@@ -676,9 +670,9 @@ export const chat = {
 
 /**
 * @see \App\Http\Controllers\ChatController::generateCanvasContent
-* @see app/Http/Controllers/ChatController.php:953
-* @route '/api/generate-canvas-content'
-*/
+ * @see app/Http/Controllers/ChatController.php:953
+ * @route '/api/generate-canvas-content'
+ */
 export const generateCanvasContent = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: generateCanvasContent.url(options),
     method: 'post',
@@ -691,18 +685,18 @@ generateCanvasContent.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::generateCanvasContent
-* @see app/Http/Controllers/ChatController.php:953
-* @route '/api/generate-canvas-content'
-*/
+ * @see app/Http/Controllers/ChatController.php:953
+ * @route '/api/generate-canvas-content'
+ */
 generateCanvasContent.url = (options?: RouteQueryOptions) => {
     return generateCanvasContent.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\ChatController::generateCanvasContent
-* @see app/Http/Controllers/ChatController.php:953
-* @route '/api/generate-canvas-content'
-*/
+ * @see app/Http/Controllers/ChatController.php:953
+ * @route '/api/generate-canvas-content'
+ */
 generateCanvasContent.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: generateCanvasContent.url(options),
     method: 'post',
@@ -710,9 +704,9 @@ generateCanvasContent.post = (options?: RouteQueryOptions): RouteDefinition<'pos
 
 /**
 * @see \App\Http\Controllers\ChatController::search
-* @see app/Http/Controllers/ChatController.php:0
-* @route '/api/conversations/search'
-*/
+ * @see app/Http/Controllers/ChatController.php:0
+ * @route '/api/conversations/search'
+ */
 export const search = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: search.url(options),
     method: 'get',
@@ -725,28 +719,27 @@ search.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::search
-* @see app/Http/Controllers/ChatController.php:0
-* @route '/api/conversations/search'
-*/
+ * @see app/Http/Controllers/ChatController.php:0
+ * @route '/api/conversations/search'
+ */
 search.url = (options?: RouteQueryOptions) => {
     return search.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\ChatController::search
-* @see app/Http/Controllers/ChatController.php:0
-* @route '/api/conversations/search'
-*/
+ * @see app/Http/Controllers/ChatController.php:0
+ * @route '/api/conversations/search'
+ */
 search.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: search.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ChatController::search
-* @see app/Http/Controllers/ChatController.php:0
-* @route '/api/conversations/search'
-*/
+ * @see app/Http/Controllers/ChatController.php:0
+ * @route '/api/conversations/search'
+ */
 search.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: search.url(options),
     method: 'head',
@@ -754,10 +747,10 @@ search.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\ChatController::show
-* @see app/Http/Controllers/ChatController.php:98
-* @route '/c/{conversation}'
-*/
-export const show = (args: { conversation: string | { id: string } } | [conversation: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/ChatController.php:98
+ * @route '/c/{conversation}'
+ */
+export const show = (args: { conversation: number | { id: number } } | [conversation: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -769,31 +762,31 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::show
-* @see app/Http/Controllers/ChatController.php:98
-* @route '/c/{conversation}'
-*/
-show.url = (args: { conversation: string | { id: string } } | [conversation: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/ChatController.php:98
+ * @route '/c/{conversation}'
+ */
+show.url = (args: { conversation: number | { id: number } } | [conversation: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { conversation: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { conversation: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { conversation: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            conversation: args[0],
-        }
+                    conversation: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        conversation: typeof args.conversation === 'object'
-        ? args.conversation.id
-        : args.conversation,
-    }
+                        conversation: typeof args.conversation === 'object'
+                ? args.conversation.id
+                : args.conversation,
+                }
 
     return show.definition.url
             .replace('{conversation}', parsedArgs.conversation.toString())
@@ -802,29 +795,28 @@ show.url = (args: { conversation: string | { id: string } } | [conversation: str
 
 /**
 * @see \App\Http\Controllers\ChatController::show
-* @see app/Http/Controllers/ChatController.php:98
-* @route '/c/{conversation}'
-*/
-show.get = (args: { conversation: string | { id: string } } | [conversation: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/ChatController.php:98
+ * @route '/c/{conversation}'
+ */
+show.get = (args: { conversation: number | { id: number } } | [conversation: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ChatController::show
-* @see app/Http/Controllers/ChatController.php:98
-* @route '/c/{conversation}'
-*/
-show.head = (args: { conversation: string | { id: string } } | [conversation: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+ * @see app/Http/Controllers/ChatController.php:98
+ * @route '/c/{conversation}'
+ */
+show.head = (args: { conversation: number | { id: number } } | [conversation: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\ChatController::regenerateMessage
-* @see app/Http/Controllers/ChatController.php:858
-* @route '/c/{messageId}/regenerate'
-*/
+ * @see app/Http/Controllers/ChatController.php:858
+ * @route '/c/{messageId}/regenerate'
+ */
 export const regenerateMessage = (args: { messageId: string | number } | [messageId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: regenerateMessage.url(args, options),
     method: 'post',
@@ -837,25 +829,26 @@ regenerateMessage.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::regenerateMessage
-* @see app/Http/Controllers/ChatController.php:858
-* @route '/c/{messageId}/regenerate'
-*/
+ * @see app/Http/Controllers/ChatController.php:858
+ * @route '/c/{messageId}/regenerate'
+ */
 regenerateMessage.url = (args: { messageId: string | number } | [messageId: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { messageId: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            messageId: args[0],
-        }
+                    messageId: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        messageId: args.messageId,
-    }
+                        messageId: args.messageId,
+                }
 
     return regenerateMessage.definition.url
             .replace('{messageId}', parsedArgs.messageId.toString())
@@ -864,14 +857,13 @@ regenerateMessage.url = (args: { messageId: string | number } | [messageId: stri
 
 /**
 * @see \App\Http\Controllers\ChatController::regenerateMessage
-* @see app/Http/Controllers/ChatController.php:858
-* @route '/c/{messageId}/regenerate'
-*/
+ * @see app/Http/Controllers/ChatController.php:858
+ * @route '/c/{messageId}/regenerate'
+ */
 regenerateMessage.post = (args: { messageId: string | number } | [messageId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: regenerateMessage.url(args, options),
     method: 'post',
 })
-
 const ChatController = { index, privacyPolicy, list, create, update, destroy, clearAll, exportMethod, statistics, chat, generateCanvasContent, search, show, regenerateMessage, export: exportMethod }
 
 export default ChatController

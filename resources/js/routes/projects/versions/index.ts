@@ -1,10 +1,10 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\ProjectController::create
-* @see app/Http/Controllers/ProjectController.php:408
-* @route '/projects/{project}/versions'
-*/
-export const create = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/ProjectController.php:408
+ * @route '/projects/{project}/versions'
+ */
+export const create = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: create.url(args, options),
     method: 'post',
 })
@@ -16,31 +16,31 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\ProjectController::create
-* @see app/Http/Controllers/ProjectController.php:408
-* @route '/projects/{project}/versions'
-*/
-create.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/ProjectController.php:408
+ * @route '/projects/{project}/versions'
+ */
+create.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { project: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { project: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-        }
+                    project: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: typeof args.project === 'object'
-        ? args.project.id
-        : args.project,
-    }
+                        project: typeof args.project === 'object'
+                ? args.project.id
+                : args.project,
+                }
 
     return create.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -49,14 +49,13 @@ create.url = (args: { project: string | { id: string } } | [project: string | { 
 
 /**
 * @see \App\Http\Controllers\ProjectController::create
-* @see app/Http/Controllers/ProjectController.php:408
-* @route '/projects/{project}/versions'
-*/
-create.post = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/ProjectController.php:408
+ * @route '/projects/{project}/versions'
+ */
+create.post = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: create.url(args, options),
     method: 'post',
 })
-
 const versions = {
     create: Object.assign(create, create),
 }

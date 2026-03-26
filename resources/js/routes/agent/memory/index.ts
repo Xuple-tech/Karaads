@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\AgentMemoryController::index
-* @see app/Http/Controllers/AgentMemoryController.php:21
-* @route '/api/projects/{project}/agents/{agent}/memory'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:21
+ * @route '/api/projects/{project}/agents/{agent}/memory'
+ */
 export const index = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
@@ -16,23 +16,23 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::index
-* @see app/Http/Controllers/AgentMemoryController.php:21
-* @route '/api/projects/{project}/agents/{agent}/memory'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:21
+ * @route '/api/projects/{project}/agents/{agent}/memory'
+ */
 index.url = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-            agent: args[1],
-        }
+                    project: args[0],
+                    agent: args[1],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: args.project,
-        agent: args.agent,
-    }
+                        project: args.project,
+                                agent: args.agent,
+                }
 
     return index.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -42,19 +42,18 @@ index.url = (args: { project: string | number, agent: string | number } | [proje
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::index
-* @see app/Http/Controllers/AgentMemoryController.php:21
-* @route '/api/projects/{project}/agents/{agent}/memory'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:21
+ * @route '/api/projects/{project}/agents/{agent}/memory'
+ */
 index.get = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\AgentMemoryController::index
-* @see app/Http/Controllers/AgentMemoryController.php:21
-* @route '/api/projects/{project}/agents/{agent}/memory'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:21
+ * @route '/api/projects/{project}/agents/{agent}/memory'
+ */
 index.head = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(args, options),
     method: 'head',
@@ -62,9 +61,9 @@ index.head = (args: { project: string | number, agent: string | number } | [proj
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::search
-* @see app/Http/Controllers/AgentMemoryController.php:43
-* @route '/api/projects/{project}/agents/{agent}/memory/search'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:43
+ * @route '/api/projects/{project}/agents/{agent}/memory/search'
+ */
 export const search = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: search.url(args, options),
     method: 'post',
@@ -77,23 +76,23 @@ search.definition = {
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::search
-* @see app/Http/Controllers/AgentMemoryController.php:43
-* @route '/api/projects/{project}/agents/{agent}/memory/search'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:43
+ * @route '/api/projects/{project}/agents/{agent}/memory/search'
+ */
 search.url = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-            agent: args[1],
-        }
+                    project: args[0],
+                    agent: args[1],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: args.project,
-        agent: args.agent,
-    }
+                        project: args.project,
+                                agent: args.agent,
+                }
 
     return search.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -103,9 +102,9 @@ search.url = (args: { project: string | number, agent: string | number } | [proj
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::search
-* @see app/Http/Controllers/AgentMemoryController.php:43
-* @route '/api/projects/{project}/agents/{agent}/memory/search'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:43
+ * @route '/api/projects/{project}/agents/{agent}/memory/search'
+ */
 search.post = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: search.url(args, options),
     method: 'post',
@@ -113,9 +112,9 @@ search.post = (args: { project: string | number, agent: string | number } | [pro
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::relevant
-* @see app/Http/Controllers/AgentMemoryController.php:68
-* @route '/api/projects/{project}/agents/{agent}/memory/relevant'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:68
+ * @route '/api/projects/{project}/agents/{agent}/memory/relevant'
+ */
 export const relevant = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: relevant.url(args, options),
     method: 'get',
@@ -128,23 +127,23 @@ relevant.definition = {
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::relevant
-* @see app/Http/Controllers/AgentMemoryController.php:68
-* @route '/api/projects/{project}/agents/{agent}/memory/relevant'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:68
+ * @route '/api/projects/{project}/agents/{agent}/memory/relevant'
+ */
 relevant.url = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-            agent: args[1],
-        }
+                    project: args[0],
+                    agent: args[1],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: args.project,
-        agent: args.agent,
-    }
+                        project: args.project,
+                                agent: args.agent,
+                }
 
     return relevant.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -154,19 +153,18 @@ relevant.url = (args: { project: string | number, agent: string | number } | [pr
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::relevant
-* @see app/Http/Controllers/AgentMemoryController.php:68
-* @route '/api/projects/{project}/agents/{agent}/memory/relevant'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:68
+ * @route '/api/projects/{project}/agents/{agent}/memory/relevant'
+ */
 relevant.get = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: relevant.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\AgentMemoryController::relevant
-* @see app/Http/Controllers/AgentMemoryController.php:68
-* @route '/api/projects/{project}/agents/{agent}/memory/relevant'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:68
+ * @route '/api/projects/{project}/agents/{agent}/memory/relevant'
+ */
 relevant.head = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: relevant.url(args, options),
     method: 'head',
@@ -174,9 +172,9 @@ relevant.head = (args: { project: string | number, agent: string | number } | [p
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::store
-* @see app/Http/Controllers/AgentMemoryController.php:88
-* @route '/api/projects/{project}/agents/{agent}/memory'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:88
+ * @route '/api/projects/{project}/agents/{agent}/memory'
+ */
 export const store = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
@@ -189,23 +187,23 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::store
-* @see app/Http/Controllers/AgentMemoryController.php:88
-* @route '/api/projects/{project}/agents/{agent}/memory'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:88
+ * @route '/api/projects/{project}/agents/{agent}/memory'
+ */
 store.url = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-            agent: args[1],
-        }
+                    project: args[0],
+                    agent: args[1],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: args.project,
-        agent: args.agent,
-    }
+                        project: args.project,
+                                agent: args.agent,
+                }
 
     return store.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -215,9 +213,9 @@ store.url = (args: { project: string | number, agent: string | number } | [proje
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::store
-* @see app/Http/Controllers/AgentMemoryController.php:88
-* @route '/api/projects/{project}/agents/{agent}/memory'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:88
+ * @route '/api/projects/{project}/agents/{agent}/memory'
+ */
 store.post = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
@@ -225,9 +223,9 @@ store.post = (args: { project: string | number, agent: string | number } | [proj
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::destroy
-* @see app/Http/Controllers/AgentMemoryController.php:113
-* @route '/api/projects/{project}/agents/{agent}/memory/{memory}'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:113
+ * @route '/api/projects/{project}/agents/{agent}/memory/{memory}'
+ */
 export const destroy = (args: { project: string | number, agent: string | number, memory: string | number } | [project: string | number, agent: string | number, memory: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
@@ -240,25 +238,25 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::destroy
-* @see app/Http/Controllers/AgentMemoryController.php:113
-* @route '/api/projects/{project}/agents/{agent}/memory/{memory}'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:113
+ * @route '/api/projects/{project}/agents/{agent}/memory/{memory}'
+ */
 destroy.url = (args: { project: string | number, agent: string | number, memory: string | number } | [project: string | number, agent: string | number, memory: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-            agent: args[1],
-            memory: args[2],
-        }
+                    project: args[0],
+                    agent: args[1],
+                    memory: args[2],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: args.project,
-        agent: args.agent,
-        memory: args.memory,
-    }
+                        project: args.project,
+                                agent: args.agent,
+                                memory: args.memory,
+                }
 
     return destroy.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -269,9 +267,9 @@ destroy.url = (args: { project: string | number, agent: string | number, memory:
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::destroy
-* @see app/Http/Controllers/AgentMemoryController.php:113
-* @route '/api/projects/{project}/agents/{agent}/memory/{memory}'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:113
+ * @route '/api/projects/{project}/agents/{agent}/memory/{memory}'
+ */
 destroy.delete = (args: { project: string | number, agent: string | number, memory: string | number } | [project: string | number, agent: string | number, memory: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
@@ -279,9 +277,9 @@ destroy.delete = (args: { project: string | number, agent: string | number, memo
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::clear
-* @see app/Http/Controllers/AgentMemoryController.php:124
-* @route '/api/projects/{project}/agents/{agent}/memory/clear'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:124
+ * @route '/api/projects/{project}/agents/{agent}/memory/clear'
+ */
 export const clear = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: clear.url(args, options),
     method: 'post',
@@ -294,23 +292,23 @@ clear.definition = {
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::clear
-* @see app/Http/Controllers/AgentMemoryController.php:124
-* @route '/api/projects/{project}/agents/{agent}/memory/clear'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:124
+ * @route '/api/projects/{project}/agents/{agent}/memory/clear'
+ */
 clear.url = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-            agent: args[1],
-        }
+                    project: args[0],
+                    agent: args[1],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: args.project,
-        agent: args.agent,
-    }
+                        project: args.project,
+                                agent: args.agent,
+                }
 
     return clear.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -320,9 +318,9 @@ clear.url = (args: { project: string | number, agent: string | number } | [proje
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::clear
-* @see app/Http/Controllers/AgentMemoryController.php:124
-* @route '/api/projects/{project}/agents/{agent}/memory/clear'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:124
+ * @route '/api/projects/{project}/agents/{agent}/memory/clear'
+ */
 clear.post = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: clear.url(args, options),
     method: 'post',
@@ -330,9 +328,9 @@ clear.post = (args: { project: string | number, agent: string | number } | [proj
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::exportMethod
-* @see app/Http/Controllers/AgentMemoryController.php:138
-* @route '/api/projects/{project}/agents/{agent}/memory/export'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:138
+ * @route '/api/projects/{project}/agents/{agent}/memory/export'
+ */
 export const exportMethod = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: exportMethod.url(args, options),
     method: 'get',
@@ -345,23 +343,23 @@ exportMethod.definition = {
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::exportMethod
-* @see app/Http/Controllers/AgentMemoryController.php:138
-* @route '/api/projects/{project}/agents/{agent}/memory/export'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:138
+ * @route '/api/projects/{project}/agents/{agent}/memory/export'
+ */
 exportMethod.url = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-            agent: args[1],
-        }
+                    project: args[0],
+                    agent: args[1],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: args.project,
-        agent: args.agent,
-    }
+                        project: args.project,
+                                agent: args.agent,
+                }
 
     return exportMethod.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -371,32 +369,30 @@ exportMethod.url = (args: { project: string | number, agent: string | number } |
 
 /**
 * @see \App\Http\Controllers\AgentMemoryController::exportMethod
-* @see app/Http/Controllers/AgentMemoryController.php:138
-* @route '/api/projects/{project}/agents/{agent}/memory/export'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:138
+ * @route '/api/projects/{project}/agents/{agent}/memory/export'
+ */
 exportMethod.get = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: exportMethod.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\AgentMemoryController::exportMethod
-* @see app/Http/Controllers/AgentMemoryController.php:138
-* @route '/api/projects/{project}/agents/{agent}/memory/export'
-*/
+ * @see app/Http/Controllers/AgentMemoryController.php:138
+ * @route '/api/projects/{project}/agents/{agent}/memory/export'
+ */
 exportMethod.head = (args: { project: string | number, agent: string | number } | [project: string | number, agent: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: exportMethod.url(args, options),
     method: 'head',
 })
-
 const memory = {
     index: Object.assign(index, index),
-    search: Object.assign(search, search),
-    relevant: Object.assign(relevant, relevant),
-    store: Object.assign(store, store),
-    destroy: Object.assign(destroy, destroy),
-    clear: Object.assign(clear, clear),
-    export: Object.assign(exportMethod, exportMethod),
+search: Object.assign(search, search),
+relevant: Object.assign(relevant, relevant),
+store: Object.assign(store, store),
+destroy: Object.assign(destroy, destroy),
+clear: Object.assign(clear, clear),
+export: Object.assign(exportMethod, exportMethod),
 }
 
 export default memory

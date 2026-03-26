@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\StripePaymentController::checkout
-* @see app/Http/Controllers/StripePaymentController.php:26
-* @route '/stripe/checkout'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:26
+ * @route '/stripe/checkout'
+ */
 export const checkout = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: checkout.url(options),
     method: 'get',
@@ -16,28 +16,27 @@ checkout.definition = {
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::checkout
-* @see app/Http/Controllers/StripePaymentController.php:26
-* @route '/stripe/checkout'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:26
+ * @route '/stripe/checkout'
+ */
 checkout.url = (options?: RouteQueryOptions) => {
     return checkout.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::checkout
-* @see app/Http/Controllers/StripePaymentController.php:26
-* @route '/stripe/checkout'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:26
+ * @route '/stripe/checkout'
+ */
 checkout.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: checkout.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\StripePaymentController::checkout
-* @see app/Http/Controllers/StripePaymentController.php:26
-* @route '/stripe/checkout'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:26
+ * @route '/stripe/checkout'
+ */
 checkout.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: checkout.url(options),
     method: 'head',
@@ -45,9 +44,9 @@ checkout.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::createPaymentIntent
-* @see app/Http/Controllers/StripePaymentController.php:47
-* @route '/stripe/payment-intent'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:47
+ * @route '/stripe/payment-intent'
+ */
 export const createPaymentIntent = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: createPaymentIntent.url(options),
     method: 'post',
@@ -60,18 +59,18 @@ createPaymentIntent.definition = {
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::createPaymentIntent
-* @see app/Http/Controllers/StripePaymentController.php:47
-* @route '/stripe/payment-intent'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:47
+ * @route '/stripe/payment-intent'
+ */
 createPaymentIntent.url = (options?: RouteQueryOptions) => {
     return createPaymentIntent.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::createPaymentIntent
-* @see app/Http/Controllers/StripePaymentController.php:47
-* @route '/stripe/payment-intent'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:47
+ * @route '/stripe/payment-intent'
+ */
 createPaymentIntent.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: createPaymentIntent.url(options),
     method: 'post',
@@ -79,9 +78,9 @@ createPaymentIntent.post = (options?: RouteQueryOptions): RouteDefinition<'post'
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::confirmSubscription
-* @see app/Http/Controllers/StripePaymentController.php:95
-* @route '/stripe/confirm-subscription'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:95
+ * @route '/stripe/confirm-subscription'
+ */
 export const confirmSubscription = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: confirmSubscription.url(options),
     method: 'post',
@@ -94,18 +93,18 @@ confirmSubscription.definition = {
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::confirmSubscription
-* @see app/Http/Controllers/StripePaymentController.php:95
-* @route '/stripe/confirm-subscription'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:95
+ * @route '/stripe/confirm-subscription'
+ */
 confirmSubscription.url = (options?: RouteQueryOptions) => {
     return confirmSubscription.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::confirmSubscription
-* @see app/Http/Controllers/StripePaymentController.php:95
-* @route '/stripe/confirm-subscription'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:95
+ * @route '/stripe/confirm-subscription'
+ */
 confirmSubscription.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: confirmSubscription.url(options),
     method: 'post',
@@ -113,9 +112,9 @@ confirmSubscription.post = (options?: RouteQueryOptions): RouteDefinition<'post'
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::getPaymentMethods
-* @see app/Http/Controllers/StripePaymentController.php:179
-* @route '/stripe/payment-methods'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:179
+ * @route '/stripe/payment-methods'
+ */
 export const getPaymentMethods = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getPaymentMethods.url(options),
     method: 'get',
@@ -128,28 +127,27 @@ getPaymentMethods.definition = {
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::getPaymentMethods
-* @see app/Http/Controllers/StripePaymentController.php:179
-* @route '/stripe/payment-methods'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:179
+ * @route '/stripe/payment-methods'
+ */
 getPaymentMethods.url = (options?: RouteQueryOptions) => {
     return getPaymentMethods.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::getPaymentMethods
-* @see app/Http/Controllers/StripePaymentController.php:179
-* @route '/stripe/payment-methods'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:179
+ * @route '/stripe/payment-methods'
+ */
 getPaymentMethods.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getPaymentMethods.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\StripePaymentController::getPaymentMethods
-* @see app/Http/Controllers/StripePaymentController.php:179
-* @route '/stripe/payment-methods'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:179
+ * @route '/stripe/payment-methods'
+ */
 getPaymentMethods.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: getPaymentMethods.url(options),
     method: 'head',
@@ -157,9 +155,9 @@ getPaymentMethods.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::updatePaymentMethod
-* @see app/Http/Controllers/StripePaymentController.php:135
-* @route '/stripe/payment-method/update'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:135
+ * @route '/stripe/payment-method/update'
+ */
 export const updatePaymentMethod = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: updatePaymentMethod.url(options),
     method: 'post',
@@ -172,18 +170,18 @@ updatePaymentMethod.definition = {
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::updatePaymentMethod
-* @see app/Http/Controllers/StripePaymentController.php:135
-* @route '/stripe/payment-method/update'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:135
+ * @route '/stripe/payment-method/update'
+ */
 updatePaymentMethod.url = (options?: RouteQueryOptions) => {
     return updatePaymentMethod.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::updatePaymentMethod
-* @see app/Http/Controllers/StripePaymentController.php:135
-* @route '/stripe/payment-method/update'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:135
+ * @route '/stripe/payment-method/update'
+ */
 updatePaymentMethod.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: updatePaymentMethod.url(options),
     method: 'post',
@@ -191,9 +189,9 @@ updatePaymentMethod.post = (options?: RouteQueryOptions): RouteDefinition<'post'
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::deletePaymentMethod
-* @see app/Http/Controllers/StripePaymentController.php:216
-* @route '/stripe/payment-method/{paymentMethodId}'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:216
+ * @route '/stripe/payment-method/{paymentMethodId}'
+ */
 export const deletePaymentMethod = (args: { paymentMethodId: string | number } | [paymentMethodId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deletePaymentMethod.url(args, options),
     method: 'delete',
@@ -206,25 +204,26 @@ deletePaymentMethod.definition = {
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::deletePaymentMethod
-* @see app/Http/Controllers/StripePaymentController.php:216
-* @route '/stripe/payment-method/{paymentMethodId}'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:216
+ * @route '/stripe/payment-method/{paymentMethodId}'
+ */
 deletePaymentMethod.url = (args: { paymentMethodId: string | number } | [paymentMethodId: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { paymentMethodId: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            paymentMethodId: args[0],
-        }
+                    paymentMethodId: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        paymentMethodId: args.paymentMethodId,
-    }
+                        paymentMethodId: args.paymentMethodId,
+                }
 
     return deletePaymentMethod.definition.url
             .replace('{paymentMethodId}', parsedArgs.paymentMethodId.toString())
@@ -233,9 +232,9 @@ deletePaymentMethod.url = (args: { paymentMethodId: string | number } | [payment
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::deletePaymentMethod
-* @see app/Http/Controllers/StripePaymentController.php:216
-* @route '/stripe/payment-method/{paymentMethodId}'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:216
+ * @route '/stripe/payment-method/{paymentMethodId}'
+ */
 deletePaymentMethod.delete = (args: { paymentMethodId: string | number } | [paymentMethodId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deletePaymentMethod.url(args, options),
     method: 'delete',
@@ -243,9 +242,9 @@ deletePaymentMethod.delete = (args: { paymentMethodId: string | number } | [paym
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::cancelSubscription
-* @see app/Http/Controllers/StripePaymentController.php:245
-* @route '/stripe/cancel'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:245
+ * @route '/stripe/cancel'
+ */
 export const cancelSubscription = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: cancelSubscription.url(options),
     method: 'post',
@@ -258,18 +257,18 @@ cancelSubscription.definition = {
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::cancelSubscription
-* @see app/Http/Controllers/StripePaymentController.php:245
-* @route '/stripe/cancel'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:245
+ * @route '/stripe/cancel'
+ */
 cancelSubscription.url = (options?: RouteQueryOptions) => {
     return cancelSubscription.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::cancelSubscription
-* @see app/Http/Controllers/StripePaymentController.php:245
-* @route '/stripe/cancel'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:245
+ * @route '/stripe/cancel'
+ */
 cancelSubscription.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: cancelSubscription.url(options),
     method: 'post',
@@ -277,9 +276,9 @@ cancelSubscription.post = (options?: RouteQueryOptions): RouteDefinition<'post'>
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::reactivateSubscription
-* @see app/Http/Controllers/StripePaymentController.php:289
-* @route '/stripe/reactivate'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:289
+ * @route '/stripe/reactivate'
+ */
 export const reactivateSubscription = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: reactivateSubscription.url(options),
     method: 'post',
@@ -292,18 +291,18 @@ reactivateSubscription.definition = {
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::reactivateSubscription
-* @see app/Http/Controllers/StripePaymentController.php:289
-* @route '/stripe/reactivate'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:289
+ * @route '/stripe/reactivate'
+ */
 reactivateSubscription.url = (options?: RouteQueryOptions) => {
     return reactivateSubscription.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::reactivateSubscription
-* @see app/Http/Controllers/StripePaymentController.php:289
-* @route '/stripe/reactivate'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:289
+ * @route '/stripe/reactivate'
+ */
 reactivateSubscription.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: reactivateSubscription.url(options),
     method: 'post',
@@ -311,9 +310,9 @@ reactivateSubscription.post = (options?: RouteQueryOptions): RouteDefinition<'po
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::billingPortal
-* @see app/Http/Controllers/StripePaymentController.php:326
-* @route '/stripe/billing-portal'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:326
+ * @route '/stripe/billing-portal'
+ */
 export const billingPortal = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: billingPortal.url(options),
     method: 'get',
@@ -326,33 +325,31 @@ billingPortal.definition = {
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::billingPortal
-* @see app/Http/Controllers/StripePaymentController.php:326
-* @route '/stripe/billing-portal'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:326
+ * @route '/stripe/billing-portal'
+ */
 billingPortal.url = (options?: RouteQueryOptions) => {
     return billingPortal.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\StripePaymentController::billingPortal
-* @see app/Http/Controllers/StripePaymentController.php:326
-* @route '/stripe/billing-portal'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:326
+ * @route '/stripe/billing-portal'
+ */
 billingPortal.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: billingPortal.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\StripePaymentController::billingPortal
-* @see app/Http/Controllers/StripePaymentController.php:326
-* @route '/stripe/billing-portal'
-*/
+ * @see app/Http/Controllers/StripePaymentController.php:326
+ * @route '/stripe/billing-portal'
+ */
 billingPortal.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: billingPortal.url(options),
     method: 'head',
 })
-
 const StripePaymentController = { checkout, createPaymentIntent, confirmSubscription, getPaymentMethods, updatePaymentMethod, deletePaymentMethod, cancelSubscription, reactivateSubscription, billingPortal }
 
 export default StripePaymentController

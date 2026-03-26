@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('name'); // 'Free', 'Paid', 'Premium', 'Gold'
             $table->string('slug')->unique(); // 'free', 'paid', 'premium', 'gold'
             $table->text('description')->nullable();
+            $table->string('stripe_product_id')->nullable();
+            $table->string('stripe_monthly_price_id')->nullable();
+            $table->string('stripe_yearly_price_id')->nullable();
             $table->decimal('monthly_price', 10, 2)->default(0); // 0 for free tier
             $table->decimal('yearly_price', 10, 2)->nullable();
 

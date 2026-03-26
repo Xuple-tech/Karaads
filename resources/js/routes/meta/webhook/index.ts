@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Meta\MetaWebhookController::verify
-* @see app/Http/Controllers/Meta/MetaWebhookController.php:20
-* @route '/meta/webhook/receive/{token}'
-*/
+ * @see app/Http/Controllers/Meta/MetaWebhookController.php:20
+ * @route '/meta/webhook/receive/{token}'
+ */
 export const verify = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: verify.url(args, options),
     method: 'get',
@@ -16,25 +16,26 @@ verify.definition = {
 
 /**
 * @see \App\Http\Controllers\Meta\MetaWebhookController::verify
-* @see app/Http/Controllers/Meta/MetaWebhookController.php:20
-* @route '/meta/webhook/receive/{token}'
-*/
+ * @see app/Http/Controllers/Meta/MetaWebhookController.php:20
+ * @route '/meta/webhook/receive/{token}'
+ */
 verify.url = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { token: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            token: args[0],
-        }
+                    token: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        token: args.token,
-    }
+                        token: args.token,
+                }
 
     return verify.definition.url
             .replace('{token}', parsedArgs.token.toString())
@@ -43,19 +44,18 @@ verify.url = (args: { token: string | number } | [token: string | number ] | str
 
 /**
 * @see \App\Http\Controllers\Meta\MetaWebhookController::verify
-* @see app/Http/Controllers/Meta/MetaWebhookController.php:20
-* @route '/meta/webhook/receive/{token}'
-*/
+ * @see app/Http/Controllers/Meta/MetaWebhookController.php:20
+ * @route '/meta/webhook/receive/{token}'
+ */
 verify.get = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: verify.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Meta\MetaWebhookController::verify
-* @see app/Http/Controllers/Meta/MetaWebhookController.php:20
-* @route '/meta/webhook/receive/{token}'
-*/
+ * @see app/Http/Controllers/Meta/MetaWebhookController.php:20
+ * @route '/meta/webhook/receive/{token}'
+ */
 verify.head = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: verify.url(args, options),
     method: 'head',
@@ -63,9 +63,9 @@ verify.head = (args: { token: string | number } | [token: string | number ] | st
 
 /**
 * @see \App\Http\Controllers\Meta\MetaWebhookController::receive
-* @see app/Http/Controllers/Meta/MetaWebhookController.php:41
-* @route '/meta/webhook/receive/{token}'
-*/
+ * @see app/Http/Controllers/Meta/MetaWebhookController.php:41
+ * @route '/meta/webhook/receive/{token}'
+ */
 export const receive = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: receive.url(args, options),
     method: 'post',
@@ -78,25 +78,26 @@ receive.definition = {
 
 /**
 * @see \App\Http\Controllers\Meta\MetaWebhookController::receive
-* @see app/Http/Controllers/Meta/MetaWebhookController.php:41
-* @route '/meta/webhook/receive/{token}'
-*/
+ * @see app/Http/Controllers/Meta/MetaWebhookController.php:41
+ * @route '/meta/webhook/receive/{token}'
+ */
 receive.url = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { token: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            token: args[0],
-        }
+                    token: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        token: args.token,
-    }
+                        token: args.token,
+                }
 
     return receive.definition.url
             .replace('{token}', parsedArgs.token.toString())
@@ -105,17 +106,16 @@ receive.url = (args: { token: string | number } | [token: string | number ] | st
 
 /**
 * @see \App\Http\Controllers\Meta\MetaWebhookController::receive
-* @see app/Http/Controllers/Meta/MetaWebhookController.php:41
-* @route '/meta/webhook/receive/{token}'
-*/
+ * @see app/Http/Controllers/Meta/MetaWebhookController.php:41
+ * @route '/meta/webhook/receive/{token}'
+ */
 receive.post = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: receive.url(args, options),
     method: 'post',
 })
-
 const webhook = {
     verify: Object.assign(verify, verify),
-    receive: Object.assign(receive, receive),
+receive: Object.assign(receive, receive),
 }
 
 export default webhook

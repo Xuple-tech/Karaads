@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::index
-* @see app/Http/Controllers/Admin/AIModeController.php:16
-* @route '/api/admin/ai-modes'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:16
+ * @route '/api/admin/ai-modes'
+ */
 const index1c86c04afa17b554551c5e8fcbacde73 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index1c86c04afa17b554551c5e8fcbacde73.url(options),
     method: 'get',
@@ -16,38 +16,37 @@ index1c86c04afa17b554551c5e8fcbacde73.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::index
-* @see app/Http/Controllers/Admin/AIModeController.php:16
-* @route '/api/admin/ai-modes'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:16
+ * @route '/api/admin/ai-modes'
+ */
 index1c86c04afa17b554551c5e8fcbacde73.url = (options?: RouteQueryOptions) => {
     return index1c86c04afa17b554551c5e8fcbacde73.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::index
-* @see app/Http/Controllers/Admin/AIModeController.php:16
-* @route '/api/admin/ai-modes'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:16
+ * @route '/api/admin/ai-modes'
+ */
 index1c86c04afa17b554551c5e8fcbacde73.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index1c86c04afa17b554551c5e8fcbacde73.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::index
-* @see app/Http/Controllers/Admin/AIModeController.php:16
-* @route '/api/admin/ai-modes'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:16
+ * @route '/api/admin/ai-modes'
+ */
 index1c86c04afa17b554551c5e8fcbacde73.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index1c86c04afa17b554551c5e8fcbacde73.url(options),
     method: 'head',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\AIModeController::index
-* @see app/Http/Controllers/Admin/AIModeController.php:16
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/list/q0w3e6r9'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:16
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/list/q0w3e6r9'
+ */
 const index264575800027568160a072c125302947 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index264575800027568160a072c125302947.url(options),
     method: 'get',
@@ -60,38 +59,37 @@ index264575800027568160a072c125302947.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::index
-* @see app/Http/Controllers/Admin/AIModeController.php:16
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/list/q0w3e6r9'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:16
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/list/q0w3e6r9'
+ */
 index264575800027568160a072c125302947.url = (options?: RouteQueryOptions) => {
     return index264575800027568160a072c125302947.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::index
-* @see app/Http/Controllers/Admin/AIModeController.php:16
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/list/q0w3e6r9'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:16
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/list/q0w3e6r9'
+ */
 index264575800027568160a072c125302947.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index264575800027568160a072c125302947.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::index
-* @see app/Http/Controllers/Admin/AIModeController.php:16
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/list/q0w3e6r9'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:16
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/list/q0w3e6r9'
+ */
 index264575800027568160a072c125302947.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index264575800027568160a072c125302947.url(options),
     method: 'head',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\AIModeController::index
-* @see app/Http/Controllers/Admin/AIModeController.php:16
-* @route '/admin/ai-modes'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:16
+ * @route '/admin/ai-modes'
+ */
 const index6b0dcc86fd5ba0fb8433f3ed3fecf46b = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index6b0dcc86fd5ba0fb8433f3ed3fecf46b.url(options),
     method: 'get',
@@ -104,28 +102,27 @@ index6b0dcc86fd5ba0fb8433f3ed3fecf46b.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::index
-* @see app/Http/Controllers/Admin/AIModeController.php:16
-* @route '/admin/ai-modes'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:16
+ * @route '/admin/ai-modes'
+ */
 index6b0dcc86fd5ba0fb8433f3ed3fecf46b.url = (options?: RouteQueryOptions) => {
     return index6b0dcc86fd5ba0fb8433f3ed3fecf46b.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::index
-* @see app/Http/Controllers/Admin/AIModeController.php:16
-* @route '/admin/ai-modes'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:16
+ * @route '/admin/ai-modes'
+ */
 index6b0dcc86fd5ba0fb8433f3ed3fecf46b.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index6b0dcc86fd5ba0fb8433f3ed3fecf46b.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::index
-* @see app/Http/Controllers/Admin/AIModeController.php:16
-* @route '/admin/ai-modes'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:16
+ * @route '/admin/ai-modes'
+ */
 index6b0dcc86fd5ba0fb8433f3ed3fecf46b.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index6b0dcc86fd5ba0fb8433f3ed3fecf46b.url(options),
     method: 'head',
@@ -139,9 +136,9 @@ export const index = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::store
-* @see app/Http/Controllers/Admin/AIModeController.php:107
-* @route '/api/admin/ai-modes'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:107
+ * @route '/api/admin/ai-modes'
+ */
 const store1c86c04afa17b554551c5e8fcbacde73 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store1c86c04afa17b554551c5e8fcbacde73.url(options),
     method: 'post',
@@ -154,28 +151,28 @@ store1c86c04afa17b554551c5e8fcbacde73.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::store
-* @see app/Http/Controllers/Admin/AIModeController.php:107
-* @route '/api/admin/ai-modes'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:107
+ * @route '/api/admin/ai-modes'
+ */
 store1c86c04afa17b554551c5e8fcbacde73.url = (options?: RouteQueryOptions) => {
     return store1c86c04afa17b554551c5e8fcbacde73.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::store
-* @see app/Http/Controllers/Admin/AIModeController.php:107
-* @route '/api/admin/ai-modes'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:107
+ * @route '/api/admin/ai-modes'
+ */
 store1c86c04afa17b554551c5e8fcbacde73.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store1c86c04afa17b554551c5e8fcbacde73.url(options),
     method: 'post',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\AIModeController::store
-* @see app/Http/Controllers/Admin/AIModeController.php:107
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/create/z2x5c8v1'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:107
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/create/z2x5c8v1'
+ */
 const store74097e6971b319222426d10724dd8b3e = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store74097e6971b319222426d10724dd8b3e.url(options),
     method: 'post',
@@ -188,28 +185,28 @@ store74097e6971b319222426d10724dd8b3e.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::store
-* @see app/Http/Controllers/Admin/AIModeController.php:107
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/create/z2x5c8v1'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:107
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/create/z2x5c8v1'
+ */
 store74097e6971b319222426d10724dd8b3e.url = (options?: RouteQueryOptions) => {
     return store74097e6971b319222426d10724dd8b3e.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::store
-* @see app/Http/Controllers/Admin/AIModeController.php:107
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/create/z2x5c8v1'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:107
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/create/z2x5c8v1'
+ */
 store74097e6971b319222426d10724dd8b3e.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store74097e6971b319222426d10724dd8b3e.url(options),
     method: 'post',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\AIModeController::store
-* @see app/Http/Controllers/Admin/AIModeController.php:107
-* @route '/admin/ai-modes'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:107
+ * @route '/admin/ai-modes'
+ */
 const store6b0dcc86fd5ba0fb8433f3ed3fecf46b = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store6b0dcc86fd5ba0fb8433f3ed3fecf46b.url(options),
     method: 'post',
@@ -222,18 +219,18 @@ store6b0dcc86fd5ba0fb8433f3ed3fecf46b.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::store
-* @see app/Http/Controllers/Admin/AIModeController.php:107
-* @route '/admin/ai-modes'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:107
+ * @route '/admin/ai-modes'
+ */
 store6b0dcc86fd5ba0fb8433f3ed3fecf46b.url = (options?: RouteQueryOptions) => {
     return store6b0dcc86fd5ba0fb8433f3ed3fecf46b.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::store
-* @see app/Http/Controllers/Admin/AIModeController.php:107
-* @route '/admin/ai-modes'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:107
+ * @route '/admin/ai-modes'
+ */
 store6b0dcc86fd5ba0fb8433f3ed3fecf46b.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store6b0dcc86fd5ba0fb8433f3ed3fecf46b.url(options),
     method: 'post',
@@ -247,9 +244,9 @@ export const store = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::show
-* @see app/Http/Controllers/Admin/AIModeController.php:58
-* @route '/api/admin/ai-modes/{id}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:58
+ * @route '/api/admin/ai-modes/{id}'
+ */
 const show4b410dc683be2dd3cf70c2b839889dc6 = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show4b410dc683be2dd3cf70c2b839889dc6.url(args, options),
     method: 'get',
@@ -262,25 +259,26 @@ show4b410dc683be2dd3cf70c2b839889dc6.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::show
-* @see app/Http/Controllers/Admin/AIModeController.php:58
-* @route '/api/admin/ai-modes/{id}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:58
+ * @route '/api/admin/ai-modes/{id}'
+ */
 show4b410dc683be2dd3cf70c2b839889dc6.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { id: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            id: args[0],
-        }
+                    id: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        id: args.id,
-    }
+                        id: args.id,
+                }
 
     return show4b410dc683be2dd3cf70c2b839889dc6.definition.url
             .replace('{id}', parsedArgs.id.toString())
@@ -289,29 +287,28 @@ show4b410dc683be2dd3cf70c2b839889dc6.url = (args: { id: string | number } | [id:
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::show
-* @see app/Http/Controllers/Admin/AIModeController.php:58
-* @route '/api/admin/ai-modes/{id}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:58
+ * @route '/api/admin/ai-modes/{id}'
+ */
 show4b410dc683be2dd3cf70c2b839889dc6.get = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show4b410dc683be2dd3cf70c2b839889dc6.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::show
-* @see app/Http/Controllers/Admin/AIModeController.php:58
-* @route '/api/admin/ai-modes/{id}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:58
+ * @route '/api/admin/ai-modes/{id}'
+ */
 show4b410dc683be2dd3cf70c2b839889dc6.head = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show4b410dc683be2dd3cf70c2b839889dc6.url(args, options),
     method: 'head',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\AIModeController::show
-* @see app/Http/Controllers/Admin/AIModeController.php:58
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/show/{uuid}/b4n7m0k3'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:58
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/show/{uuid}/b4n7m0k3'
+ */
 const showdd09f8b2ac42364c5fe7267a06dfcfb4 = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: showdd09f8b2ac42364c5fe7267a06dfcfb4.url(args, options),
     method: 'get',
@@ -324,25 +321,26 @@ showdd09f8b2ac42364c5fe7267a06dfcfb4.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::show
-* @see app/Http/Controllers/Admin/AIModeController.php:58
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/show/{uuid}/b4n7m0k3'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:58
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/show/{uuid}/b4n7m0k3'
+ */
 showdd09f8b2ac42364c5fe7267a06dfcfb4.url = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { uuid: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            uuid: args[0],
-        }
+                    uuid: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        uuid: args.uuid,
-    }
+                        uuid: args.uuid,
+                }
 
     return showdd09f8b2ac42364c5fe7267a06dfcfb4.definition.url
             .replace('{uuid}', parsedArgs.uuid.toString())
@@ -351,29 +349,28 @@ showdd09f8b2ac42364c5fe7267a06dfcfb4.url = (args: { uuid: string | number } | [u
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::show
-* @see app/Http/Controllers/Admin/AIModeController.php:58
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/show/{uuid}/b4n7m0k3'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:58
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/show/{uuid}/b4n7m0k3'
+ */
 showdd09f8b2ac42364c5fe7267a06dfcfb4.get = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: showdd09f8b2ac42364c5fe7267a06dfcfb4.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::show
-* @see app/Http/Controllers/Admin/AIModeController.php:58
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/show/{uuid}/b4n7m0k3'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:58
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/show/{uuid}/b4n7m0k3'
+ */
 showdd09f8b2ac42364c5fe7267a06dfcfb4.head = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: showdd09f8b2ac42364c5fe7267a06dfcfb4.url(args, options),
     method: 'head',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\AIModeController::show
-* @see app/Http/Controllers/Admin/AIModeController.php:58
-* @route '/admin/ai-modes/{mode}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:58
+ * @route '/admin/ai-modes/{mode}'
+ */
 const showd10de2e8bbbc6fff94bcfbd84a490d74 = (args: { mode: string | number } | [mode: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: showd10de2e8bbbc6fff94bcfbd84a490d74.url(args, options),
     method: 'get',
@@ -386,25 +383,26 @@ showd10de2e8bbbc6fff94bcfbd84a490d74.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::show
-* @see app/Http/Controllers/Admin/AIModeController.php:58
-* @route '/admin/ai-modes/{mode}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:58
+ * @route '/admin/ai-modes/{mode}'
+ */
 showd10de2e8bbbc6fff94bcfbd84a490d74.url = (args: { mode: string | number } | [mode: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { mode: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            mode: args[0],
-        }
+                    mode: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        mode: args.mode,
-    }
+                        mode: args.mode,
+                }
 
     return showd10de2e8bbbc6fff94bcfbd84a490d74.definition.url
             .replace('{mode}', parsedArgs.mode.toString())
@@ -413,19 +411,18 @@ showd10de2e8bbbc6fff94bcfbd84a490d74.url = (args: { mode: string | number } | [m
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::show
-* @see app/Http/Controllers/Admin/AIModeController.php:58
-* @route '/admin/ai-modes/{mode}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:58
+ * @route '/admin/ai-modes/{mode}'
+ */
 showd10de2e8bbbc6fff94bcfbd84a490d74.get = (args: { mode: string | number } | [mode: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: showd10de2e8bbbc6fff94bcfbd84a490d74.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::show
-* @see app/Http/Controllers/Admin/AIModeController.php:58
-* @route '/admin/ai-modes/{mode}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:58
+ * @route '/admin/ai-modes/{mode}'
+ */
 showd10de2e8bbbc6fff94bcfbd84a490d74.head = (args: { mode: string | number } | [mode: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: showd10de2e8bbbc6fff94bcfbd84a490d74.url(args, options),
     method: 'head',
@@ -439,9 +436,9 @@ export const show = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::update
-* @see app/Http/Controllers/Admin/AIModeController.php:156
-* @route '/api/admin/ai-modes/{id}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:156
+ * @route '/api/admin/ai-modes/{id}'
+ */
 const update4b410dc683be2dd3cf70c2b839889dc6 = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update4b410dc683be2dd3cf70c2b839889dc6.url(args, options),
     method: 'put',
@@ -454,25 +451,26 @@ update4b410dc683be2dd3cf70c2b839889dc6.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::update
-* @see app/Http/Controllers/Admin/AIModeController.php:156
-* @route '/api/admin/ai-modes/{id}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:156
+ * @route '/api/admin/ai-modes/{id}'
+ */
 update4b410dc683be2dd3cf70c2b839889dc6.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { id: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            id: args[0],
-        }
+                    id: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        id: args.id,
-    }
+                        id: args.id,
+                }
 
     return update4b410dc683be2dd3cf70c2b839889dc6.definition.url
             .replace('{id}', parsedArgs.id.toString())
@@ -481,19 +479,19 @@ update4b410dc683be2dd3cf70c2b839889dc6.url = (args: { id: string | number } | [i
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::update
-* @see app/Http/Controllers/Admin/AIModeController.php:156
-* @route '/api/admin/ai-modes/{id}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:156
+ * @route '/api/admin/ai-modes/{id}'
+ */
 update4b410dc683be2dd3cf70c2b839889dc6.put = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update4b410dc683be2dd3cf70c2b839889dc6.url(args, options),
     method: 'put',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\AIModeController::update
-* @see app/Http/Controllers/Admin/AIModeController.php:156
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/update/{uuid}/h6g9f2d5'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:156
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/update/{uuid}/h6g9f2d5'
+ */
 const update727a6dc275b2f794e7af15138000bcf8 = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update727a6dc275b2f794e7af15138000bcf8.url(args, options),
     method: 'put',
@@ -506,25 +504,26 @@ update727a6dc275b2f794e7af15138000bcf8.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::update
-* @see app/Http/Controllers/Admin/AIModeController.php:156
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/update/{uuid}/h6g9f2d5'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:156
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/update/{uuid}/h6g9f2d5'
+ */
 update727a6dc275b2f794e7af15138000bcf8.url = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { uuid: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            uuid: args[0],
-        }
+                    uuid: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        uuid: args.uuid,
-    }
+                        uuid: args.uuid,
+                }
 
     return update727a6dc275b2f794e7af15138000bcf8.definition.url
             .replace('{uuid}', parsedArgs.uuid.toString())
@@ -533,19 +532,19 @@ update727a6dc275b2f794e7af15138000bcf8.url = (args: { uuid: string | number } | 
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::update
-* @see app/Http/Controllers/Admin/AIModeController.php:156
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/update/{uuid}/h6g9f2d5'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:156
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/update/{uuid}/h6g9f2d5'
+ */
 update727a6dc275b2f794e7af15138000bcf8.put = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update727a6dc275b2f794e7af15138000bcf8.url(args, options),
     method: 'put',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\AIModeController::update
-* @see app/Http/Controllers/Admin/AIModeController.php:156
-* @route '/admin/ai-modes/{mode}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:156
+ * @route '/admin/ai-modes/{mode}'
+ */
 const updated10de2e8bbbc6fff94bcfbd84a490d74 = (args: { mode: string | number } | [mode: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updated10de2e8bbbc6fff94bcfbd84a490d74.url(args, options),
     method: 'put',
@@ -558,25 +557,26 @@ updated10de2e8bbbc6fff94bcfbd84a490d74.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::update
-* @see app/Http/Controllers/Admin/AIModeController.php:156
-* @route '/admin/ai-modes/{mode}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:156
+ * @route '/admin/ai-modes/{mode}'
+ */
 updated10de2e8bbbc6fff94bcfbd84a490d74.url = (args: { mode: string | number } | [mode: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { mode: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            mode: args[0],
-        }
+                    mode: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        mode: args.mode,
-    }
+                        mode: args.mode,
+                }
 
     return updated10de2e8bbbc6fff94bcfbd84a490d74.definition.url
             .replace('{mode}', parsedArgs.mode.toString())
@@ -585,9 +585,9 @@ updated10de2e8bbbc6fff94bcfbd84a490d74.url = (args: { mode: string | number } | 
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::update
-* @see app/Http/Controllers/Admin/AIModeController.php:156
-* @route '/admin/ai-modes/{mode}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:156
+ * @route '/admin/ai-modes/{mode}'
+ */
 updated10de2e8bbbc6fff94bcfbd84a490d74.put = (args: { mode: string | number } | [mode: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updated10de2e8bbbc6fff94bcfbd84a490d74.url(args, options),
     method: 'put',
@@ -601,9 +601,9 @@ export const update = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::destroy
-* @see app/Http/Controllers/Admin/AIModeController.php:199
-* @route '/api/admin/ai-modes/{id}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:199
+ * @route '/api/admin/ai-modes/{id}'
+ */
 const destroy4b410dc683be2dd3cf70c2b839889dc6 = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy4b410dc683be2dd3cf70c2b839889dc6.url(args, options),
     method: 'delete',
@@ -616,25 +616,26 @@ destroy4b410dc683be2dd3cf70c2b839889dc6.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::destroy
-* @see app/Http/Controllers/Admin/AIModeController.php:199
-* @route '/api/admin/ai-modes/{id}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:199
+ * @route '/api/admin/ai-modes/{id}'
+ */
 destroy4b410dc683be2dd3cf70c2b839889dc6.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { id: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            id: args[0],
-        }
+                    id: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        id: args.id,
-    }
+                        id: args.id,
+                }
 
     return destroy4b410dc683be2dd3cf70c2b839889dc6.definition.url
             .replace('{id}', parsedArgs.id.toString())
@@ -643,19 +644,19 @@ destroy4b410dc683be2dd3cf70c2b839889dc6.url = (args: { id: string | number } | [
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::destroy
-* @see app/Http/Controllers/Admin/AIModeController.php:199
-* @route '/api/admin/ai-modes/{id}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:199
+ * @route '/api/admin/ai-modes/{id}'
+ */
 destroy4b410dc683be2dd3cf70c2b839889dc6.delete = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy4b410dc683be2dd3cf70c2b839889dc6.url(args, options),
     method: 'delete',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\AIModeController::destroy
-* @see app/Http/Controllers/Admin/AIModeController.php:199
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/delete/{uuid}/j8k1l4z7'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:199
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/delete/{uuid}/j8k1l4z7'
+ */
 const destroy426a2d38c21ae4d9721fe5285643ff43 = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy426a2d38c21ae4d9721fe5285643ff43.url(args, options),
     method: 'delete',
@@ -668,25 +669,26 @@ destroy426a2d38c21ae4d9721fe5285643ff43.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::destroy
-* @see app/Http/Controllers/Admin/AIModeController.php:199
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/delete/{uuid}/j8k1l4z7'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:199
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/delete/{uuid}/j8k1l4z7'
+ */
 destroy426a2d38c21ae4d9721fe5285643ff43.url = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { uuid: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            uuid: args[0],
-        }
+                    uuid: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        uuid: args.uuid,
-    }
+                        uuid: args.uuid,
+                }
 
     return destroy426a2d38c21ae4d9721fe5285643ff43.definition.url
             .replace('{uuid}', parsedArgs.uuid.toString())
@@ -695,19 +697,19 @@ destroy426a2d38c21ae4d9721fe5285643ff43.url = (args: { uuid: string | number } |
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::destroy
-* @see app/Http/Controllers/Admin/AIModeController.php:199
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/delete/{uuid}/j8k1l4z7'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:199
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/delete/{uuid}/j8k1l4z7'
+ */
 destroy426a2d38c21ae4d9721fe5285643ff43.delete = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy426a2d38c21ae4d9721fe5285643ff43.url(args, options),
     method: 'delete',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\AIModeController::destroy
-* @see app/Http/Controllers/Admin/AIModeController.php:199
-* @route '/admin/ai-modes/{mode}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:199
+ * @route '/admin/ai-modes/{mode}'
+ */
 const destroyd10de2e8bbbc6fff94bcfbd84a490d74 = (args: { mode: string | number } | [mode: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroyd10de2e8bbbc6fff94bcfbd84a490d74.url(args, options),
     method: 'delete',
@@ -720,25 +722,26 @@ destroyd10de2e8bbbc6fff94bcfbd84a490d74.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::destroy
-* @see app/Http/Controllers/Admin/AIModeController.php:199
-* @route '/admin/ai-modes/{mode}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:199
+ * @route '/admin/ai-modes/{mode}'
+ */
 destroyd10de2e8bbbc6fff94bcfbd84a490d74.url = (args: { mode: string | number } | [mode: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { mode: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            mode: args[0],
-        }
+                    mode: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        mode: args.mode,
-    }
+                        mode: args.mode,
+                }
 
     return destroyd10de2e8bbbc6fff94bcfbd84a490d74.definition.url
             .replace('{mode}', parsedArgs.mode.toString())
@@ -747,9 +750,9 @@ destroyd10de2e8bbbc6fff94bcfbd84a490d74.url = (args: { mode: string | number } |
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::destroy
-* @see app/Http/Controllers/Admin/AIModeController.php:199
-* @route '/admin/ai-modes/{mode}'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:199
+ * @route '/admin/ai-modes/{mode}'
+ */
 destroyd10de2e8bbbc6fff94bcfbd84a490d74.delete = (args: { mode: string | number } | [mode: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroyd10de2e8bbbc6fff94bcfbd84a490d74.url(args, options),
     method: 'delete',
@@ -763,9 +766,9 @@ export const destroy = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::toggleStatus
-* @see app/Http/Controllers/Admin/AIModeController.php:243
-* @route '/api/admin/ai-modes/{id}/toggle'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:243
+ * @route '/api/admin/ai-modes/{id}/toggle'
+ */
 const toggleStatus8939bbd1253be4e5f4d46c6ddb5bd7e8 = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleStatus8939bbd1253be4e5f4d46c6ddb5bd7e8.url(args, options),
     method: 'patch',
@@ -778,25 +781,26 @@ toggleStatus8939bbd1253be4e5f4d46c6ddb5bd7e8.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::toggleStatus
-* @see app/Http/Controllers/Admin/AIModeController.php:243
-* @route '/api/admin/ai-modes/{id}/toggle'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:243
+ * @route '/api/admin/ai-modes/{id}/toggle'
+ */
 toggleStatus8939bbd1253be4e5f4d46c6ddb5bd7e8.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { id: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            id: args[0],
-        }
+                    id: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        id: args.id,
-    }
+                        id: args.id,
+                }
 
     return toggleStatus8939bbd1253be4e5f4d46c6ddb5bd7e8.definition.url
             .replace('{id}', parsedArgs.id.toString())
@@ -805,19 +809,19 @@ toggleStatus8939bbd1253be4e5f4d46c6ddb5bd7e8.url = (args: { id: string | number 
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::toggleStatus
-* @see app/Http/Controllers/Admin/AIModeController.php:243
-* @route '/api/admin/ai-modes/{id}/toggle'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:243
+ * @route '/api/admin/ai-modes/{id}/toggle'
+ */
 toggleStatus8939bbd1253be4e5f4d46c6ddb5bd7e8.patch = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleStatus8939bbd1253be4e5f4d46c6ddb5bd7e8.url(args, options),
     method: 'patch',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\AIModeController::toggleStatus
-* @see app/Http/Controllers/Admin/AIModeController.php:243
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/toggle/{uuid}/s0a3d6f9'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:243
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/toggle/{uuid}/s0a3d6f9'
+ */
 const toggleStatusf7a341ead050f19989b50ba7d848702c = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleStatusf7a341ead050f19989b50ba7d848702c.url(args, options),
     method: 'patch',
@@ -830,25 +834,26 @@ toggleStatusf7a341ead050f19989b50ba7d848702c.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::toggleStatus
-* @see app/Http/Controllers/Admin/AIModeController.php:243
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/toggle/{uuid}/s0a3d6f9'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:243
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/toggle/{uuid}/s0a3d6f9'
+ */
 toggleStatusf7a341ead050f19989b50ba7d848702c.url = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { uuid: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            uuid: args[0],
-        }
+                    uuid: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        uuid: args.uuid,
-    }
+                        uuid: args.uuid,
+                }
 
     return toggleStatusf7a341ead050f19989b50ba7d848702c.definition.url
             .replace('{uuid}', parsedArgs.uuid.toString())
@@ -857,19 +862,19 @@ toggleStatusf7a341ead050f19989b50ba7d848702c.url = (args: { uuid: string | numbe
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::toggleStatus
-* @see app/Http/Controllers/Admin/AIModeController.php:243
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/toggle/{uuid}/s0a3d6f9'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:243
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/toggle/{uuid}/s0a3d6f9'
+ */
 toggleStatusf7a341ead050f19989b50ba7d848702c.patch = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleStatusf7a341ead050f19989b50ba7d848702c.url(args, options),
     method: 'patch',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\AIModeController::toggleStatus
-* @see app/Http/Controllers/Admin/AIModeController.php:243
-* @route '/admin/ai-modes/{mode}/toggle'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:243
+ * @route '/admin/ai-modes/{mode}/toggle'
+ */
 const toggleStatus0da42d6b7284c6cbafbc7c4c50bf7792 = (args: { mode: string | number } | [mode: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleStatus0da42d6b7284c6cbafbc7c4c50bf7792.url(args, options),
     method: 'patch',
@@ -882,25 +887,26 @@ toggleStatus0da42d6b7284c6cbafbc7c4c50bf7792.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::toggleStatus
-* @see app/Http/Controllers/Admin/AIModeController.php:243
-* @route '/admin/ai-modes/{mode}/toggle'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:243
+ * @route '/admin/ai-modes/{mode}/toggle'
+ */
 toggleStatus0da42d6b7284c6cbafbc7c4c50bf7792.url = (args: { mode: string | number } | [mode: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { mode: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            mode: args[0],
-        }
+                    mode: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        mode: args.mode,
-    }
+                        mode: args.mode,
+                }
 
     return toggleStatus0da42d6b7284c6cbafbc7c4c50bf7792.definition.url
             .replace('{mode}', parsedArgs.mode.toString())
@@ -909,9 +915,9 @@ toggleStatus0da42d6b7284c6cbafbc7c4c50bf7792.url = (args: { mode: string | numbe
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::toggleStatus
-* @see app/Http/Controllers/Admin/AIModeController.php:243
-* @route '/admin/ai-modes/{mode}/toggle'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:243
+ * @route '/admin/ai-modes/{mode}/toggle'
+ */
 toggleStatus0da42d6b7284c6cbafbc7c4c50bf7792.patch = (args: { mode: string | number } | [mode: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleStatus0da42d6b7284c6cbafbc7c4c50bf7792.url(args, options),
     method: 'patch',
@@ -925,9 +931,9 @@ export const toggleStatus = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::reorder
-* @see app/Http/Controllers/Admin/AIModeController.php:275
-* @route '/api/admin/ai-modes/reorder'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:275
+ * @route '/api/admin/ai-modes/reorder'
+ */
 const reorderf39de6fb924c2f236f49437d0f03b927 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: reorderf39de6fb924c2f236f49437d0f03b927.url(options),
     method: 'post',
@@ -940,28 +946,28 @@ reorderf39de6fb924c2f236f49437d0f03b927.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::reorder
-* @see app/Http/Controllers/Admin/AIModeController.php:275
-* @route '/api/admin/ai-modes/reorder'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:275
+ * @route '/api/admin/ai-modes/reorder'
+ */
 reorderf39de6fb924c2f236f49437d0f03b927.url = (options?: RouteQueryOptions) => {
     return reorderf39de6fb924c2f236f49437d0f03b927.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::reorder
-* @see app/Http/Controllers/Admin/AIModeController.php:275
-* @route '/api/admin/ai-modes/reorder'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:275
+ * @route '/api/admin/ai-modes/reorder'
+ */
 reorderf39de6fb924c2f236f49437d0f03b927.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: reorderf39de6fb924c2f236f49437d0f03b927.url(options),
     method: 'post',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\AIModeController::reorder
-* @see app/Http/Controllers/Admin/AIModeController.php:275
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/reorder/p2o5i8u1'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:275
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/reorder/p2o5i8u1'
+ */
 const reorder3bb7821e80da0202c458d6d0ebd7f07e = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: reorder3bb7821e80da0202c458d6d0ebd7f07e.url(options),
     method: 'post',
@@ -974,18 +980,18 @@ reorder3bb7821e80da0202c458d6d0ebd7f07e.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::reorder
-* @see app/Http/Controllers/Admin/AIModeController.php:275
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/reorder/p2o5i8u1'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:275
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/reorder/p2o5i8u1'
+ */
 reorder3bb7821e80da0202c458d6d0ebd7f07e.url = (options?: RouteQueryOptions) => {
     return reorder3bb7821e80da0202c458d6d0ebd7f07e.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::reorder
-* @see app/Http/Controllers/Admin/AIModeController.php:275
-* @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/reorder/p2o5i8u1'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:275
+ * @route '/api/admin/secure/w6e9r2t5/ai/modes/y8u1i4o7/reorder/p2o5i8u1'
+ */
 reorder3bb7821e80da0202c458d6d0ebd7f07e.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: reorder3bb7821e80da0202c458d6d0ebd7f07e.url(options),
     method: 'post',
@@ -998,9 +1004,9 @@ export const reorder = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::create
-* @see app/Http/Controllers/Admin/AIModeController.php:50
-* @route '/admin/ai-modes/create'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:50
+ * @route '/admin/ai-modes/create'
+ */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(options),
     method: 'get',
@@ -1013,28 +1019,27 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::create
-* @see app/Http/Controllers/Admin/AIModeController.php:50
-* @route '/admin/ai-modes/create'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:50
+ * @route '/admin/ai-modes/create'
+ */
 create.url = (options?: RouteQueryOptions) => {
     return create.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::create
-* @see app/Http/Controllers/Admin/AIModeController.php:50
-* @route '/admin/ai-modes/create'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:50
+ * @route '/admin/ai-modes/create'
+ */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::create
-* @see app/Http/Controllers/Admin/AIModeController.php:50
-* @route '/admin/ai-modes/create'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:50
+ * @route '/admin/ai-modes/create'
+ */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: create.url(options),
     method: 'head',
@@ -1042,9 +1047,9 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::edit
-* @see app/Http/Controllers/Admin/AIModeController.php:90
-* @route '/admin/ai-modes/{mode}/edit'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:90
+ * @route '/admin/ai-modes/{mode}/edit'
+ */
 export const edit = (args: { mode: string | number } | [mode: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
@@ -1057,25 +1062,26 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::edit
-* @see app/Http/Controllers/Admin/AIModeController.php:90
-* @route '/admin/ai-modes/{mode}/edit'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:90
+ * @route '/admin/ai-modes/{mode}/edit'
+ */
 edit.url = (args: { mode: string | number } | [mode: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { mode: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            mode: args[0],
-        }
+                    mode: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        mode: args.mode,
-    }
+                        mode: args.mode,
+                }
 
     return edit.definition.url
             .replace('{mode}', parsedArgs.mode.toString())
@@ -1084,24 +1090,22 @@ edit.url = (args: { mode: string | number } | [mode: string | number ] | string 
 
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::edit
-* @see app/Http/Controllers/Admin/AIModeController.php:90
-* @route '/admin/ai-modes/{mode}/edit'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:90
+ * @route '/admin/ai-modes/{mode}/edit'
+ */
 edit.get = (args: { mode: string | number } | [mode: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\AIModeController::edit
-* @see app/Http/Controllers/Admin/AIModeController.php:90
-* @route '/admin/ai-modes/{mode}/edit'
-*/
+ * @see app/Http/Controllers/Admin/AIModeController.php:90
+ * @route '/admin/ai-modes/{mode}/edit'
+ */
 edit.head = (args: { mode: string | number } | [mode: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
-
 const AIModeController = { index, store, show, update, destroy, toggleStatus, reorder, create, edit }
 
 export default AIModeController

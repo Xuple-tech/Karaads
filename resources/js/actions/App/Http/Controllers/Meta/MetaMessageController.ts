@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::conversations
-* @see app/Http/Controllers/Meta/MetaMessageController.php:33
-* @route '/meta/accounts/{metaAccount}/conversations'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:33
+ * @route '/meta/accounts/{metaAccount}/conversations'
+ */
 export const conversations = (args: { metaAccount: string | number } | [metaAccount: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: conversations.url(args, options),
     method: 'get',
@@ -16,25 +16,26 @@ conversations.definition = {
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::conversations
-* @see app/Http/Controllers/Meta/MetaMessageController.php:33
-* @route '/meta/accounts/{metaAccount}/conversations'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:33
+ * @route '/meta/accounts/{metaAccount}/conversations'
+ */
 conversations.url = (args: { metaAccount: string | number } | [metaAccount: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { metaAccount: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            metaAccount: args[0],
-        }
+                    metaAccount: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        metaAccount: args.metaAccount,
-    }
+                        metaAccount: args.metaAccount,
+                }
 
     return conversations.definition.url
             .replace('{metaAccount}', parsedArgs.metaAccount.toString())
@@ -43,19 +44,18 @@ conversations.url = (args: { metaAccount: string | number } | [metaAccount: stri
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::conversations
-* @see app/Http/Controllers/Meta/MetaMessageController.php:33
-* @route '/meta/accounts/{metaAccount}/conversations'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:33
+ * @route '/meta/accounts/{metaAccount}/conversations'
+ */
 conversations.get = (args: { metaAccount: string | number } | [metaAccount: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: conversations.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::conversations
-* @see app/Http/Controllers/Meta/MetaMessageController.php:33
-* @route '/meta/accounts/{metaAccount}/conversations'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:33
+ * @route '/meta/accounts/{metaAccount}/conversations'
+ */
 conversations.head = (args: { metaAccount: string | number } | [metaAccount: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: conversations.url(args, options),
     method: 'head',
@@ -63,9 +63,9 @@ conversations.head = (args: { metaAccount: string | number } | [metaAccount: str
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::conversation
-* @see app/Http/Controllers/Meta/MetaMessageController.php:78
-* @route '/meta/accounts/{metaAccount}/conversations/{metaConversation}'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:78
+ * @route '/meta/accounts/{metaAccount}/conversations/{metaConversation}'
+ */
 export const conversation = (args: { metaAccount: string | number, metaConversation: string | number } | [metaAccount: string | number, metaConversation: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: conversation.url(args, options),
     method: 'get',
@@ -78,23 +78,23 @@ conversation.definition = {
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::conversation
-* @see app/Http/Controllers/Meta/MetaMessageController.php:78
-* @route '/meta/accounts/{metaAccount}/conversations/{metaConversation}'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:78
+ * @route '/meta/accounts/{metaAccount}/conversations/{metaConversation}'
+ */
 conversation.url = (args: { metaAccount: string | number, metaConversation: string | number } | [metaAccount: string | number, metaConversation: string | number ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
-            metaAccount: args[0],
-            metaConversation: args[1],
-        }
+                    metaAccount: args[0],
+                    metaConversation: args[1],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        metaAccount: args.metaAccount,
-        metaConversation: args.metaConversation,
-    }
+                        metaAccount: args.metaAccount,
+                                metaConversation: args.metaConversation,
+                }
 
     return conversation.definition.url
             .replace('{metaAccount}', parsedArgs.metaAccount.toString())
@@ -104,19 +104,18 @@ conversation.url = (args: { metaAccount: string | number, metaConversation: stri
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::conversation
-* @see app/Http/Controllers/Meta/MetaMessageController.php:78
-* @route '/meta/accounts/{metaAccount}/conversations/{metaConversation}'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:78
+ * @route '/meta/accounts/{metaAccount}/conversations/{metaConversation}'
+ */
 conversation.get = (args: { metaAccount: string | number, metaConversation: string | number } | [metaAccount: string | number, metaConversation: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: conversation.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::conversation
-* @see app/Http/Controllers/Meta/MetaMessageController.php:78
-* @route '/meta/accounts/{metaAccount}/conversations/{metaConversation}'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:78
+ * @route '/meta/accounts/{metaAccount}/conversations/{metaConversation}'
+ */
 conversation.head = (args: { metaAccount: string | number, metaConversation: string | number } | [metaAccount: string | number, metaConversation: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: conversation.url(args, options),
     method: 'head',
@@ -124,9 +123,9 @@ conversation.head = (args: { metaAccount: string | number, metaConversation: str
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::analyzeAndDraft
-* @see app/Http/Controllers/Meta/MetaMessageController.php:144
-* @route '/meta/messages/{metaMessage}/analyze-and-draft'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:144
+ * @route '/meta/messages/{metaMessage}/analyze-and-draft'
+ */
 export const analyzeAndDraft = (args: { metaMessage: string | number } | [metaMessage: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: analyzeAndDraft.url(args, options),
     method: 'post',
@@ -139,25 +138,26 @@ analyzeAndDraft.definition = {
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::analyzeAndDraft
-* @see app/Http/Controllers/Meta/MetaMessageController.php:144
-* @route '/meta/messages/{metaMessage}/analyze-and-draft'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:144
+ * @route '/meta/messages/{metaMessage}/analyze-and-draft'
+ */
 analyzeAndDraft.url = (args: { metaMessage: string | number } | [metaMessage: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { metaMessage: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            metaMessage: args[0],
-        }
+                    metaMessage: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        metaMessage: args.metaMessage,
-    }
+                        metaMessage: args.metaMessage,
+                }
 
     return analyzeAndDraft.definition.url
             .replace('{metaMessage}', parsedArgs.metaMessage.toString())
@@ -166,9 +166,9 @@ analyzeAndDraft.url = (args: { metaMessage: string | number } | [metaMessage: st
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::analyzeAndDraft
-* @see app/Http/Controllers/Meta/MetaMessageController.php:144
-* @route '/meta/messages/{metaMessage}/analyze-and-draft'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:144
+ * @route '/meta/messages/{metaMessage}/analyze-and-draft'
+ */
 analyzeAndDraft.post = (args: { metaMessage: string | number } | [metaMessage: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: analyzeAndDraft.url(args, options),
     method: 'post',
@@ -176,9 +176,9 @@ analyzeAndDraft.post = (args: { metaMessage: string | number } | [metaMessage: s
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::updateDraft
-* @see app/Http/Controllers/Meta/MetaMessageController.php:234
-* @route '/meta/drafts/{metaMessageDraft}'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:234
+ * @route '/meta/drafts/{metaMessageDraft}'
+ */
 export const updateDraft = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateDraft.url(args, options),
     method: 'put',
@@ -191,25 +191,26 @@ updateDraft.definition = {
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::updateDraft
-* @see app/Http/Controllers/Meta/MetaMessageController.php:234
-* @route '/meta/drafts/{metaMessageDraft}'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:234
+ * @route '/meta/drafts/{metaMessageDraft}'
+ */
 updateDraft.url = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { metaMessageDraft: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            metaMessageDraft: args[0],
-        }
+                    metaMessageDraft: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        metaMessageDraft: args.metaMessageDraft,
-    }
+                        metaMessageDraft: args.metaMessageDraft,
+                }
 
     return updateDraft.definition.url
             .replace('{metaMessageDraft}', parsedArgs.metaMessageDraft.toString())
@@ -218,9 +219,9 @@ updateDraft.url = (args: { metaMessageDraft: string | number } | [metaMessageDra
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::updateDraft
-* @see app/Http/Controllers/Meta/MetaMessageController.php:234
-* @route '/meta/drafts/{metaMessageDraft}'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:234
+ * @route '/meta/drafts/{metaMessageDraft}'
+ */
 updateDraft.put = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateDraft.url(args, options),
     method: 'put',
@@ -228,9 +229,9 @@ updateDraft.put = (args: { metaMessageDraft: string | number } | [metaMessageDra
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::sendDraft
-* @see app/Http/Controllers/Meta/MetaMessageController.php:262
-* @route '/meta/drafts/{metaMessageDraft}/send'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:262
+ * @route '/meta/drafts/{metaMessageDraft}/send'
+ */
 export const sendDraft = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: sendDraft.url(args, options),
     method: 'post',
@@ -243,25 +244,26 @@ sendDraft.definition = {
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::sendDraft
-* @see app/Http/Controllers/Meta/MetaMessageController.php:262
-* @route '/meta/drafts/{metaMessageDraft}/send'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:262
+ * @route '/meta/drafts/{metaMessageDraft}/send'
+ */
 sendDraft.url = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { metaMessageDraft: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            metaMessageDraft: args[0],
-        }
+                    metaMessageDraft: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        metaMessageDraft: args.metaMessageDraft,
-    }
+                        metaMessageDraft: args.metaMessageDraft,
+                }
 
     return sendDraft.definition.url
             .replace('{metaMessageDraft}', parsedArgs.metaMessageDraft.toString())
@@ -270,9 +272,9 @@ sendDraft.url = (args: { metaMessageDraft: string | number } | [metaMessageDraft
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::sendDraft
-* @see app/Http/Controllers/Meta/MetaMessageController.php:262
-* @route '/meta/drafts/{metaMessageDraft}/send'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:262
+ * @route '/meta/drafts/{metaMessageDraft}/send'
+ */
 sendDraft.post = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: sendDraft.url(args, options),
     method: 'post',
@@ -280,9 +282,9 @@ sendDraft.post = (args: { metaMessageDraft: string | number } | [metaMessageDraf
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::rejectDraft
-* @see app/Http/Controllers/Meta/MetaMessageController.php:281
-* @route '/meta/drafts/{metaMessageDraft}/reject'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:281
+ * @route '/meta/drafts/{metaMessageDraft}/reject'
+ */
 export const rejectDraft = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: rejectDraft.url(args, options),
     method: 'post',
@@ -295,25 +297,26 @@ rejectDraft.definition = {
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::rejectDraft
-* @see app/Http/Controllers/Meta/MetaMessageController.php:281
-* @route '/meta/drafts/{metaMessageDraft}/reject'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:281
+ * @route '/meta/drafts/{metaMessageDraft}/reject'
+ */
 rejectDraft.url = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { metaMessageDraft: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            metaMessageDraft: args[0],
-        }
+                    metaMessageDraft: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        metaMessageDraft: args.metaMessageDraft,
-    }
+                        metaMessageDraft: args.metaMessageDraft,
+                }
 
     return rejectDraft.definition.url
             .replace('{metaMessageDraft}', parsedArgs.metaMessageDraft.toString())
@@ -322,9 +325,9 @@ rejectDraft.url = (args: { metaMessageDraft: string | number } | [metaMessageDra
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::rejectDraft
-* @see app/Http/Controllers/Meta/MetaMessageController.php:281
-* @route '/meta/drafts/{metaMessageDraft}/reject'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:281
+ * @route '/meta/drafts/{metaMessageDraft}/reject'
+ */
 rejectDraft.post = (args: { metaMessageDraft: string | number } | [metaMessageDraft: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: rejectDraft.url(args, options),
     method: 'post',
@@ -332,9 +335,9 @@ rejectDraft.post = (args: { metaMessageDraft: string | number } | [metaMessageDr
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::send
-* @see app/Http/Controllers/Meta/MetaMessageController.php:304
-* @route '/meta/conversations/{metaConversation}/send'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:304
+ * @route '/meta/conversations/{metaConversation}/send'
+ */
 export const send = (args: { metaConversation: string | number } | [metaConversation: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: send.url(args, options),
     method: 'post',
@@ -347,25 +350,26 @@ send.definition = {
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::send
-* @see app/Http/Controllers/Meta/MetaMessageController.php:304
-* @route '/meta/conversations/{metaConversation}/send'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:304
+ * @route '/meta/conversations/{metaConversation}/send'
+ */
 send.url = (args: { metaConversation: string | number } | [metaConversation: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { metaConversation: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            metaConversation: args[0],
-        }
+                    metaConversation: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        metaConversation: args.metaConversation,
-    }
+                        metaConversation: args.metaConversation,
+                }
 
     return send.definition.url
             .replace('{metaConversation}', parsedArgs.metaConversation.toString())
@@ -374,14 +378,13 @@ send.url = (args: { metaConversation: string | number } | [metaConversation: str
 
 /**
 * @see \App\Http\Controllers\Meta\MetaMessageController::send
-* @see app/Http/Controllers/Meta/MetaMessageController.php:304
-* @route '/meta/conversations/{metaConversation}/send'
-*/
+ * @see app/Http/Controllers/Meta/MetaMessageController.php:304
+ * @route '/meta/conversations/{metaConversation}/send'
+ */
 send.post = (args: { metaConversation: string | number } | [metaConversation: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: send.url(args, options),
     method: 'post',
 })
-
 const MetaMessageController = { conversations, conversation, analyzeAndDraft, updateDraft, sendDraft, rejectDraft, send }
 
 export default MetaMessageController

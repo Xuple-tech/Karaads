@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::edit
-* @see app/Http/Controllers/Settings/ProfileController.php:19
-* @route '/settings/profile'
-*/
+ * @see app/Http/Controllers/Settings/ProfileController.php:19
+ * @route '/settings/profile'
+ */
 export const edit = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(options),
     method: 'get',
@@ -16,28 +16,27 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::edit
-* @see app/Http/Controllers/Settings/ProfileController.php:19
-* @route '/settings/profile'
-*/
+ * @see app/Http/Controllers/Settings/ProfileController.php:19
+ * @route '/settings/profile'
+ */
 edit.url = (options?: RouteQueryOptions) => {
     return edit.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::edit
-* @see app/Http/Controllers/Settings/ProfileController.php:19
-* @route '/settings/profile'
-*/
+ * @see app/Http/Controllers/Settings/ProfileController.php:19
+ * @route '/settings/profile'
+ */
 edit.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::edit
-* @see app/Http/Controllers/Settings/ProfileController.php:19
-* @route '/settings/profile'
-*/
+ * @see app/Http/Controllers/Settings/ProfileController.php:19
+ * @route '/settings/profile'
+ */
 edit.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(options),
     method: 'head',
@@ -45,9 +44,9 @@ edit.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::update
-* @see app/Http/Controllers/Settings/ProfileController.php:31
-* @route '/settings/profile'
-*/
+ * @see app/Http/Controllers/Settings/ProfileController.php:31
+ * @route '/settings/profile'
+ */
 export const update = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(options),
     method: 'patch',
@@ -60,18 +59,18 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::update
-* @see app/Http/Controllers/Settings/ProfileController.php:31
-* @route '/settings/profile'
-*/
+ * @see app/Http/Controllers/Settings/ProfileController.php:31
+ * @route '/settings/profile'
+ */
 update.url = (options?: RouteQueryOptions) => {
     return update.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::update
-* @see app/Http/Controllers/Settings/ProfileController.php:31
-* @route '/settings/profile'
-*/
+ * @see app/Http/Controllers/Settings/ProfileController.php:31
+ * @route '/settings/profile'
+ */
 update.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(options),
     method: 'patch',
@@ -79,9 +78,9 @@ update.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
 
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::destroy
-* @see app/Http/Controllers/Settings/ProfileController.php:47
-* @route '/settings/profile'
-*/
+ * @see app/Http/Controllers/Settings/ProfileController.php:47
+ * @route '/settings/profile'
+ */
 export const destroy = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(options),
     method: 'delete',
@@ -94,27 +93,26 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::destroy
-* @see app/Http/Controllers/Settings/ProfileController.php:47
-* @route '/settings/profile'
-*/
+ * @see app/Http/Controllers/Settings/ProfileController.php:47
+ * @route '/settings/profile'
+ */
 destroy.url = (options?: RouteQueryOptions) => {
     return destroy.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::destroy
-* @see app/Http/Controllers/Settings/ProfileController.php:47
-* @route '/settings/profile'
-*/
+ * @see app/Http/Controllers/Settings/ProfileController.php:47
+ * @route '/settings/profile'
+ */
 destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(options),
     method: 'delete',
 })
-
 const profile = {
     edit: Object.assign(edit, edit),
-    update: Object.assign(update, update),
-    destroy: Object.assign(destroy, destroy),
+update: Object.assign(update, update),
+destroy: Object.assign(destroy, destroy),
 }
 
 export default profile

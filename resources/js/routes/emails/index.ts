@@ -6,9 +6,9 @@ import connect from './connect'
 import callback from './callback'
 /**
 * @see \App\Http\Controllers\MailController::list
-* @see app/Http/Controllers/MailController.php:392
-* @route '/api/emails/accounts/{accountId}/emails'
-*/
+ * @see app/Http/Controllers/MailController.php:392
+ * @route '/api/emails/accounts/{accountId}/emails'
+ */
 export const list = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: list.url(args, options),
     method: 'get',
@@ -21,25 +21,26 @@ list.definition = {
 
 /**
 * @see \App\Http\Controllers\MailController::list
-* @see app/Http/Controllers/MailController.php:392
-* @route '/api/emails/accounts/{accountId}/emails'
-*/
+ * @see app/Http/Controllers/MailController.php:392
+ * @route '/api/emails/accounts/{accountId}/emails'
+ */
 list.url = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { accountId: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            accountId: args[0],
-        }
+                    accountId: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        accountId: args.accountId,
-    }
+                        accountId: args.accountId,
+                }
 
     return list.definition.url
             .replace('{accountId}', parsedArgs.accountId.toString())
@@ -48,19 +49,18 @@ list.url = (args: { accountId: string | number } | [accountId: string | number ]
 
 /**
 * @see \App\Http\Controllers\MailController::list
-* @see app/Http/Controllers/MailController.php:392
-* @route '/api/emails/accounts/{accountId}/emails'
-*/
+ * @see app/Http/Controllers/MailController.php:392
+ * @route '/api/emails/accounts/{accountId}/emails'
+ */
 list.get = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: list.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\MailController::list
-* @see app/Http/Controllers/MailController.php:392
-* @route '/api/emails/accounts/{accountId}/emails'
-*/
+ * @see app/Http/Controllers/MailController.php:392
+ * @route '/api/emails/accounts/{accountId}/emails'
+ */
 list.head = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: list.url(args, options),
     method: 'head',
@@ -68,9 +68,9 @@ list.head = (args: { accountId: string | number } | [accountId: string | number 
 
 /**
 * @see \App\Http\Controllers\MailController::process
-* @see app/Http/Controllers/MailController.php:430
-* @route '/api/emails/{emailId}/process'
-*/
+ * @see app/Http/Controllers/MailController.php:430
+ * @route '/api/emails/{emailId}/process'
+ */
 export const process = (args: { emailId: string | number } | [emailId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: process.url(args, options),
     method: 'post',
@@ -83,25 +83,26 @@ process.definition = {
 
 /**
 * @see \App\Http\Controllers\MailController::process
-* @see app/Http/Controllers/MailController.php:430
-* @route '/api/emails/{emailId}/process'
-*/
+ * @see app/Http/Controllers/MailController.php:430
+ * @route '/api/emails/{emailId}/process'
+ */
 process.url = (args: { emailId: string | number } | [emailId: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { emailId: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            emailId: args[0],
-        }
+                    emailId: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        emailId: args.emailId,
-    }
+                        emailId: args.emailId,
+                }
 
     return process.definition.url
             .replace('{emailId}', parsedArgs.emailId.toString())
@@ -110,22 +111,21 @@ process.url = (args: { emailId: string | number } | [emailId: string | number ] 
 
 /**
 * @see \App\Http\Controllers\MailController::process
-* @see app/Http/Controllers/MailController.php:430
-* @route '/api/emails/{emailId}/process'
-*/
+ * @see app/Http/Controllers/MailController.php:430
+ * @route '/api/emails/{emailId}/process'
+ */
 process.post = (args: { emailId: string | number } | [emailId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: process.url(args, options),
     method: 'post',
 })
-
 const emails = {
     accounts: Object.assign(accounts, accounts),
-    list: Object.assign(list, list),
-    process: Object.assign(process, process),
-    rules: Object.assign(rules, rules),
-    responses: Object.assign(responses, responses),
-    connect: Object.assign(connect, connect),
-    callback: Object.assign(callback, callback),
+list: Object.assign(list, list),
+process: Object.assign(process, process),
+rules: Object.assign(rules, rules),
+responses: Object.assign(responses, responses),
+connect: Object.assign(connect, connect),
+callback: Object.assign(callback, callback),
 }
 
 export default emails

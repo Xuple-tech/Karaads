@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\ProjectChatController::index
-* @see app/Http/Controllers/ProjectChatController.php:0
-* @route '/api/projects/{project}/conversations'
-*/
+ * @see app/Http/Controllers/ProjectChatController.php:0
+ * @route '/api/projects/{project}/conversations'
+ */
 export const index = (args: { project: string | number } | [project: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
@@ -16,25 +16,26 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\ProjectChatController::index
-* @see app/Http/Controllers/ProjectChatController.php:0
-* @route '/api/projects/{project}/conversations'
-*/
+ * @see app/Http/Controllers/ProjectChatController.php:0
+ * @route '/api/projects/{project}/conversations'
+ */
 index.url = (args: { project: string | number } | [project: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-        }
+                    project: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: args.project,
-    }
+                        project: args.project,
+                }
 
     return index.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -43,19 +44,18 @@ index.url = (args: { project: string | number } | [project: string | number ] | 
 
 /**
 * @see \App\Http\Controllers\ProjectChatController::index
-* @see app/Http/Controllers/ProjectChatController.php:0
-* @route '/api/projects/{project}/conversations'
-*/
+ * @see app/Http/Controllers/ProjectChatController.php:0
+ * @route '/api/projects/{project}/conversations'
+ */
 index.get = (args: { project: string | number } | [project: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ProjectChatController::index
-* @see app/Http/Controllers/ProjectChatController.php:0
-* @route '/api/projects/{project}/conversations'
-*/
+ * @see app/Http/Controllers/ProjectChatController.php:0
+ * @route '/api/projects/{project}/conversations'
+ */
 index.head = (args: { project: string | number } | [project: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(args, options),
     method: 'head',
@@ -63,10 +63,10 @@ index.head = (args: { project: string | number } | [project: string | number ] |
 
 /**
 * @see \App\Http\Controllers\ProjectChatController::create
-* @see app/Http/Controllers/ProjectChatController.php:99
-* @route '/api/projects/{project}/conversations'
-*/
-export const create = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/ProjectChatController.php:99
+ * @route '/api/projects/{project}/conversations'
+ */
+export const create = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: create.url(args, options),
     method: 'post',
 })
@@ -78,31 +78,31 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\ProjectChatController::create
-* @see app/Http/Controllers/ProjectChatController.php:99
-* @route '/api/projects/{project}/conversations'
-*/
-create.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/ProjectChatController.php:99
+ * @route '/api/projects/{project}/conversations'
+ */
+create.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { project: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { project: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            project: args[0],
-        }
+                    project: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        project: typeof args.project === 'object'
-        ? args.project.id
-        : args.project,
-    }
+                        project: typeof args.project === 'object'
+                ? args.project.id
+                : args.project,
+                }
 
     return create.definition.url
             .replace('{project}', parsedArgs.project.toString())
@@ -111,17 +111,16 @@ create.url = (args: { project: string | { id: string } } | [project: string | { 
 
 /**
 * @see \App\Http\Controllers\ProjectChatController::create
-* @see app/Http/Controllers/ProjectChatController.php:99
-* @route '/api/projects/{project}/conversations'
-*/
-create.post = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/ProjectChatController.php:99
+ * @route '/api/projects/{project}/conversations'
+ */
+create.post = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: create.url(args, options),
     method: 'post',
 })
-
 const conversations = {
     index: Object.assign(index, index),
-    create: Object.assign(create, create),
+create: Object.assign(create, create),
 }
 
 export default conversations

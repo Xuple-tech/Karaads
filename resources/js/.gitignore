@@ -1,0 +1,6 @@
+actions/*
+routes/*
+wayfinder/*
+/wayfinder/
+/actions/
+/routes/

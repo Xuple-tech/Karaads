@@ -11,10 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('subscription_plans')) {
+            return;
+        }
+
         Schema::table('subscription_plans', function (Blueprint $table) {
-            $table->string('stripe_product_id')->nullable()->after('description');
-            $table->string('stripe_monthly_price_id')->nullable()->after('stripe_product_id');
-            $table->string('stripe_yearly_price_id')->nullable()->after('stripe_monthly_price_id');
+            if (!Schema::hasColumn('subscription_plans', 'stripe_product_id')) {
+                $table->string('stripe_product_id')->nullable()->after('description');
+            }
+
+            if (!Schema::hasColumn('subscription_plans', 'stripe_monthly_price_id')) {
+                $table->string('stripe_monthly_price_id')->nullable()->after('stripe_product_id');
+            }
+
+            if (!Schema::hasColumn('subscription_plans', 'stripe_yearly_price_id')) {
+                $table->string('stripe_yearly_price_id')->nullable()->after('stripe_monthly_price_id');
+            }
         });
     }
 
@@ -23,8 +35,20 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (!Schema::hasTable('subscription_plans')) {
+            return;
+        }
+
         Schema::table('subscription_plans', function (Blueprint $table) {
-            $table->dropColumn(['stripe_product_id', 'stripe_monthly_price_id', 'stripe_yearly_price_id']);
+            $columns = array_filter([
+                Schema::hasColumn('subscription_plans', 'stripe_product_id') ? 'stripe_product_id' : null,
+                Schema::hasColumn('subscription_plans', 'stripe_monthly_price_id') ? 'stripe_monthly_price_id' : null,
+                Schema::hasColumn('subscription_plans', 'stripe_yearly_price_id') ? 'stripe_yearly_price_id' : null,
+            ]);
+
+            if ($columns !== []) {
+                $table->dropColumn($columns);
+            }
         });
     }
 };

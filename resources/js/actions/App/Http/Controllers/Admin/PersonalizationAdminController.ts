@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::getSystemPersonalizations
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:34
-* @route '/api/admin/system-personalizations'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:34
+ * @route '/api/admin/system-personalizations'
+ */
 const getSystemPersonalizations7c68a2d9e1f7861bd89c4dabe4cfe62f = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getSystemPersonalizations7c68a2d9e1f7861bd89c4dabe4cfe62f.url(options),
     method: 'get',
@@ -16,38 +16,37 @@ getSystemPersonalizations7c68a2d9e1f7861bd89c4dabe4cfe62f.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::getSystemPersonalizations
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:34
-* @route '/api/admin/system-personalizations'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:34
+ * @route '/api/admin/system-personalizations'
+ */
 getSystemPersonalizations7c68a2d9e1f7861bd89c4dabe4cfe62f.url = (options?: RouteQueryOptions) => {
     return getSystemPersonalizations7c68a2d9e1f7861bd89c4dabe4cfe62f.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::getSystemPersonalizations
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:34
-* @route '/api/admin/system-personalizations'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:34
+ * @route '/api/admin/system-personalizations'
+ */
 getSystemPersonalizations7c68a2d9e1f7861bd89c4dabe4cfe62f.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getSystemPersonalizations7c68a2d9e1f7861bd89c4dabe4cfe62f.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::getSystemPersonalizations
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:34
-* @route '/api/admin/system-personalizations'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:34
+ * @route '/api/admin/system-personalizations'
+ */
 getSystemPersonalizations7c68a2d9e1f7861bd89c4dabe4cfe62f.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: getSystemPersonalizations7c68a2d9e1f7861bd89c4dabe4cfe62f.url(options),
     method: 'head',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::getSystemPersonalizations
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:34
-* @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/list/x6z9a2s5'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:34
+ * @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/list/x6z9a2s5'
+ */
 const getSystemPersonalizations2c53d7c00617630ae1e70dc99ec59c58 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getSystemPersonalizations2c53d7c00617630ae1e70dc99ec59c58.url(options),
     method: 'get',
@@ -60,28 +59,27 @@ getSystemPersonalizations2c53d7c00617630ae1e70dc99ec59c58.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::getSystemPersonalizations
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:34
-* @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/list/x6z9a2s5'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:34
+ * @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/list/x6z9a2s5'
+ */
 getSystemPersonalizations2c53d7c00617630ae1e70dc99ec59c58.url = (options?: RouteQueryOptions) => {
     return getSystemPersonalizations2c53d7c00617630ae1e70dc99ec59c58.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::getSystemPersonalizations
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:34
-* @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/list/x6z9a2s5'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:34
+ * @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/list/x6z9a2s5'
+ */
 getSystemPersonalizations2c53d7c00617630ae1e70dc99ec59c58.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getSystemPersonalizations2c53d7c00617630ae1e70dc99ec59c58.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::getSystemPersonalizations
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:34
-* @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/list/x6z9a2s5'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:34
+ * @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/list/x6z9a2s5'
+ */
 getSystemPersonalizations2c53d7c00617630ae1e70dc99ec59c58.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: getSystemPersonalizations2c53d7c00617630ae1e70dc99ec59c58.url(options),
     method: 'head',
@@ -94,9 +92,9 @@ export const getSystemPersonalizations = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::createSystemPersonalization
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:76
-* @route '/api/admin/system-personalizations'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:76
+ * @route '/api/admin/system-personalizations'
+ */
 const createSystemPersonalization7c68a2d9e1f7861bd89c4dabe4cfe62f = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: createSystemPersonalization7c68a2d9e1f7861bd89c4dabe4cfe62f.url(options),
     method: 'post',
@@ -109,28 +107,28 @@ createSystemPersonalization7c68a2d9e1f7861bd89c4dabe4cfe62f.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::createSystemPersonalization
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:76
-* @route '/api/admin/system-personalizations'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:76
+ * @route '/api/admin/system-personalizations'
+ */
 createSystemPersonalization7c68a2d9e1f7861bd89c4dabe4cfe62f.url = (options?: RouteQueryOptions) => {
     return createSystemPersonalization7c68a2d9e1f7861bd89c4dabe4cfe62f.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::createSystemPersonalization
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:76
-* @route '/api/admin/system-personalizations'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:76
+ * @route '/api/admin/system-personalizations'
+ */
 createSystemPersonalization7c68a2d9e1f7861bd89c4dabe4cfe62f.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: createSystemPersonalization7c68a2d9e1f7861bd89c4dabe4cfe62f.url(options),
     method: 'post',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::createSystemPersonalization
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:76
-* @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/create/m8k1j4h7'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:76
+ * @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/create/m8k1j4h7'
+ */
 const createSystemPersonalizationf1b6660ea1d4f01d4186e46b2f3fc89c = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: createSystemPersonalizationf1b6660ea1d4f01d4186e46b2f3fc89c.url(options),
     method: 'post',
@@ -143,18 +141,18 @@ createSystemPersonalizationf1b6660ea1d4f01d4186e46b2f3fc89c.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::createSystemPersonalization
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:76
-* @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/create/m8k1j4h7'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:76
+ * @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/create/m8k1j4h7'
+ */
 createSystemPersonalizationf1b6660ea1d4f01d4186e46b2f3fc89c.url = (options?: RouteQueryOptions) => {
     return createSystemPersonalizationf1b6660ea1d4f01d4186e46b2f3fc89c.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::createSystemPersonalization
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:76
-* @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/create/m8k1j4h7'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:76
+ * @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/create/m8k1j4h7'
+ */
 createSystemPersonalizationf1b6660ea1d4f01d4186e46b2f3fc89c.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: createSystemPersonalizationf1b6660ea1d4f01d4186e46b2f3fc89c.url(options),
     method: 'post',
@@ -167,9 +165,9 @@ export const createSystemPersonalization = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::updateSystemPersonalization
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:151
-* @route '/api/admin/system-personalizations/{id}'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:151
+ * @route '/api/admin/system-personalizations/{id}'
+ */
 const updateSystemPersonalization3aea192bb0f425a1c4d831f8e12fd06d = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateSystemPersonalization3aea192bb0f425a1c4d831f8e12fd06d.url(args, options),
     method: 'put',
@@ -182,25 +180,26 @@ updateSystemPersonalization3aea192bb0f425a1c4d831f8e12fd06d.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::updateSystemPersonalization
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:151
-* @route '/api/admin/system-personalizations/{id}'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:151
+ * @route '/api/admin/system-personalizations/{id}'
+ */
 updateSystemPersonalization3aea192bb0f425a1c4d831f8e12fd06d.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { id: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            id: args[0],
-        }
+                    id: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        id: args.id,
-    }
+                        id: args.id,
+                }
 
     return updateSystemPersonalization3aea192bb0f425a1c4d831f8e12fd06d.definition.url
             .replace('{id}', parsedArgs.id.toString())
@@ -209,19 +208,19 @@ updateSystemPersonalization3aea192bb0f425a1c4d831f8e12fd06d.url = (args: { id: s
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::updateSystemPersonalization
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:151
-* @route '/api/admin/system-personalizations/{id}'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:151
+ * @route '/api/admin/system-personalizations/{id}'
+ */
 updateSystemPersonalization3aea192bb0f425a1c4d831f8e12fd06d.put = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateSystemPersonalization3aea192bb0f425a1c4d831f8e12fd06d.url(args, options),
     method: 'put',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::updateSystemPersonalization
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:151
-* @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/update/{uuid}/g0f3d6s9'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:151
+ * @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/update/{uuid}/g0f3d6s9'
+ */
 const updateSystemPersonalizationf6716480db6ebee2ffc89c4132cdbcb7 = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateSystemPersonalizationf6716480db6ebee2ffc89c4132cdbcb7.url(args, options),
     method: 'put',
@@ -234,25 +233,26 @@ updateSystemPersonalizationf6716480db6ebee2ffc89c4132cdbcb7.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::updateSystemPersonalization
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:151
-* @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/update/{uuid}/g0f3d6s9'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:151
+ * @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/update/{uuid}/g0f3d6s9'
+ */
 updateSystemPersonalizationf6716480db6ebee2ffc89c4132cdbcb7.url = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { uuid: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            uuid: args[0],
-        }
+                    uuid: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        uuid: args.uuid,
-    }
+                        uuid: args.uuid,
+                }
 
     return updateSystemPersonalizationf6716480db6ebee2ffc89c4132cdbcb7.definition.url
             .replace('{uuid}', parsedArgs.uuid.toString())
@@ -261,9 +261,9 @@ updateSystemPersonalizationf6716480db6ebee2ffc89c4132cdbcb7.url = (args: { uuid:
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::updateSystemPersonalization
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:151
-* @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/update/{uuid}/g0f3d6s9'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:151
+ * @route '/api/admin/secure/w6e9r2t5/personalization/system/c4v7b0n3/update/{uuid}/g0f3d6s9'
+ */
 updateSystemPersonalizationf6716480db6ebee2ffc89c4132cdbcb7.put = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateSystemPersonalizationf6716480db6ebee2ffc89c4132cdbcb7.url(args, options),
     method: 'put',
@@ -276,9 +276,9 @@ export const updateSystemPersonalization = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::getTemplates
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:215
-* @route '/api/admin/personalization-templates'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:215
+ * @route '/api/admin/personalization-templates'
+ */
 const getTemplates24020a5c99fdf1f60e8402b88ad17206 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getTemplates24020a5c99fdf1f60e8402b88ad17206.url(options),
     method: 'get',
@@ -291,38 +291,37 @@ getTemplates24020a5c99fdf1f60e8402b88ad17206.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::getTemplates
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:215
-* @route '/api/admin/personalization-templates'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:215
+ * @route '/api/admin/personalization-templates'
+ */
 getTemplates24020a5c99fdf1f60e8402b88ad17206.url = (options?: RouteQueryOptions) => {
     return getTemplates24020a5c99fdf1f60e8402b88ad17206.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::getTemplates
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:215
-* @route '/api/admin/personalization-templates'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:215
+ * @route '/api/admin/personalization-templates'
+ */
 getTemplates24020a5c99fdf1f60e8402b88ad17206.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getTemplates24020a5c99fdf1f60e8402b88ad17206.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::getTemplates
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:215
-* @route '/api/admin/personalization-templates'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:215
+ * @route '/api/admin/personalization-templates'
+ */
 getTemplates24020a5c99fdf1f60e8402b88ad17206.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: getTemplates24020a5c99fdf1f60e8402b88ad17206.url(options),
     method: 'head',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::getTemplates
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:215
-* @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/list/t4y7u0i3'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:215
+ * @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/list/t4y7u0i3'
+ */
 const getTemplates24b15585a36d47821cf1084d10c8b204 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getTemplates24b15585a36d47821cf1084d10c8b204.url(options),
     method: 'get',
@@ -335,28 +334,27 @@ getTemplates24b15585a36d47821cf1084d10c8b204.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::getTemplates
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:215
-* @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/list/t4y7u0i3'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:215
+ * @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/list/t4y7u0i3'
+ */
 getTemplates24b15585a36d47821cf1084d10c8b204.url = (options?: RouteQueryOptions) => {
     return getTemplates24b15585a36d47821cf1084d10c8b204.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::getTemplates
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:215
-* @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/list/t4y7u0i3'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:215
+ * @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/list/t4y7u0i3'
+ */
 getTemplates24b15585a36d47821cf1084d10c8b204.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getTemplates24b15585a36d47821cf1084d10c8b204.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::getTemplates
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:215
-* @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/list/t4y7u0i3'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:215
+ * @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/list/t4y7u0i3'
+ */
 getTemplates24b15585a36d47821cf1084d10c8b204.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: getTemplates24b15585a36d47821cf1084d10c8b204.url(options),
     method: 'head',
@@ -369,9 +367,9 @@ export const getTemplates = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::createTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:258
-* @route '/api/admin/personalization-templates'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:258
+ * @route '/api/admin/personalization-templates'
+ */
 const createTemplate24020a5c99fdf1f60e8402b88ad17206 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: createTemplate24020a5c99fdf1f60e8402b88ad17206.url(options),
     method: 'post',
@@ -384,28 +382,28 @@ createTemplate24020a5c99fdf1f60e8402b88ad17206.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::createTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:258
-* @route '/api/admin/personalization-templates'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:258
+ * @route '/api/admin/personalization-templates'
+ */
 createTemplate24020a5c99fdf1f60e8402b88ad17206.url = (options?: RouteQueryOptions) => {
     return createTemplate24020a5c99fdf1f60e8402b88ad17206.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::createTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:258
-* @route '/api/admin/personalization-templates'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:258
+ * @route '/api/admin/personalization-templates'
+ */
 createTemplate24020a5c99fdf1f60e8402b88ad17206.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: createTemplate24020a5c99fdf1f60e8402b88ad17206.url(options),
     method: 'post',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::createTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:258
-* @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/create/p6a9s2d5'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:258
+ * @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/create/p6a9s2d5'
+ */
 const createTemplatec3224002fb9dd72b29c7a9471e94f96b = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: createTemplatec3224002fb9dd72b29c7a9471e94f96b.url(options),
     method: 'post',
@@ -418,18 +416,18 @@ createTemplatec3224002fb9dd72b29c7a9471e94f96b.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::createTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:258
-* @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/create/p6a9s2d5'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:258
+ * @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/create/p6a9s2d5'
+ */
 createTemplatec3224002fb9dd72b29c7a9471e94f96b.url = (options?: RouteQueryOptions) => {
     return createTemplatec3224002fb9dd72b29c7a9471e94f96b.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::createTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:258
-* @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/create/p6a9s2d5'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:258
+ * @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/create/p6a9s2d5'
+ */
 createTemplatec3224002fb9dd72b29c7a9471e94f96b.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: createTemplatec3224002fb9dd72b29c7a9471e94f96b.url(options),
     method: 'post',
@@ -442,9 +440,9 @@ export const createTemplate = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::updateTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:329
-* @route '/api/admin/personalization-templates/{id}'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:329
+ * @route '/api/admin/personalization-templates/{id}'
+ */
 const updateTemplate5f1493536ca3ff2c7d07326f0ca2f039 = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateTemplate5f1493536ca3ff2c7d07326f0ca2f039.url(args, options),
     method: 'put',
@@ -457,25 +455,26 @@ updateTemplate5f1493536ca3ff2c7d07326f0ca2f039.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::updateTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:329
-* @route '/api/admin/personalization-templates/{id}'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:329
+ * @route '/api/admin/personalization-templates/{id}'
+ */
 updateTemplate5f1493536ca3ff2c7d07326f0ca2f039.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { id: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            id: args[0],
-        }
+                    id: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        id: args.id,
-    }
+                        id: args.id,
+                }
 
     return updateTemplate5f1493536ca3ff2c7d07326f0ca2f039.definition.url
             .replace('{id}', parsedArgs.id.toString())
@@ -484,19 +483,19 @@ updateTemplate5f1493536ca3ff2c7d07326f0ca2f039.url = (args: { id: string | numbe
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::updateTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:329
-* @route '/api/admin/personalization-templates/{id}'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:329
+ * @route '/api/admin/personalization-templates/{id}'
+ */
 updateTemplate5f1493536ca3ff2c7d07326f0ca2f039.put = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateTemplate5f1493536ca3ff2c7d07326f0ca2f039.url(args, options),
     method: 'put',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::updateTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:329
-* @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/update/{uuid}/l8z1x4c7'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:329
+ * @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/update/{uuid}/l8z1x4c7'
+ */
 const updateTemplate4beb01a1ce18b808a5071ec0da933803 = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateTemplate4beb01a1ce18b808a5071ec0da933803.url(args, options),
     method: 'put',
@@ -509,25 +508,26 @@ updateTemplate4beb01a1ce18b808a5071ec0da933803.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::updateTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:329
-* @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/update/{uuid}/l8z1x4c7'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:329
+ * @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/update/{uuid}/l8z1x4c7'
+ */
 updateTemplate4beb01a1ce18b808a5071ec0da933803.url = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { uuid: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            uuid: args[0],
-        }
+                    uuid: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        uuid: args.uuid,
-    }
+                        uuid: args.uuid,
+                }
 
     return updateTemplate4beb01a1ce18b808a5071ec0da933803.definition.url
             .replace('{uuid}', parsedArgs.uuid.toString())
@@ -536,9 +536,9 @@ updateTemplate4beb01a1ce18b808a5071ec0da933803.url = (args: { uuid: string | num
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::updateTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:329
-* @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/update/{uuid}/l8z1x4c7'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:329
+ * @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/update/{uuid}/l8z1x4c7'
+ */
 updateTemplate4beb01a1ce18b808a5071ec0da933803.put = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateTemplate4beb01a1ce18b808a5071ec0da933803.url(args, options),
     method: 'put',
@@ -551,9 +551,9 @@ export const updateTemplate = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::deleteTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:368
-* @route '/api/admin/personalization-templates/{id}'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:368
+ * @route '/api/admin/personalization-templates/{id}'
+ */
 const deleteTemplate5f1493536ca3ff2c7d07326f0ca2f039 = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteTemplate5f1493536ca3ff2c7d07326f0ca2f039.url(args, options),
     method: 'delete',
@@ -566,25 +566,26 @@ deleteTemplate5f1493536ca3ff2c7d07326f0ca2f039.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::deleteTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:368
-* @route '/api/admin/personalization-templates/{id}'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:368
+ * @route '/api/admin/personalization-templates/{id}'
+ */
 deleteTemplate5f1493536ca3ff2c7d07326f0ca2f039.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { id: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            id: args[0],
-        }
+                    id: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        id: args.id,
-    }
+                        id: args.id,
+                }
 
     return deleteTemplate5f1493536ca3ff2c7d07326f0ca2f039.definition.url
             .replace('{id}', parsedArgs.id.toString())
@@ -593,19 +594,19 @@ deleteTemplate5f1493536ca3ff2c7d07326f0ca2f039.url = (args: { id: string | numbe
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::deleteTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:368
-* @route '/api/admin/personalization-templates/{id}'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:368
+ * @route '/api/admin/personalization-templates/{id}'
+ */
 deleteTemplate5f1493536ca3ff2c7d07326f0ca2f039.delete = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteTemplate5f1493536ca3ff2c7d07326f0ca2f039.url(args, options),
     method: 'delete',
 })
 
-/**
+    /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::deleteTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:368
-* @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/delete/{uuid}/v0b3n6m9'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:368
+ * @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/delete/{uuid}/v0b3n6m9'
+ */
 const deleteTemplateb1c8ffa5132c557c69e72e9a0c883208 = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteTemplateb1c8ffa5132c557c69e72e9a0c883208.url(args, options),
     method: 'delete',
@@ -618,25 +619,26 @@ deleteTemplateb1c8ffa5132c557c69e72e9a0c883208.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::deleteTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:368
-* @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/delete/{uuid}/v0b3n6m9'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:368
+ * @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/delete/{uuid}/v0b3n6m9'
+ */
 deleteTemplateb1c8ffa5132c557c69e72e9a0c883208.url = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { uuid: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            uuid: args[0],
-        }
+                    uuid: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        uuid: args.uuid,
-    }
+                        uuid: args.uuid,
+                }
 
     return deleteTemplateb1c8ffa5132c557c69e72e9a0c883208.definition.url
             .replace('{uuid}', parsedArgs.uuid.toString())
@@ -645,9 +647,9 @@ deleteTemplateb1c8ffa5132c557c69e72e9a0c883208.url = (args: { uuid: string | num
 
 /**
 * @see \App\Http\Controllers\Admin\PersonalizationAdminController::deleteTemplate
-* @see app/Http/Controllers/Admin/PersonalizationAdminController.php:368
-* @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/delete/{uuid}/v0b3n6m9'
-*/
+ * @see app/Http/Controllers/Admin/PersonalizationAdminController.php:368
+ * @route '/api/admin/secure/w6e9r2t5/personalization/templates/q2w5e8r1/delete/{uuid}/v0b3n6m9'
+ */
 deleteTemplateb1c8ffa5132c557c69e72e9a0c883208.delete = (args: { uuid: string | number } | [uuid: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteTemplateb1c8ffa5132c557c69e72e9a0c883208.url(args, options),
     method: 'delete',

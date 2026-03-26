@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\SaasOwner\UserStatsController::overview
-* @see app/Http/Controllers/SaasOwner/UserStatsController.php:25
-* @route '/saas-owner/stats'
-*/
+ * @see app/Http/Controllers/SaasOwner/UserStatsController.php:25
+ * @route '/saas-owner/stats'
+ */
 export const overview = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: overview.url(options),
     method: 'get',
@@ -16,28 +16,27 @@ overview.definition = {
 
 /**
 * @see \App\Http\Controllers\SaasOwner\UserStatsController::overview
-* @see app/Http/Controllers/SaasOwner/UserStatsController.php:25
-* @route '/saas-owner/stats'
-*/
+ * @see app/Http/Controllers/SaasOwner/UserStatsController.php:25
+ * @route '/saas-owner/stats'
+ */
 overview.url = (options?: RouteQueryOptions) => {
     return overview.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\SaasOwner\UserStatsController::overview
-* @see app/Http/Controllers/SaasOwner/UserStatsController.php:25
-* @route '/saas-owner/stats'
-*/
+ * @see app/Http/Controllers/SaasOwner/UserStatsController.php:25
+ * @route '/saas-owner/stats'
+ */
 overview.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: overview.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\SaasOwner\UserStatsController::overview
-* @see app/Http/Controllers/SaasOwner/UserStatsController.php:25
-* @route '/saas-owner/stats'
-*/
+ * @see app/Http/Controllers/SaasOwner/UserStatsController.php:25
+ * @route '/saas-owner/stats'
+ */
 overview.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: overview.url(options),
     method: 'head',
@@ -45,10 +44,10 @@ overview.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\SaasOwner\UserStatsController::userDetails
-* @see app/Http/Controllers/SaasOwner/UserStatsController.php:111
-* @route '/saas-owner/stats/users/{user}'
-*/
-export const userDetails = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/SaasOwner/UserStatsController.php:111
+ * @route '/saas-owner/stats/users/{user}'
+ */
+export const userDetails = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: userDetails.url(args, options),
     method: 'get',
 })
@@ -60,31 +59,31 @@ userDetails.definition = {
 
 /**
 * @see \App\Http\Controllers\SaasOwner\UserStatsController::userDetails
-* @see app/Http/Controllers/SaasOwner/UserStatsController.php:111
-* @route '/saas-owner/stats/users/{user}'
-*/
-userDetails.url = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/SaasOwner/UserStatsController.php:111
+ * @route '/saas-owner/stats/users/{user}'
+ */
+userDetails.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { user: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { user: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { user: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            user: args[0],
-        }
+                    user: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        user: typeof args.user === 'object'
-        ? args.user.id
-        : args.user,
-    }
+                        user: typeof args.user === 'object'
+                ? args.user.id
+                : args.user,
+                }
 
     return userDetails.definition.url
             .replace('{user}', parsedArgs.user.toString())
@@ -93,29 +92,28 @@ userDetails.url = (args: { user: string | { id: string } } | [user: string | { i
 
 /**
 * @see \App\Http\Controllers\SaasOwner\UserStatsController::userDetails
-* @see app/Http/Controllers/SaasOwner/UserStatsController.php:111
-* @route '/saas-owner/stats/users/{user}'
-*/
-userDetails.get = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/SaasOwner/UserStatsController.php:111
+ * @route '/saas-owner/stats/users/{user}'
+ */
+userDetails.get = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: userDetails.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\SaasOwner\UserStatsController::userDetails
-* @see app/Http/Controllers/SaasOwner/UserStatsController.php:111
-* @route '/saas-owner/stats/users/{user}'
-*/
-userDetails.head = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+ * @see app/Http/Controllers/SaasOwner/UserStatsController.php:111
+ * @route '/saas-owner/stats/users/{user}'
+ */
+userDetails.head = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: userDetails.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\SaasOwner\UserStatsController::subscriptions
-* @see app/Http/Controllers/SaasOwner/UserStatsController.php:201
-* @route '/saas-owner/stats/subscriptions'
-*/
+ * @see app/Http/Controllers/SaasOwner/UserStatsController.php:201
+ * @route '/saas-owner/stats/subscriptions'
+ */
 export const subscriptions = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: subscriptions.url(options),
     method: 'get',
@@ -128,28 +126,27 @@ subscriptions.definition = {
 
 /**
 * @see \App\Http\Controllers\SaasOwner\UserStatsController::subscriptions
-* @see app/Http/Controllers/SaasOwner/UserStatsController.php:201
-* @route '/saas-owner/stats/subscriptions'
-*/
+ * @see app/Http/Controllers/SaasOwner/UserStatsController.php:201
+ * @route '/saas-owner/stats/subscriptions'
+ */
 subscriptions.url = (options?: RouteQueryOptions) => {
     return subscriptions.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\SaasOwner\UserStatsController::subscriptions
-* @see app/Http/Controllers/SaasOwner/UserStatsController.php:201
-* @route '/saas-owner/stats/subscriptions'
-*/
+ * @see app/Http/Controllers/SaasOwner/UserStatsController.php:201
+ * @route '/saas-owner/stats/subscriptions'
+ */
 subscriptions.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: subscriptions.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\SaasOwner\UserStatsController::subscriptions
-* @see app/Http/Controllers/SaasOwner/UserStatsController.php:201
-* @route '/saas-owner/stats/subscriptions'
-*/
+ * @see app/Http/Controllers/SaasOwner/UserStatsController.php:201
+ * @route '/saas-owner/stats/subscriptions'
+ */
 subscriptions.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: subscriptions.url(options),
     method: 'head',
@@ -157,9 +154,9 @@ subscriptions.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 
 /**
 * @see \App\Http\Controllers\SaasOwner\UserStatsController::engagement
-* @see app/Http/Controllers/SaasOwner/UserStatsController.php:275
-* @route '/saas-owner/stats/engagement'
-*/
+ * @see app/Http/Controllers/SaasOwner/UserStatsController.php:275
+ * @route '/saas-owner/stats/engagement'
+ */
 export const engagement = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: engagement.url(options),
     method: 'get',
@@ -172,38 +169,36 @@ engagement.definition = {
 
 /**
 * @see \App\Http\Controllers\SaasOwner\UserStatsController::engagement
-* @see app/Http/Controllers/SaasOwner/UserStatsController.php:275
-* @route '/saas-owner/stats/engagement'
-*/
+ * @see app/Http/Controllers/SaasOwner/UserStatsController.php:275
+ * @route '/saas-owner/stats/engagement'
+ */
 engagement.url = (options?: RouteQueryOptions) => {
     return engagement.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\SaasOwner\UserStatsController::engagement
-* @see app/Http/Controllers/SaasOwner/UserStatsController.php:275
-* @route '/saas-owner/stats/engagement'
-*/
+ * @see app/Http/Controllers/SaasOwner/UserStatsController.php:275
+ * @route '/saas-owner/stats/engagement'
+ */
 engagement.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: engagement.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\SaasOwner\UserStatsController::engagement
-* @see app/Http/Controllers/SaasOwner/UserStatsController.php:275
-* @route '/saas-owner/stats/engagement'
-*/
+ * @see app/Http/Controllers/SaasOwner/UserStatsController.php:275
+ * @route '/saas-owner/stats/engagement'
+ */
 engagement.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: engagement.url(options),
     method: 'head',
 })
-
 const stats = {
     overview: Object.assign(overview, overview),
-    userDetails: Object.assign(userDetails, userDetails),
-    subscriptions: Object.assign(subscriptions, subscriptions),
-    engagement: Object.assign(engagement, engagement),
+userDetails: Object.assign(userDetails, userDetails),
+subscriptions: Object.assign(subscriptions, subscriptions),
+engagement: Object.assign(engagement, engagement),
 }
 
 export default stats

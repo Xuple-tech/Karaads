@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\User\AgentTemplateController::index
-* @see app/Http/Controllers/User/AgentTemplateController.php:14
-* @route '/ai-agents/templates'
-*/
+ * @see app/Http/Controllers/User/AgentTemplateController.php:14
+ * @route '/ai-agents/templates'
+ */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
     method: 'get',
@@ -16,28 +16,27 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\User\AgentTemplateController::index
-* @see app/Http/Controllers/User/AgentTemplateController.php:14
-* @route '/ai-agents/templates'
-*/
+ * @see app/Http/Controllers/User/AgentTemplateController.php:14
+ * @route '/ai-agents/templates'
+ */
 index.url = (options?: RouteQueryOptions) => {
     return index.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\User\AgentTemplateController::index
-* @see app/Http/Controllers/User/AgentTemplateController.php:14
-* @route '/ai-agents/templates'
-*/
+ * @see app/Http/Controllers/User/AgentTemplateController.php:14
+ * @route '/ai-agents/templates'
+ */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\User\AgentTemplateController::index
-* @see app/Http/Controllers/User/AgentTemplateController.php:14
-* @route '/ai-agents/templates'
-*/
+ * @see app/Http/Controllers/User/AgentTemplateController.php:14
+ * @route '/ai-agents/templates'
+ */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
     method: 'head',
@@ -45,10 +44,10 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\User\AgentTemplateController::show
-* @see app/Http/Controllers/User/AgentTemplateController.php:31
-* @route '/ai-agents/templates/{template}'
-*/
-export const show = (args: { template: string | { id: string } } | [template: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/User/AgentTemplateController.php:31
+ * @route '/ai-agents/templates/{template}'
+ */
+export const show = (args: { template: string | number | { id: string | number } } | [template: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -60,31 +59,31 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\User\AgentTemplateController::show
-* @see app/Http/Controllers/User/AgentTemplateController.php:31
-* @route '/ai-agents/templates/{template}'
-*/
-show.url = (args: { template: string | { id: string } } | [template: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/User/AgentTemplateController.php:31
+ * @route '/ai-agents/templates/{template}'
+ */
+show.url = (args: { template: string | number | { id: string | number } } | [template: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { template: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { template: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { template: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            template: args[0],
-        }
+                    template: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        template: typeof args.template === 'object'
-        ? args.template.id
-        : args.template,
-    }
+                        template: typeof args.template === 'object'
+                ? args.template.id
+                : args.template,
+                }
 
     return show.definition.url
             .replace('{template}', parsedArgs.template.toString())
@@ -93,30 +92,29 @@ show.url = (args: { template: string | { id: string } } | [template: string | { 
 
 /**
 * @see \App\Http\Controllers\User\AgentTemplateController::show
-* @see app/Http/Controllers/User/AgentTemplateController.php:31
-* @route '/ai-agents/templates/{template}'
-*/
-show.get = (args: { template: string | { id: string } } | [template: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/User/AgentTemplateController.php:31
+ * @route '/ai-agents/templates/{template}'
+ */
+show.get = (args: { template: string | number | { id: string | number } } | [template: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\User\AgentTemplateController::show
-* @see app/Http/Controllers/User/AgentTemplateController.php:31
-* @route '/ai-agents/templates/{template}'
-*/
-show.head = (args: { template: string | { id: string } } | [template: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+ * @see app/Http/Controllers/User/AgentTemplateController.php:31
+ * @route '/ai-agents/templates/{template}'
+ */
+show.head = (args: { template: string | number | { id: string | number } } | [template: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\User\AgentTemplateController::apply
-* @see app/Http/Controllers/User/AgentTemplateController.php:50
-* @route '/ai-agents/templates/{template}/apply'
-*/
-export const apply = (args: { template: string | { id: string } } | [template: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/User/AgentTemplateController.php:50
+ * @route '/ai-agents/templates/{template}/apply'
+ */
+export const apply = (args: { template: string | number | { id: string | number } } | [template: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: apply.url(args, options),
     method: 'post',
 })
@@ -128,31 +126,31 @@ apply.definition = {
 
 /**
 * @see \App\Http\Controllers\User\AgentTemplateController::apply
-* @see app/Http/Controllers/User/AgentTemplateController.php:50
-* @route '/ai-agents/templates/{template}/apply'
-*/
-apply.url = (args: { template: string | { id: string } } | [template: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/User/AgentTemplateController.php:50
+ * @route '/ai-agents/templates/{template}/apply'
+ */
+apply.url = (args: { template: string | number | { id: string | number } } | [template: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { template: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { template: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { template: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            template: args[0],
-        }
+                    template: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        template: typeof args.template === 'object'
-        ? args.template.id
-        : args.template,
-    }
+                        template: typeof args.template === 'object'
+                ? args.template.id
+                : args.template,
+                }
 
     return apply.definition.url
             .replace('{template}', parsedArgs.template.toString())
@@ -161,14 +159,13 @@ apply.url = (args: { template: string | { id: string } } | [template: string | {
 
 /**
 * @see \App\Http\Controllers\User\AgentTemplateController::apply
-* @see app/Http/Controllers/User/AgentTemplateController.php:50
-* @route '/ai-agents/templates/{template}/apply'
-*/
-apply.post = (args: { template: string | { id: string } } | [template: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/User/AgentTemplateController.php:50
+ * @route '/ai-agents/templates/{template}/apply'
+ */
+apply.post = (args: { template: string | number | { id: string | number } } | [template: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: apply.url(args, options),
     method: 'post',
 })
-
 const AgentTemplateController = { index, show, apply }
 
 export default AgentTemplateController

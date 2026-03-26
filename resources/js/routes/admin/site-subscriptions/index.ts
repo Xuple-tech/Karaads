@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::index
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:19
-* @route '/admin/site-subscriptions'
-*/
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:19
+ * @route '/admin/site-subscriptions'
+ */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
     method: 'get',
@@ -16,28 +16,27 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::index
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:19
-* @route '/admin/site-subscriptions'
-*/
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:19
+ * @route '/admin/site-subscriptions'
+ */
 index.url = (options?: RouteQueryOptions) => {
     return index.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::index
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:19
-* @route '/admin/site-subscriptions'
-*/
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:19
+ * @route '/admin/site-subscriptions'
+ */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::index
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:19
-* @route '/admin/site-subscriptions'
-*/
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:19
+ * @route '/admin/site-subscriptions'
+ */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
     method: 'head',
@@ -45,9 +44,9 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::create
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:76
-* @route '/admin/site-subscriptions/create'
-*/
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:76
+ * @route '/admin/site-subscriptions/create'
+ */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(options),
     method: 'get',
@@ -60,28 +59,27 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::create
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:76
-* @route '/admin/site-subscriptions/create'
-*/
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:76
+ * @route '/admin/site-subscriptions/create'
+ */
 create.url = (options?: RouteQueryOptions) => {
     return create.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::create
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:76
-* @route '/admin/site-subscriptions/create'
-*/
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:76
+ * @route '/admin/site-subscriptions/create'
+ */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::create
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:76
-* @route '/admin/site-subscriptions/create'
-*/
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:76
+ * @route '/admin/site-subscriptions/create'
+ */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: create.url(options),
     method: 'head',
@@ -89,9 +87,9 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::store
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:91
-* @route '/admin/site-subscriptions'
-*/
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:91
+ * @route '/admin/site-subscriptions'
+ */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
@@ -104,18 +102,18 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::store
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:91
-* @route '/admin/site-subscriptions'
-*/
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:91
+ * @route '/admin/site-subscriptions'
+ */
 store.url = (options?: RouteQueryOptions) => {
     return store.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::store
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:91
-* @route '/admin/site-subscriptions'
-*/
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:91
+ * @route '/admin/site-subscriptions'
+ */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
@@ -123,10 +121,10 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::show
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:135
-* @route '/admin/site-subscriptions/{siteSubscription}'
-*/
-export const show = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:135
+ * @route '/admin/site-subscriptions/{siteSubscription}'
+ */
+export const show = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -138,31 +136,31 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::show
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:135
-* @route '/admin/site-subscriptions/{siteSubscription}'
-*/
-show.url = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:135
+ * @route '/admin/site-subscriptions/{siteSubscription}'
+ */
+show.url = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteSubscription: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { siteSubscription: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { siteSubscription: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            siteSubscription: args[0],
-        }
+                    siteSubscription: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        siteSubscription: typeof args.siteSubscription === 'object'
-        ? args.siteSubscription.id
-        : args.siteSubscription,
-    }
+                        siteSubscription: typeof args.siteSubscription === 'object'
+                ? args.siteSubscription.id
+                : args.siteSubscription,
+                }
 
     return show.definition.url
             .replace('{siteSubscription}', parsedArgs.siteSubscription.toString())
@@ -171,30 +169,29 @@ show.url = (args: { siteSubscription: string | { id: string } } | [siteSubscript
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::show
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:135
-* @route '/admin/site-subscriptions/{siteSubscription}'
-*/
-show.get = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:135
+ * @route '/admin/site-subscriptions/{siteSubscription}'
+ */
+show.get = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::show
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:135
-* @route '/admin/site-subscriptions/{siteSubscription}'
-*/
-show.head = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:135
+ * @route '/admin/site-subscriptions/{siteSubscription}'
+ */
+show.head = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::edit
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:155
-* @route '/admin/site-subscriptions/{siteSubscription}/edit'
-*/
-export const edit = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:155
+ * @route '/admin/site-subscriptions/{siteSubscription}/edit'
+ */
+export const edit = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -206,31 +203,31 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::edit
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:155
-* @route '/admin/site-subscriptions/{siteSubscription}/edit'
-*/
-edit.url = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:155
+ * @route '/admin/site-subscriptions/{siteSubscription}/edit'
+ */
+edit.url = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteSubscription: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { siteSubscription: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { siteSubscription: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            siteSubscription: args[0],
-        }
+                    siteSubscription: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        siteSubscription: typeof args.siteSubscription === 'object'
-        ? args.siteSubscription.id
-        : args.siteSubscription,
-    }
+                        siteSubscription: typeof args.siteSubscription === 'object'
+                ? args.siteSubscription.id
+                : args.siteSubscription,
+                }
 
     return edit.definition.url
             .replace('{siteSubscription}', parsedArgs.siteSubscription.toString())
@@ -239,30 +236,29 @@ edit.url = (args: { siteSubscription: string | { id: string } } | [siteSubscript
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::edit
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:155
-* @route '/admin/site-subscriptions/{siteSubscription}/edit'
-*/
-edit.get = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:155
+ * @route '/admin/site-subscriptions/{siteSubscription}/edit'
+ */
+edit.get = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::edit
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:155
-* @route '/admin/site-subscriptions/{siteSubscription}/edit'
-*/
-edit.head = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:155
+ * @route '/admin/site-subscriptions/{siteSubscription}/edit'
+ */
+edit.head = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::update
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:173
-* @route '/admin/site-subscriptions/{siteSubscription}'
-*/
-export const update = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:173
+ * @route '/admin/site-subscriptions/{siteSubscription}'
+ */
+export const update = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -274,31 +270,31 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::update
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:173
-* @route '/admin/site-subscriptions/{siteSubscription}'
-*/
-update.url = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:173
+ * @route '/admin/site-subscriptions/{siteSubscription}'
+ */
+update.url = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteSubscription: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { siteSubscription: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { siteSubscription: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            siteSubscription: args[0],
-        }
+                    siteSubscription: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        siteSubscription: typeof args.siteSubscription === 'object'
-        ? args.siteSubscription.id
-        : args.siteSubscription,
-    }
+                        siteSubscription: typeof args.siteSubscription === 'object'
+                ? args.siteSubscription.id
+                : args.siteSubscription,
+                }
 
     return update.definition.url
             .replace('{siteSubscription}', parsedArgs.siteSubscription.toString())
@@ -307,20 +303,20 @@ update.url = (args: { siteSubscription: string | { id: string } } | [siteSubscri
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::update
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:173
-* @route '/admin/site-subscriptions/{siteSubscription}'
-*/
-update.put = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:173
+ * @route '/admin/site-subscriptions/{siteSubscription}'
+ */
+update.put = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::destroy
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:212
-* @route '/admin/site-subscriptions/{siteSubscription}'
-*/
-export const destroy = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:212
+ * @route '/admin/site-subscriptions/{siteSubscription}'
+ */
+export const destroy = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -332,31 +328,31 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::destroy
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:212
-* @route '/admin/site-subscriptions/{siteSubscription}'
-*/
-destroy.url = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:212
+ * @route '/admin/site-subscriptions/{siteSubscription}'
+ */
+destroy.url = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteSubscription: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { siteSubscription: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { siteSubscription: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            siteSubscription: args[0],
-        }
+                    siteSubscription: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        siteSubscription: typeof args.siteSubscription === 'object'
-        ? args.siteSubscription.id
-        : args.siteSubscription,
-    }
+                        siteSubscription: typeof args.siteSubscription === 'object'
+                ? args.siteSubscription.id
+                : args.siteSubscription,
+                }
 
     return destroy.definition.url
             .replace('{siteSubscription}', parsedArgs.siteSubscription.toString())
@@ -365,20 +361,20 @@ destroy.url = (args: { siteSubscription: string | { id: string } } | [siteSubscr
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::destroy
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:212
-* @route '/admin/site-subscriptions/{siteSubscription}'
-*/
-destroy.delete = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:212
+ * @route '/admin/site-subscriptions/{siteSubscription}'
+ */
+destroy.delete = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::cancel
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:223
-* @route '/admin/site-subscriptions/{siteSubscription}/cancel'
-*/
-export const cancel = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:223
+ * @route '/admin/site-subscriptions/{siteSubscription}/cancel'
+ */
+export const cancel = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: cancel.url(args, options),
     method: 'post',
 })
@@ -390,31 +386,31 @@ cancel.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::cancel
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:223
-* @route '/admin/site-subscriptions/{siteSubscription}/cancel'
-*/
-cancel.url = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:223
+ * @route '/admin/site-subscriptions/{siteSubscription}/cancel'
+ */
+cancel.url = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteSubscription: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { siteSubscription: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { siteSubscription: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            siteSubscription: args[0],
-        }
+                    siteSubscription: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        siteSubscription: typeof args.siteSubscription === 'object'
-        ? args.siteSubscription.id
-        : args.siteSubscription,
-    }
+                        siteSubscription: typeof args.siteSubscription === 'object'
+                ? args.siteSubscription.id
+                : args.siteSubscription,
+                }
 
     return cancel.definition.url
             .replace('{siteSubscription}', parsedArgs.siteSubscription.toString())
@@ -423,20 +419,20 @@ cancel.url = (args: { siteSubscription: string | { id: string } } | [siteSubscri
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::cancel
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:223
-* @route '/admin/site-subscriptions/{siteSubscription}/cancel'
-*/
-cancel.post = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:223
+ * @route '/admin/site-subscriptions/{siteSubscription}/cancel'
+ */
+cancel.post = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: cancel.url(args, options),
     method: 'post',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::reactivate
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:237
-* @route '/admin/site-subscriptions/{siteSubscription}/reactivate'
-*/
-export const reactivate = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:237
+ * @route '/admin/site-subscriptions/{siteSubscription}/reactivate'
+ */
+export const reactivate = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: reactivate.url(args, options),
     method: 'post',
 })
@@ -448,31 +444,31 @@ reactivate.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::reactivate
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:237
-* @route '/admin/site-subscriptions/{siteSubscription}/reactivate'
-*/
-reactivate.url = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:237
+ * @route '/admin/site-subscriptions/{siteSubscription}/reactivate'
+ */
+reactivate.url = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteSubscription: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { siteSubscription: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { siteSubscription: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            siteSubscription: args[0],
-        }
+                    siteSubscription: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        siteSubscription: typeof args.siteSubscription === 'object'
-        ? args.siteSubscription.id
-        : args.siteSubscription,
-    }
+                        siteSubscription: typeof args.siteSubscription === 'object'
+                ? args.siteSubscription.id
+                : args.siteSubscription,
+                }
 
     return reactivate.definition.url
             .replace('{siteSubscription}', parsedArgs.siteSubscription.toString())
@@ -481,20 +477,20 @@ reactivate.url = (args: { siteSubscription: string | { id: string } } | [siteSub
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::reactivate
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:237
-* @route '/admin/site-subscriptions/{siteSubscription}/reactivate'
-*/
-reactivate.post = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:237
+ * @route '/admin/site-subscriptions/{siteSubscription}/reactivate'
+ */
+reactivate.post = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: reactivate.url(args, options),
     method: 'post',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::renew
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:263
-* @route '/admin/site-subscriptions/{siteSubscription}/renew'
-*/
-export const renew = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:263
+ * @route '/admin/site-subscriptions/{siteSubscription}/renew'
+ */
+export const renew = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: renew.url(args, options),
     method: 'post',
 })
@@ -506,31 +502,31 @@ renew.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::renew
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:263
-* @route '/admin/site-subscriptions/{siteSubscription}/renew'
-*/
-renew.url = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:263
+ * @route '/admin/site-subscriptions/{siteSubscription}/renew'
+ */
+renew.url = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteSubscription: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { siteSubscription: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { siteSubscription: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            siteSubscription: args[0],
-        }
+                    siteSubscription: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        siteSubscription: typeof args.siteSubscription === 'object'
-        ? args.siteSubscription.id
-        : args.siteSubscription,
-    }
+                        siteSubscription: typeof args.siteSubscription === 'object'
+                ? args.siteSubscription.id
+                : args.siteSubscription,
+                }
 
     return renew.definition.url
             .replace('{siteSubscription}', parsedArgs.siteSubscription.toString())
@@ -539,20 +535,20 @@ renew.url = (args: { siteSubscription: string | { id: string } } | [siteSubscrip
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::renew
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:263
-* @route '/admin/site-subscriptions/{siteSubscription}/renew'
-*/
-renew.post = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:263
+ * @route '/admin/site-subscriptions/{siteSubscription}/renew'
+ */
+renew.post = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: renew.url(args, options),
     method: 'post',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::changePlan
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:281
-* @route '/admin/site-subscriptions/{siteSubscription}/change-plan'
-*/
-export const changePlan = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:281
+ * @route '/admin/site-subscriptions/{siteSubscription}/change-plan'
+ */
+export const changePlan = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: changePlan.url(args, options),
     method: 'post',
 })
@@ -564,31 +560,31 @@ changePlan.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::changePlan
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:281
-* @route '/admin/site-subscriptions/{siteSubscription}/change-plan'
-*/
-changePlan.url = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:281
+ * @route '/admin/site-subscriptions/{siteSubscription}/change-plan'
+ */
+changePlan.url = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteSubscription: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { siteSubscription: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { siteSubscription: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            siteSubscription: args[0],
-        }
+                    siteSubscription: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        siteSubscription: typeof args.siteSubscription === 'object'
-        ? args.siteSubscription.id
-        : args.siteSubscription,
-    }
+                        siteSubscription: typeof args.siteSubscription === 'object'
+                ? args.siteSubscription.id
+                : args.siteSubscription,
+                }
 
     return changePlan.definition.url
             .replace('{siteSubscription}', parsedArgs.siteSubscription.toString())
@@ -597,20 +593,20 @@ changePlan.url = (args: { siteSubscription: string | { id: string } } | [siteSub
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::changePlan
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:281
-* @route '/admin/site-subscriptions/{siteSubscription}/change-plan'
-*/
-changePlan.post = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:281
+ * @route '/admin/site-subscriptions/{siteSubscription}/change-plan'
+ */
+changePlan.post = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: changePlan.url(args, options),
     method: 'post',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::extendTrial
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:310
-* @route '/admin/site-subscriptions/{siteSubscription}/extend-trial'
-*/
-export const extendTrial = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:310
+ * @route '/admin/site-subscriptions/{siteSubscription}/extend-trial'
+ */
+export const extendTrial = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: extendTrial.url(args, options),
     method: 'post',
 })
@@ -622,31 +618,31 @@ extendTrial.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::extendTrial
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:310
-* @route '/admin/site-subscriptions/{siteSubscription}/extend-trial'
-*/
-extendTrial.url = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:310
+ * @route '/admin/site-subscriptions/{siteSubscription}/extend-trial'
+ */
+extendTrial.url = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteSubscription: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { siteSubscription: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { siteSubscription: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            siteSubscription: args[0],
-        }
+                    siteSubscription: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        siteSubscription: typeof args.siteSubscription === 'object'
-        ? args.siteSubscription.id
-        : args.siteSubscription,
-    }
+                        siteSubscription: typeof args.siteSubscription === 'object'
+                ? args.siteSubscription.id
+                : args.siteSubscription,
+                }
 
     return extendTrial.definition.url
             .replace('{siteSubscription}', parsedArgs.siteSubscription.toString())
@@ -655,20 +651,20 @@ extendTrial.url = (args: { siteSubscription: string | { id: string } } | [siteSu
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::extendTrial
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:310
-* @route '/admin/site-subscriptions/{siteSubscription}/extend-trial'
-*/
-extendTrial.post = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:310
+ * @route '/admin/site-subscriptions/{siteSubscription}/extend-trial'
+ */
+extendTrial.post = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: extendTrial.url(args, options),
     method: 'post',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::syncStripe
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:330
-* @route '/admin/site-subscriptions/{siteSubscription}/sync-stripe'
-*/
-export const syncStripe = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:330
+ * @route '/admin/site-subscriptions/{siteSubscription}/sync-stripe'
+ */
+export const syncStripe = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: syncStripe.url(args, options),
     method: 'post',
 })
@@ -680,31 +676,31 @@ syncStripe.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::syncStripe
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:330
-* @route '/admin/site-subscriptions/{siteSubscription}/sync-stripe'
-*/
-syncStripe.url = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:330
+ * @route '/admin/site-subscriptions/{siteSubscription}/sync-stripe'
+ */
+syncStripe.url = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { siteSubscription: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { siteSubscription: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { siteSubscription: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            siteSubscription: args[0],
-        }
+                    siteSubscription: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        siteSubscription: typeof args.siteSubscription === 'object'
-        ? args.siteSubscription.id
-        : args.siteSubscription,
-    }
+                        siteSubscription: typeof args.siteSubscription === 'object'
+                ? args.siteSubscription.id
+                : args.siteSubscription,
+                }
 
     return syncStripe.definition.url
             .replace('{siteSubscription}', parsedArgs.siteSubscription.toString())
@@ -713,19 +709,19 @@ syncStripe.url = (args: { siteSubscription: string | { id: string } } | [siteSub
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::syncStripe
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:330
-* @route '/admin/site-subscriptions/{siteSubscription}/sync-stripe'
-*/
-syncStripe.post = (args: { siteSubscription: string | { id: string } } | [siteSubscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:330
+ * @route '/admin/site-subscriptions/{siteSubscription}/sync-stripe'
+ */
+syncStripe.post = (args: { siteSubscription: string | number | { id: string | number } } | [siteSubscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: syncStripe.url(args, options),
     method: 'post',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::analytics
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:342
-* @route '/admin/site-subscriptions/analytics'
-*/
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:342
+ * @route '/admin/site-subscriptions/analytics'
+ */
 export const analytics = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: analytics.url(options),
     method: 'get',
@@ -738,48 +734,46 @@ analytics.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::analytics
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:342
-* @route '/admin/site-subscriptions/analytics'
-*/
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:342
+ * @route '/admin/site-subscriptions/analytics'
+ */
 analytics.url = (options?: RouteQueryOptions) => {
     return analytics.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::analytics
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:342
-* @route '/admin/site-subscriptions/analytics'
-*/
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:342
+ * @route '/admin/site-subscriptions/analytics'
+ */
 analytics.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: analytics.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\SiteSubscriptionController::analytics
-* @see app/Http/Controllers/Admin/SiteSubscriptionController.php:342
-* @route '/admin/site-subscriptions/analytics'
-*/
+ * @see app/Http/Controllers/Admin/SiteSubscriptionController.php:342
+ * @route '/admin/site-subscriptions/analytics'
+ */
 analytics.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: analytics.url(options),
     method: 'head',
 })
-
 const siteSubscriptions = {
     index: Object.assign(index, index),
-    create: Object.assign(create, create),
-    store: Object.assign(store, store),
-    show: Object.assign(show, show),
-    edit: Object.assign(edit, edit),
-    update: Object.assign(update, update),
-    destroy: Object.assign(destroy, destroy),
-    cancel: Object.assign(cancel, cancel),
-    reactivate: Object.assign(reactivate, reactivate),
-    renew: Object.assign(renew, renew),
-    changePlan: Object.assign(changePlan, changePlan),
-    extendTrial: Object.assign(extendTrial, extendTrial),
-    syncStripe: Object.assign(syncStripe, syncStripe),
-    analytics: Object.assign(analytics, analytics),
+create: Object.assign(create, create),
+store: Object.assign(store, store),
+show: Object.assign(show, show),
+edit: Object.assign(edit, edit),
+update: Object.assign(update, update),
+destroy: Object.assign(destroy, destroy),
+cancel: Object.assign(cancel, cancel),
+reactivate: Object.assign(reactivate, reactivate),
+renew: Object.assign(renew, renew),
+changePlan: Object.assign(changePlan, changePlan),
+extendTrial: Object.assign(extendTrial, extendTrial),
+syncStripe: Object.assign(syncStripe, syncStripe),
+analytics: Object.assign(analytics, analytics),
 }
 
 export default siteSubscriptions

@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\User::language
-* @see app/Http/Controllers/User.php:11
-* @route '/user/setting/language'
-*/
+ * @see app/Http/Controllers/User.php:11
+ * @route '/user/setting/language'
+ */
 export const language = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: language.url(options),
     method: 'post',
@@ -16,23 +16,22 @@ language.definition = {
 
 /**
 * @see \App\Http\Controllers\User::language
-* @see app/Http/Controllers/User.php:11
-* @route '/user/setting/language'
-*/
+ * @see app/Http/Controllers/User.php:11
+ * @route '/user/setting/language'
+ */
 language.url = (options?: RouteQueryOptions) => {
     return language.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\User::language
-* @see app/Http/Controllers/User.php:11
-* @route '/user/setting/language'
-*/
+ * @see app/Http/Controllers/User.php:11
+ * @route '/user/setting/language'
+ */
 language.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: language.url(options),
     method: 'post',
 })
-
 const setting = {
     language: Object.assign(language, language),
 }

@@ -2,9 +2,9 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
 import file from './file'
 /**
 * @see \App\Http\Controllers\ChatController::sendm
-* @see app/Http/Controllers/ChatController.php:246
-* @route '/api/create/challenge/message'
-*/
+ * @see app/Http/Controllers/ChatController.php:246
+ * @route '/api/create/challenge/message'
+ */
 export const sendm = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: sendm.url(options),
     method: 'post',
@@ -17,18 +17,18 @@ sendm.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::sendm
-* @see app/Http/Controllers/ChatController.php:246
-* @route '/api/create/challenge/message'
-*/
+ * @see app/Http/Controllers/ChatController.php:246
+ * @route '/api/create/challenge/message'
+ */
 sendm.url = (options?: RouteQueryOptions) => {
     return sendm.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\ChatController::sendm
-* @see app/Http/Controllers/ChatController.php:246
-* @route '/api/create/challenge/message'
-*/
+ * @see app/Http/Controllers/ChatController.php:246
+ * @route '/api/create/challenge/message'
+ */
 sendm.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: sendm.url(options),
     method: 'post',
@@ -36,9 +36,9 @@ sendm.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\ChatController::newMethod
-* @see app/Http/Controllers/ChatController.php:60
-* @route '/c/new'
-*/
+ * @see app/Http/Controllers/ChatController.php:60
+ * @route '/c/new'
+ */
 export const newMethod = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: newMethod.url(options),
     method: 'get',
@@ -51,28 +51,27 @@ newMethod.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::newMethod
-* @see app/Http/Controllers/ChatController.php:60
-* @route '/c/new'
-*/
+ * @see app/Http/Controllers/ChatController.php:60
+ * @route '/c/new'
+ */
 newMethod.url = (options?: RouteQueryOptions) => {
     return newMethod.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\ChatController::newMethod
-* @see app/Http/Controllers/ChatController.php:60
-* @route '/c/new'
-*/
+ * @see app/Http/Controllers/ChatController.php:60
+ * @route '/c/new'
+ */
 newMethod.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: newMethod.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ChatController::newMethod
-* @see app/Http/Controllers/ChatController.php:60
-* @route '/c/new'
-*/
+ * @see app/Http/Controllers/ChatController.php:60
+ * @route '/c/new'
+ */
 newMethod.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: newMethod.url(options),
     method: 'head',
@@ -80,10 +79,10 @@ newMethod.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\ChatController::show
-* @see app/Http/Controllers/ChatController.php:98
-* @route '/c/{conversation}'
-*/
-export const show = (args: { conversation: string | { id: string } } | [conversation: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/ChatController.php:98
+ * @route '/c/{conversation}'
+ */
+export const show = (args: { conversation: number | { id: number } } | [conversation: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -95,31 +94,31 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::show
-* @see app/Http/Controllers/ChatController.php:98
-* @route '/c/{conversation}'
-*/
-show.url = (args: { conversation: string | { id: string } } | [conversation: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/ChatController.php:98
+ * @route '/c/{conversation}'
+ */
+show.url = (args: { conversation: number | { id: number } } | [conversation: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { conversation: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { conversation: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { conversation: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            conversation: args[0],
-        }
+                    conversation: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        conversation: typeof args.conversation === 'object'
-        ? args.conversation.id
-        : args.conversation,
-    }
+                        conversation: typeof args.conversation === 'object'
+                ? args.conversation.id
+                : args.conversation,
+                }
 
     return show.definition.url
             .replace('{conversation}', parsedArgs.conversation.toString())
@@ -128,29 +127,28 @@ show.url = (args: { conversation: string | { id: string } } | [conversation: str
 
 /**
 * @see \App\Http\Controllers\ChatController::show
-* @see app/Http/Controllers/ChatController.php:98
-* @route '/c/{conversation}'
-*/
-show.get = (args: { conversation: string | { id: string } } | [conversation: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/ChatController.php:98
+ * @route '/c/{conversation}'
+ */
+show.get = (args: { conversation: number | { id: number } } | [conversation: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\ChatController::show
-* @see app/Http/Controllers/ChatController.php:98
-* @route '/c/{conversation}'
-*/
-show.head = (args: { conversation: string | { id: string } } | [conversation: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+ * @see app/Http/Controllers/ChatController.php:98
+ * @route '/c/{conversation}'
+ */
+show.head = (args: { conversation: number | { id: number } } | [conversation: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\ChatController::send
-* @see app/Http/Controllers/ChatController.php:246
-* @route '/create-two-step-challagene'
-*/
+ * @see app/Http/Controllers/ChatController.php:246
+ * @route '/create-two-step-challagene'
+ */
 export const send = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: send.url(options),
     method: 'post',
@@ -163,18 +161,18 @@ send.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::send
-* @see app/Http/Controllers/ChatController.php:246
-* @route '/create-two-step-challagene'
-*/
+ * @see app/Http/Controllers/ChatController.php:246
+ * @route '/create-two-step-challagene'
+ */
 send.url = (options?: RouteQueryOptions) => {
     return send.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\ChatController::send
-* @see app/Http/Controllers/ChatController.php:246
-* @route '/create-two-step-challagene'
-*/
+ * @see app/Http/Controllers/ChatController.php:246
+ * @route '/create-two-step-challagene'
+ */
 send.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: send.url(options),
     method: 'post',
@@ -182,9 +180,9 @@ send.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\ChatController::regenerate
-* @see app/Http/Controllers/ChatController.php:858
-* @route '/c/{messageId}/regenerate'
-*/
+ * @see app/Http/Controllers/ChatController.php:858
+ * @route '/c/{messageId}/regenerate'
+ */
 export const regenerate = (args: { messageId: string | number } | [messageId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: regenerate.url(args, options),
     method: 'post',
@@ -197,25 +195,26 @@ regenerate.definition = {
 
 /**
 * @see \App\Http\Controllers\ChatController::regenerate
-* @see app/Http/Controllers/ChatController.php:858
-* @route '/c/{messageId}/regenerate'
-*/
+ * @see app/Http/Controllers/ChatController.php:858
+ * @route '/c/{messageId}/regenerate'
+ */
 regenerate.url = (args: { messageId: string | number } | [messageId: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { messageId: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            messageId: args[0],
-        }
+                    messageId: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        messageId: args.messageId,
-    }
+                        messageId: args.messageId,
+                }
 
     return regenerate.definition.url
             .replace('{messageId}', parsedArgs.messageId.toString())
@@ -224,21 +223,20 @@ regenerate.url = (args: { messageId: string | number } | [messageId: string | nu
 
 /**
 * @see \App\Http\Controllers\ChatController::regenerate
-* @see app/Http/Controllers/ChatController.php:858
-* @route '/c/{messageId}/regenerate'
-*/
+ * @see app/Http/Controllers/ChatController.php:858
+ * @route '/c/{messageId}/regenerate'
+ */
 regenerate.post = (args: { messageId: string | number } | [messageId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: regenerate.url(args, options),
     method: 'post',
 })
-
 const chat = {
     file: Object.assign(file, file),
-    sendm: Object.assign(sendm, sendm),
-    new: Object.assign(newMethod, newMethod),
-    show: Object.assign(show, show),
-    send: Object.assign(send, send),
-    regenerate: Object.assign(regenerate, regenerate),
+sendm: Object.assign(sendm, sendm),
+new: Object.assign(newMethod, newMethod),
+show: Object.assign(show, show),
+send: Object.assign(send, send),
+regenerate: Object.assign(regenerate, regenerate),
 }
 
 export default chat

@@ -1,8 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../wayfinder'
+import privateMethodCd1e55 from './private'
 /**
-* @see vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProvider.php:98
-* @route '/storage/{path}'
-*/
+ * @see vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProvider.php:98
+ * @route '/storage/{path}'
+ */
 export const privateMethod = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: privateMethod.url(args, options),
     method: 'get',
@@ -14,25 +15,26 @@ privateMethod.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProvider.php:98
-* @route '/storage/{path}'
-*/
+ * @see vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProvider.php:98
+ * @route '/storage/{path}'
+ */
 privateMethod.url = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { path: args }
     }
 
+    
     if (Array.isArray(args)) {
         args = {
-            path: args[0],
-        }
+                    path: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        path: args.path,
-    }
+                        path: args.path,
+                }
 
     return privateMethod.definition.url
             .replace('{path}', parsedArgs.path.toString())
@@ -40,25 +42,23 @@ privateMethod.url = (args: { path: string | number } | [path: string | number ] 
 }
 
 /**
-* @see vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProvider.php:98
-* @route '/storage/{path}'
-*/
+ * @see vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProvider.php:98
+ * @route '/storage/{path}'
+ */
 privateMethod.get = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: privateMethod.url(args, options),
     method: 'get',
 })
-
 /**
-* @see vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProvider.php:98
-* @route '/storage/{path}'
-*/
+ * @see vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProvider.php:98
+ * @route '/storage/{path}'
+ */
 privateMethod.head = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: privateMethod.url(args, options),
     method: 'head',
 })
-
 const storage = {
-    private: Object.assign(privateMethod, privateMethod),
+    private: Object.assign(privateMethod, privateMethodCd1e55),
 }
 
 export default storage

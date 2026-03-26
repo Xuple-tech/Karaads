@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::index
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:16
-* @route '/admin/agent-knowledge-bases'
-*/
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:16
+ * @route '/admin/agent-knowledge-bases'
+ */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
     method: 'get',
@@ -16,28 +16,27 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::index
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:16
-* @route '/admin/agent-knowledge-bases'
-*/
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:16
+ * @route '/admin/agent-knowledge-bases'
+ */
 index.url = (options?: RouteQueryOptions) => {
     return index.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::index
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:16
-* @route '/admin/agent-knowledge-bases'
-*/
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:16
+ * @route '/admin/agent-knowledge-bases'
+ */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::index
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:16
-* @route '/admin/agent-knowledge-bases'
-*/
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:16
+ * @route '/admin/agent-knowledge-bases'
+ */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
     method: 'head',
@@ -45,9 +44,9 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::create
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:50
-* @route '/admin/agent-knowledge-bases/create'
-*/
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:50
+ * @route '/admin/agent-knowledge-bases/create'
+ */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(options),
     method: 'get',
@@ -60,28 +59,27 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::create
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:50
-* @route '/admin/agent-knowledge-bases/create'
-*/
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:50
+ * @route '/admin/agent-knowledge-bases/create'
+ */
 create.url = (options?: RouteQueryOptions) => {
     return create.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::create
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:50
-* @route '/admin/agent-knowledge-bases/create'
-*/
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:50
+ * @route '/admin/agent-knowledge-bases/create'
+ */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::create
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:50
-* @route '/admin/agent-knowledge-bases/create'
-*/
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:50
+ * @route '/admin/agent-knowledge-bases/create'
+ */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: create.url(options),
     method: 'head',
@@ -89,9 +87,9 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::store
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:61
-* @route '/admin/agent-knowledge-bases'
-*/
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:61
+ * @route '/admin/agent-knowledge-bases'
+ */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
@@ -104,18 +102,18 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::store
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:61
-* @route '/admin/agent-knowledge-bases'
-*/
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:61
+ * @route '/admin/agent-knowledge-bases'
+ */
 store.url = (options?: RouteQueryOptions) => {
     return store.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::store
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:61
-* @route '/admin/agent-knowledge-bases'
-*/
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:61
+ * @route '/admin/agent-knowledge-bases'
+ */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
@@ -123,10 +121,10 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::show
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:86
-* @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
-*/
-export const show = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowledgeBase: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:86
+ * @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
+ */
+export const show = (args: { agentKnowledgeBase: string | number | { id: string | number } } | [agentKnowledgeBase: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -138,31 +136,31 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::show
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:86
-* @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
-*/
-show.url = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowledgeBase: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:86
+ * @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
+ */
+show.url = (args: { agentKnowledgeBase: string | number | { id: string | number } } | [agentKnowledgeBase: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentKnowledgeBase: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { agentKnowledgeBase: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { agentKnowledgeBase: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            agentKnowledgeBase: args[0],
-        }
+                    agentKnowledgeBase: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        agentKnowledgeBase: typeof args.agentKnowledgeBase === 'object'
-        ? args.agentKnowledgeBase.id
-        : args.agentKnowledgeBase,
-    }
+                        agentKnowledgeBase: typeof args.agentKnowledgeBase === 'object'
+                ? args.agentKnowledgeBase.id
+                : args.agentKnowledgeBase,
+                }
 
     return show.definition.url
             .replace('{agentKnowledgeBase}', parsedArgs.agentKnowledgeBase.toString())
@@ -171,30 +169,29 @@ show.url = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowle
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::show
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:86
-* @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
-*/
-show.get = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowledgeBase: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:86
+ * @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
+ */
+show.get = (args: { agentKnowledgeBase: string | number | { id: string | number } } | [agentKnowledgeBase: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::show
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:86
-* @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
-*/
-show.head = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowledgeBase: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:86
+ * @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
+ */
+show.head = (args: { agentKnowledgeBase: string | number | { id: string | number } } | [agentKnowledgeBase: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::edit
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:98
-* @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}/edit'
-*/
-export const edit = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowledgeBase: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:98
+ * @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}/edit'
+ */
+export const edit = (args: { agentKnowledgeBase: string | number | { id: string | number } } | [agentKnowledgeBase: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -206,31 +203,31 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::edit
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:98
-* @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}/edit'
-*/
-edit.url = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowledgeBase: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:98
+ * @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}/edit'
+ */
+edit.url = (args: { agentKnowledgeBase: string | number | { id: string | number } } | [agentKnowledgeBase: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentKnowledgeBase: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { agentKnowledgeBase: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { agentKnowledgeBase: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            agentKnowledgeBase: args[0],
-        }
+                    agentKnowledgeBase: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        agentKnowledgeBase: typeof args.agentKnowledgeBase === 'object'
-        ? args.agentKnowledgeBase.id
-        : args.agentKnowledgeBase,
-    }
+                        agentKnowledgeBase: typeof args.agentKnowledgeBase === 'object'
+                ? args.agentKnowledgeBase.id
+                : args.agentKnowledgeBase,
+                }
 
     return edit.definition.url
             .replace('{agentKnowledgeBase}', parsedArgs.agentKnowledgeBase.toString())
@@ -239,30 +236,29 @@ edit.url = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowle
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::edit
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:98
-* @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}/edit'
-*/
-edit.get = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowledgeBase: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:98
+ * @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}/edit'
+ */
+edit.get = (args: { agentKnowledgeBase: string | number | { id: string | number } } | [agentKnowledgeBase: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
-
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::edit
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:98
-* @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}/edit'
-*/
-edit.head = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowledgeBase: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:98
+ * @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}/edit'
+ */
+edit.head = (args: { agentKnowledgeBase: string | number | { id: string | number } } | [agentKnowledgeBase: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::update
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:110
-* @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
-*/
-export const update = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowledgeBase: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:110
+ * @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
+ */
+export const update = (args: { agentKnowledgeBase: string | number | { id: string | number } } | [agentKnowledgeBase: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -274,31 +270,31 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::update
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:110
-* @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
-*/
-update.url = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowledgeBase: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:110
+ * @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
+ */
+update.url = (args: { agentKnowledgeBase: string | number | { id: string | number } } | [agentKnowledgeBase: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentKnowledgeBase: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { agentKnowledgeBase: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { agentKnowledgeBase: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            agentKnowledgeBase: args[0],
-        }
+                    agentKnowledgeBase: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        agentKnowledgeBase: typeof args.agentKnowledgeBase === 'object'
-        ? args.agentKnowledgeBase.id
-        : args.agentKnowledgeBase,
-    }
+                        agentKnowledgeBase: typeof args.agentKnowledgeBase === 'object'
+                ? args.agentKnowledgeBase.id
+                : args.agentKnowledgeBase,
+                }
 
     return update.definition.url
             .replace('{agentKnowledgeBase}', parsedArgs.agentKnowledgeBase.toString())
@@ -307,20 +303,20 @@ update.url = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnow
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::update
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:110
-* @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
-*/
-update.put = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowledgeBase: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:110
+ * @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
+ */
+update.put = (args: { agentKnowledgeBase: string | number | { id: string | number } } | [agentKnowledgeBase: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::destroy
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:135
-* @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
-*/
-export const destroy = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowledgeBase: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:135
+ * @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
+ */
+export const destroy = (args: { agentKnowledgeBase: string | number | { id: string | number } } | [agentKnowledgeBase: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -332,31 +328,31 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::destroy
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:135
-* @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
-*/
-destroy.url = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowledgeBase: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:135
+ * @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
+ */
+destroy.url = (args: { agentKnowledgeBase: string | number | { id: string | number } } | [agentKnowledgeBase: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentKnowledgeBase: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { agentKnowledgeBase: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { agentKnowledgeBase: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            agentKnowledgeBase: args[0],
-        }
+                    agentKnowledgeBase: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        agentKnowledgeBase: typeof args.agentKnowledgeBase === 'object'
-        ? args.agentKnowledgeBase.id
-        : args.agentKnowledgeBase,
-    }
+                        agentKnowledgeBase: typeof args.agentKnowledgeBase === 'object'
+                ? args.agentKnowledgeBase.id
+                : args.agentKnowledgeBase,
+                }
 
     return destroy.definition.url
             .replace('{agentKnowledgeBase}', parsedArgs.agentKnowledgeBase.toString())
@@ -365,20 +361,20 @@ destroy.url = (args: { agentKnowledgeBase: string | { id: string } } | [agentKno
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::destroy
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:135
-* @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
-*/
-destroy.delete = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowledgeBase: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:135
+ * @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}'
+ */
+destroy.delete = (args: { agentKnowledgeBase: string | number | { id: string | number } } | [agentKnowledgeBase: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::toggle
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:146
-* @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}/toggle'
-*/
-export const toggle = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowledgeBase: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:146
+ * @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}/toggle'
+ */
+export const toggle = (args: { agentKnowledgeBase: string | number | { id: string | number } } | [agentKnowledgeBase: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggle.url(args, options),
     method: 'patch',
 })
@@ -390,31 +386,31 @@ toggle.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::toggle
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:146
-* @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}/toggle'
-*/
-toggle.url = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowledgeBase: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:146
+ * @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}/toggle'
+ */
+toggle.url = (args: { agentKnowledgeBase: string | number | { id: string | number } } | [agentKnowledgeBase: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentKnowledgeBase: args }
     }
 
-    if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-        args = { agentKnowledgeBase: args.id }
-    }
-
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { agentKnowledgeBase: args.id }
+        }
+    
     if (Array.isArray(args)) {
         args = {
-            agentKnowledgeBase: args[0],
-        }
+                    agentKnowledgeBase: args[0],
+                }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-        agentKnowledgeBase: typeof args.agentKnowledgeBase === 'object'
-        ? args.agentKnowledgeBase.id
-        : args.agentKnowledgeBase,
-    }
+                        agentKnowledgeBase: typeof args.agentKnowledgeBase === 'object'
+                ? args.agentKnowledgeBase.id
+                : args.agentKnowledgeBase,
+                }
 
     return toggle.definition.url
             .replace('{agentKnowledgeBase}', parsedArgs.agentKnowledgeBase.toString())
@@ -423,19 +419,19 @@ toggle.url = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnow
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::toggle
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:146
-* @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}/toggle'
-*/
-toggle.patch = (args: { agentKnowledgeBase: string | { id: string } } | [agentKnowledgeBase: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:146
+ * @route '/admin/agent-knowledge-bases/{agentKnowledgeBase}/toggle'
+ */
+toggle.patch = (args: { agentKnowledgeBase: string | number | { id: string | number } } | [agentKnowledgeBase: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggle.url(args, options),
     method: 'patch',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::bulkAction
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:159
-* @route '/admin/agent-knowledge-bases/bulk-action'
-*/
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:159
+ * @route '/admin/agent-knowledge-bases/bulk-action'
+ */
 export const bulkAction = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: bulkAction.url(options),
     method: 'post',
@@ -448,33 +444,32 @@ bulkAction.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::bulkAction
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:159
-* @route '/admin/agent-knowledge-bases/bulk-action'
-*/
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:159
+ * @route '/admin/agent-knowledge-bases/bulk-action'
+ */
 bulkAction.url = (options?: RouteQueryOptions) => {
     return bulkAction.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Admin\AgentKnowledgeBaseController::bulkAction
-* @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:159
-* @route '/admin/agent-knowledge-bases/bulk-action'
-*/
+ * @see app/Http/Controllers/Admin/AgentKnowledgeBaseController.php:159
+ * @route '/admin/agent-knowledge-bases/bulk-action'
+ */
 bulkAction.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: bulkAction.url(options),
     method: 'post',
 })
-
 const agentKnowledgeBases = {
     index: Object.assign(index, index),
-    create: Object.assign(create, create),
-    store: Object.assign(store, store),
-    show: Object.assign(show, show),
-    edit: Object.assign(edit, edit),
-    update: Object.assign(update, update),
-    destroy: Object.assign(destroy, destroy),
-    toggle: Object.assign(toggle, toggle),
-    bulkAction: Object.assign(bulkAction, bulkAction),
+create: Object.assign(create, create),
+store: Object.assign(store, store),
+show: Object.assign(show, show),
+edit: Object.assign(edit, edit),
+update: Object.assign(update, update),
+destroy: Object.assign(destroy, destroy),
+toggle: Object.assign(toggle, toggle),
+bulkAction: Object.assign(bulkAction, bulkAction),
 }
 
 export default agentKnowledgeBases
