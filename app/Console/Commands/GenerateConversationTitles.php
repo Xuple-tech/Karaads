@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Conversation;
-use App\Services\GeminiService;
+use App\Services\GrokApiService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -13,14 +13,14 @@ class GenerateConversationTitles extends Command
                           {--limit=10 : Number of conversations to process per run}
                           {--dry-run : Show what would be processed without making changes}';
 
-    protected $description = 'Generate AI-powered titles for conversations using Gemini';
+    protected $description = 'Generate AI-powered titles for conversations using Grok';
 
-    private GeminiService $geminiService;
+    private GrokApiService $grokService;
 
-    public function __construct(GeminiService $geminiService)
+    public function __construct(GrokApiService $grokService)
     {
         parent::__construct();
-        $this->geminiService = $geminiService;
+        $this->grokService = $grokService;
     }
 
     public function handle()
@@ -114,7 +114,7 @@ class GenerateConversationTitles extends Command
     }
 
     /**
-     * Generate a title for a conversation using Gemini AI
+     * Generate a title for a conversation using Grok
      */
     private function generateTitleForConversation(Conversation $conversation): ?string
     {
@@ -125,7 +125,7 @@ class GenerateConversationTitles extends Command
             return null;
         }
 
-        // Create a prompt for Gemini to generate a concise title
+        // Create a prompt for Grok to generate a concise title
         $messagesText = implode("\n", array_map(function ($msg, $index) {
             return ($index + 1) . ". " . substr($msg, 0, 200) . (strlen($msg) > 200 ? '...' : '');
         }, $userMessages, array_keys($userMessages)));
@@ -148,10 +148,13 @@ PROMPT;
         try {
             $generatedTitle = '';
 
-            // Use Gemini to generate the title
-            $this->geminiService->generateTextStream($prompt, function ($chunk) use (&$generatedTitle) {
-                $generatedTitle .= $chunk;
-            });
+            $generatedTitle = $this->grokService->generateChat(
+                prompt: $prompt,
+                model: 'grok-4-fast-non-reasoning',
+                history: [],
+                tools: [],
+                format: null
+            );
 
             // Clean up the generated title
             $generatedTitle = trim($generatedTitle);
@@ -172,7 +175,7 @@ PROMPT;
             return $generatedTitle;
 
         } catch (\Exception $e) {
-            Log::error("Gemini title generation failed: {$e->getMessage()}");
+            Log::error("Grok title generation failed: {$e->getMessage()}");
             return null;
         }
     }

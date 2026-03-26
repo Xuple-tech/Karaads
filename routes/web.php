@@ -1,10 +1,8 @@
 <?php
 
 use App\Http\Controllers\AgentController;
-use App\Http\Controllers\AppController;
 use App\Http\Controllers\AgentIntelligenceController;
 use App\Http\Controllers\ChatController;
-use App\Http\Controllers\CodingAgentController;
 use App\Http\Controllers\EnhancedProjectController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MailController;
@@ -370,7 +368,6 @@ require __DIR__ . '/currency.php';
 require __DIR__ . '/project-chats.php';
 require __DIR__ . '/studio.php';
 require __DIR__ . '/docs.php';
+require __DIR__ . '/developer-api.php';
 
 require __DIR__ . '/aiaidgetfeatures.php';
-
-

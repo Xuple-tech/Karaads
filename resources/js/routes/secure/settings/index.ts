@@ -116,40 +116,6 @@ apikeys.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\Api\SettingsController::gemini
-* @see app/Http/Controllers/Api/SettingsController.php:105
-* @route '/api/settings/mgmt/r4t7y0u3/apikeys/gemini/q2w5e8r1'
-*/
-export const gemini = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: gemini.url(options),
-    method: 'post',
-})
-
-gemini.definition = {
-    methods: ["post"],
-    url: '/api/settings/mgmt/r4t7y0u3/apikeys/gemini/q2w5e8r1',
-} satisfies RouteDefinition<["post"]>
-
-/**
-* @see \App\Http\Controllers\Api\SettingsController::gemini
-* @see app/Http/Controllers/Api/SettingsController.php:105
-* @route '/api/settings/mgmt/r4t7y0u3/apikeys/gemini/q2w5e8r1'
-*/
-gemini.url = (options?: RouteQueryOptions) => {
-    return gemini.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Api\SettingsController::gemini
-* @see app/Http/Controllers/Api/SettingsController.php:105
-* @route '/api/settings/mgmt/r4t7y0u3/apikeys/gemini/q2w5e8r1'
-*/
-gemini.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: gemini.url(options),
-    method: 'post',
-})
-
-/**
 * @see \App\Http\Controllers\Api\SettingsController::ollama
 * @see app/Http/Controllers/Api/SettingsController.php:134
 * @route '/api/settings/mgmt/r4t7y0u3/apikeys/ollama/t4y7u0i3'
@@ -221,7 +187,6 @@ const settings = {
     profile: Object.assign(profile, profile),
     password: Object.assign(password, password),
     apikeys: Object.assign(apikeys, apikeys),
-    gemini: Object.assign(gemini, gemini),
     ollama: Object.assign(ollama, ollama),
     openrouter: Object.assign(openrouter, openrouter),
     apikey: Object.assign(apikey, apikey),

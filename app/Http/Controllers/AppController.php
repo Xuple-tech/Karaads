@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chat;
+use App\Services\GrokApiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class AppController extends Controller
 {
-    protected $geminiService;
+    protected GrokApiService $grokService;
 
-    public function __construct()
+    public function __construct(GrokApiService $grokService)
     {
-        $this->geminiService = app('App\Services\GeminiService');
+        $this->grokService = $grokService;
     }
 
     public function getSessions()
@@ -61,15 +62,15 @@ class AppController extends Controller
             'user_id' => auth()->id()
         ]);
 
-        $generationConfig = [
-            'temperature' => 0.7,
-            'top_p' => 0.9,
-            'max_output_tokens' => 1024,
-        ];
-
         if (!$stream) {
             try {
-                $response = $this->geminiService->generateChatResponse($message, $history, $generationConfig);
+                $response = $this->grokService->generateChat(
+                    prompt: $message,
+                    model: 'grok-4-fast-non-reasoning',
+                    history: $history,
+                    tools: [],
+                    format: null
+                );
 
                 // Save assistant's response
                 Chat::create([
@@ -98,15 +99,21 @@ class AppController extends Controller
             try {
                 $fullResponse = '';
 
-                $this->geminiService->generateTextStream(
-                    $message,
-                    function ($chunk) use (&$fullResponse) {
-                        $fullResponse .= $chunk;
-                        echo "data: " . json_encode(['chunk' => $chunk]) . "\n\n";
+                $this->grokService->generateStreamingChat(
+                    prompt: $message,
+                    callback: function ($chunk) use (&$fullResponse) {
+                        if (!empty($chunk['content'])) {
+                            $fullResponse .= $chunk['content'];
+                            echo "data: " . json_encode(['chunk' => $chunk['content']]) . "\n\n";
+                        }
                         ob_flush();
                         flush();
                     },
-                    $generationConfig
+                    model: 'grok-4-fast-non-reasoning',
+                    history: $history,
+                    tools: [],
+                    format: null,
+                    autoTools: false
                 );
 
                 // Save the complete response

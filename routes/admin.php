@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DeveloperApiController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\SaasOwnerController;
@@ -66,6 +67,16 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->name('admin.')->gr
         Route::post('/{config}/test', [GrokApiController::class, 'test'])->name('test');
         Route::post('/{config}/deactivate', [GrokApiController::class, 'deactivate'])->name('deactivate');
         Route::delete('/{config}', [GrokApiController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('developer-api')->name('developer-api.')->group(function () {
+        Route::get('/', [DeveloperApiController::class, 'index'])->name('index');
+        Route::post('/models', [DeveloperApiController::class, 'storeModel'])->name('models.store');
+        Route::put('/models/{apiModel}', [DeveloperApiController::class, 'updateModel'])->name('models.update');
+        Route::post('/models/{apiModel}/toggle', [DeveloperApiController::class, 'toggleModel'])->name('models.toggle');
+        Route::post('/keys/{developerApiKey}/toggle', [DeveloperApiController::class, 'toggleKey'])->name('keys.toggle');
+        Route::post('/keys/{developerApiKey}/regenerate', [DeveloperApiController::class, 'regenerateKey'])->name('keys.regenerate');
+        Route::post('/wallets/{user}/adjust', [DeveloperApiController::class, 'adjustWallet'])->name('wallets.adjust');
     });
 
     // AI Prompt Templates

@@ -1,9 +1,7 @@
 <?php
 
-use App\Http\Controllers\AppController;
 use App\Http\Controllers\AgentIntelligenceController;
 use App\Http\Controllers\ChatController;
-use App\Http\Controllers\CodingAgentController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ProjectController;

@@ -66,6 +66,7 @@ export function DocsLayout({ children }: { children: React.ReactNode }) {
         { icon: Home, label: 'Home', href: '/docs' },
         // { icon: BookOpen, label: 'Introduction', href: '/docs/introduction' },
         { icon: Code2, label: 'Quick Start', href: '/docs/agents' },
+        { icon: FileCode, label: 'Developer Console Docs', href: '/docs/developer-api' },
         { icon: BookOpen, label: 'Knowledge Base', href: '/docs/agents/knowledge-base' },
         { icon: FileCode, label: 'Tools', href: '/docs/agents/tools' },
         // { icon: Settings, label: 'Configuration', href: '/docs/configuration' },

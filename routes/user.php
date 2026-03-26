@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ChatPreferenceController;
+use App\Http\Controllers\Developer\DeveloperPortalController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\User\UserConversationController;
 use App\Http\Controllers\User\UserSettingsController;
@@ -35,6 +36,15 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
             'availablePlans' => \App\Models\SubscriptionPlan::getActivePlans(),
         ]);
     })->name('subscription');
+
+    Route::prefix('developer-api')->name('developer-api.')->group(function () {
+        Route::get('/', [DeveloperPortalController::class, 'index'])->name('index');
+        Route::post('/keys', [DeveloperPortalController::class, 'storeKey'])->name('keys.store');
+        Route::put('/keys/{developerApiKey}', [DeveloperPortalController::class, 'updateKey'])->name('keys.update');
+        Route::post('/keys/{developerApiKey}/revoke', [DeveloperPortalController::class, 'revokeKey'])->name('keys.revoke');
+        Route::post('/keys/{developerApiKey}/regenerate', [DeveloperPortalController::class, 'regenerateKey'])->name('keys.regenerate');
+        Route::post('/top-up', [DeveloperPortalController::class, 'createTopupCheckout'])->name('topup');
+    });
 });
 
 Route::middleware('web')->prefix('/api-/_0001/user')->group(function () {

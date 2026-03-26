@@ -11,6 +11,7 @@ use Stripe\Price;
 use Stripe\Product;
 use Stripe\Subscription as StripeSubscription;
 use Illuminate\Support\Facades\Log;
+use Stripe\Checkout\Session as CheckoutSession;
 
 class StripeService
 {
@@ -146,6 +147,32 @@ class StripeService
                 'user_id' => $user->id,
                 'plan_id' => $plan->id,
             ],
+        ]);
+
+        return $session->url;
+    }
+
+    public function createOneTimeCheckoutSession(User $user, float $amountUsd, string $successUrl, string $cancelUrl, array $metadata = []): string
+    {
+        $customer = $this->getOrCreateCustomer($user);
+
+        $session = CheckoutSession::create([
+            'customer' => $customer->id,
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'usd',
+                    'product_data' => [
+                        'name' => 'Developer API Wallet Top-Up',
+                    ],
+                    'unit_amount' => (int) round($amountUsd * 100),
+                ],
+                'quantity' => 1,
+            ]],
+            'mode' => 'payment',
+            'success_url' => $successUrl,
+            'cancel_url' => $cancelUrl,
+            'metadata' => $metadata,
         ]);
 
         return $session->url;

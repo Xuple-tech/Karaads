@@ -239,79 +239,6 @@ export const getApiKeys = {
 }
 
 /**
-* @see \App\Http\Controllers\Api\SettingsController::addGeminiKey
-* @see app/Http/Controllers/Api/SettingsController.php:105
-* @route '/api/settings/api-keys/gemini'
-*/
-const addGeminiKeyfa066e6e64956aa07ac53b6e31281991 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: addGeminiKeyfa066e6e64956aa07ac53b6e31281991.url(options),
-    method: 'post',
-})
-
-addGeminiKeyfa066e6e64956aa07ac53b6e31281991.definition = {
-    methods: ["post"],
-    url: '/api/settings/api-keys/gemini',
-} satisfies RouteDefinition<["post"]>
-
-/**
-* @see \App\Http\Controllers\Api\SettingsController::addGeminiKey
-* @see app/Http/Controllers/Api/SettingsController.php:105
-* @route '/api/settings/api-keys/gemini'
-*/
-addGeminiKeyfa066e6e64956aa07ac53b6e31281991.url = (options?: RouteQueryOptions) => {
-    return addGeminiKeyfa066e6e64956aa07ac53b6e31281991.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Api\SettingsController::addGeminiKey
-* @see app/Http/Controllers/Api/SettingsController.php:105
-* @route '/api/settings/api-keys/gemini'
-*/
-addGeminiKeyfa066e6e64956aa07ac53b6e31281991.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: addGeminiKeyfa066e6e64956aa07ac53b6e31281991.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\Api\SettingsController::addGeminiKey
-* @see app/Http/Controllers/Api/SettingsController.php:105
-* @route '/api/settings/mgmt/r4t7y0u3/apikeys/gemini/q2w5e8r1'
-*/
-const addGeminiKey0e4b327c489c0da460919eb4e7692f33 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: addGeminiKey0e4b327c489c0da460919eb4e7692f33.url(options),
-    method: 'post',
-})
-
-addGeminiKey0e4b327c489c0da460919eb4e7692f33.definition = {
-    methods: ["post"],
-    url: '/api/settings/mgmt/r4t7y0u3/apikeys/gemini/q2w5e8r1',
-} satisfies RouteDefinition<["post"]>
-
-/**
-* @see \App\Http\Controllers\Api\SettingsController::addGeminiKey
-* @see app/Http/Controllers/Api/SettingsController.php:105
-* @route '/api/settings/mgmt/r4t7y0u3/apikeys/gemini/q2w5e8r1'
-*/
-addGeminiKey0e4b327c489c0da460919eb4e7692f33.url = (options?: RouteQueryOptions) => {
-    return addGeminiKey0e4b327c489c0da460919eb4e7692f33.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Api\SettingsController::addGeminiKey
-* @see app/Http/Controllers/Api/SettingsController.php:105
-* @route '/api/settings/mgmt/r4t7y0u3/apikeys/gemini/q2w5e8r1'
-*/
-addGeminiKey0e4b327c489c0da460919eb4e7692f33.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: addGeminiKey0e4b327c489c0da460919eb4e7692f33.url(options),
-    method: 'post',
-})
-
-export const addGeminiKey = {
-    '/api/settings/api-keys/gemini': addGeminiKeyfa066e6e64956aa07ac53b6e31281991,
-    '/api/settings/mgmt/r4t7y0u3/apikeys/gemini/q2w5e8r1': addGeminiKey0e4b327c489c0da460919eb4e7692f33,
-}
-
-/**
 * @see \App\Http\Controllers\Api\SettingsController::addOllamaKey
 * @see app/Http/Controllers/Api/SettingsController.php:134
 * @route '/api/settings/api-keys/ollama'
@@ -930,6 +857,6 @@ export const updateAiPreferences = {
     '/api/settings/mgmt/r4t7y0u3/ai/prefs/update/w6e9r2t5': updateAiPreferencesdbdf8c6dfed862d7c7dba4849ce3aca2,
 }
 
-const SettingsController = { updateProfile, changePassword, getApiKeys, addGeminiKey, addOllamaKey, addOpenRouterKey, updateApiKeyStatus, deleteApiKey, getAiModes, getAiPreferences, updateAiPreferences }
+const SettingsController = { updateProfile, changePassword, getApiKeys, addOllamaKey, addOpenRouterKey, updateApiKeyStatus, deleteApiKey, getAiModes, getAiPreferences, updateAiPreferences }
 
 export default SettingsController

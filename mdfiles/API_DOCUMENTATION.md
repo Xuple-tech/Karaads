@@ -489,32 +489,13 @@ Authorization: Bearer {token}
 - **Response:**
   ```json
   {
-    "gemini": [
-      {
-        "id": 1,
-        "key": "sk_***",
-        "status": "active",
-        "created_at": "2025-01-01T12:00:00Z"
-      }
-    ],
+    "grok": [],
     "ollama": [],
     "openrouter": []
   }
   ```
 
-#### 4. Add Gemini API Key
-- **Endpoint:** `POST /settings/api-keys/gemini`
-- **Description:** Adds a Gemini API key
-- **Request Body:**
-  ```json
-  {
-    "key": "gemini_api_key_here",
-    "label": "My Gemini Key"
-  }
-  ```
-- **Response:** Created API key object
-
-#### 5. Add Ollama API Key
+#### 4. Add Ollama API Key
 - **Endpoint:** `POST /settings/api-keys/ollama`
 - **Description:** Adds an Ollama API key
 - **Request Body:**
@@ -527,7 +508,7 @@ Authorization: Bearer {token}
   ```
 - **Response:** Created API key object
 
-#### 6. Add OpenRouter API Key
+#### 5. Add OpenRouter API Key
 - **Endpoint:** `POST /settings/api-keys/openrouter`
 - **Description:** Adds an OpenRouter API key
 - **Request Body:**
@@ -539,11 +520,11 @@ Authorization: Bearer {token}
   ```
 - **Response:** Created API key object
 
-#### 7. Update API Key Status
+#### 6. Update API Key Status
 - **Endpoint:** `PUT /settings/api-keys/{type}/{id}/status`
 - **Description:** Enables or disables an API key
 - **Parameters:**
-  - `type`: gemini, ollama, or openrouter
+  - `type`: grok, ollama, or openrouter
   - `id`: Key ID
 - **Request Body:**
   ```json
@@ -553,11 +534,11 @@ Authorization: Bearer {token}
   ```
 - **Response:** Updated API key object
 
-#### 8. Delete API Key
+#### 7. Delete API Key
 - **Endpoint:** `DELETE /settings/api-keys/{type}/{id}`
 - **Description:** Deletes an API key
 - **Parameters:**
-  - `type`: gemini, ollama, or openrouter
+  - `type`: grok, ollama, or openrouter
   - `id`: Key ID
 - **Response:** Success message
 
@@ -625,7 +606,7 @@ Authorization: Bearer {token}
 - **Response:**
   ```json
   {
-    "default_model": "gemini",
+    "default_model": "grok",
     "temperature": 0.7,
     "max_tokens": 2000,
     "top_p": 0.9

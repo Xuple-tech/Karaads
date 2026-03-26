@@ -26,11 +26,6 @@ return [
         ],
     ],
 
-    'gemini' => [
-        'api_key' => env('GEMINI_API_KEY'),
-        'model' => env('GEMINI_MODEL', 'gemini-pro'),
-    ],
-
     'openrouter' => [
         'api_key' => env('OPENROUTER_API_KEY'),
     ],

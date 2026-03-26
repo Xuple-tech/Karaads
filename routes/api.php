@@ -75,7 +75,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/profile', [SettingsController::class, 'updateProfile']);
         Route::put('/password', [SettingsController::class, 'changePassword']);
         Route::get('/api-keys', [SettingsController::class, 'getApiKeys']);
-        Route::post('/api-keys/gemini', [SettingsController::class, 'addGeminiKey']);
         Route::post('/api-keys/ollama', [SettingsController::class, 'addOllamaKey']);
         Route::post('/api-keys/openrouter', [SettingsController::class, 'addOpenRouterKey']);
         Route::put('/api-keys/{type}/{id}/status', [SettingsController::class, 'updateApiKeyStatus']);

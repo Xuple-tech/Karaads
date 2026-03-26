@@ -101,6 +101,12 @@ export default function TermsOfService() {
                 suspend, or discontinue any service at any time without prior notice.
               </p>
             </div>
+            <div className="p-4 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/20">
+              <p className="text-sm">
+                <strong>Upstream Infrastructure:</strong> Some services, including the developer API, may rely on third-party
+                infrastructure or upstream model providers. Kwai AI remains your contractual service provider for the branded API experience.
+              </p>
+            </div>
           </div>
         </section>
 

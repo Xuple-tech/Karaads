@@ -26,16 +26,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // Generate conversation titles using Gemini AI daily at 2 AM
+        // Generate conversation titles using Grok daily at 2 AM
         $schedule->command('conversations:generate-titles --limit=50')
                  ->dailyAt('02:00')
                  ->withoutOverlapping()
                  ->runInBackground();
-
-        // Reset Gemini API key request counts daily at midnight
-        $schedule->command('gemini:keys reset')
-                 ->daily()
-                 ->withoutOverlapping();
 
         // $schedule->command('inspire')->hourly();
     }

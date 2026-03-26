@@ -108,7 +108,6 @@ Route::middleware(array_merge($securityMiddleware, ['auth:sanctum']))->group(fun
         Route::put('/profile/update/i6o9p2l5', [SettingsController::class, 'updateProfile'])->name('secure.settings.profile');
         Route::put('/password/change/h8j1k4z7', [SettingsController::class, 'changePassword'])->name('secure.settings.password');
         Route::get('/apikeys/list/g0f3d6s9', [SettingsController::class, 'getApiKeys'])->name('secure.settings.apikeys');
-        Route::post('/apikeys/gemini/q2w5e8r1', [SettingsController::class, 'addGeminiKey'])->name('secure.settings.gemini');
         Route::post('/apikeys/ollama/t4y7u0i3', [SettingsController::class, 'addOllamaKey'])->name('secure.settings.ollama');
         Route::post('/apikeys/openrouter/p6a9s2d5', [SettingsController::class, 'addOpenRouterKey'])->name('secure.settings.openrouter');
         Route::put('/apikeys/status/{type}/{uuid}/l8z1x4c7', [SettingsController::class, 'updateApiKeyStatus'])->name('secure.settings.apikey.status');

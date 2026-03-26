@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\AIMode;
-use App\Models\GeminiApiKey;
 use App\Models\OllamaApiKey;
 use App\Models\OpenRouterApiKey;
 use Illuminate\Http\Request;
@@ -81,14 +80,12 @@ class SettingsController extends Controller
     public function getApiKeys()
     {
         try {
-            $geminiKeys = GeminiApiKey::where('user_id', Auth::id())->get(['id', 'name', 'is_active', 'created_at']);
             $ollamaKeys = OllamaApiKey::where('user_id', Auth::id())->get(['id', 'name', 'endpoint', 'is_active', 'created_at']);
             $openRouterKeys = OpenRouterApiKey::where('user_id', Auth::id())->get(['id', 'name', 'is_active', 'created_at']);
 
             return response()->json([
                 'success' => true,
                 'api_keys' => [
-                    'gemini' => $geminiKeys,
                     'ollama' => $ollamaKeys,
                     'openrouter' => $openRouterKeys
                 ]
@@ -98,35 +95,6 @@ class SettingsController extends Controller
             return response()->json([
                 'success' => false,
                 'error' => 'Failed to fetch API keys'
-            ], 500);
-        }
-    }
-
-    public function addGeminiKey(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'api_key' => 'required|string',
-        ]);
-
-        try {
-            $key = GeminiApiKey::create([
-                'user_id' => Auth::id(),
-                'name' => $request->name,
-                'api_key' => encrypt($request->api_key),
-                'is_active' => true
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'key' => $key->only(['id', 'name', 'is_active', 'created_at']),
-                'message' => 'Gemini API key added successfully'
-            ], 201);
-        } catch (\Exception $e) {
-            Log::error('Error adding Gemini API key: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'error' => 'Failed to add API key'
             ], 500);
         }
     }
@@ -199,7 +167,6 @@ class SettingsController extends Controller
 
         try {
             $model = match($type) {
-                'gemini' => GeminiApiKey::class,
                 'ollama' => OllamaApiKey::class,
                 'openrouter' => OpenRouterApiKey::class,
                 default => throw new \InvalidArgumentException('Invalid key type')
@@ -225,7 +192,6 @@ class SettingsController extends Controller
     {
         try {
             $model = match($type) {
-                'gemini' => GeminiApiKey::class,
                 'ollama' => OllamaApiKey::class,
                 'openrouter' => OpenRouterApiKey::class,
                 default => throw new \InvalidArgumentException('Invalid key type')

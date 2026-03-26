@@ -17,11 +17,30 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check()) {
-            $user = auth()->user();
-            $user->load('roles');
-            if($user->roles->role == 'super_admin'){
-                return $next($request);
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Unauthorized. Admin access required.'], 403);
             }
+
+            return redirect()->route('login');
+        }
+
+        $user = Auth::user();
+        $role = $user->role;
+        $hiddenRole = null;
+
+        if (!in_array($role, ['admin', 'super_admin'], true) && method_exists($user, 'roles')) {
+            try {
+                $user->loadMissing('roles');
+                $hiddenRole = $user->roles?->role;
+            } catch (\Throwable) {
+                $hiddenRole = null;
+            }
+        }
+
+        $isAdmin = in_array($role, ['admin', 'super_admin'], true)
+            || in_array($hiddenRole, ['admin', 'super_admin'], true);
+
+        if (!$isAdmin) {
             if ($request->expectsJson()) {
                 return response()->json(['error' => 'Unauthorized. Admin access required.'], 403);
             }

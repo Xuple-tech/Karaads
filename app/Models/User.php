@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -340,6 +341,21 @@ class User extends Authenticatable implements MustVerifyEmail
     public function agentSubscriptions(): HasMany
     {
         return $this->hasMany(SiteSubscription::class);
+    }
+
+    public function developerApiKeys(): HasMany
+    {
+        return $this->hasMany(DeveloperApiKey::class);
+    }
+
+    public function developerWallet(): HasOne
+    {
+        return $this->hasOne(DeveloperWallet::class);
+    }
+
+    public function developerUsageRecords(): HasMany
+    {
+        return $this->hasMany(DeveloperUsageRecord::class);
     }
 
     public function getTotalAgentsCount(): int

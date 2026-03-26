@@ -42,4 +42,7 @@ Route::prefix('/docs')->name('docs.')->group(function () {
          return Inertia::render('docs/subscription/faq');
       })->name('subscription.faq');
    });
+   Route::get('/developer-api', function () {
+      return Inertia::render('docs/developer-api');
+   })->name('developer-api');
 });

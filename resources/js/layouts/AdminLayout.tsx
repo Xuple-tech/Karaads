@@ -26,7 +26,8 @@ import {
     CreditCard,
     ClipboardList,
     Bell,
-    Cpu
+    Cpu,
+    Code2
 } from 'lucide-react';
 import {
     Sidebar,
@@ -124,6 +125,7 @@ const MENU_GROUPS = [
             { name: 'Configuration', icon: Shield, route: admin.management.configuration.url() },
             { name: 'Audit Logs', icon: ClipboardList, route: admin.management.auditLogs.url() },
             { name: 'Alerts', icon: Bell, route: admin.management.alerts.url() },
+            { name: 'Developer Console', icon: Code2, route: '/admin/developer-api' },
             // { name: 'Grok API', icon: Cpu, route: admin.grokApi.index.url() },
         ]
     }

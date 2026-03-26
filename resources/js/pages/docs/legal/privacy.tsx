@@ -124,6 +124,7 @@ export default function PrivacyPolicy() {
                 <ul className="list-disc pl-5 mt-3 space-y-1">
                   <li>With your explicit consent</li>
                   <li>With service providers who assist our operations (under strict contracts)</li>
+                  <li>With upstream AI or infrastructure providers when required to process your requests</li>
                   <li>To comply with legal obligations</li>
                   <li>To protect rights and safety of our users</li>
                 </ul>
