@@ -23,7 +23,7 @@ type SharedProps = {
 export default function ConsoleLogin({ status, canResetPassword }: LoginProps) {
     const [showPassword, setShowPassword] = useState(false);
     const page = usePage<SharedProps>();
-    const baseUrl = page.props.console.base_url;
+    const baseUrl = page.props.console.base_url.replace(/\/+$/, '');
 
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',

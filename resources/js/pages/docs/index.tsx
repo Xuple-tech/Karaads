@@ -11,7 +11,7 @@ type SharedProps = {
 export default function DocsIndex() {
     const { props } = usePage<SharedProps>();
     const docsBaseUrl = props.console.docs_base_url;
-    const consoleBaseUrl = props.console.base_url;
+    const consoleBaseUrl = props.console.base_url.replace(/\/+$/, '');
 
     return (
         <DocsLayout>

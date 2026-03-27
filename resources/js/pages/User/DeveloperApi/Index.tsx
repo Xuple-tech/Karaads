@@ -30,7 +30,7 @@ export default function DeveloperApiIndex({
 }: Props) {
     const page = usePage<FlashProps>();
     const flash = page.props.flash ?? {};
-    const consoleBaseUrl = page.props.console.base_url;
+    const consoleBaseUrl = page.props.console.base_url.replace(/\/+$/, '');
     const activeSection = section;
 
     /** Derive the URL for a given section. */

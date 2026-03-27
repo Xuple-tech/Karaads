@@ -5,7 +5,9 @@ use App\Http\Middleware\AuthenticateConsole;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SetConsoleSessionConfig;
 use App\Http\Middleware\UseConsoleGuard;
+use App\Support\AuthRedirect;
 use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -23,6 +25,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        RedirectIfAuthenticated::redirectUsing(function ($request) {
+            return AuthRedirect::sanitize($request->query('redirect'))
+                ?? AuthRedirect::sanitize($request->input('redirect'))
+                ?? route('home');
+        });
+
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
         $middleware->web(append: [

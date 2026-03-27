@@ -78,6 +78,7 @@ export default function ConsoleLayout({
 }: ConsoleLayoutProps) {
   const { props } = usePage<ConsolePageProps>();
   const user = props.auth.user;
+  const docsBaseUrl = props.console.docs_base_url.replace(/\/+$/, '');
 
   const getUserInitials = () => {
     if (!user?.name) return '?';
@@ -230,7 +231,7 @@ export default function ConsoleLayout({
             <div className="flex flex-1 items-center justify-end gap-2">
               {actions}
               <Button variant="outline" size="sm" asChild>
-                <Link href={props.console.docs_base_url}>
+                <Link href={docsBaseUrl}>
                   <BookOpen className="mr-1.5 h-3.5 w-3.5" />
                   Docs
                 </Link>

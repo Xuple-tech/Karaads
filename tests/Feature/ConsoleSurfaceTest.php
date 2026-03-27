@@ -7,8 +7,10 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Http\Request;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
+use App\Support\ConsoleUrl;
 
 class ConsoleSurfaceTest extends TestCase
 {
@@ -97,5 +99,15 @@ class ConsoleSurfaceTest extends TestCase
     {
         $this->get('/docs/developer-api')
             ->assertRedirectContains('/console/docs/api');
+    }
+
+    public function test_console_url_has_no_trailing_slash_on_console_domain(): void
+    {
+        $this->app->detectEnvironment(fn () => 'production');
+        Config::set('console.domain', 'console.kwatiai.com');
+
+        $request = Request::create('https://kwatiai.com');
+
+        $this->assertSame('https://console.kwatiai.com', ConsoleUrl::consoleUrl($request));
     }
 }

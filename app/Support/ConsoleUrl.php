@@ -37,7 +37,13 @@ class ConsoleUrl
 
     public static function consoleUrl(Request $request): string
     {
-        return self::urlForPath($request, self::basePath() ?: '/');
+        $url = self::urlForPath($request, self::basePath() ?: '/');
+
+        if (! self::usesPathPrefix()) {
+            return rtrim($url, '/');
+        }
+
+        return $url;
     }
 
     public static function urlForPath(Request $request, string $path): string

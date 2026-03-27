@@ -52,7 +52,7 @@ type SharedProps = {
 export function DocsLayout({ children }: { children: React.ReactNode }) {
   const { props } = usePage<SharedProps>();
   const docsBaseUrl = props.console.docs_base_url;
-  const consoleBaseUrl = props.console.base_url;
+  const consoleBaseUrl = props.console.base_url.replace(/\/+$/, '');
 
   const groups = [
     {

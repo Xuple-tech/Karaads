@@ -18,14 +18,15 @@ declare(strict_types=1);
 |   1. Generate a key in the developer console.
 |   2. Paste it into $apiKey below.
 |   3. Set $baseUrl to your real API base URL.
-|   4. Upstream SSL handling is managed by the server. API consumers do not
-|      need to configure TLS verification in this client script.
+|   4. If your local PHP/cURL CA bundle is not configured, keep
+|      $verifySsl = false for quick testing on Windows.
 |
 */
 
-$baseUrl = 'http://localhost:8000/v1';
-$apiKey = 'kwati_ramk7oglm4rq.3jBugRGrIXox6zjN4t8lQ83MZZJTCdUdEzdojZqg';
+$baseUrl = 'https://api.kwatiai.com/v1';
+$apiKey = 'kwati_vn8fh6wsveci.OA1UqGGGZwjiiCC9TYnlK4wK65vFi566UeE5r07I';
 $model = 'kwati-4-fast';
+$verifySsl = false;
 
 $action = $argv[1] ?? 'models';
 
@@ -78,6 +79,8 @@ switch ($action) {
 
 function request(string $method, string $url, string $apiKey, ?array $payload = null): void
 {
+    global $verifySsl;
+
     $ch = curl_init($url);
 
     $headers = [
@@ -95,6 +98,8 @@ function request(string $method, string $url, string $apiKey, ?array $payload = 
         CURLOPT_HTTPHEADER => $headers,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_TIMEOUT => 60,
+        CURLOPT_SSL_VERIFYPEER => $verifySsl,
+        CURLOPT_SSL_VERIFYHOST => $verifySsl ? 2 : 0,
     ]);
 
     $response = curl_exec($ch);
