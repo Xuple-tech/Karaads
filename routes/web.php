@@ -30,6 +30,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
+require __DIR__ . '/console-web.php';
+require __DIR__ . '/developer-api.php';
+
 // Public chat route
 Route::get('/', [ChatController::class, 'index'])->name('home');
 Route::get('/app', [ChatController::class, 'index'])->name('app');
@@ -369,7 +372,5 @@ require __DIR__ . '/currency.php';
 require __DIR__ . '/project-chats.php';
 require __DIR__ . '/studio.php';
 require __DIR__ . '/docs.php';
-require __DIR__ . '/console-web.php';
-require __DIR__ . '/developer-api.php';
 
 require __DIR__ . '/aiaidgetfeatures.php';

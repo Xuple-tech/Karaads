@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\EmailAccount;
+use App\Support\AuthRedirect;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Crypt;
@@ -24,6 +25,8 @@ class GoogleController extends Controller
         if ($request->query('link_email') === '1') {
             session(['oauth_link_email' => true]);
         }
+
+        AuthRedirect::remember($request);
 
         return Socialite::driver('google')
             ->scopes(['email', 'profile'])
@@ -73,6 +76,10 @@ class GoogleController extends Controller
                     'user_id' => $user->id,
                     'email_address' => $googleUser->email,
                 ]);
+            }
+
+            if ($redirectTarget = AuthRedirect::fromRequest($request)) {
+                return redirect()->to($redirectTarget);
             }
 
             return redirect()->intended('/new');

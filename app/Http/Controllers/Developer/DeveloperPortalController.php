@@ -197,8 +197,8 @@ class DeveloperPortalController extends Controller
             'provider' => 'required|string|in:stripe,paystack',
         ]);
 
-        $successUrl = route('console.index', ['section' => 'billing'], true);
-        $cancelUrl = route('console.index', ['section' => 'billing'], true);
+        $successUrl = route('console.billing', [], true);
+        $cancelUrl = route('console.billing', [], true);
         $provider = $validated['provider'];
 
         try {

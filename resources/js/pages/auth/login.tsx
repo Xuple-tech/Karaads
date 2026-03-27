@@ -18,20 +18,23 @@ type LoginForm = {
     email: string;
     password: string;
     remember: boolean;
+    redirect: string;
 };
 
 interface LoginProps {
     status?: string;
     canResetPassword: boolean;
+    redirect?: string | null;
 }
 
-export default function Login({ status, canResetPassword }: LoginProps) {
+export default function Login({ status, canResetPassword, redirect }: LoginProps) {
     const [showPassword, setShowPassword] = useState(false);
 
-    const { data, setData, post, processing, errors, reset } = useForm<Required<LoginForm>>({
+    const { data, setData, post, processing, errors, reset } = useForm<LoginForm>({
         email: '',
         password: '',
         remember: false,
+        redirect: redirect ?? '',
     });
 
     const submit: FormEventHandler = (e) => {
@@ -57,7 +60,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
             <form className="space-y-6" onSubmit={submit}>
                 <div className="space-y-4">
                     <a
-                        href={auth.google.url()}
+                        href={redirect ? `${auth.google.url()}?redirect=${encodeURIComponent(redirect)}` : auth.google.url()}
                         className="border-z inc -200 text-primary -700 hover:bg-z inc -50 flex h-11 w-full items-center justify-center gap-3 rounded-lg border bg-white text-sm font-medium shadow-sm transition-all hover:shadow"
                         disabled={processing}
                     >
@@ -102,7 +105,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                 Password
                             </Label>
                             {canResetPassword && (
-                                <TextLink href={password.request.url()} className="text-xs font-medium text-blue-600 hover:text-blue-700">
+                                <TextLink href={redirect ? `${password.request.url()}?redirect=${encodeURIComponent(redirect)}` : password.request.url()} className="text-xs font-medium text-blue-600 hover:text-blue-700">
                                     Forgot password?
                                 </TextLink>
                             )}
@@ -167,7 +170,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
 
                 <div className="text-z inc -600 pt-4 text-center text-sm">
                     Don't have an account?{' '}
-                    <TextLink href={register().url} className="font-medium text-blue-600 hover:text-blue-700">
+                    <TextLink href={redirect ? `${register().url}?redirect=${encodeURIComponent(redirect)}` : register().url} className="font-medium text-blue-600 hover:text-blue-700">
                         Sign up
                     </TextLink>
                 </div>

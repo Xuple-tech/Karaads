@@ -11,9 +11,9 @@ class UseConsoleGuard
 {
     public function handle(Request $request, Closure $next): Response
     {
-        Auth::shouldUse('console');
+        Auth::shouldUse('web');
 
-        $request->setUserResolver(static fn (?string $guard = null) => Auth::guard($guard ?: 'console')->user());
+        $request->setUserResolver(static fn (?string $guard = null) => Auth::guard($guard ?: 'web')->user());
 
         return $next($request);
     }

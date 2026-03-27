@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Str;
 
+$appHost = parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST);
+$isLocalSession = in_array(env('APP_ENV', 'production'), ['local', 'testing'], true);
+
 return [
 
     /*
@@ -156,7 +159,7 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN'),
+    'domain' => env('SESSION_DOMAIN', $isLocalSession || ! $appHost ? null : '.' . ltrim($appHost, '.')),
 
     /*
     |--------------------------------------------------------------------------

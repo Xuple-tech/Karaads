@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\AuthRedirect;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,9 +19,13 @@ class RegisteredUserController extends Controller
     /**
      * Show the registration page.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        return Inertia::render('auth/register');
+        AuthRedirect::remember($request);
+
+        return Inertia::render('auth/register', [
+            'redirect' => AuthRedirect::sanitize($request->query('redirect')),
+        ]);
     }
 
     /**
@@ -45,6 +50,10 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user,true);
+
+        if ($redirectTarget = AuthRedirect::fromRequest($request)) {
+            return redirect()->to($redirectTarget);
+        }
 
         return redirect()->intended('/new');
     }

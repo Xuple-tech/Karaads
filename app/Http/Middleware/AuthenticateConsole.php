@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\AuthRedirect;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,12 +12,14 @@ class AuthenticateConsole
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (! Auth::guard('console')->check()) {
-            return redirect()->route('console.login');
+        if (! Auth::guard('web')->check()) {
+            $target = AuthRedirect::sanitize($request->fullUrl()) ?? $request->getRequestUri();
+
+            return redirect()->to(AuthRedirect::mainLoginUrl($target));
         }
 
-        Auth::shouldUse('console');
-        $request->setUserResolver(static fn (?string $guard = null) => Auth::guard($guard ?: 'console')->user());
+        Auth::shouldUse('web');
+        $request->setUserResolver(static fn (?string $guard = null) => Auth::guard($guard ?: 'web')->user());
 
         return $next($request);
     }

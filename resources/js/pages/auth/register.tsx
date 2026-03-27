@@ -19,14 +19,20 @@ type RegisterForm = {
     email: string;
     password: string;
     password_confirmation: string;
+    redirect: string;
 };
 
-export default function Register() {
-    const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
+interface RegisterProps {
+    redirect?: string | null;
+}
+
+export default function Register({ redirect }: RegisterProps) {
+    const { data, setData, post, processing, errors, reset } = useForm<RegisterForm>({
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
+        redirect: redirect ?? '',
     });
 
     const submit: FormEventHandler = (e) => {
@@ -45,7 +51,7 @@ export default function Register() {
                     
 
                     <a
-                        href={auth.google.url()}
+                        href={redirect ? `${auth.google.url()}?redirect=${encodeURIComponent(redirect)}` : auth.google.url()}
                         className="border-white-200 text-primary hover:bg-white-50 flex h-11 w-full items-center justify-center gap-3 rounded-lg border bg-white text-sm font-medium shadow-sm transition-all hover:shadow"
                         disabled={processing}
                     >
@@ -174,7 +180,7 @@ export default function Register() {
 
                 <div className="text-white-600 pt-4 text-center text-sm">
                     Already have an account?{' '}
-                    <TextLink href={login.url()} className="font-medium text-blue-600 hover:text-blue-700">
+                    <TextLink href={redirect ? `${login.url()}?redirect=${encodeURIComponent(redirect)}` : login.url()} className="font-medium text-blue-600 hover:text-blue-700">
                         Sign in
                     </TextLink>
                 </div>

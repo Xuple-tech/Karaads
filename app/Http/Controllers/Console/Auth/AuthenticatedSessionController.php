@@ -60,16 +60,16 @@ class AuthenticatedSessionController extends Controller
         RateLimiter::clear($throttleKey);
         $request->session()->regenerate();
 
-        return redirect()->intended(route('console.index'));
+        return redirect()->intended(route('console.overview'));
     }
 
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('console')->logout();
+        Auth::guard('web')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('console.login');
+        return redirect()->route('login');
     }
 }

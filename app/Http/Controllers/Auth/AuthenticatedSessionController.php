@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Support\AuthRedirect;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,9 +19,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(Request $request): Response
     {
+        AuthRedirect::remember($request);
+
         return Inertia::render('auth/login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => $request->session()->get('status'),
+            'redirect' => AuthRedirect::sanitize($request->query('redirect')),
         ]);
     }
 
@@ -32,8 +36,12 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+        $redirectTarget = AuthRedirect::fromRequest($request);
 
         $user = $request->user();
+        if ($redirectTarget) {
+            return redirect()->to($redirectTarget);
+        }
         if($user->is_admin){
             return redirect()->intended('/admin');
         }

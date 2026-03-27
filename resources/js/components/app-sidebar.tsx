@@ -7,7 +7,7 @@ import { Link, usePage } from '@inertiajs/react';
 import { AudioLines, BookOpen, Folder, Mail, SquarePen, Zap, MessageCircle, Stars, BotMessageSquareIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import AppLogo from './app-logo';
-import ConversationLink from './Chat/conversionLink';
+import ConversationLink from './chat/conversionLink';
 import { Skeleton } from './ui/skeleton';
 import { Button } from './ui/button';
 import { dashboard } from '@/routes/user';

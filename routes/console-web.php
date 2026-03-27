@@ -1,23 +1,27 @@
 <?php
 
-use App\Http\Controllers\Console\Auth\AuthenticatedSessionController;
+use App\Support\AuthRedirect;
+use App\Support\ConsoleUrl;
 use App\Http\Controllers\Console\BillingController;
 use App\Http\Controllers\Console\KeysController;
 use App\Http\Controllers\Console\ModelsController;
 use App\Http\Controllers\Console\OverviewController;
 use App\Http\Controllers\Console\UsageController;
-use App\Support\ConsoleUrl;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 $registerConsoleRoutes = function (): void {
-    Route::middleware('guest:console')->group(function () {
-        Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('console.login');
-        Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('console.login.store');
+    Route::group([], function () {
+        Route::get('/login', function (Request $request) {
+            $target = AuthRedirect::sanitize($request->query('redirect')) ?? ConsoleUrl::consoleUrl($request);
+
+            return redirect()->to(AuthRedirect::mainLoginUrl($target));
+        })->name('console.login');
     });
 
     Route::middleware('auth.console')->group(function () {
-        Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('console.logout');
+        Route::post('/logout', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'destroy'])->name('console.logout');
 
         Route::get('/', [OverviewController::class, 'index'])->name('console.overview');
         Route::get('/keys', [KeysController::class, 'index'])->name('console.keys');

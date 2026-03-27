@@ -1,4 +1,4 @@
-import ChatInterface from '@/components/Chat/ChatInterface';
+import ChatInterface from '@/components/chat/ChatInterface';
 import { LanguageProvider } from '@/hooks/use-lang';
 import GuestLayout from '@/layouts/GuestLayout';
 import AppLayout from '@/layouts/app-layout';
