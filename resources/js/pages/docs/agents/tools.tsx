@@ -15,7 +15,7 @@ export default function ToolsIndex() {
                 {/* Header */}
                 <div className="space-y-2">
                     <h1 className="text-4xl font-bold tracking-tight">Tools Management</h1>
-                    <p className="text-muted-foreground text-lg">Add powerful capabilities to your AI agent with tools and integrations</p>
+                    <p className="text-muted-foreground text-lg">Connect tools and integrations so your agent can take real actions</p>
                 </div>
 
                 {/* Quick Navigation */}
@@ -28,7 +28,7 @@ export default function ToolsIndex() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-muted-foreground text-sm">Create your first tool in 5 minutes</p>
+                            <p className="text-muted-foreground text-sm">Set up your first tool in a few minutes</p>
                         </CardContent>
                     </Card>
 
@@ -40,7 +40,7 @@ export default function ToolsIndex() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-muted-foreground text-sm">Explore different types of tools available</p>
+                            <p className="text-muted-foreground text-sm">Compare tool types and when to use each one</p>
                         </CardContent>
                     </Card>
 
@@ -52,7 +52,7 @@ export default function ToolsIndex() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-muted-foreground text-sm">Learn how to configure tools properly</p>
+                            <p className="text-muted-foreground text-sm">Configure tools safely and predictably</p>
                         </CardContent>
                     </Card>
                 </div>
@@ -238,7 +238,7 @@ export default function ToolsIndex() {
 
                 {/* Quick Start */}
                 <section className="space-y-4">
-                    <h2 className="text-2xl font-bold tracking-tight">Quick Start - Create Your First Tool</h2>
+                    <h2 className="text-2xl font-bold tracking-tight">Quick Start: Create Your First Tool</h2>
 
                     <div className="space-y-3">
                         <div className="space-y-2 rounded-lg border p-4">

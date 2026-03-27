@@ -44,6 +44,7 @@ class ImageGenerationsController extends Controller
             'data' => $result['images'],
             'model' => $result['model']->public_id,
             'usage' => $result['usage'],
+            'billing' => $result['billing'],
         ]);
     }
 

@@ -79,9 +79,9 @@ class DeveloperApiChatService
                 ->post(rtrim((string) config('developer-api.upstream.base_url'), '/') . '/chat/completions', $upstreamPayload)
                 ->throw();
         } catch (ConnectionException $exception) {
-            throw new \RuntimeException('Upstream model service is currently unavailable.');
+            throw new \RuntimeException('Server cooling down, please try again later.');
         } catch (RequestException $exception) {
-            throw new \RuntimeException('Upstream model request failed.');
+            throw new \RuntimeException('Server cooling down, please try again later.');
         } catch (\Throwable $exception) {
             throw new \RuntimeException('Developer API request could not be completed.');
         }
@@ -135,8 +135,13 @@ class DeveloperApiChatService
                 'prompt_tokens' => $usageRecord->input_tokens,
                 'completion_tokens' => $usageRecord->output_tokens,
                 'total_tokens' => $usageRecord->total_tokens,
+                'cost_usd' => (float) $usageRecord->cost_usd,
+                'is_estimated' => (bool) $usageRecord->is_estimated_tokens,
             ],
-            'cost_usd' => (float) $usageRecord->cost_usd,
+            'billing' => [
+                'amount_charged_usd' => (float) $usageRecord->cost_usd,
+                'currency' => 'USD',
+            ],
         ];
     }
 

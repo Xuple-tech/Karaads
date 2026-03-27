@@ -99,6 +99,7 @@ class ChatCompletionsController extends Controller
                 'finish_reason' => $result['finish_reason'],
             ]],
             'usage' => $result['usage'],
+            'billing' => $result['billing'],
         ]);
     }
 

@@ -111,6 +111,11 @@ export type TopupConfig = {
     max_amount_usd: number;
     providers: string[];
     default_provider: 'stripe' | 'paystack';
+    paystack: {
+        currency: string;
+        exchange_rate: number;
+        symbol: string;
+    };
 };
 
 export type Filters = {

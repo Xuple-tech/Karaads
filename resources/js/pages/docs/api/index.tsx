@@ -19,7 +19,7 @@ export default function ApiDocsIndex() {
             <div className="space-y-8">
                 <div className="space-y-3">
                     <div className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">API / LLM</div>
-                    <h1 className="text-4xl font-semibold">Developer API documentation</h1>
+                    <h1 className="text-4xl font-semibold">Developer API docs</h1>
                     <p className="max-w-3xl text-lg text-muted-foreground">
                         The API is a branded model surface exposed at <code>https://api.your-domain.com/v1</code>. Manage keys, wallet credits, and
                         access controls in the developer console. Use bearer keys for API requests.
@@ -48,7 +48,7 @@ export default function ApiDocsIndex() {
                     ].map(([title, href]) => (
                         <Link key={href} href={href} className="rounded-2xl border border-border bg-card p-5 transition hover:border-border">
                             <div className="text-lg font-semibold">{title}</div>
-                            <p className="mt-2 text-sm text-muted-foreground">Open the {title.toLowerCase()} page.</p>
+                            <p className="mt-2 text-sm text-muted-foreground">View {title.toLowerCase()} details and examples.</p>
                         </Link>
                     ))}
                 </div>

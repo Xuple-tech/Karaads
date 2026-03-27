@@ -310,7 +310,10 @@ class DeveloperApiTest extends TestCase
             ->assertJsonPath('object', 'chat.completion')
             ->assertJsonPath('model', 'kwati-4-fast')
             ->assertJsonPath('choices.0.message.role', 'assistant')
-            ->assertJsonPath('usage.total_tokens', 17);
+            ->assertJsonPath('usage.total_tokens', 17)
+            ->assertJsonPath('usage.prompt_tokens', 12)
+            ->assertJsonPath('usage.completion_tokens', 5)
+            ->assertJsonPath('billing.currency', 'USD');
 
         $this->assertSame(1, DeveloperUsageRecord::count());
         $this->assertLessThan(10.0, (float) DeveloperWallet::query()->where('user_id', $user->id)->value('balance_usd'));
@@ -360,7 +363,7 @@ class DeveloperApiTest extends TestCase
             ->assertStatus(502)
             ->assertJsonPath('error.type', 'api_error')
             ->assertJsonPath('error.code', 'upstream_error')
-            ->assertJsonPath('error.message', 'Upstream model service is currently unavailable.');
+            ->assertJsonPath('error.message', 'Server cooling down, please try again later.');
     }
 
     public function test_it_supports_image_generation_and_debits_the_wallet(): void
@@ -395,6 +398,7 @@ class DeveloperApiTest extends TestCase
         $response->assertOk()
             ->assertJsonPath('model', 'kwati-imagine-image')
             ->assertJsonPath('usage.images', 1)
+            ->assertJsonPath('billing.currency', 'USD')
             ->assertJsonStructure(['created', 'data', 'model', 'usage']);
 
         $this->assertSame(1, DeveloperUsageRecord::count());

@@ -93,7 +93,11 @@ class PaystackWebhookController extends Controller
 
         $amountUsd = (float) ($metadata['amount_usd'] ?? 0);
         if ($amountUsd <= 0) {
-            $amountUsd = ((float) ($transaction['amount'] ?? 0)) / 100;
+            $amountUsd = $this->paystackService->convertCheckoutMinorAmountToUsd(
+                (float) ($transaction['amount'] ?? 0),
+                (string) ($transaction['currency'] ?? $metadata['checkout_currency'] ?? $this->paystackService->getCheckoutCurrency()),
+                isset($metadata['checkout_exchange_rate']) ? (float) $metadata['checkout_exchange_rate'] : null,
+            );
         }
 
         if ($amountUsd <= 0) {
@@ -108,7 +112,7 @@ class PaystackWebhookController extends Controller
             [
                 'paystack_reference' => $reference,
                 'paystack_transaction_id' => $transaction['id'] ?? null,
-                'currency' => $transaction['currency'] ?? config('services.paystack.currency', 'USD'),
+                'currency' => $transaction['currency'] ?? $this->paystackService->getCheckoutCurrency(),
             ],
             (string) $reference
         );

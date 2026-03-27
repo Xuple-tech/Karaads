@@ -14,7 +14,7 @@ export default function KnowledgeBaseIndex() {
                 {/* Header */}
                 <div className="space-y-2">
                     <h1 className="text-4xl font-bold tracking-tight">Knowledge Base Management</h1>
-                    <p className="text-muted-foreground text-lg">Learn how to create, organize, and manage your AI agent's knowledge base</p>
+                    <p className="text-muted-foreground text-lg">Build and maintain a knowledge base your agent can actually use</p>
                 </div>
 
                 {/* Quick Navigation */}
@@ -39,7 +39,7 @@ export default function KnowledgeBaseIndex() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-muted-foreground text-sm">Step-by-step guide to adding knowledge base items</p>
+                            <p className="text-muted-foreground text-sm">Clear steps for adding knowledge items</p>
                         </CardContent>
                     </Card>
 

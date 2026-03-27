@@ -24,7 +24,7 @@ declare(strict_types=1);
 */
 
 $baseUrl = 'http://localhost:8000/v1';
-$apiKey = 'kwati_trsozwetdepn.muceBMICB8WVDnyx8Dw6Bqt3GonrmPkzJJTsxtJm';
+$apiKey = 'kwati_ramk7oglm4rq.3jBugRGrIXox6zjN4t8lQ83MZZJTCdUdEzdojZqg';
 $model = 'kwati-4-fast';
 
 $action = $argv[1] ?? 'models';

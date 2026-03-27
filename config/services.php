@@ -84,6 +84,8 @@ return [
         'public_key' => env('PAYSTACK_PUBLIC_KEY','pk_test_cd821bdd12e8f817821893748d75962d7fb8c0a7'),
         'base_url' => env('PAYSTACK_BASE_URL', 'https://api.paystack.co'),
         'currency' => env('PAYSTACK_CURRENCY', 'USD'),
+        'settlement_currency' => env('PAYSTACK_SETTLEMENT_CURRENCY', 'NGN'),
+        'usd_to_ngn_rate' => (float) env('PAYSTACK_USD_TO_NGN_RATE', 1460),
         'timeout' => (int) env('PAYSTACK_TIMEOUT', 60),
         'connect_timeout' => (int) env('PAYSTACK_CONNECT_TIMEOUT', 15),
         'verify_ssl' => filter_var(env('PAYSTACK_VERIFY_SSL', false), FILTER_VALIDATE_BOOL),

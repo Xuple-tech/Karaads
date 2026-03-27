@@ -40,6 +40,10 @@ export function BillingSection({
     onTopup,
 }: Props) {
     const [checkoutOpen, setCheckoutOpen] = useState(false);
+    const paystackConvertedAmount =
+        topupProvider === 'paystack'
+            ? topupAmount * topupConfig.paystack.exchange_rate
+            : 0;
 
     const handleTopup = () => {
         onTopup();
@@ -80,7 +84,7 @@ export function BillingSection({
             {/* Top up */}
             <Panel
                 title="Add Credits"
-                description={`Enter amount between $${topupConfig.min_amount_usd} and $${topupConfig.max_amount_usd}.`}
+                description={`Enter amount between $${topupConfig.min_amount_usd} and $${topupConfig.max_amount_usd}. Paystack checkouts are charged in ${topupConfig.paystack.currency}.`}
                 action={
                     <Button
                         size="sm"
@@ -109,7 +113,13 @@ export function BillingSection({
                         />
                         {!isAmountValid && topupAmount > 0 && (
                             <p className="text-xs text-destructive">
-                                Must be between ${topupConfig.min_amount_usd}  ${topupConfig.max_amount_usd}
+                                Must be between ${topupConfig.min_amount_usd} and ${topupConfig.max_amount_usd}
+                            </p>
+                        )}
+                        {topupProvider === 'paystack' && isAmountValid && (
+                            <p className="text-xs text-muted-foreground">
+                                Charged as {topupConfig.paystack.symbol}{paystackConvertedAmount.toLocaleString(undefined, { maximumFractionDigits: 2 })}{' '}
+                                {topupConfig.paystack.currency} at {topupConfig.paystack.symbol}{topupConfig.paystack.exchange_rate.toLocaleString()} per $1
                             </p>
                         )}
                     </div>
@@ -220,6 +230,11 @@ export function BillingSection({
                             <p className="mt-1 text-3xl font-bold tracking-tight text-foreground">
                                 ${topupAmount.toFixed(2)}
                             </p>
+                            {topupProvider === 'paystack' && (
+                                <p className="mt-2 text-sm font-medium text-foreground">
+                                    {topupConfig.paystack.symbol}{paystackConvertedAmount.toLocaleString(undefined, { maximumFractionDigits: 2 })} {topupConfig.paystack.currency}
+                                </p>
+                            )}
                             <p className="mt-2 text-xs text-muted-foreground">
                                 Paying with {topupProvider === 'paystack' ? 'Paystack' : 'Stripe'}
                             </p>

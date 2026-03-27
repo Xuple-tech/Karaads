@@ -47,6 +47,11 @@ class BillingController extends ConsoleBaseController
                     'max_amount_usd' => (float) config('developer-api.max_topup_amount_usd'),
                     'providers' => config('developer-api.topup_providers', ['paystack', 'stripe']),
                     'default_provider' => (string) config('developer-api.default_topup_provider', 'paystack'),
+                    'paystack' => [
+                        'currency' => $this->paystackService->getCheckoutCurrency(),
+                        'exchange_rate' => $this->paystackService->getUsdExchangeRate(),
+                        'symbol' => $this->paystackService->getCheckoutCurrency() === 'NGN' ? '₦' : '$',
+                    ],
                 ],
             ]
         ));
@@ -63,28 +68,32 @@ class BillingController extends ConsoleBaseController
         $successUrl = route('console.billing', [], true);
         $cancelUrl = route('console.billing', [], true);
 
-        $url = $provider === 'paystack'
-            ? $this->paystackService->createDeveloperWalletTopupAuthorization(
-                $request->user(),
-                (float) $validated['amount_usd'],
-                route('paystack.callback', [], true),
-                $cancelUrl,
-                [
-                    'provider' => 'paystack',
-                ]
-            )
-            : $this->stripeService->createOneTimeCheckoutSession(
-                $request->user(),
-                (float) $validated['amount_usd'],
-                $successUrl,
-                $cancelUrl,
-                [
-                    'purpose' => 'developer_wallet_topup',
-                    'user_id' => $request->user()->id,
-                    'amount_usd' => (string) $validated['amount_usd'],
-                    'provider' => 'stripe',
-                ]
-            );
+        try {
+            $url = $provider === 'paystack'
+                ? $this->paystackService->createDeveloperWalletTopupAuthorization(
+                    $request->user(),
+                    (float) $validated['amount_usd'],
+                    route('paystack.callback', [], true),
+                    $cancelUrl,
+                    [
+                        'provider' => 'paystack',
+                    ]
+                )
+                : $this->stripeService->createOneTimeCheckoutSession(
+                    $request->user(),
+                    (float) $validated['amount_usd'],
+                    $successUrl,
+                    $cancelUrl,
+                    [
+                        'purpose' => 'developer_wallet_topup',
+                        'user_id' => $request->user()->id,
+                        'amount_usd' => (string) $validated['amount_usd'],
+                        'provider' => 'stripe',
+                    ]
+                );
+        } catch (\Throwable $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
 
         return Inertia::location($url);
     }

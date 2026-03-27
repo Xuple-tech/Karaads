@@ -208,7 +208,7 @@ export default function DeveloperApiIndex({
                         wallet={wallet}
                         breakdowns={resolvedBreakdowns}
                         ledger={ledger ?? { data: [], links: [] }}
-                        topupConfig={topupConfig ?? { default_amount_usd: 10, min_amount_usd: 1, max_amount_usd: 1000, providers: ['paystack', 'stripe'], default_provider: 'paystack' }}
+                        topupConfig={topupConfig ?? { default_amount_usd: 10, min_amount_usd: 1, max_amount_usd: 1000, providers: ['paystack', 'stripe'], default_provider: 'paystack', paystack: { currency: 'NGN', exchange_rate: 1460, symbol: '₦' } }}
                         consoleBaseUrl={consoleBaseUrl}
                         topupAmount={topupForm.data.amount_usd}
                         topupProvider={topupForm.data.provider}

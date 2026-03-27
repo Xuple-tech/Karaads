@@ -19,7 +19,7 @@ export default function SubscriptionOverview() {
                             Subscription Plans
                         </h1>
                         <p className="text-xl text-muted-foreground">
-                            Choose the perfect plan for your needs and start building powerful AI agents
+                            Choose a plan that matches your usage and team size
                         </p>
                     </div>
 

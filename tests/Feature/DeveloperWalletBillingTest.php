@@ -105,7 +105,8 @@ class DeveloperWalletBillingTest extends TestCase
     {
         config()->set('services.paystack.secret_key', 'paystack_test_secret');
         config()->set('services.paystack.base_url', 'https://api.paystack.co');
-        config()->set('services.paystack.currency', 'USD');
+        config()->set('services.paystack.settlement_currency', 'NGN');
+        config()->set('services.paystack.usd_to_ngn_rate', 1460);
 
         Http::fake([
             'https://api.paystack.co/transaction/verify/*' => Http::response([
@@ -114,12 +115,13 @@ class DeveloperWalletBillingTest extends TestCase
                     'id' => 123456,
                     'reference' => 'kwati_paystack_test_ref',
                     'status' => 'success',
-                    'amount' => 2500,
-                    'currency' => 'USD',
+                    'amount' => 3650000,
+                    'currency' => 'NGN',
                     'metadata' => [
                         'purpose' => 'developer_wallet_topup',
                         'user_id' => null,
                         'amount_usd' => '25.00',
+                        'checkout_exchange_rate' => '1460.0000',
                     ],
                 ],
             ], 200),
@@ -134,12 +136,13 @@ class DeveloperWalletBillingTest extends TestCase
                     'id' => 123456,
                     'reference' => 'kwati_paystack_test_ref',
                     'status' => 'success',
-                    'amount' => 2500,
-                    'currency' => 'USD',
+                    'amount' => 3650000,
+                    'currency' => 'NGN',
                     'metadata' => [
                         'purpose' => 'developer_wallet_topup',
                         'user_id' => $user->id,
                         'amount_usd' => '25.00',
+                        'checkout_exchange_rate' => '1460.0000',
                     ],
                 ],
             ], 200),
@@ -180,5 +183,44 @@ class DeveloperWalletBillingTest extends TestCase
         $this->assertSame($first->id, $second->id);
         $this->assertSame('25.000000', $wallet->balance_usd);
         $this->assertDatabaseCount('developer_credit_ledgers', 1);
+    }
+
+    public function test_paystack_checkout_initialization_converts_usd_to_ngn(): void
+    {
+        config()->set('services.paystack.secret_key', 'paystack_test_secret');
+        config()->set('services.paystack.base_url', 'https://api.paystack.co');
+        config()->set('services.paystack.settlement_currency', 'NGN');
+        config()->set('services.paystack.usd_to_ngn_rate', 1460);
+
+        Http::fake([
+            'https://api.paystack.co/transaction/initialize' => Http::response([
+                'status' => true,
+                'data' => [
+                    'authorization_url' => 'https://checkout.paystack.test/authorize',
+                ],
+            ], 200),
+        ]);
+
+        $user = User::factory()->create();
+
+        $url = app(PaystackService::class)->createDeveloperWalletTopupAuthorization(
+            $user,
+            25.00,
+            'https://example.com/callback',
+            'https://example.com/cancel'
+        );
+
+        $this->assertSame('https://checkout.paystack.test/authorize', $url);
+
+        Http::assertSent(function ($request) {
+            $data = $request->data();
+
+            return $request->url() === 'https://api.paystack.co/transaction/initialize'
+                && $data['currency'] === 'NGN'
+                && $data['amount'] === 3650000
+                && $data['metadata']['amount_usd'] === '25.00'
+                && $data['metadata']['checkout_currency'] === 'NGN'
+                && $data['metadata']['checkout_exchange_rate'] === '1460.0000';
+        });
     }
 }

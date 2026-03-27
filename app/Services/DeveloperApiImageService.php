@@ -113,6 +113,10 @@ class DeveloperApiImageService
                 'images' => count($images),
                 'cost_usd' => (float) $usageRecord->cost_usd,
             ],
+            'billing' => [
+                'amount_charged_usd' => (float) $usageRecord->cost_usd,
+                'currency' => 'USD',
+            ],
         ];
     }
 }

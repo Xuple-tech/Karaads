@@ -17,7 +17,7 @@ export default function AgentsDocsIndex() {
             <div className="space-y-8">
                 <div className="space-y-3">
                     <div className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">Agents</div>
-                    <h1 className="text-4xl font-semibold">Agent documentation</h1>
+                    <h1 className="text-4xl font-semibold">Agent docs</h1>
                     <p className="max-w-3xl text-lg text-muted-foreground">
                         This section covers the website-agent product only: widget setup, agent configuration, reusable templates, tool extensions,
                         and knowledge-base operations.

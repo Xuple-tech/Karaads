@@ -54,6 +54,18 @@ abstract class ConsoleBaseController extends Controller
             'models' => ApiModel::where('is_active', true)->orderBy('model_type')->orderBy('public_id')->get(),
             'apiBaseUrl' => 'https://' . config('developer-api.domain') . '/v1',
             'docsUrl' => ConsoleUrl::docsUrl($request) . '/api',
+            'topupConfig' => [
+                'default_amount_usd' => (float) config('developer-api.default_topup_amount_usd'),
+                'min_amount_usd' => (float) config('developer-api.min_topup_amount_usd'),
+                'max_amount_usd' => (float) config('developer-api.max_topup_amount_usd'),
+                'providers' => config('developer-api.topup_providers', ['paystack', 'stripe']),
+                'default_provider' => (string) config('developer-api.default_topup_provider', 'paystack'),
+                'paystack' => [
+                    'currency' => $this->paystackService->getCheckoutCurrency(),
+                    'exchange_rate' => $this->paystackService->getUsdExchangeRate(),
+                    'symbol' => $this->paystackService->getCheckoutCurrency() === 'NGN' ? '₦' : '$',
+                ],
+            ],
             'filters' => $filters,
             'section' => $section,
         ];
