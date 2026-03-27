@@ -7,12 +7,12 @@ export default function ApiReferenceDocs() {
             <Head title="API Reference" />
             <div className="space-y-8">
                 <div>
-                    <div className="text-sm font-semibold uppercase tracking-[0.2em] text-stone-500">API / LLM / Reference</div>
+                    <div className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">API / LLM / Reference</div>
                     <h1 className="mt-2 text-4xl font-semibold">Implemented route reference</h1>
-                    <p className="mt-3 max-w-3xl text-lg text-stone-600">Only the currently implemented routes are documented here.</p>
+                    <p className="mt-3 max-w-3xl text-lg text-muted-foreground">Only the currently implemented routes are documented here.</p>
                 </div>
 
-                <section className="rounded-2xl border border-stone-200 bg-white p-6">
+                <section className="rounded-2xl border border-border bg-card p-6">
                     <table className="min-w-full text-sm">
                         <thead>
                             <tr className="border-b text-left">

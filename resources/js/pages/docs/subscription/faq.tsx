@@ -155,14 +155,14 @@ export default function SubscriptionFAQ() {
         <GuestLayout>
             <Head title="Subscription FAQ" />
             
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="min-h-screen bg-gradient-to-br from-background to-muted/40 py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-3xl mx-auto">
                     {/* Header */}
                     <div className="mb-12">
-                        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                        <h1 className="text-4xl font-bold text-foreground mb-4">
                             Frequently Asked Questions
                         </h1>
-                        <p className="text-xl text-gray-600 dark:text-gray-400">
+                        <p className="text-xl text-muted-foreground">
                             Find answers to common questions about our subscription plans and billing
                         </p>
                     </div>
@@ -171,7 +171,7 @@ export default function SubscriptionFAQ() {
                     <div className="space-y-8">
                         {categories.map((category) => (
                             <div key={category}>
-                                <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white flex items-center gap-2">
+                                <h2 className="text-2xl font-bold mb-4 text-foreground flex items-center gap-2">
                                     <span className="w-1 h-8 bg-primary rounded-full"></span>
                                     {category}
                                 </h2>

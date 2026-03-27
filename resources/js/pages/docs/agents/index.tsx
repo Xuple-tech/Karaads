@@ -16,9 +16,9 @@ export default function AgentsDocsIndex() {
             <Head title="Agents Docs" />
             <div className="space-y-8">
                 <div className="space-y-3">
-                    <div className="text-sm font-semibold uppercase tracking-[0.2em] text-stone-500">Agents</div>
+                    <div className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">Agents</div>
                     <h1 className="text-4xl font-semibold">Agent documentation</h1>
-                    <p className="max-w-3xl text-lg text-stone-600">
+                    <p className="max-w-3xl text-lg text-muted-foreground">
                         This section covers the website-agent product only: widget setup, agent configuration, reusable templates, tool extensions,
                         and knowledge-base operations.
                     </p>
@@ -32,9 +32,9 @@ export default function AgentsDocsIndex() {
                         ['Knowledge Base', `${base}/knowledge-base`, 'Organize facts, policy, and structured context for retrieval.'],
                         ['Tools', `${base}/tools`, 'Extend the agent with operational tools and external actions.'],
                     ].map(([title, href, description]) => (
-                        <Link key={href} href={href} className="rounded-2xl border border-stone-200 bg-white p-5 transition hover:border-stone-400">
+                        <Link key={href} href={href} className="rounded-2xl border border-border bg-card p-5 transition hover:border-border">
                             <div className="text-lg font-semibold">{title}</div>
-                            <p className="mt-2 text-sm text-stone-600">{description}</p>
+                            <p className="mt-2 text-sm text-muted-foreground">{description}</p>
                         </Link>
                     ))}
                 </div>

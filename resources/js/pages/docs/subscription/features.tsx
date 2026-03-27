@@ -178,14 +178,14 @@ export default function SubscriptionFeatures() {
         <GuestLayout>
             <Head title="Plan Features Comparison" />
             
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="min-h-screen bg-gradient-to-br from-background to-muted/40 py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
                     {/* Header */}
                     <div className="mb-12">
-                        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                        <h1 className="text-4xl font-bold text-foreground mb-4">
                             Plan Features Comparison
                         </h1>
-                        <p className="text-xl text-gray-600 dark:text-gray-400">
+                        <p className="text-xl text-muted-foreground">
                             Compare features across all our subscription plans to find the right fit for your needs
                         </p>
                     </div>

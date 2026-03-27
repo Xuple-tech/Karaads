@@ -19,7 +19,9 @@ class ModelsController extends Controller
             'object' => 'model',
             'created' => $model->created_at?->timestamp ?? now()->timestamp,
             'owned_by' => 'kwati',
+            'type' => $model->model_type,
             'max_context_tokens' => $model->max_context_tokens,
+            'supports_reasoning' => $model->supports_reasoning,
             'supports_streaming' => $model->supports_streaming,
         ])->values();
 

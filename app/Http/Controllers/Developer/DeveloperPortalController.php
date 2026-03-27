@@ -8,6 +8,7 @@ use App\Models\DeveloperApiKey;
 use App\Support\ConsoleUrl;
 use App\Services\DeveloperApiBillingService;
 use App\Services\DeveloperApiTokenService;
+use App\Services\PaystackService;
 use App\Services\StripeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ class DeveloperPortalController extends Controller
         private readonly DeveloperApiTokenService $tokenService,
         private readonly DeveloperApiBillingService $billingService,
         private readonly StripeService $stripeService,
+        private readonly PaystackService $paystackService,
     ) {
     }
 
@@ -103,13 +105,15 @@ class DeveloperPortalController extends Controller
                     ] : null,
                 ];
             }),
-            'models' => ApiModel::where('is_active', true)->orderBy('public_id')->get(),
+            'models' => ApiModel::where('is_active', true)->orderBy('model_type')->orderBy('public_id')->get(),
             'apiBaseUrl' => 'https://' . config('developer-api.domain') . '/v1',
             'docsUrl' => ConsoleUrl::docsUrl($request) . '/api',
             'topupConfig' => [
                 'default_amount_usd' => (float) config('developer-api.default_topup_amount_usd'),
                 'min_amount_usd' => (float) config('developer-api.min_topup_amount_usd'),
                 'max_amount_usd' => (float) config('developer-api.max_topup_amount_usd'),
+                'providers' => config('developer-api.topup_providers', ['paystack', 'stripe']),
+                'default_provider' => (string) config('developer-api.default_topup_provider', 'paystack'),
             ],
             'filters' => $filters,
         ]);
@@ -185,19 +189,35 @@ class DeveloperPortalController extends Controller
     {
         $validated = $request->validate([
             'amount_usd' => 'required|numeric|min:' . config('developer-api.min_topup_amount_usd') . '|max:' . config('developer-api.max_topup_amount_usd'),
+            'provider' => 'required|string|in:stripe,paystack',
         ]);
 
-        $url = $this->stripeService->createOneTimeCheckoutSession(
-            $request->user(),
-            (float) $validated['amount_usd'],
-            route('console.index', ['section' => 'billing'], true),
-            route('console.index', ['section' => 'billing'], true),
-            [
-                'purpose' => 'developer_wallet_topup',
-                'user_id' => $request->user()->id,
-                'amount_usd' => (string) $validated['amount_usd'],
-            ]
-        );
+        $successUrl = route('console.index', ['section' => 'billing'], true);
+        $cancelUrl = route('console.index', ['section' => 'billing'], true);
+        $provider = $validated['provider'];
+
+        $url = $provider === 'paystack'
+            ? $this->paystackService->createDeveloperWalletTopupAuthorization(
+                $request->user(),
+                (float) $validated['amount_usd'],
+                route('paystack.callback', [], true),
+                $cancelUrl,
+                [
+                    'provider' => 'paystack',
+                ]
+            )
+            : $this->stripeService->createOneTimeCheckoutSession(
+                $request->user(),
+                (float) $validated['amount_usd'],
+                $successUrl,
+                $cancelUrl,
+                [
+                    'purpose' => 'developer_wallet_topup',
+                    'user_id' => $request->user()->id,
+                    'amount_usd' => (string) $validated['amount_usd'],
+                    'provider' => 'stripe',
+                ]
+            );
 
         return Inertia::location($url);
     }

@@ -38,6 +38,11 @@ class DeveloperApiBillingService
         return round($inputCost + $outputCost, 6);
     }
 
+    public function estimateImageCost(ApiModel $model, int $imageCount): float
+    {
+        return round(max(1, $imageCount) * (float) ($model->price_per_image_usd ?? 0), 6);
+    }
+
     public function ensureSufficientBalance(User $user, float $requiredAmount): void
     {
         $wallet = $this->getOrCreateWallet($user);
@@ -60,7 +65,8 @@ class DeveloperApiBillingService
         ?string $errorMessage = null,
         ?string $ipAddress = null,
         ?string $userAgent = null,
-        ?string $requestId = null
+        ?string $requestId = null,
+        ?float $costOverride = null
     ): DeveloperUsageRecord {
         return DB::transaction(function () use (
             $apiKey,
@@ -74,10 +80,11 @@ class DeveloperApiBillingService
             $errorMessage,
             $ipAddress,
             $userAgent,
-            $requestId
+            $requestId,
+            $costOverride
         ) {
             $wallet = DeveloperWallet::where('user_id', $apiKey->user_id)->lockForUpdate()->firstOrFail();
-            $cost = $this->estimateRequestCost($model, $usage['input_tokens'], $usage['output_tokens']);
+            $cost = $costOverride ?? $this->estimateRequestCost($model, $usage['input_tokens'], $usage['output_tokens']);
 
             if ((float) $wallet->balance_usd < $cost) {
                 throw new \RuntimeException('Insufficient credits.');

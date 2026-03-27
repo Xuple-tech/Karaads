@@ -11,14 +11,14 @@ export default function SubscriptionOverview() {
         <GuestLayout>
             <Head title="Subscription Overview" />
             
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="min-h-screen bg-gradient-to-br from-background to-muted/40 py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto">
                     {/* Header */}
                     <div className="mb-8">
-                        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                        <h1 className="text-4xl font-bold text-foreground mb-4">
                             Subscription Plans
                         </h1>
-                        <p className="text-xl text-gray-600 dark:text-gray-400">
+                        <p className="text-xl text-muted-foreground">
                             Choose the perfect plan for your needs and start building powerful AI agents
                         </p>
                     </div>
@@ -33,7 +33,7 @@ export default function SubscriptionOverview() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                <p className="text-sm text-muted-foreground">
                                     Choose from multiple subscription tiers designed to fit different needs, from individual developers to large teams.
                                 </p>
                             </CardContent>
@@ -47,7 +47,7 @@ export default function SubscriptionOverview() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                <p className="text-sm text-muted-foreground">
                                     Upgrade or downgrade your plan anytime. Pay only for what you need as your usage grows.
                                 </p>
                             </CardContent>
@@ -61,7 +61,7 @@ export default function SubscriptionOverview() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                <p className="text-sm text-muted-foreground">
                                     Transparent pricing with no hidden fees. Monthly or yearly billing options available.
                                 </p>
                             </CardContent>
@@ -135,7 +135,7 @@ export default function SubscriptionOverview() {
                         <CardContent className="space-y-6">
                             <div>
                                 <h3 className="font-semibold mb-2">API Requests</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p className="text-sm text-muted-foreground mb-2">
                                     Each call to the API counts as one request. Daily and monthly limits reset at UTC midnight and the first day of the month respectively.
                                 </p>
                                 <div className="bg-muted p-3 rounded-lg text-sm">
@@ -145,7 +145,7 @@ export default function SubscriptionOverview() {
 
                             <div>
                                 <h3 className="font-semibold mb-2">Tokens</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p className="text-sm text-muted-foreground mb-2">
                                     Tokens represent the size of text data. Roughly 1 token ≈ 4 characters. Both input and output tokens are counted toward your limit.
                                 </p>
                                 <div className="bg-muted p-3 rounded-lg text-sm">
@@ -155,7 +155,7 @@ export default function SubscriptionOverview() {
 
                             <div>
                                 <h3 className="font-semibold mb-2">Images Generated</h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <p className="text-sm text-muted-foreground mb-2">
                                     Each image generated from text or image editing counts toward your image limit.
                                 </p>
                                 <div className="bg-muted p-3 rounded-lg text-sm">

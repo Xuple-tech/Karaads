@@ -1,7 +1,11 @@
 <?php
 
 use App\Http\Controllers\Console\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Developer\DeveloperPortalController;
+use App\Http\Controllers\Console\BillingController;
+use App\Http\Controllers\Console\KeysController;
+use App\Http\Controllers\Console\ModelsController;
+use App\Http\Controllers\Console\OverviewController;
+use App\Http\Controllers\Console\UsageController;
 use App\Support\ConsoleUrl;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -15,12 +19,16 @@ $registerConsoleRoutes = function (): void {
     Route::middleware('auth.console')->group(function () {
         Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('console.logout');
 
-        Route::get('/', [DeveloperPortalController::class, 'index'])->name('console.index');
-        Route::post('/keys', [DeveloperPortalController::class, 'storeKey'])->name('console.keys.store');
-        Route::put('/keys/{developerApiKey}', [DeveloperPortalController::class, 'updateKey'])->name('console.keys.update');
-        Route::post('/keys/{developerApiKey}/revoke', [DeveloperPortalController::class, 'revokeKey'])->name('console.keys.revoke');
-        Route::post('/keys/{developerApiKey}/regenerate', [DeveloperPortalController::class, 'regenerateKey'])->name('console.keys.regenerate');
-        Route::post('/top-up', [DeveloperPortalController::class, 'createTopupCheckout'])->name('console.topup');
+        Route::get('/', [OverviewController::class, 'index'])->name('console.overview');
+        Route::get('/keys', [KeysController::class, 'index'])->name('console.keys');
+        Route::post('/keys', [KeysController::class, 'store'])->name('console.keys.store');
+        Route::put('/keys/{developerApiKey}', [KeysController::class, 'update'])->name('console.keys.update');
+        Route::post('/keys/{developerApiKey}/revoke', [KeysController::class, 'revoke'])->name('console.keys.revoke');
+        Route::post('/keys/{developerApiKey}/regenerate', [KeysController::class, 'regenerate'])->name('console.keys.regenerate');
+        Route::get('/usage', [UsageController::class, 'index'])->name('console.usage');
+        Route::get('/billing', [BillingController::class, 'index'])->name('console.billing');
+        Route::post('/billing/top-up', [BillingController::class, 'topup'])->name('console.topup');
+        Route::get('/models', [ModelsController::class, 'index'])->name('console.models');
     });
 
     Route::prefix('docs')->name('console.docs.')->group(function () {

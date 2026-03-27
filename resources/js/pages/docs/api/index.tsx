@@ -18,17 +18,17 @@ export default function ApiDocsIndex() {
             <Head title="API / LLM Docs" />
             <div className="space-y-8">
                 <div className="space-y-3">
-                    <div className="text-sm font-semibold uppercase tracking-[0.2em] text-stone-500">API / LLM</div>
+                    <div className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">API / LLM</div>
                     <h1 className="text-4xl font-semibold">Developer API documentation</h1>
-                    <p className="max-w-3xl text-lg text-stone-600">
+                    <p className="max-w-3xl text-lg text-muted-foreground">
                         The API is a branded model surface exposed at <code>https://api.your-domain.com/v1</code>. Manage keys, wallet credits, and
                         access controls in the developer console. Use bearer keys for API requests.
                     </p>
                     <div className="flex gap-3">
-                        <Link href={consoleBaseUrl} className="rounded bg-stone-950 px-4 py-2 text-sm font-medium text-white">
+                        <Link href={consoleBaseUrl} className="rounded bg-foreground px-4 py-2 text-sm font-medium text-white">
                             Open Console
                         </Link>
-                        <Link href={`${docsBaseUrl}/reference`} className="rounded border border-stone-300 px-4 py-2 text-sm font-medium">
+                        <Link href={`${docsBaseUrl}/reference`} className="rounded border border-border px-4 py-2 text-sm font-medium">
                             API Reference
                         </Link>
                     </div>
@@ -46,9 +46,9 @@ export default function ApiDocsIndex() {
                         ['Pricing', `${docsBaseUrl}/pricing`],
                         ['Reference', `${docsBaseUrl}/reference`],
                     ].map(([title, href]) => (
-                        <Link key={href} href={href} className="rounded-2xl border border-stone-200 bg-white p-5 transition hover:border-stone-400">
+                        <Link key={href} href={href} className="rounded-2xl border border-border bg-card p-5 transition hover:border-border">
                             <div className="text-lg font-semibold">{title}</div>
-                            <p className="mt-2 text-sm text-stone-600">Open the {title.toLowerCase()} page.</p>
+                            <p className="mt-2 text-sm text-muted-foreground">Open the {title.toLowerCase()} page.</p>
                         </Link>
                     ))}
                 </div>

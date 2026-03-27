@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ApiModel;
 use App\Models\DeveloperApiKey;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Factory as HttpFactory;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Arr;
@@ -21,6 +22,7 @@ class DeveloperApiChatService
     {
         return ApiModel::query()
             ->where('is_active', true)
+            ->orderBy('model_type')
             ->orderBy('public_id')
             ->get();
     }
@@ -34,6 +36,10 @@ class DeveloperApiChatService
 
         if (!$model) {
             throw new \InvalidArgumentException('Unsupported model.');
+        }
+
+        if (!$model->isTextModel()) {
+            throw new \InvalidArgumentException('The requested model does not support chat completions.');
         }
 
         if (!$apiKey->allowsModel($model->public_id)) {
@@ -65,10 +71,19 @@ class DeveloperApiChatService
             $response = $this->http
                 ->withToken((string) config('developer-api.upstream.api_key'))
                 ->acceptJson()
+                ->timeout((int) config('developer-api.upstream.timeout', 60))
+                ->connectTimeout((int) config('developer-api.upstream.connect_timeout', 15))
+                ->withOptions([
+                    'verify' => (bool) config('developer-api.upstream.verify_ssl', true),
+                ])
                 ->post(rtrim((string) config('developer-api.upstream.base_url'), '/') . '/chat/completions', $upstreamPayload)
                 ->throw();
+        } catch (ConnectionException $exception) {
+            throw new \RuntimeException('Upstream model service is currently unavailable.');
         } catch (RequestException $exception) {
             throw new \RuntimeException('Upstream model request failed.');
+        } catch (\Throwable $exception) {
+            throw new \RuntimeException('Developer API request could not be completed.');
         }
 
         $upstreamJson = $response->json();

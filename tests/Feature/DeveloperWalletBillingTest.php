@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use App\Services\DeveloperApiBillingService;
+use App\Services\PaystackService;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
@@ -97,5 +99,86 @@ class DeveloperWalletBillingTest extends TestCase
         $this->assertSame('15.000000', $wallet->balance_usd);
         $this->assertSame('20.000000', $wallet->lifetime_credited_usd);
         $this->assertSame('5.000000', $wallet->lifetime_debited_usd);
+    }
+
+    public function test_paystack_transaction_verification_can_credit_wallet_idempotently(): void
+    {
+        config()->set('services.paystack.secret_key', 'paystack_test_secret');
+        config()->set('services.paystack.base_url', 'https://api.paystack.co');
+        config()->set('services.paystack.currency', 'USD');
+
+        Http::fake([
+            'https://api.paystack.co/transaction/verify/*' => Http::response([
+                'status' => true,
+                'data' => [
+                    'id' => 123456,
+                    'reference' => 'kwati_paystack_test_ref',
+                    'status' => 'success',
+                    'amount' => 2500,
+                    'currency' => 'USD',
+                    'metadata' => [
+                        'purpose' => 'developer_wallet_topup',
+                        'user_id' => null,
+                        'amount_usd' => '25.00',
+                    ],
+                ],
+            ], 200),
+        ]);
+
+        $user = User::factory()->create();
+
+        Http::fake([
+            'https://api.paystack.co/transaction/verify/*' => Http::response([
+                'status' => true,
+                'data' => [
+                    'id' => 123456,
+                    'reference' => 'kwati_paystack_test_ref',
+                    'status' => 'success',
+                    'amount' => 2500,
+                    'currency' => 'USD',
+                    'metadata' => [
+                        'purpose' => 'developer_wallet_topup',
+                        'user_id' => $user->id,
+                        'amount_usd' => '25.00',
+                    ],
+                ],
+            ], 200),
+        ]);
+
+        $payload = app(PaystackService::class)->verifyTransaction('kwati_paystack_test_ref');
+        $data = $payload['data'];
+
+        $billing = app(DeveloperApiBillingService::class);
+        $first = $billing->creditWallet(
+            $user,
+            (float) $data['metadata']['amount_usd'],
+            'topup',
+            'Paystack top-up',
+            [
+                'paystack_reference' => $data['reference'],
+                'paystack_transaction_id' => $data['id'],
+                'currency' => $data['currency'],
+            ],
+            $data['reference']
+        );
+
+        $second = $billing->creditWallet(
+            $user,
+            (float) $data['metadata']['amount_usd'],
+            'topup',
+            'Paystack top-up',
+            [
+                'paystack_reference' => $data['reference'],
+                'paystack_transaction_id' => $data['id'],
+                'currency' => $data['currency'],
+            ],
+            $data['reference']
+        );
+
+        $wallet = $billing->getOrCreateWallet($user)->fresh();
+
+        $this->assertSame($first->id, $second->id);
+        $this->assertSame('25.000000', $wallet->balance_usd);
+        $this->assertDatabaseCount('developer_credit_ledgers', 1);
     }
 }

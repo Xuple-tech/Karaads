@@ -12,11 +12,17 @@ type ModelRow = {
     public_id: string;
     name: string;
     description?: string | null;
+    model_type: 'text' | 'image';
     upstream_provider: string;
     upstream_model: string;
     input_price_per_1m_tokens: string;
     output_price_per_1m_tokens: string;
+    provider_input_price_per_1m_tokens?: string | null;
+    provider_output_price_per_1m_tokens?: string | null;
+    price_per_image_usd?: string | null;
+    provider_price_per_image_usd?: string | null;
     max_context_tokens?: number | null;
+    supports_reasoning: boolean;
     supports_streaming: boolean;
     supports_tools: boolean;
     is_active: boolean;
@@ -118,11 +124,17 @@ type FlashProps = {
 type ModelDraft = {
     name: string;
     description: string;
+    model_type: 'text' | 'image';
     upstream_provider: string;
     upstream_model: string;
     input_price_per_1m_tokens: number;
     output_price_per_1m_tokens: number;
+    provider_input_price_per_1m_tokens: number;
+    provider_output_price_per_1m_tokens: number;
+    price_per_image_usd: number;
+    provider_price_per_image_usd: number;
     max_context_tokens: number;
+    supports_reasoning: boolean;
     supports_streaming: boolean;
     supports_tools: boolean;
     is_active: boolean;
@@ -152,11 +164,17 @@ export default function AdminDeveloperApiIndex({ models, keys, usage, wallets, l
         public_id: '',
         name: '',
         description: '',
+        model_type: 'text' as const,
         upstream_provider: 'internal',
         upstream_model: '',
         input_price_per_1m_tokens: 0,
         output_price_per_1m_tokens: 0,
+        provider_input_price_per_1m_tokens: 0,
+        provider_output_price_per_1m_tokens: 0,
+        price_per_image_usd: 0,
+        provider_price_per_image_usd: 0,
         max_context_tokens: 128000,
+        supports_reasoning: false,
         supports_streaming: true,
         supports_tools: false,
         is_active: true,
@@ -168,11 +186,17 @@ export default function AdminDeveloperApiIndex({ models, keys, usage, wallets, l
                 carry[model.id] = {
                     name: model.name,
                     description: model.description ?? '',
+                    model_type: model.model_type,
                     upstream_provider: model.upstream_provider,
                     upstream_model: model.upstream_model,
                     input_price_per_1m_tokens: Number(model.input_price_per_1m_tokens),
                     output_price_per_1m_tokens: Number(model.output_price_per_1m_tokens),
+                    provider_input_price_per_1m_tokens: Number(model.provider_input_price_per_1m_tokens ?? 0),
+                    provider_output_price_per_1m_tokens: Number(model.provider_output_price_per_1m_tokens ?? 0),
+                    price_per_image_usd: Number(model.price_per_image_usd ?? 0),
+                    provider_price_per_image_usd: Number(model.provider_price_per_image_usd ?? 0),
                     max_context_tokens: model.max_context_tokens ?? 128000,
+                    supports_reasoning: model.supports_reasoning,
                     supports_streaming: model.supports_streaming,
                     supports_tools: model.supports_tools,
                     is_active: model.is_active,
@@ -279,11 +303,22 @@ export default function AdminDeveloperApiIndex({ models, keys, usage, wallets, l
                             <div className="grid gap-4 lg:grid-cols-3">
                                 <Field label="Public ID"><input className="rounded border px-3 py-2" value={createModelForm.data.public_id} onChange={(e) => createModelForm.setData('public_id', e.target.value)} /></Field>
                                 <Field label="Name"><input className="rounded border px-3 py-2" value={createModelForm.data.name} onChange={(e) => createModelForm.setData('name', e.target.value)} /></Field>
+                                <Field label="Model Type">
+                                    <select className="rounded border px-3 py-2" value={createModelForm.data.model_type} onChange={(e) => createModelForm.setData('model_type', e.target.value as 'text' | 'image')}>
+                                        <option value="text">Text</option>
+                                        <option value="image">Image</option>
+                                    </select>
+                                </Field>
                                 <Field label="Upstream Model"><input className="rounded border px-3 py-2" value={createModelForm.data.upstream_model} onChange={(e) => createModelForm.setData('upstream_model', e.target.value)} /></Field>
                                 <Field label="Description" className="lg:col-span-3"><textarea className="min-h-20 rounded border px-3 py-2" value={createModelForm.data.description} onChange={(e) => createModelForm.setData('description', e.target.value)} /></Field>
                                 <Field label="Input Price"><input className="rounded border px-3 py-2" type="number" step="0.000001" value={createModelForm.data.input_price_per_1m_tokens} onChange={(e) => createModelForm.setData('input_price_per_1m_tokens', Number(e.target.value))} /></Field>
                                 <Field label="Output Price"><input className="rounded border px-3 py-2" type="number" step="0.000001" value={createModelForm.data.output_price_per_1m_tokens} onChange={(e) => createModelForm.setData('output_price_per_1m_tokens', Number(e.target.value))} /></Field>
+                                <Field label="Provider Input"><input className="rounded border px-3 py-2" type="number" step="0.000001" value={createModelForm.data.provider_input_price_per_1m_tokens} onChange={(e) => createModelForm.setData('provider_input_price_per_1m_tokens', Number(e.target.value))} /></Field>
+                                <Field label="Provider Output"><input className="rounded border px-3 py-2" type="number" step="0.000001" value={createModelForm.data.provider_output_price_per_1m_tokens} onChange={(e) => createModelForm.setData('provider_output_price_per_1m_tokens', Number(e.target.value))} /></Field>
+                                <Field label="Price Per Image"><input className="rounded border px-3 py-2" type="number" step="0.000001" value={createModelForm.data.price_per_image_usd} onChange={(e) => createModelForm.setData('price_per_image_usd', Number(e.target.value))} /></Field>
+                                <Field label="Provider Image Price"><input className="rounded border px-3 py-2" type="number" step="0.000001" value={createModelForm.data.provider_price_per_image_usd} onChange={(e) => createModelForm.setData('provider_price_per_image_usd', Number(e.target.value))} /></Field>
                                 <Field label="Context"><input className="rounded border px-3 py-2" type="number" value={createModelForm.data.max_context_tokens} onChange={(e) => createModelForm.setData('max_context_tokens', Number(e.target.value))} /></Field>
+                                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={createModelForm.data.supports_reasoning} onChange={(e) => createModelForm.setData('supports_reasoning', e.target.checked)} />Supports reasoning</label>
                             </div>
                             <div className="mt-4"><button className="rounded bg-black px-4 py-2 text-white" onClick={() => createModelForm.post('/admin/developer-api/models')}>Create model</button></div>
                         </Panel>
@@ -295,17 +330,31 @@ export default function AdminDeveloperApiIndex({ models, keys, usage, wallets, l
                                     return (
                                         <div key={model.id} className="rounded border p-4">
                                             <div className="mb-3 flex items-center justify-between">
-                                                <div className="font-semibold">{model.public_id}</div>
+                                                <div>
+                                                    <div className="font-semibold">{model.public_id}</div>
+                                                    <div className="text-xs text-muted-foreground">{model.model_type}{model.supports_reasoning ? ' · reasoning' : ''}</div>
+                                                </div>
                                                 <div className="text-sm text-muted-foreground">{model.is_active ? 'Active' : 'Disabled'}</div>
                                             </div>
                                             <div className="grid gap-4 lg:grid-cols-3">
                                                 <Field label="Name"><input className="rounded border px-3 py-2" value={draft.name} onChange={(e) => updateModelDraft(model.id, { name: e.target.value })} /></Field>
+                                                <Field label="Model Type">
+                                                    <select className="rounded border px-3 py-2" value={draft.model_type} onChange={(e) => updateModelDraft(model.id, { model_type: e.target.value as 'text' | 'image' })}>
+                                                        <option value="text">Text</option>
+                                                        <option value="image">Image</option>
+                                                    </select>
+                                                </Field>
                                                 <Field label="Upstream Provider"><input className="rounded border px-3 py-2" value={draft.upstream_provider} onChange={(e) => updateModelDraft(model.id, { upstream_provider: e.target.value })} /></Field>
                                                 <Field label="Upstream Model"><input className="rounded border px-3 py-2" value={draft.upstream_model} onChange={(e) => updateModelDraft(model.id, { upstream_model: e.target.value })} /></Field>
                                                 <Field label="Description" className="lg:col-span-3"><textarea className="min-h-20 rounded border px-3 py-2" value={draft.description} onChange={(e) => updateModelDraft(model.id, { description: e.target.value })} /></Field>
                                                 <Field label="Input Price"><input className="rounded border px-3 py-2" type="number" step="0.000001" value={draft.input_price_per_1m_tokens} onChange={(e) => updateModelDraft(model.id, { input_price_per_1m_tokens: Number(e.target.value) })} /></Field>
                                                 <Field label="Output Price"><input className="rounded border px-3 py-2" type="number" step="0.000001" value={draft.output_price_per_1m_tokens} onChange={(e) => updateModelDraft(model.id, { output_price_per_1m_tokens: Number(e.target.value) })} /></Field>
+                                                <Field label="Provider Input"><input className="rounded border px-3 py-2" type="number" step="0.000001" value={draft.provider_input_price_per_1m_tokens} onChange={(e) => updateModelDraft(model.id, { provider_input_price_per_1m_tokens: Number(e.target.value) })} /></Field>
+                                                <Field label="Provider Output"><input className="rounded border px-3 py-2" type="number" step="0.000001" value={draft.provider_output_price_per_1m_tokens} onChange={(e) => updateModelDraft(model.id, { provider_output_price_per_1m_tokens: Number(e.target.value) })} /></Field>
+                                                <Field label="Price Per Image"><input className="rounded border px-3 py-2" type="number" step="0.000001" value={draft.price_per_image_usd} onChange={(e) => updateModelDraft(model.id, { price_per_image_usd: Number(e.target.value) })} /></Field>
+                                                <Field label="Provider Image Price"><input className="rounded border px-3 py-2" type="number" step="0.000001" value={draft.provider_price_per_image_usd} onChange={(e) => updateModelDraft(model.id, { provider_price_per_image_usd: Number(e.target.value) })} /></Field>
                                                 <Field label="Context"><input className="rounded border px-3 py-2" type="number" value={draft.max_context_tokens} onChange={(e) => updateModelDraft(model.id, { max_context_tokens: Number(e.target.value) })} /></Field>
+                                                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={draft.supports_reasoning} onChange={(e) => updateModelDraft(model.id, { supports_reasoning: e.target.checked })} />Supports reasoning</label>
                                             </div>
                                             <div className="mt-4 flex gap-2">
                                                 <button className="rounded bg-black px-4 py-2 text-white" onClick={() => router.put(`/admin/developer-api/models/${model.id}`, draft)}>Save</button>

@@ -3,10 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\DeveloperUsageRecord;
+use App\Models\DeveloperWallet;
 use App\Models\User;
 use App\Services\DeveloperApiBillingService;
 use App\Services\DeveloperApiTokenService;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
@@ -42,11 +44,17 @@ class DeveloperApiTest extends TestCase
             $table->string('public_id')->unique();
             $table->string('name');
             $table->text('description')->nullable();
+            $table->string('model_type')->default('text');
             $table->string('upstream_provider');
             $table->string('upstream_model');
             $table->decimal('input_price_per_1m_tokens', 12, 6)->default(0);
             $table->decimal('output_price_per_1m_tokens', 12, 6)->default(0);
+            $table->decimal('provider_input_price_per_1m_tokens', 12, 6)->nullable();
+            $table->decimal('provider_output_price_per_1m_tokens', 12, 6)->nullable();
+            $table->decimal('price_per_image_usd', 12, 6)->nullable();
+            $table->decimal('provider_price_per_image_usd', 12, 6)->nullable();
             $table->unsignedInteger('max_context_tokens')->nullable();
+            $table->boolean('supports_reasoning')->default(false);
             $table->boolean('supports_streaming')->default(true);
             $table->boolean('supports_tools')->default(false);
             $table->boolean('is_active')->default(true);
@@ -119,11 +127,17 @@ class DeveloperApiTest extends TestCase
                 'public_id' => 'kwati-4',
                 'name' => 'Kwati 4',
                 'description' => 'General-purpose flagship text model.',
+                'model_type' => 'text',
                 'upstream_provider' => 'internal',
                 'upstream_model' => 'grok-4-fast-reasoning',
                 'input_price_per_1m_tokens' => 8.000000,
                 'output_price_per_1m_tokens' => 24.000000,
+                'provider_input_price_per_1m_tokens' => 2.000000,
+                'provider_output_price_per_1m_tokens' => 6.000000,
+                'price_per_image_usd' => null,
+                'provider_price_per_image_usd' => null,
                 'max_context_tokens' => 128000,
+                'supports_reasoning' => true,
                 'supports_streaming' => true,
                 'supports_tools' => false,
                 'is_active' => true,
@@ -135,12 +149,40 @@ class DeveloperApiTest extends TestCase
                 'public_id' => 'kwati-4-fast',
                 'name' => 'Kwati 4 Fast',
                 'description' => 'Fast low-latency text model.',
+                'model_type' => 'text',
                 'upstream_provider' => 'internal',
                 'upstream_model' => 'grok-4-fast-non-reasoning',
                 'input_price_per_1m_tokens' => 4.000000,
                 'output_price_per_1m_tokens' => 12.000000,
+                'provider_input_price_per_1m_tokens' => 0.200000,
+                'provider_output_price_per_1m_tokens' => 0.500000,
+                'price_per_image_usd' => null,
+                'provider_price_per_image_usd' => null,
                 'max_context_tokens' => 128000,
+                'supports_reasoning' => false,
                 'supports_streaming' => true,
+                'supports_tools' => false,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => (string) \Illuminate\Support\Str::uuid(),
+                'public_id' => 'kwati-imagine-image',
+                'name' => 'Kwati Imagine Image',
+                'description' => 'Image generation model.',
+                'model_type' => 'image',
+                'upstream_provider' => 'internal',
+                'upstream_model' => 'grok-imagine-image',
+                'input_price_per_1m_tokens' => 0,
+                'output_price_per_1m_tokens' => 0,
+                'provider_input_price_per_1m_tokens' => null,
+                'provider_output_price_per_1m_tokens' => null,
+                'price_per_image_usd' => 0.070000,
+                'provider_price_per_image_usd' => 0.020000,
+                'max_context_tokens' => null,
+                'supports_reasoning' => false,
+                'supports_streaming' => false,
                 'supports_tools' => false,
                 'is_active' => true,
                 'created_at' => now(),
@@ -178,7 +220,8 @@ class DeveloperApiTest extends TestCase
         $response->assertOk()
             ->assertJsonPath('object', 'list')
             ->assertJsonFragment(['id' => 'kwati-4'])
-            ->assertJsonFragment(['id' => 'kwati-4-fast']);
+            ->assertJsonFragment(['id' => 'kwati-4-fast'])
+            ->assertJsonFragment(['id' => 'kwati-imagine-image']);
     }
 
     public function test_it_returns_authenticated_account_metadata(): void
@@ -270,7 +313,7 @@ class DeveloperApiTest extends TestCase
             ->assertJsonPath('usage.total_tokens', 17);
 
         $this->assertSame(1, DeveloperUsageRecord::count());
-        $this->assertLessThan(10.0, (float) $user->developerWallet()->first()->balance_usd);
+        $this->assertLessThan(10.0, (float) DeveloperWallet::query()->where('user_id', $user->id)->value('balance_usd'));
     }
 
     public function test_it_returns_402_when_credits_are_insufficient(): void
@@ -294,6 +337,68 @@ class DeveloperApiTest extends TestCase
 
         $response->assertStatus(402)
             ->assertJsonPath('error.code', 'insufficient_credits');
+    }
+
+    public function test_it_sanitizes_upstream_transport_failures(): void
+    {
+        Http::fake(function () {
+            throw new ConnectionException('SSL certificate problem');
+        });
+
+        $user = User::factory()->create();
+        [, $plainKey] = $this->createDeveloperKeyForUser($user);
+        app(DeveloperApiBillingService::class)->creditWallet($user, 10, 'adjustment', 'Seed credits');
+
+        $this
+            ->withHeader('Authorization', 'Bearer ' . $plainKey)
+            ->postJson($this->developerApiBase . '/v1/chat/completions', [
+                'model' => 'kwati-4-fast',
+                'messages' => [
+                    ['role' => 'user', 'content' => 'Test transport failure handling'],
+                ],
+            ])
+            ->assertStatus(502)
+            ->assertJsonPath('error.type', 'api_error')
+            ->assertJsonPath('error.code', 'upstream_error')
+            ->assertJsonPath('error.message', 'Upstream model service is currently unavailable.');
+    }
+
+    public function test_it_supports_image_generation_and_debits_the_wallet(): void
+    {
+        Http::fake([
+            'https://api.x.ai/v1/images/generations' => Http::response([
+                'created' => now()->timestamp,
+                'data' => [[
+                    'b64_json' => base64_encode('fake-image'),
+                ]],
+            ], 200),
+        ]);
+
+        $user = User::factory()->create();
+        [, $plainKey] = app(DeveloperApiTokenService::class)->createKey(
+            $user,
+            'Image Key',
+            ['kwati-imagine-image']
+        );
+        app(DeveloperApiBillingService::class)->creditWallet($user, 10, 'adjustment', 'Seed credits');
+
+        $response = $this
+            ->withHeader('Authorization', 'Bearer ' . $plainKey)
+            ->postJson($this->developerApiBase . '/v1/images/generations', [
+                'model' => 'kwati-imagine-image',
+                'prompt' => 'Generate a dashboard illustration',
+                'n' => 1,
+                'size' => '1024x1024',
+                'response_format' => 'b64_json',
+            ]);
+
+        $response->assertOk()
+            ->assertJsonPath('model', 'kwati-imagine-image')
+            ->assertJsonPath('usage.images', 1)
+            ->assertJsonStructure(['created', 'data', 'model', 'usage']);
+
+        $this->assertSame(1, DeveloperUsageRecord::count());
+        $this->assertLessThan(10.0, (float) DeveloperWallet::query()->where('user_id', $user->id)->value('balance_usd'));
     }
 
     public function test_it_rejects_models_outside_the_key_scope(): void

@@ -7,9 +7,9 @@ export default function AgentTemplatesDocs() {
             <Head title="Agent Templates" />
             <div className="space-y-8">
                 <div>
-                    <div className="text-sm font-semibold uppercase tracking-[0.2em] text-stone-500">Agents / Templates</div>
+                    <div className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">Agents / Templates</div>
                     <h1 className="mt-2 text-4xl font-semibold">Start from repeatable agent templates</h1>
-                    <p className="mt-3 max-w-3xl text-lg text-stone-600">
+                    <p className="mt-3 max-w-3xl text-lg text-muted-foreground">
                         Templates should reduce setup time, not hide product decisions. Use them as structured starting points for support, sales,
                         lead qualification, or internal operations.
                     </p>
@@ -22,9 +22,9 @@ export default function AgentTemplatesDocs() {
                         ['Operations agent', 'Optimized for workflows that depend on controlled tool usage.'],
                         ['Custom template', 'Start from a blank operational profile when a standard template is too restrictive.'],
                     ].map(([title, body]) => (
-                        <div key={title} className="rounded-2xl border border-stone-200 bg-white p-5">
+                        <div key={title} className="rounded-2xl border border-border bg-card p-5">
                             <div className="text-lg font-semibold">{title}</div>
-                            <p className="mt-2 text-sm text-stone-600">{body}</p>
+                            <p className="mt-2 text-sm text-muted-foreground">{body}</p>
                         </div>
                     ))}
                 </section>

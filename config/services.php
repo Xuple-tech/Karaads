@@ -79,6 +79,16 @@ return [
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
 
+    'paystack' => [
+        'secret_key' => env('PAYSTACK_SECRET_KEY','sk_test_46beb99e252d1fa4be2dbc043a14248cc344d000'),
+        'public_key' => env('PAYSTACK_PUBLIC_KEY','pk_test_cd821bdd12e8f817821893748d75962d7fb8c0a7'),
+        'base_url' => env('PAYSTACK_BASE_URL', 'https://api.paystack.co'),
+        'currency' => env('PAYSTACK_CURRENCY', 'USD'),
+        'timeout' => (int) env('PAYSTACK_TIMEOUT', 60),
+        'connect_timeout' => (int) env('PAYSTACK_CONNECT_TIMEOUT', 15),
+        'verify_ssl' => filter_var(env('PAYSTACK_VERIFY_SSL', false), FILTER_VALIDATE_BOOL),
+    ],
+
     'currency' => [
         'api_key' => env('OPENEXCHANGERATES_API_KEY'),
         'default' => env('DEFAULT_CURRENCY', 'USD'),

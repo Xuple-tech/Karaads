@@ -37,6 +37,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAppearance } from '@/hooks/use-appearance';
+import { useEffect } from 'react';
 
 type SharedProps = {
   auth: {
@@ -98,7 +99,26 @@ export function DocsLayout({ children }: { children: React.ReactNode }) {
       .toUpperCase()
       .slice(0, 2);
   };
-  const { appearance, updateAppearance } = useAppearance();
+  const {appearance} = useAppearance();
+    function updateAppearance(theme: string) {
+        theme = (theme == 'light') ? 'buz-light' : (theme === 'dark' ? 'buz-dark' : 'buz-light');
+      document.documentElement.setAttribute('class', theme);
+      localStorage.setItem('console', theme);
+    }
+    useEffect(()=>{
+      if(appearance === 'dark'){
+        updateAppearance('buz-dark');
+      }
+      if(appearance === 'light'){
+        updateAppearance('buz-light');
+      }
+      if(appearance === 'system'){
+        updateAppearance('buz-light');
+      }
+      else{
+          updateAppearance('buz-light');
+      }
+    },[appearance])
 
   return (
     <SidebarProvider defaultOpen={true}>

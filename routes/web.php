@@ -362,6 +362,7 @@ require __DIR__ . '/staff.php';
 require __DIR__ . '/settings.php';
 require __DIR__ . '/subscriptions.php';
 require __DIR__ . '/stripe.php';
+require __DIR__ . '/paystack.php';
 require __DIR__ . '/voice-conversation.php';
 require __DIR__ . '/user.php';
 require __DIR__ . '/currency.php';
