@@ -1,21 +1,20 @@
 import AppLogoIcon from '@/components/app-logo-icon';
-import { home, privacy, terms } from '@/routes';
-import { Link } from '@inertiajs/react';
 import { type PropsWithChildren } from 'react';
+import { Link } from 'react-router-dom';
 
 interface AuthLayoutProps {
     title?: string;
     description?: string;
 }
 
-export default function AuthSplitLayout({ children, title, description }: PropsWithChildren<AuthLayoutProps>) {
+export default function AuthLayout({ children, title, description }: PropsWithChildren<AuthLayoutProps>) {
     return (
         <div className="min-h-dvh bg-background flex flex-col items-center justify-center p-4 py-12">
             <div className="w-full max-w-[400px]">
                 {/* Logo */}
                 <div className="flex justify-center mb-8">
                     <Link
-                        href={home.url()}
+                        to="/"
                         className="flex items-center gap-2.5 hover:opacity-75 transition-opacity"
                     >
                         <AppLogoIcon />
@@ -44,11 +43,11 @@ export default function AuthSplitLayout({ children, title, description }: PropsW
 
                 {/* Footer */}
                 <div className="mt-6 flex items-center justify-center gap-5 text-xs text-muted-foreground">
-                    <Link href={privacy.url()} className="hover:text-foreground transition-colors">
+                    <Link to="/privacy" className="hover:text-foreground transition-colors">
                         Privacy policy
                     </Link>
                     <span className="text-border">·</span>
-                    <Link href={terms.url()} className="hover:text-foreground transition-colors">
+                    <Link to="/terms" className="hover:text-foreground transition-colors">
                         Terms of use
                     </Link>
                 </div>

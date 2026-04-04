@@ -174,6 +174,20 @@ class ChatMessageService
                             ],
                         ]);
                     }
+
+                    if ($attachment = $this->createDocumentAttachment($assistantMessage, $data['tool_name'] ?? null, $data['result'] ?? null)) {
+                        $emit('attachment.created', [
+                            'message_id' => $assistantMessage->id,
+                            'attachment' => [
+                                'id' => $attachment->id,
+                                'kind' => $attachment->kind,
+                                'name' => $attachment->name,
+                                'mime_type' => $attachment->mime_type,
+                                'size' => $attachment->size,
+                                'url' => $attachment->url,
+                            ],
+                        ]);
+                    }
                 }
 
                 if ($eventName === 'tool.failed') {
@@ -272,6 +286,33 @@ class ChatMessageService
 
         $attachment->update([
             'url' => url('/api/chat/files/' . $attachment->id),
+        ]);
+    }
+
+    private function createDocumentAttachment(ChatMessage $message, ?string $toolName, mixed $result): ?ChatMessageAttachment
+    {
+        if (!in_array($toolName, ['generate_pdf_document', 'generate_word_document'], true) || !is_array($result)) {
+            return null;
+        }
+
+        if (empty($result['url']) || empty($result['filename'])) {
+            return null;
+        }
+
+        return ChatMessageAttachment::create([
+            'chat_message_id' => $message->id,
+            'kind' => 'file',
+            'name' => $result['filename'],
+            'mime_type' => $result['mime_type'] ?? null,
+            'size' => $result['size'] ?? null,
+            'url' => $result['url'],
+            'path' => $result['path'] ?? null,
+            'payload' => [
+                'title' => $result['title'] ?? null,
+                'format' => $result['format'] ?? null,
+                'document_type' => $result['document_type'] ?? null,
+                'generated_at' => $result['generated_at'] ?? null,
+            ],
         ]);
     }
 

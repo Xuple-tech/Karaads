@@ -1,6 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
+import { LoaderCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+import AuthLayout from '@/spa/components/AuthLayout';
 import { apiRequest } from '@/spa/lib/api';
 import { useSessionQuery } from '@/spa/lib/session';
 
@@ -11,12 +13,35 @@ export function Component() {
     });
 
     return (
-        <section className="mx-auto max-w-xl space-y-6 px-6 py-16">
-            <h1 className="text-3xl font-semibold">Verify your email</h1>
-            <p className="text-muted-foreground">
-                Signed in as {session.data?.user?.email}. Use the button below to resend the verification email.
-            </p>
-            <Button onClick={() => resend.mutate()}>{resend.isPending ? 'Sending...' : 'Resend verification email'}</Button>
-        </section>
+        <AuthLayout title="Verify your email" description="One more step before you get started">
+            <div className="space-y-5">
+                {resend.isSuccess && (
+                    <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400">
+                        A new verification link has been sent to your inbox.
+                    </div>
+                )}
+
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                    We sent a verification link to{' '}
+                    <span className="font-medium text-foreground">{session.data?.user?.email}</span>.
+                    Check your inbox and click the link to activate your account.
+                </p>
+
+                <Button
+                    className="h-10 w-full rounded-lg bg-primary text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                    disabled={resend.isPending}
+                    onClick={() => resend.mutate()}
+                >
+                    {resend.isPending ? (
+                        <>
+                            <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                            Sending…
+                        </>
+                    ) : (
+                        'Resend verification email'
+                    )}
+                </Button>
+            </div>
+        </AuthLayout>
     );
 }

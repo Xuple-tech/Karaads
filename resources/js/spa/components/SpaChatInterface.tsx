@@ -1,25 +1,19 @@
 import type { Message } from '@/types/chat';
-import { AlertCircle, Loader2, Wrench } from 'lucide-react';
+import { AlertCircle, Loader2, Sparkles } from 'lucide-react';
 import { FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import ChatInput from '@/spa/components/SpaChatInput';
-import ChatMessageRenderer from '@/spa/components/ChatMessageRenderer';
+import ChatMessageRenderer, { type StreamActivity } from '@/spa/components/ChatMessageRenderer';
 import { apiRequest } from '@/spa/lib/api';
 import { authHeaders } from '@/spa/lib/auth-token';
-
-type Activity = {
-    tool_name: string;
-    status: 'started' | 'completed' | 'failed';
-    message?: string | null;
-};
 
 type ChatState = {
     messages: Message[];
     conversationId: string | null;
-    activities: Activity[];
+    activities: StreamActivity[];
+    streamingMessageId: string | null;
 };
 
 type ChatAction =
@@ -30,76 +24,76 @@ type ChatAction =
     | { type: 'attachment.add'; messageId: string; attachment: any }
     | { type: 'assistant.complete'; messageId: string; content?: string; attachments?: any[] }
     | { type: 'assistant.fail'; messageId: string; error: string }
-    | { type: 'activity'; activity: Activity }
+    | { type: 'activity'; activity: StreamActivity }
     | { type: 'activity.clear' };
 
 function reducer(state: ChatState, action: ChatAction): ChatState {
     switch (action.type) {
         case 'hydrate':
-            return { ...state, conversationId: action.conversationId, messages: action.messages };
+            return { ...state, conversationId: action.conversationId, messages: action.messages, activities: [], streamingMessageId: null };
         case 'user.append':
             return { ...state, messages: [...state.messages, action.message] };
         case 'assistant.create': {
-            const baseMessages = action.replace ? state.messages.filter((message) => message.id !== action.message.id) : state.messages;
+            const baseMessages = action.replace
+                ? state.messages.filter((m) => m.id !== action.message.id)
+                : state.messages;
             return {
                 ...state,
                 conversationId: action.conversationId ?? state.conversationId,
                 messages: [...baseMessages, action.message],
+                streamingMessageId: action.message.id,
             };
         }
         case 'assistant.delta':
             return {
                 ...state,
-                messages: state.messages.map((message) =>
-                    message.id === action.messageId
-                        ? {
-                              ...message,
-                              content: (message.content || '') + action.content,
-                              content_markdown: (message.content_markdown || '') + action.content,
-                              isStreaming: true,
-                          }
-                        : message
+                messages: state.messages.map((m) =>
+                    m.id === action.messageId
+                        ? { ...m, content: (m.content || '') + action.content, content_markdown: (m.content_markdown || '') + action.content, isStreaming: true }
+                        : m
                 ),
             };
         case 'attachment.add':
             return {
                 ...state,
-                messages: state.messages.map((message) =>
-                    message.id === action.messageId
-                        ? { ...message, attachments: [...(message.attachments || []), action.attachment] }
-                        : message
+                messages: state.messages.map((m) =>
+                    m.id === action.messageId
+                        ? { ...m, attachments: [...(m.attachments || []), action.attachment] }
+                        : m
                 ),
             };
         case 'assistant.complete':
             return {
                 ...state,
-                messages: state.messages.map((message) =>
-                    message.id === action.messageId
+                messages: state.messages.map((m) =>
+                    m.id === action.messageId
                         ? {
-                              ...message,
-                              content: action.content ?? message.content,
-                              content_markdown: action.content ?? message.content_markdown,
-                              attachments: action.attachments ?? message.attachments,
+                              ...m,
+                              content: action.content ?? m.content,
+                              content_markdown: action.content ?? m.content_markdown,
+                              attachments: action.attachments ?? m.attachments,
                               isStreaming: false,
                               status: 'completed',
                           }
-                        : message
+                        : m
                 ),
+                streamingMessageId: null,
             };
         case 'assistant.fail':
             return {
                 ...state,
-                messages: state.messages.map((message) =>
-                    message.id === action.messageId
-                        ? { ...message, isStreaming: false, status: 'failed', error_message: action.error }
-                        : message
+                messages: state.messages.map((m) =>
+                    m.id === action.messageId
+                        ? { ...m, isStreaming: false, status: 'failed', error_message: action.error }
+                        : m
                 ),
+                streamingMessageId: null,
             };
         case 'activity':
             return {
                 ...state,
                 activities: [
-                    ...state.activities.filter((activity) => activity.tool_name !== action.activity.tool_name),
+                    ...state.activities.filter((a) => a.tool_name !== action.activity.tool_name),
                     action.activity,
                 ],
             };
@@ -110,13 +104,8 @@ function reducer(state: ChatState, action: ChatAction): ChatState {
     }
 }
 
-async function readSse(
-    response: Response,
-    onEvent: (event: string, payload: any) => void
-) {
-    if (!response.body) {
-        throw new Error('Missing response body');
-    }
+async function readSse(response: Response, onEvent: (event: string, payload: any) => void) {
+    if (!response.body) throw new Error('Missing response body');
 
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
@@ -124,9 +113,7 @@ async function readSse(
 
     while (true) {
         const { done, value } = await reader.read();
-        if (done) {
-            break;
-        }
+        if (done) break;
 
         buffer += decoder.decode(value, { stream: true });
         const chunks = buffer.split('\n\n');
@@ -137,22 +124,22 @@ async function readSse(
             let data = '';
 
             for (const line of chunk.split('\n')) {
-                if (line.startsWith('event: ')) {
-                    eventName = line.slice(7).trim();
-                }
-                if (line.startsWith('data: ')) {
-                    data += line.slice(6);
-                }
+                if (line.startsWith('event: ')) eventName = line.slice(7).trim();
+                if (line.startsWith('data: ')) data += line.slice(6);
             }
 
-            if (!data) {
-                continue;
-            }
-
+            if (!data) continue;
             onEvent(eventName, JSON.parse(data));
         }
     }
 }
+
+const WELCOME_PROMPTS = [
+    'Write me a business proposal',
+    'Explain quantum computing simply',
+    'Help me debug my code',
+    'Create a weekly meal plan',
+];
 
 export default function SpaChatInterface({
     isAuthenticated,
@@ -169,6 +156,7 @@ export default function SpaChatInterface({
         messages: initialMessages,
         conversationId: initialConversationId,
         activities: [],
+        streamingMessageId: null,
     });
     const [isLoading, setIsLoading] = useState(false);
     const [mode, setMode] = useState<'text' | 'image'>('text');
@@ -186,38 +174,28 @@ export default function SpaChatInterface({
     }, [state.messages, state.activities.length]);
 
     const syncConversation = useCallback(async (conversationId: string) => {
-        const response = await apiRequest<{ conversation: { id: string; messages: any[] } }>(`/api/chat/conversations/${conversationId}`);
-        const mappedMessages: Message[] = response.conversation.messages.map((message: any) => ({
-            id: message.id,
-            conversation_id: message.conversation_id,
-            role: message.role,
-            status: message.status,
-            provider: message.provider,
-            model: message.model,
-            type: message.type,
-            content: message.content_markdown,
-            content_markdown: message.content_markdown,
-            content_text: message.content_text,
-            created_at: message.created_at,
-            attachments: message.attachments ?? [],
+        const response = await apiRequest<{ conversation: { id: string; messages: any[] } }>(
+            `/api/chat/conversations/${conversationId}`
+        );
+        const mappedMessages: Message[] = response.conversation.messages.map((m: any) => ({
+            id: m.id,
+            conversation_id: m.conversation_id,
+            role: m.role,
+            status: m.status,
+            provider: m.provider,
+            model: m.model,
+            type: m.type,
+            content: m.content_markdown,
+            content_markdown: m.content_markdown,
+            content_text: m.content_text,
+            created_at: m.created_at,
+            attachments: m.attachments ?? [],
         }));
 
-        dispatch({
-            type: 'hydrate',
-            conversationId,
-            messages: mappedMessages,
-        });
-        dispatch({ type: 'activity.clear' });
+        dispatch({ type: 'hydrate', conversationId, messages: mappedMessages });
     }, []);
 
-    const handleSubmit = useCallback(async (event: FormEvent, type: 'text' | 'image', attachedFiles?: File[]) => {
-        event.preventDefault();
-        const prompt = inputRef.current?.value?.trim();
-
-        if (!prompt || isLoading) {
-            return;
-        }
-
+    const sendMessage = useCallback(async (prompt: string, type: 'text' | 'image', attachedFiles?: File[]) => {
         setError(null);
         setIsLoading(true);
         dispatch({ type: 'activity.clear' });
@@ -241,11 +219,6 @@ export default function SpaChatInterface({
             },
         });
 
-        if (inputRef.current) {
-            inputRef.current.value = '';
-            inputRef.current.style.height = 'auto';
-        }
-
         const processedFiles = await Promise.all((attachedFiles || []).map(async (file) => ({
             name: file.name,
             type: file.type,
@@ -259,11 +232,7 @@ export default function SpaChatInterface({
 
         const response = await fetch('/api/chat/messages', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'text/event-stream',
-                ...authHeaders(),
-            },
+            headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream', ...authHeaders() },
             body: JSON.stringify({
                 conversation_id: state.conversationId,
                 message: prompt,
@@ -275,7 +244,7 @@ export default function SpaChatInterface({
 
         if (!response.ok) {
             setIsLoading(false);
-            setError('Could not send message.');
+            setError('Could not send message. Please try again.');
             return;
         }
 
@@ -315,36 +284,15 @@ export default function SpaChatInterface({
             }
 
             if (eventName === 'tool.started') {
-                dispatch({
-                    type: 'activity',
-                    activity: {
-                        tool_name: payload.tool_name,
-                        status: 'started',
-                        message: payload.message,
-                    },
-                });
+                dispatch({ type: 'activity', activity: { tool_name: payload.tool_name, status: 'started', message: payload.message } });
             }
 
             if (eventName === 'tool.completed') {
-                dispatch({
-                    type: 'activity',
-                    activity: {
-                        tool_name: payload.tool_name,
-                        status: 'completed',
-                        message: payload.summary,
-                    },
-                });
+                dispatch({ type: 'activity', activity: { tool_name: payload.tool_name, status: 'completed', message: payload.summary } });
             }
 
             if (eventName === 'tool.failed') {
-                dispatch({
-                    type: 'activity',
-                    activity: {
-                        tool_name: payload.tool_name,
-                        status: 'failed',
-                        message: payload.error,
-                    },
-                });
+                dispatch({ type: 'activity', activity: { tool_name: payload.tool_name, status: 'failed', message: payload.error } });
             }
 
             if (eventName === 'attachment.created' && assistantMessageId) {
@@ -367,6 +315,19 @@ export default function SpaChatInterface({
         setIsLoading(false);
     }, [isLoading, state.conversationId, syncConversation]);
 
+    const handleSubmit = useCallback(async (event: FormEvent, type: 'text' | 'image', attachedFiles?: File[]) => {
+        event.preventDefault();
+        const prompt = inputRef.current?.value?.trim();
+        if (!prompt || isLoading) return;
+
+        if (inputRef.current) {
+            inputRef.current.value = '';
+            inputRef.current.style.height = 'auto';
+        }
+
+        await sendMessage(prompt, type, attachedFiles);
+    }, [isLoading, sendMessage]);
+
     const handleRegenerate = useCallback(async (messageId: string) => {
         setError(null);
         setIsLoading(true);
@@ -374,10 +335,7 @@ export default function SpaChatInterface({
 
         const response = await fetch(`/api/chat/messages/${messageId}/regenerate`, {
             method: 'POST',
-            headers: {
-                Accept: 'text/event-stream',
-                ...authHeaders(),
-            },
+            headers: { Accept: 'text/event-stream', ...authHeaders() },
         });
 
         if (!response.ok) {
@@ -445,59 +403,99 @@ export default function SpaChatInterface({
     }, [files, handleSubmit, mode]);
 
     const welcome = useMemo(() => state.messages.length === 0, [state.messages.length]);
+    const firstName = userName?.split(' ')[0];
 
     return (
         <div className="flex min-h-screen w-full flex-col bg-background">
-            <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col px-4 pb-36 pt-6">
-                {welcome ? (
-                    <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 text-center">
-                        <h1 className="text-4xl font-semibold tracking-tight">{userName ? `Hello, ${userName}` : 'Start a new chat'}</h1>
-                        <p className="max-w-xl text-muted-foreground">Clean markdown rendering, structured source cards, and a stable streaming experience now run through the new chat runtime.</p>
-                    </div>
-                ) : null}
+            <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 pb-40 pt-8">
 
-                {error ? (
-                    <Alert className="mb-4" variant="destructive">
+                {/* Welcome screen */}
+                {welcome && (
+                    <div className="flex flex-1 flex-col items-center justify-center gap-8 text-center py-16">
+                        <div className="space-y-3">
+                            <div className="mx-auto h-12 w-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+                                <Sparkles className="h-6 w-6 text-primary" />
+                            </div>
+                            <h1 className="text-3xl font-semibold tracking-tight">
+                                {firstName ? `Hello, ${firstName}` : 'How can I help?'}
+                            </h1>
+                            <p className="text-muted-foreground text-sm max-w-sm mx-auto">
+                                Ask me anything — I can write, research, code, analyze, and more.
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2 w-full max-w-md">
+                            {WELCOME_PROMPTS.map((prompt) => (
+                                <Button
+                                    key={prompt}
+                                    variant="outline"
+                                    className="h-auto py-3 px-4 text-left text-sm font-normal text-muted-foreground hover:text-foreground rounded-xl border-border/60 hover:border-primary/40 transition-colors whitespace-normal"
+                                    onClick={() => {
+                                        if (inputRef.current) {
+                                            inputRef.current.value = prompt;
+                                            inputRef.current.focus();
+                                        }
+                                    }}
+                                >
+                                    {prompt}
+                                </Button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Error */}
+                {error && (
+                    <Alert className="mb-4 rounded-xl" variant="destructive">
                         <AlertCircle className="h-4 w-4" />
                         <AlertDescription>{error}</AlertDescription>
                     </Alert>
-                ) : null}
+                )}
 
-                {state.activities.length > 0 ? (
-                    <div className="mb-4 space-y-2">
-                        {state.activities.map((activity) => (
-                            <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-card/70 px-4 py-3 text-sm" key={activity.tool_name}>
-                                <Wrench className="h-4 w-4 text-primary" />
-                                <span className="font-medium">{activity.tool_name.replace(/_/g, ' ')}</span>
-                                <Badge variant="secondary" className="capitalize">{activity.status}</Badge>
-                                {activity.message ? <span className="text-muted-foreground">{activity.message}</span> : null}
+                {/* Messages */}
+                <div className="space-y-6">
+                    {state.messages.map((message) => {
+                        // Pass live activities only to the currently-streaming message
+                        const activities = (message.isStreaming && message.id === state.streamingMessageId)
+                            ? state.activities
+                            : undefined;
+
+                        return (
+                            <ChatMessageRenderer
+                                key={message.id}
+                                message={message}
+                                activities={activities}
+                                onRegenerate={message.role === 'assistant' ? handleRegenerate : undefined}
+                            />
+                        );
+                    })}
+
+                    {/* Loading indicator when waiting for first SSE event */}
+                    {isLoading && !state.streamingMessageId && (
+                        <div className="flex gap-3">
+                            <div className="flex-shrink-0 mt-0.5 h-7 w-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+                                <Loader2 className="h-3.5 w-3.5 text-primary animate-spin" />
                             </div>
-                        ))}
-                    </div>
-                ) : null}
-
-                <div className="space-y-4">
-                    {state.messages.map((message) => (
-                        <ChatMessageRenderer key={message.id} message={message} onRegenerate={message.role === 'assistant' ? handleRegenerate : undefined} />
-                    ))}
-                    {isLoading ? (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                            Streaming response...
+                            <div className="flex items-center gap-1 py-1">
+                                <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:-0.3s]" />
+                                <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:-0.15s]" />
+                                <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50 animate-bounce" />
+                            </div>
                         </div>
-                    ) : null}
+                    )}
                 </div>
 
                 <div ref={bottomRef} />
             </div>
 
-            {!isAuthenticated ? (
-                <div className="fixed bottom-28 left-0 right-0 z-10 flex justify-center px-4">
-                    <div className="rounded-full border border-border/50 bg-background/90 px-4 py-2 text-sm text-muted-foreground backdrop-blur">
-                        Sign in for saved chat history and billing-backed limits.
+            {/* Guest notice */}
+            {!isAuthenticated && (
+                <div className="fixed bottom-28 left-0 right-0 z-10 flex justify-center px-4 pointer-events-none">
+                    <div className="rounded-full border border-border/50 bg-background/90 px-4 py-2 text-xs text-muted-foreground backdrop-blur">
+                        Sign in to save chat history and unlock higher limits
                     </div>
                 </div>
-            ) : null}
+            )}
 
             <ChatInput
                 files={files}

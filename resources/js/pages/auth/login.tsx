@@ -1,6 +1,6 @@
 import GoogleLogo from '@/components/google-logo';
 import { Head, useForm } from '@inertiajs/react';
-import { Eye, EyeOff, LoaderCircle, Lock, LogIn, Mail } from 'lucide-react';
+import { Eye, EyeOff, LoaderCircle } from 'lucide-react';
 import { type FormEventHandler, useState } from 'react';
 
 import InputError from '@/components/input-error';
@@ -45,75 +45,65 @@ export default function Login({ status, canResetPassword, redirect }: LoginProps
     };
 
     return (
-        <AuthLayout title="Welcome back" description="Sign in to your Kwati AI account to continue">
+        <AuthLayout title="Sign in" description="Enter your credentials to access your account">
             <Head title="Log in" />
 
             {status && (
-                <div className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50/50 p-4">
-                    <div className="flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-emerald-500" />
-                        <p className="text-sm font-medium text-emerald-700">{status}</p>
-                    </div>
+                <div className="mb-4 rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400">
+                    {status}
                 </div>
             )}
 
-            <form className="space-y-6" onSubmit={submit}>
-                <div className="space-y-4">
-                    <a
-                        href={redirect ? `${auth.google.url()}?redirect=${encodeURIComponent(redirect)}` : auth.google.url()}
-                        className="border-z inc -200 text-primary -700 hover:bg-z inc -50 flex h-11 w-full items-center justify-center gap-3 rounded-lg border bg-white text-sm font-medium shadow-sm transition-all hover:shadow"
-                        disabled={processing}
-                    >
-                        <GoogleLogo className="h-5 w-5" />
-                        Google
-                    </a>
-                    <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="border-z inc -200 w-full border-t"></div>
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-body -500 px-4 text-white">Or continue with</span>
-                        </div>
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="email" className="text-z inc -700 text-sm font-medium">
-                            Email Address
+            <div className="space-y-5">
+                <a
+                    href={redirect ? `${auth.google.url()}?redirect=${encodeURIComponent(redirect)}` : auth.google.url()}
+                    className="flex h-10 w-full items-center justify-center gap-2.5 rounded-lg border border-border bg-muted text-sm font-medium text-foreground transition-colors hover:bg-muted/70"
+                >
+                    <GoogleLogo className="h-4 w-4" />
+                    Continue with Google
+                </a>
+
+                <div className="flex items-center gap-3">
+                    <div className="flex-1 border-t border-border" />
+                    <span className="text-xs text-muted-foreground">or</span>
+                    <div className="flex-1 border-t border-border" />
+                </div>
+
+                <form className="space-y-4" onSubmit={submit}>
+                    <div className="space-y-1.5">
+                        <Label htmlFor="email" className="text-sm font-medium text-foreground">
+                            Email
                         </Label>
-                        <div className="relative">
-                            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                <Mail className="text-z inc -400 h-5 w-5" />
-                            </div>
-                            <Input
-                                id="email"
-                                type="email"
-                                required
-                                autoFocus
-                                autoComplete="email"
-                                value={data.email}
-                                onChange={(e) => setData('email', e.target.value)}
-                                placeholder="you@example.com"
-                                className="border-z inc -200 h-11 rounded-lg pl-10 text-sm focus:border-blue-500 focus:ring-blue-500/20"
-                                disabled={processing}
-                            />
-                        </div>
-                        <InputError message={errors.email} className="text-sm" />
+                        <Input
+                            id="email"
+                            type="email"
+                            required
+                            autoFocus
+                            autoComplete="email"
+                            value={data.email}
+                            onChange={(e) => setData('email', e.target.value)}
+                            placeholder="you@example.com"
+                            className="h-10 rounded-lg text-sm"
+                            disabled={processing}
+                        />
+                        <InputError message={errors.email} className="text-xs" />
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-1.5">
                         <div className="flex items-center justify-between">
-                            <Label htmlFor="password" className="text-z inc -700 text-sm font-medium">
+                            <Label htmlFor="password" className="text-sm font-medium text-foreground">
                                 Password
                             </Label>
                             {canResetPassword && (
-                                <TextLink href={redirect ? `${password.request.url()}?redirect=${encodeURIComponent(redirect)}` : password.request.url()} className="text-xs font-medium text-blue-600 hover:text-blue-700">
+                                <TextLink
+                                    href={redirect ? `${password.request.url()}?redirect=${encodeURIComponent(redirect)}` : password.request.url()}
+                                    className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                                >
                                     Forgot password?
                                 </TextLink>
                             )}
                         </div>
                         <div className="relative">
-                            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                <Lock className="text-z inc -400 h-5 w-5" />
-                            </div>
                             <Input
                                 id="password"
                                 type={showPassword ? 'text' : 'password'}
@@ -122,59 +112,59 @@ export default function Login({ status, canResetPassword, redirect }: LoginProps
                                 value={data.password}
                                 onChange={(e) => setData('password', e.target.value)}
                                 placeholder="••••••••"
-                                className="border-z inc -200 h-11 rounded-lg pr-10 pl-10 text-sm focus:border-blue-500 focus:ring-blue-500/20"
+                                className="h-10 rounded-lg pr-10 text-sm"
                                 disabled={processing}
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="text-z inc -400 hover:text-z inc -600 absolute inset-y-0 right-0 flex items-center pr-3"
+                                className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground transition-colors"
                             >
-                                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                             </button>
                         </div>
-                        <InputError message={errors.password} className="text-sm" />
+                        <InputError message={errors.password} className="text-xs" />
                     </div>
 
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center gap-2">
                         <Checkbox
                             id="remember"
                             checked={data.remember}
                             onCheckedChange={(checked) => setData('remember', checked as boolean)}
-                            className="border-z inc -300 h-4 w-4 rounded data-[state=checked]:border-blue-600 data-[state=checked]:bg-blue-600"
                             disabled={processing}
                         />
-                        <Label htmlFor="remember" className="text-z inc -600 cursor-pointer text-sm">
-                            Remember me for 30 days
+                        <Label htmlFor="remember" className="cursor-pointer text-sm text-muted-foreground">
+                            Remember me
                         </Label>
                     </div>
-                </div>
 
-                <Button
-                    type="submit"
-                    className="from-accent -600 to-primary -700 h-11 w-full rounded-lg bg-gradient-to-r text-sm font-medium shadow-sm transition-all hover:from-blue-700 hover:to-blue-800 hover:shadow"
-                    disabled={processing}
-                >
-                    {processing ? (
-                        <>
-                            <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
-                            Signing in...
-                        </>
-                    ) : (
-                        <>
-                            <LogIn className="mr-2 h-4 w-4" />
-                            Sign in
-                        </>
-                    )}
-                </Button>
+                    <Button
+                        type="submit"
+                        className="h-10 w-full rounded-lg bg-primary text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                        disabled={processing}
+                    >
+                        {processing ? (
+                            <>
+                                <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                                Signing in…
+                            </>
+                        ) : (
+                            'Sign in'
+                        )}
+                    </Button>
+                </form>
 
-                <div className="text-z inc -600 pt-4 text-center text-sm">
+                <p className="text-center text-sm text-muted-foreground">
                     Don't have an account?{' '}
-                    <TextLink href={redirect ? `${register().url}?redirect=${encodeURIComponent(redirect)}` : register().url} className="font-medium text-blue-600 hover:text-blue-700">
+                    <TextLink
+                        href={redirect ? `${register().url}?redirect=${encodeURIComponent(redirect)}` : register().url}
+                        className="font-medium text-foreground hover:underline"
+                    >
                         Sign up
                     </TextLink>
-                </div>
-            </form>
+                </p>
+            </div>
         </AuthLayout>
     );
 }
+

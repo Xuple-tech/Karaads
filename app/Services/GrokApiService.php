@@ -19,7 +19,7 @@ use App\Models\ApiUsageLog;
 use App\Models\ImageGeneration;
 use App\Services\ChatPersonalizationService;
 use App\Services\LimitResponseService;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Services\PythonDocumentGenerationService;
 use Illuminate\Support\Str;
 
 use function Pest\Laravel\json;
@@ -35,6 +35,7 @@ class GrokApiService
     private SearchService $searchService;
     private ?User $currentUser = null;
     private ?SubscriptionService $subscriptionService = null;
+    private PythonDocumentGenerationService $documentGenerationService;
     public StabilityAIImageService $stabilityImageService; // Add OpenAI image service
 
     // Language-specific constants
@@ -194,13 +195,18 @@ class GrokApiService
     ];
 
 
-    public function __construct(SearchService $searchService, ?SubscriptionService $subscriptionService = null)
+    public function __construct(
+        SearchService $searchService,
+        PythonDocumentGenerationService $documentGenerationService,
+        ?SubscriptionService $subscriptionService = null
+    )
     {
         $this->searchService = $searchService;
         $this->subscriptionService = $subscriptionService;
+        $this->documentGenerationService = $documentGenerationService;
         // CHANGE THIS LINE:
         // $this->hfImageService = $hfImageService ?? app(HfImageService::class); // Old line
-        $this->stabilityImageService = $stabilityImageService ?? app(StabilityAIImageService::class); // New line
+        $this->stabilityImageService = app(StabilityAIImageService::class); // New line
         // Also update the property declaration at the top of the class
         // Add this property: public StabilityAIImageService $stabilityImageService;
 
@@ -740,6 +746,7 @@ class GrokApiService
      */
     private function executeAndContinueToolCalls(array $toolCalls, array $messages, string $model, callable $callback, ?int $chatId = null): void
     {
+        $shouldStopAfterTools = true;
         $callback(['tool_status' => 'executing_tools', 'count' => count($toolCalls)], false);
         $messages[] = [
             'role' => 'assistant',
@@ -800,6 +807,7 @@ class GrokApiService
 
                 $callback($toolCompletedData, false);
             } catch (\Exception $e) {
+                $shouldStopAfterTools = false;
                 // Only log actual errors, not SSL/certificate issues
                 if (!strpos($e->getMessage(), 'SSL') && !strpos($e->getMessage(), 'certificate') && !strpos($e->getMessage(), 'cURL')) {
                     Log::error("Tool execution failed for {$functionName}: " . $e->getMessage());
@@ -841,7 +849,17 @@ class GrokApiService
 
                 $callback($failedData, false);
             }
+
+            if (!in_array($functionName, ['generate_image', 'edit_image', 'generate_pdf_document', 'generate_word_document'], true)) {
+                $shouldStopAfterTools = false;
+            }
         }
+
+        if ($shouldStopAfterTools) {
+            $callback(['done' => true], false);
+            return;
+        }
+
         $this->continueConversationWithToolResults($messages, $model, $callback, $chatId);
     }
 
@@ -1115,7 +1133,7 @@ class GrokApiService
                 'content' =>  $customSystemPrompt
             ];
         } else {
-            $messages[] = $mode == 'voice' ? $this->voiceSystemInstruction : $this->systemInstructions; // System prompt adjusted for Grok
+            $messages[] = $this->getSystemInstruction($mode);
         }
         $message[] = [
             'role' => 'system',
@@ -1187,6 +1205,59 @@ class GrokApiService
             'content' => $userContent
         ];
         return $messages;
+    }
+
+    private function getSystemInstruction(string $mode = 'text'): array
+    {
+        if ($mode === 'voice') {
+            return $this->voiceSystemInstruction;
+        }
+
+        return [
+            'role' => 'system',
+            'content' => "CRITICAL - IMAGE TOOL STOP INSTRUCTION:
+
+When you execute generate_image or edit_image tools:
+1. Make the tool call
+2. Stop and do not write any response text
+3. If the tool fails, explain the error briefly and stop
+4. Never add extra commentary after a successful image tool call
+
+CRITICAL - DOCUMENT TOOL STOP INSTRUCTION:
+
+When a user asks for a document, report, proposal, letter, resume, PDF, DOCX, or Word file:
+1. You must use a document tool
+2. Generate the complete document content before the tool call
+3. Pass the complete content as markdown in the content field
+4. After a successful document tool call, stop immediately
+5. Do not output the raw document text in chat after success
+6. Do not add comments like 'Here is your document' or 'I created this for you'
+7. If the tool fails, explain the error briefly and stop
+
+DOCUMENT TOOL RULES:
+- generate_pdf_document is the default for document requests unless the user explicitly asks for Word or DOCX
+- generate_word_document is only for explicit Word or DOCX requests
+- Always provide complete, professional, well-structured markdown content
+- Preserve user-provided content while formatting it cleanly
+
+You are a highly knowledgeable and concise AI assistant named Kwati Ai. Built By KwatiAi Team. You reply with a friendly and expressive tone and may use emojis.
+
+Safety Requirements:
+- Decline any request involving explicit sexual content, graphic violence, illegal activities, political persuasion, hateful behavior, or personal data extraction
+- If a request falls into those categories, give a gentle and brief refusal
+- Keep all content safe, non-graphic, and suitable for general audiences
+
+Tool Usage:
+- Use web search only when the user asks for current, real-time, or recently updated information
+- Do not use tools for general knowledge, math, programming help, or creative tasks
+- Integrate search results naturally and concisely
+
+TOOL EXECUTION SUMMARY:
+1. Images: generate_image/edit_image -> call tool -> stop
+2. Documents: generate_pdf_document/generate_word_document -> call tool -> stop
+3. Web search: web_search/web_fetch -> call tool -> continue with results
+4. All tools except web search end the response after the tool call",
+        ];
     }
 
     /**
@@ -1961,77 +2032,54 @@ class GrokApiService
     private function generateWordDocument(array $arguments, ?int $chatId = null): array
     {
         try {
-            $title = $arguments['title'];
-            $content = $arguments['content'];
+            $title = $arguments['title'] ?? 'Document';
+            $content = $arguments['content'] ?? '';
             $documentType = $arguments['document_type'] ?? 'general';
-            $formatting = $arguments['formatting'] ?? [];
 
-            Log::info("Word document generation requested", [
+            Log::info('Python Word document generation requested', [
                 'title' => $title,
                 'document_type' => $documentType,
                 'content_length' => strlen($content),
                 'chat_id' => $chatId
             ]);
 
-            // Check limits
             $limitCheck = $this->checkDocumentLimits();
             if ($limitCheck !== null) {
                 throw new \Exception($limitCheck['message'] ?? 'Document generation limit exceeded');
             }
 
-            // Convert markdown to HTML first
-            $htmlContent = Str::markdown($content);
-
-            // Create the Word document from HTML
-            $documentPath = $this->createWordDocumentFromHtml($title, $htmlContent, $documentType, $formatting);
-
-            // Generate a unique filename
-            $filename = 'document_' . uniqid() . '_' . Str::slug($title) . '.docx';
-            $storagePath = 'user-content/documents/' . date('Y/m/d') . '/' . $filename;
-
-            // Store the file
-            Storage::disk('public')->put($storagePath, file_get_contents($documentPath));
-            $url = Storage::url($storagePath);
-
-            // Clean up temp file
-            unlink($documentPath);
-
-            // Store document info in chat if chatId provided
-            if ($chatId) {
-                $this->storeDocumentInChat($chatId, [
-                    'title' => $title,
-                    'filename' => $filename,
-                    'url' => $url,
-                    'storage_path' => $storagePath,
-                    'document_type' => $documentType,
-                    'format' => 'docx',
-                    'size' => Storage::disk('public')->size($storagePath),
-                    'generated_at' => now()->toISOString()
-                ]);
-            }
+            $result = $this->documentGenerationService->generateDocument(
+                title: $title,
+                contentMarkdown: $content,
+                format: 'docx',
+                documentType: $documentType,
+                options: [
+                    'formatting' => $arguments['formatting'] ?? [],
+                ],
+            );
 
             return [
                 'success' => true,
-                'title' => $title,
-                'filename' => $filename,
-                'url' => $url,
-                'format' => 'docx',
-                'document_type' => $documentType,
-                'size' => Storage::disk('public')->size($storagePath),
-                'timestamp' => now()->toISOString(),
+                'title' => $result['title'],
+                'filename' => $result['filename'],
+                'url' => $result['url'],
+                'path' => $result['path'],
+                'format' => $result['format'],
+                'mime_type' => $result['mime_type'],
+                'document_type' => $result['document_type'],
+                'size' => $result['size'],
+                'generated_at' => $result['generated_at'],
+                'timestamp' => $result['generated_at'],
                 'type' => 'word_document',
-                'message' => 'Word document generated successfully! 📄',
-                'user_message' => "I've created your Word document: {$title}",
-                'download_message' => 'You can download it here:',
                 'stop_generation' => true
             ];
         } catch (\Exception $e) {
-            Log::error('Word document generation error: ' . $e->getMessage(), [
+            Log::error('Python Word document generation error: ' . $e->getMessage(), [
                 'arguments' => $arguments,
                 'chat_id' => $chatId
             ]);
 
-            throw new \Exception('Failed to generate Word document: ' . $e->getMessage());
+            throw new \Exception('Failed to generate DOCX: ' . $e->getMessage());
         }
     }
 
@@ -2109,81 +2157,48 @@ class GrokApiService
             $title = $arguments['title'] ?? 'Document';
             $content = $arguments['content'] ?? '';
             $documentType = $arguments['document_type'] ?? 'general';
-            $includeHeader = $arguments['include_header'] ?? true;
-            $includePageNumbers = $arguments['include_page_numbers'] ?? true;
 
-            Log::info("PDF document generation requested", [
+            Log::info('Python PDF document generation requested', [
                 'title' => $title,
                 'document_type' => $documentType,
                 'content_length' => strlen($content),
                 'chat_id' => $chatId
             ]);
 
-            // Check limits
             $limitCheck = $this->checkDocumentLimits();
             if ($limitCheck !== null) {
                 throw new \Exception($limitCheck['message'] ?? 'Document generation limit exceeded');
             }
 
-            // Convert markdown to HTML using Laravel's Str::markdown()
-            $htmlContent = $this->formatMarkdownForPdf($content);
-
-            // Create HTML template
-            $html = view('pdf.document', [
-                'title' => $title,
-                'content' => $htmlContent,
-                'includeHeader' => $includeHeader,
-                'includePageNumbers' => $includePageNumbers,
-                'documentType' => $documentType,
-                'generatedAt' => now()->format('F j, Y H:i:s')
-            ])->render();
-
-            // Generate PDF using DomPDF
-            $pdf = Pdf::loadHTML($html)
-                ->setPaper('A4', 'portrait')
-                ->setOption('defaultFont', 'Arial')
-                ->setOption('isHtml5ParserEnabled', true)
-                ->setOption('isRemoteEnabled', true);
-
-            // Generate filename
-            $filename = 'document_' . uniqid() . '_' . Str::slug($title) . '.pdf';
-            $storagePath = 'user-content/documents/' . date('Y/m/d') . '/' . $filename;
-
-            // Save to storage
-            Storage::disk('public')->put($storagePath, $pdf->output());
-            $url = Storage::url($storagePath);
-
-            // Store in chat if needed
-            if ($chatId) {
-                $this->storeDocumentInChat($chatId, [
-                    'title' => $title,
-                    'filename' => $filename,
-                    'url' => $url,
-                    'storage_path' => $storagePath,
-                    'document_type' => $documentType,
-                    'format' => 'pdf',
-                    'size' => Storage::disk('public')->size($storagePath),
-                    'generated_at' => now()->toISOString()
-                ]);
-            }
+            $result = $this->documentGenerationService->generateDocument(
+                title: $title,
+                contentMarkdown: $content,
+                format: 'pdf',
+                documentType: $documentType,
+                options: [
+                    'include_header' => $arguments['include_header'] ?? true,
+                    'include_page_numbers' => $arguments['include_page_numbers'] ?? true,
+                    'formatting' => $arguments['formatting'] ?? [],
+                ],
+            );
 
             return [
                 'success' => true,
-                'title' => $title,
-                'filename' => $filename,
-                'url' => $url,
-                'format' => 'pdf',
-                'document_type' => $documentType,
-                'size' => Storage::disk('public')->size($storagePath),
-                'timestamp' => now()->toISOString(),
+                'title' => $result['title'],
+                'filename' => $result['filename'],
+                'url' => $result['url'],
+                'path' => $result['path'],
+                'format' => $result['format'],
+                'mime_type' => $result['mime_type'],
+                'document_type' => $result['document_type'],
+                'size' => $result['size'],
+                'generated_at' => $result['generated_at'],
+                'timestamp' => $result['generated_at'],
                 'type' => 'pdf_document',
-                'message' => 'PDF document generated successfully! 📄',
-                'user_message' => "I've created your PDF document: {$title}",
-                'download_message' => 'You can download it here:',
                 'stop_generation' => true
             ];
         } catch (\Exception $e) {
-            Log::error('PDF generation error: ' . $e->getMessage());
+            Log::error('Python PDF generation error: ' . $e->getMessage());
             throw new \Exception('Failed to generate PDF: ' . $e->getMessage());
         }
     }

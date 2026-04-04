@@ -1,7 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
+import { LoaderCircle } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import AuthLayout from '@/spa/components/AuthLayout';
 import { ApiError, apiRequest } from '@/spa/lib/api';
 
 export function Component() {
@@ -26,14 +31,58 @@ export function Component() {
     };
 
     return (
-        <section className="mx-auto flex min-h-[calc(100vh-73px)] max-w-md items-center px-6 py-16">
-            <form className="w-full space-y-5 rounded-3xl border border-border/70 bg-card p-8" onSubmit={onSubmit}>
-                <h1 className="text-3xl font-semibold">Reset password</h1>
-                <input className="w-full rounded-2xl border border-border bg-background px-4 py-3" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email address" />
-                {message ? <p className="text-sm text-emerald-400">{message}</p> : null}
-                {error ? <p className="text-sm text-destructive">{error}</p> : null}
-                <Button className="w-full" type="submit">{mutation.isPending ? 'Sending...' : 'Send reset link'}</Button>
-            </form>
-        </section>
+        <AuthLayout title="Reset your password" description="Enter your email to receive a reset link">
+            <div className="space-y-5">
+                <form className="space-y-4" onSubmit={onSubmit}>
+                    {message && (
+                        <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400">
+                            {message}
+                        </div>
+                    )}
+                    {error && (
+                        <div className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                            {error}
+                        </div>
+                    )}
+
+                    <div className="space-y-1.5">
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                            id="email"
+                            type="email"
+                            required
+                            autoFocus
+                            autoComplete="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="you@example.com"
+                            className="h-10 rounded-lg text-sm"
+                            disabled={mutation.isPending}
+                        />
+                    </div>
+
+                    <Button
+                        type="submit"
+                        className="h-10 w-full rounded-lg bg-primary text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                        disabled={mutation.isPending}
+                    >
+                        {mutation.isPending ? (
+                            <>
+                                <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                                Sending…
+                            </>
+                        ) : (
+                            'Send reset link'
+                        )}
+                    </Button>
+                </form>
+
+                <p className="text-center text-sm text-muted-foreground">
+                    <Link className="font-medium text-foreground hover:underline" to="/login">
+                        Back to sign in
+                    </Link>
+                </p>
+            </div>
+        </AuthLayout>
     );
 }
