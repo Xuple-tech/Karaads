@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\SpaController;
 use App\Http\Controllers\PodcastController;
-use App\Http\Controllers\StudioController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/studio', SpaController::class)->name('studio.index');

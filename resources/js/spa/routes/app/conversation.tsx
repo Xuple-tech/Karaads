@@ -1,10 +1,9 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { type FormEvent, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
-import { Button } from '@/components/ui/button';
+import SpaChatInterface from '@/spa/components/SpaChatInterface';
 import { apiRequest } from '@/spa/lib/api';
-import { queryClient } from '@/spa/lib/query-client';
+import { useSessionQuery } from '@/spa/lib/session';
 
 type ConversationResponse = {
     conversation: {
@@ -14,62 +13,38 @@ type ConversationResponse = {
             id: string;
             role: string;
             message: string;
+            thinking?: string;
+            metadata?: Record<string, unknown>;
+            type?: string;
         }>;
     };
 };
 
 export function Component() {
     const { conversationId = '' } = useParams();
-    const [message, setMessage] = useState('');
+    const session = useSessionQuery();
     const conversation = useQuery({
         queryKey: ['spa', 'conversation', conversationId],
         queryFn: () => apiRequest<ConversationResponse>(`/api/spa/conversations/${conversationId}`),
     });
 
-    const send = useMutation({
-        mutationFn: () =>
-            apiRequest('/create-two-step-challagene', {
-                method: 'POST',
-                json: {
-                    message,
-                    conversation_id: conversationId,
-                    stream: false,
-                },
-            }),
-        onSuccess: async () => {
-            setMessage('');
-            await queryClient.invalidateQueries({ queryKey: ['spa', 'conversation', conversationId] });
-            await queryClient.invalidateQueries({ queryKey: ['spa', 'conversations'] });
-        },
-    });
-
-    const onSubmit = (event: FormEvent) => {
-        event.preventDefault();
-        if (!message.trim()) {
-            return;
-        }
-        send.mutate();
-    };
+    const messages =
+        conversation.data?.conversation.messages.map((item) => ({
+            id: item.id,
+            role: item.role,
+            content: item.message,
+            message: item.message,
+            thinking: item.thinking,
+            metadata: item.metadata ?? {},
+            type: item.type ?? 'text',
+        })) ?? [];
 
     return (
-        <div className="space-y-6">
-            <div>
-                <h1 className="text-3xl font-semibold">{conversation.data?.conversation.title ?? 'Conversation'}</h1>
-            </div>
-            <div className="space-y-3">
-                {conversation.data?.conversation.messages?.map((item) => (
-                    <div className="rounded-2xl border border-border/70 bg-background px-4 py-3" key={item.id}>
-                        <p className="mb-1 text-xs uppercase tracking-[0.2em] text-muted-foreground">{item.role}</p>
-                        <p className="whitespace-pre-wrap text-sm">{item.message}</p>
-                    </div>
-                ))}
-            </div>
-            <form className="space-y-3" onSubmit={onSubmit}>
-                <textarea className="min-h-32 w-full rounded-3xl border border-border bg-background px-5 py-4" onChange={(e) => setMessage(e.target.value)} placeholder="Continue the conversation..." value={message} />
-                <Button disabled={send.isPending} type="submit">
-                    {send.isPending ? 'Sending...' : 'Send'}
-                </Button>
-            </form>
-        </div>
+        <SpaChatInterface
+            initialConversationId={conversationId}
+            initialMessages={messages as any}
+            isAuthenticated={true}
+            userName={session.data?.user?.name?.split(' ')[0]}
+        />
     );
 }

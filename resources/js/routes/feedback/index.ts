@@ -1,6 +1,6 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../wayfinder'
 /**
- * @see routes/web.php:164
+ * @see routes/web.php:155
  * @route '/a/feedback/sms'
  */
 export const sms = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -14,7 +14,7 @@ sms.definition = {
 } satisfies RouteDefinition<["post"]>
 
 /**
- * @see routes/web.php:164
+ * @see routes/web.php:155
  * @route '/a/feedback/sms'
  */
 sms.url = (options?: RouteQueryOptions) => {
@@ -22,7 +22,7 @@ sms.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/web.php:164
+ * @see routes/web.php:155
  * @route '/a/feedback/sms'
  */
 sms.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({

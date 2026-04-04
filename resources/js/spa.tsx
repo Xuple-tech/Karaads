@@ -7,6 +7,7 @@ import { RouterProvider } from 'react-router-dom';
 
 import { Toaster } from '@/components/ui/toaster';
 import ErrorBoundary from '@/pages/ErrorBoundry';
+import { SpaLanguageProvider } from '@/spa/lib/lang';
 import { queryClient } from '@/spa/lib/query-client';
 import { router } from '@/spa/router';
 
@@ -17,8 +18,10 @@ if (root) {
         <ErrorBoundary>
             <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
                 <QueryClientProvider client={queryClient}>
-                    <RouterProvider router={router} />
-                    <Toaster />
+                    <SpaLanguageProvider>
+                        <RouterProvider router={router} />
+                        <Toaster />
+                    </SpaLanguageProvider>
                 </QueryClientProvider>
             </ThemeProvider>
         </ErrorBoundary>,

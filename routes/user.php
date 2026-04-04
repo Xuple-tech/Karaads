@@ -2,8 +2,6 @@
 
 use App\Http\Controllers\Api\ChatPreferenceController;
 use App\Http\Controllers\SpaController;
-use App\Http\Controllers\User\UserConversationController;
-use App\Http\Controllers\User\UserSettingsController;
 use Illuminate\Support\Facades\Route;
 
 // ========== USER ROUTES ==========
