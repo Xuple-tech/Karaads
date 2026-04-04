@@ -7,9 +7,9 @@ use App\Models\SubscriptionPlan;
 use App\Services\SubscriptionService;
 use App\Services\StripeService;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Inertia\Inertia;
 
 class SubscriptionController extends Controller
 {
@@ -25,37 +25,17 @@ class SubscriptionController extends Controller
     /**
      * Show subscription/pricing page
      */
-    public function index()
+    public function index(): RedirectResponse
     {
-        $plans = SubscriptionPlan::getActivePlans();
-        $userSubscription = null;
-
-        if (Auth::check()) {
-            $userSubscription = $this->subscriptionService->getUserSubscription(Auth::user());
-        }
-
-        return Inertia::render('Subscription/Index', [
-            'plans' => $plans,
-            'userSubscription' => $userSubscription,
-        ]);
+        return redirect()->to('/subscription');
     }
 
     /**
      * Show detailed pricing page
      */
-    public function pricing()
+    public function pricing(): RedirectResponse
     {
-        $plans = SubscriptionPlan::getActivePlans();
-        $userPlan = null;
-
-        if (Auth::check()) {
-            $userPlan = $this->subscriptionService->getUserPlan(Auth::user());
-        }
-
-        return Inertia::render('Subscription/Pricing', [
-            'plans' => $plans,
-            'userPlan' => $userPlan,
-        ]);
+        return redirect()->to('/pricing');
     }
 
     /**
@@ -361,21 +341,8 @@ class SubscriptionController extends Controller
     /**
      * Show billing management page
      */
-    public function billing()
+    public function billing(): RedirectResponse
     {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
-
-        $user = Auth::user();
-        $currentSubscription = $this->subscriptionService->getUserSubscription($user);
-        $currentPlan = $this->subscriptionService->getUserPlan($user);
-        $availablePlans = SubscriptionPlan::getActivePlans();
-
-        return Inertia::render('Profile/BillingManagement', [
-            'currentSubscription' => $currentSubscription,
-            'currentPlan' => $currentPlan,
-            'availablePlans' => $availablePlans,
-        ]);
+        return redirect()->to(Auth::check() ? '/billing' : '/login');
     }
 }

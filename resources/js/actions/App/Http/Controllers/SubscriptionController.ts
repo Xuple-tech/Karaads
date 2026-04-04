@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\SubscriptionController::getPlans
- * @see app/Http/Controllers/SubscriptionController.php:64
+ * @see app/Http/Controllers/SubscriptionController.php:44
  * @route '/api/subscription/plans'
  */
 export const getPlans = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ getPlans.definition = {
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::getPlans
- * @see app/Http/Controllers/SubscriptionController.php:64
+ * @see app/Http/Controllers/SubscriptionController.php:44
  * @route '/api/subscription/plans'
  */
 getPlans.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ getPlans.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::getPlans
- * @see app/Http/Controllers/SubscriptionController.php:64
+ * @see app/Http/Controllers/SubscriptionController.php:44
  * @route '/api/subscription/plans'
  */
 getPlans.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ getPlans.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\SubscriptionController::getPlans
- * @see app/Http/Controllers/SubscriptionController.php:64
+ * @see app/Http/Controllers/SubscriptionController.php:44
  * @route '/api/subscription/plans'
  */
 getPlans.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ getPlans.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::handleCheckoutSuccess
- * @see app/Http/Controllers/SubscriptionController.php:141
+ * @see app/Http/Controllers/SubscriptionController.php:121
  * @route '/subscription/success'
  */
 export const handleCheckoutSuccess = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -59,7 +59,7 @@ handleCheckoutSuccess.definition = {
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::handleCheckoutSuccess
- * @see app/Http/Controllers/SubscriptionController.php:141
+ * @see app/Http/Controllers/SubscriptionController.php:121
  * @route '/subscription/success'
  */
 handleCheckoutSuccess.url = (options?: RouteQueryOptions) => {
@@ -68,7 +68,7 @@ handleCheckoutSuccess.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::handleCheckoutSuccess
- * @see app/Http/Controllers/SubscriptionController.php:141
+ * @see app/Http/Controllers/SubscriptionController.php:121
  * @route '/subscription/success'
  */
 handleCheckoutSuccess.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -77,7 +77,7 @@ handleCheckoutSuccess.get = (options?: RouteQueryOptions): RouteDefinition<'get'
 })
 /**
 * @see \App\Http\Controllers\SubscriptionController::handleCheckoutSuccess
- * @see app/Http/Controllers/SubscriptionController.php:141
+ * @see app/Http/Controllers/SubscriptionController.php:121
  * @route '/subscription/success'
  */
 handleCheckoutSuccess.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -87,7 +87,7 @@ handleCheckoutSuccess.head = (options?: RouteQueryOptions): RouteDefinition<'hea
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::getMySubscription
- * @see app/Http/Controllers/SubscriptionController.php:83
+ * @see app/Http/Controllers/SubscriptionController.php:63
  * @route '/api/subscription/my-subscription'
  */
 export const getMySubscription = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -102,7 +102,7 @@ getMySubscription.definition = {
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::getMySubscription
- * @see app/Http/Controllers/SubscriptionController.php:83
+ * @see app/Http/Controllers/SubscriptionController.php:63
  * @route '/api/subscription/my-subscription'
  */
 getMySubscription.url = (options?: RouteQueryOptions) => {
@@ -111,7 +111,7 @@ getMySubscription.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::getMySubscription
- * @see app/Http/Controllers/SubscriptionController.php:83
+ * @see app/Http/Controllers/SubscriptionController.php:63
  * @route '/api/subscription/my-subscription'
  */
 getMySubscription.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -120,7 +120,7 @@ getMySubscription.get = (options?: RouteQueryOptions): RouteDefinition<'get'> =>
 })
 /**
 * @see \App\Http\Controllers\SubscriptionController::getMySubscription
- * @see app/Http/Controllers/SubscriptionController.php:83
+ * @see app/Http/Controllers/SubscriptionController.php:63
  * @route '/api/subscription/my-subscription'
  */
 getMySubscription.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -130,7 +130,7 @@ getMySubscription.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::upgrade
- * @see app/Http/Controllers/SubscriptionController.php:105
+ * @see app/Http/Controllers/SubscriptionController.php:85
  * @route '/api/subscription/upgrade'
  */
 export const upgrade = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -145,7 +145,7 @@ upgrade.definition = {
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::upgrade
- * @see app/Http/Controllers/SubscriptionController.php:105
+ * @see app/Http/Controllers/SubscriptionController.php:85
  * @route '/api/subscription/upgrade'
  */
 upgrade.url = (options?: RouteQueryOptions) => {
@@ -154,7 +154,7 @@ upgrade.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::upgrade
- * @see app/Http/Controllers/SubscriptionController.php:105
+ * @see app/Http/Controllers/SubscriptionController.php:85
  * @route '/api/subscription/upgrade'
  */
 upgrade.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -164,7 +164,7 @@ upgrade.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::downgrade
- * @see app/Http/Controllers/SubscriptionController.php:212
+ * @see app/Http/Controllers/SubscriptionController.php:192
  * @route '/api/subscription/downgrade'
  */
 export const downgrade = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -179,7 +179,7 @@ downgrade.definition = {
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::downgrade
- * @see app/Http/Controllers/SubscriptionController.php:212
+ * @see app/Http/Controllers/SubscriptionController.php:192
  * @route '/api/subscription/downgrade'
  */
 downgrade.url = (options?: RouteQueryOptions) => {
@@ -188,7 +188,7 @@ downgrade.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::downgrade
- * @see app/Http/Controllers/SubscriptionController.php:212
+ * @see app/Http/Controllers/SubscriptionController.php:192
  * @route '/api/subscription/downgrade'
  */
 downgrade.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -198,7 +198,7 @@ downgrade.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::cancel
- * @see app/Http/Controllers/SubscriptionController.php:245
+ * @see app/Http/Controllers/SubscriptionController.php:225
  * @route '/api/subscription/cancel'
  */
 export const cancel = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -213,7 +213,7 @@ cancel.definition = {
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::cancel
- * @see app/Http/Controllers/SubscriptionController.php:245
+ * @see app/Http/Controllers/SubscriptionController.php:225
  * @route '/api/subscription/cancel'
  */
 cancel.url = (options?: RouteQueryOptions) => {
@@ -222,7 +222,7 @@ cancel.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::cancel
- * @see app/Http/Controllers/SubscriptionController.php:245
+ * @see app/Http/Controllers/SubscriptionController.php:225
  * @route '/api/subscription/cancel'
  */
 cancel.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -232,7 +232,7 @@ cancel.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::startTrial
- * @see app/Http/Controllers/SubscriptionController.php:280
+ * @see app/Http/Controllers/SubscriptionController.php:260
  * @route '/api/subscription/start-trial'
  */
 export const startTrial = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -247,7 +247,7 @@ startTrial.definition = {
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::startTrial
- * @see app/Http/Controllers/SubscriptionController.php:280
+ * @see app/Http/Controllers/SubscriptionController.php:260
  * @route '/api/subscription/start-trial'
  */
 startTrial.url = (options?: RouteQueryOptions) => {
@@ -256,7 +256,7 @@ startTrial.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::startTrial
- * @see app/Http/Controllers/SubscriptionController.php:280
+ * @see app/Http/Controllers/SubscriptionController.php:260
  * @route '/api/subscription/start-trial'
  */
 startTrial.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -266,7 +266,7 @@ startTrial.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::getUsageStats
- * @see app/Http/Controllers/SubscriptionController.php:321
+ * @see app/Http/Controllers/SubscriptionController.php:301
  * @route '/api/subscription/usage-stats'
  */
 export const getUsageStats = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -281,7 +281,7 @@ getUsageStats.definition = {
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::getUsageStats
- * @see app/Http/Controllers/SubscriptionController.php:321
+ * @see app/Http/Controllers/SubscriptionController.php:301
  * @route '/api/subscription/usage-stats'
  */
 getUsageStats.url = (options?: RouteQueryOptions) => {
@@ -290,7 +290,7 @@ getUsageStats.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SubscriptionController::getUsageStats
- * @see app/Http/Controllers/SubscriptionController.php:321
+ * @see app/Http/Controllers/SubscriptionController.php:301
  * @route '/api/subscription/usage-stats'
  */
 getUsageStats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -299,7 +299,7 @@ getUsageStats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\SubscriptionController::getUsageStats
- * @see app/Http/Controllers/SubscriptionController.php:321
+ * @see app/Http/Controllers/SubscriptionController.php:301
  * @route '/api/subscription/usage-stats'
  */
 getUsageStats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({

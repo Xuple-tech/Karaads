@@ -6,10 +6,10 @@ namespace App\Http\Controllers;
 use App\Services\VoiceConversationService;
 use App\Services\OpenAITextToSpeechService;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Models\Conversation;
 use App\Models\Chat;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\RedirectResponse;
 
 class VoiceConversationController extends Controller
 {
@@ -26,49 +26,17 @@ class VoiceConversationController extends Controller
     /**
      * Create new conversation or use existing one for voice chat
      */
-    function index()
+    function index(): RedirectResponse
     {
-        $conversation = Conversation::create([
-            'user_id' => auth('web')->id(),
-            'title' => 'Voice Chat',
-            'mode' => 'voice',
-        ]);
-
-        return to_route('voice.conversation', $conversation->id);
+        return redirect()->to('/voice-chat');
     }
 
     /**
      * Show conversation page (supports both text and voice modes)
      */
-    public function show($conversationId)
+    public function show($conversationId): RedirectResponse
     {
-        $conversation = Conversation::where('id', $conversationId)
-            ->where('user_id', auth('web')->id())
-            ->with(['chats' => function ($query) {
-                $query->orderBy('created_at', 'asc');
-            }])
-            ->firstOrFail();
-
-        return Inertia::render('VoiceConversation', [
-            'conversation' => [
-                'id' => $conversation->id,
-                'title' => $conversation->title,
-                'mode' => $conversation->mode ?? 'text',
-                'language' => $conversation->language ?? 'en',
-                'voice_settings' => $conversation->voice_settings ?? [],
-            ],
-            'messages' => $conversation->chats->map(fn ($chat) => [
-                'id' => $chat->id,
-                'content' => $chat->content,
-                'role' => $chat->role,
-                'type' => $chat->type ?? 'text',
-                'is_voice' => $chat->is_voice ?? false,
-                'audio_path' => $chat->audio_path,
-                'audio_duration' => $chat->audio_duration,
-                'created_at' => $chat->created_at->toIso8601String(),
-            ])->values(),
-            'availableVoices' => $this->getAvailableVoices()
-        ]);
+        return redirect()->to("/c/{$conversationId}/voice");
     }
 
     /**

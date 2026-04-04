@@ -35,7 +35,7 @@ start.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\VoiceConversationController::processAudio
- * @see app/Http/Controllers/VoiceConversationController.php:168
+ * @see app/Http/Controllers/VoiceConversationController.php:136
  * @route '/api/voice/process-audio'
  */
 export const processAudio = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -50,7 +50,7 @@ processAudio.definition = {
 
 /**
 * @see \App\Http\Controllers\VoiceConversationController::processAudio
- * @see app/Http/Controllers/VoiceConversationController.php:168
+ * @see app/Http/Controllers/VoiceConversationController.php:136
  * @route '/api/voice/process-audio'
  */
 processAudio.url = (options?: RouteQueryOptions) => {
@@ -59,7 +59,7 @@ processAudio.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\VoiceConversationController::processAudio
- * @see app/Http/Controllers/VoiceConversationController.php:168
+ * @see app/Http/Controllers/VoiceConversationController.php:136
  * @route '/api/voice/process-audio'
  */
 processAudio.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -69,7 +69,7 @@ processAudio.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\VoiceConversationController::processText
- * @see app/Http/Controllers/VoiceConversationController.php:139
+ * @see app/Http/Controllers/VoiceConversationController.php:107
  * @route '/api/voice/process-text'
  */
 export const processText = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -84,7 +84,7 @@ processText.definition = {
 
 /**
 * @see \App\Http\Controllers\VoiceConversationController::processText
- * @see app/Http/Controllers/VoiceConversationController.php:139
+ * @see app/Http/Controllers/VoiceConversationController.php:107
  * @route '/api/voice/process-text'
  */
 processText.url = (options?: RouteQueryOptions) => {
@@ -93,7 +93,7 @@ processText.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\VoiceConversationController::processText
- * @see app/Http/Controllers/VoiceConversationController.php:139
+ * @see app/Http/Controllers/VoiceConversationController.php:107
  * @route '/api/voice/process-text'
  */
 processText.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -137,7 +137,7 @@ end.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\VoiceConversationController::history
- * @see app/Http/Controllers/VoiceConversationController.php:199
+ * @see app/Http/Controllers/VoiceConversationController.php:167
  * @route '/api/voice/history/{conversationId}'
  */
 export const history = (args: { conversationId: string | number } | [conversationId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -152,7 +152,7 @@ history.definition = {
 
 /**
 * @see \App\Http\Controllers\VoiceConversationController::history
- * @see app/Http/Controllers/VoiceConversationController.php:199
+ * @see app/Http/Controllers/VoiceConversationController.php:167
  * @route '/api/voice/history/{conversationId}'
  */
 history.url = (args: { conversationId: string | number } | [conversationId: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -180,7 +180,7 @@ history.url = (args: { conversationId: string | number } | [conversationId: stri
 
 /**
 * @see \App\Http\Controllers\VoiceConversationController::history
- * @see app/Http/Controllers/VoiceConversationController.php:199
+ * @see app/Http/Controllers/VoiceConversationController.php:167
  * @route '/api/voice/history/{conversationId}'
  */
 history.get = (args: { conversationId: string | number } | [conversationId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -189,7 +189,7 @@ history.get = (args: { conversationId: string | number } | [conversationId: stri
 })
 /**
 * @see \App\Http\Controllers\VoiceConversationController::history
- * @see app/Http/Controllers/VoiceConversationController.php:199
+ * @see app/Http/Controllers/VoiceConversationController.php:167
  * @route '/api/voice/history/{conversationId}'
  */
 history.head = (args: { conversationId: string | number } | [conversationId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -199,7 +199,7 @@ history.head = (args: { conversationId: string | number } | [conversationId: str
 
 /**
 * @see \App\Http\Controllers\VoiceConversationController::streamAudio
- * @see app/Http/Controllers/VoiceConversationController.php:253
+ * @see app/Http/Controllers/VoiceConversationController.php:221
  * @route '/api/voice/stream-audio/{messageId}'
  */
 export const streamAudio = (args: { messageId: string | number } | [messageId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -214,7 +214,7 @@ streamAudio.definition = {
 
 /**
 * @see \App\Http\Controllers\VoiceConversationController::streamAudio
- * @see app/Http/Controllers/VoiceConversationController.php:253
+ * @see app/Http/Controllers/VoiceConversationController.php:221
  * @route '/api/voice/stream-audio/{messageId}'
  */
 streamAudio.url = (args: { messageId: string | number } | [messageId: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -242,7 +242,7 @@ streamAudio.url = (args: { messageId: string | number } | [messageId: string | n
 
 /**
 * @see \App\Http\Controllers\VoiceConversationController::streamAudio
- * @see app/Http/Controllers/VoiceConversationController.php:253
+ * @see app/Http/Controllers/VoiceConversationController.php:221
  * @route '/api/voice/stream-audio/{messageId}'
  */
 streamAudio.get = (args: { messageId: string | number } | [messageId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -251,7 +251,7 @@ streamAudio.get = (args: { messageId: string | number } | [messageId: string | n
 })
 /**
 * @see \App\Http\Controllers\VoiceConversationController::streamAudio
- * @see app/Http/Controllers/VoiceConversationController.php:253
+ * @see app/Http/Controllers/VoiceConversationController.php:221
  * @route '/api/voice/stream-audio/{messageId}'
  */
 streamAudio.head = (args: { messageId: string | number } | [messageId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
