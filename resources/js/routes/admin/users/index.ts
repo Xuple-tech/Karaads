@@ -382,9 +382,4 @@ const users = {
 create: Object.assign(create, create),
 store: Object.assign(store, store),
 show: Object.assign(show, show),
-edit: Object.assign(edit, edit),
-update: Object.assign(update, update),
-destroy: Object.assign(destroy, destroy),
-}
-
-export default users
+edit: Object.assign(edi

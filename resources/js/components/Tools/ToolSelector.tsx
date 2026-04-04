@@ -1,25 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import axios from 'axios';
+import { ChevronsUpDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ChevronsUpDown } from 'lucide-react';
-import axios from 'axios';
 
-interface Tool {
+export interface ToolOption {
   id: string;
   name: string;
-  display_name: string;
+  displayName: string;
   description: string;
   category: string;
-  icon_url?: string;
-  parameters?: Record<string, any>;
+  status: string;
+  parameters: Record<string, any>;
+  outputSchema: Record<string, any>;
+  raw: Record<string, any>;
 }
 
 interface ToolSelectorProps {
   projectId: string;
-  onToolSelected?: (tool: Tool) => void;
+  onToolSelected?: (tool: ToolOption) => void;
   disabled?: boolean;
+}
+
+const categoryIcons: Record<string, string> = {
+  search: 'Search',
+  file: 'File',
+  api: 'API',
+  code: 'Code',
+  utility: 'Util',
+  internal: 'Core',
+};
+
+function normalizeTool(tool: Record<string, any>): ToolOption {
+  return {
+    id: String(tool.id),
+    name: tool.slug ?? tool.name ?? String(tool.id),
+    displayName: tool.display_name ?? tool.name ?? tool.slug ?? 'Untitled tool',
+    description: tool.description ?? '',
+    category: tool.category ?? tool.type ?? 'internal',
+    status: tool.status ?? (tool.is_active ? 'active' : 'inactive'),
+    parameters: tool.parameters ?? tool.input_schema?.properties ?? {},
+    outputSchema: tool.return_schema ?? tool.output_schema ?? {},
+    raw: tool,
+  };
 }
 
 export default function ToolSelector({
@@ -28,54 +52,58 @@ export default function ToolSelector({
   disabled = false,
 }: ToolSelectorProps) {
   const [open, setOpen] = useState(false);
-  const [tools, setTools] = useState<Tool[]>([]);
+  const [tools, setTools] = useState<ToolOption[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
-    if (open) {
-      fetchTools();
+    if (!open) {
+      return;
     }
+
+    const fetchTools = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`/api/workspace/projects/${projectId}/tools`);
+        const nextTools = (response.data.data ?? []).map(normalizeTool);
+        setTools(nextTools);
+      } catch (error) {
+        console.error('Failed to fetch workspace tools:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTools();
   }, [open, projectId]);
 
-  const fetchTools = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(`/api/projects/${projectId}/tools`);
-      setTools(response.data.data || []);
-    } catch (error) {
-      console.error('Failed to fetch tools:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const categories = useMemo(
+    () => [...new Set(tools.map((tool) => tool.category))],
+    [tools]
+  );
 
-  const categories = [...new Set(tools.map(t => t.category))];
+  const filteredTools = useMemo(
+    () =>
+      tools.filter((tool) => {
+        const matchesSearch =
+          tool.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          tool.description.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesCategory = !selectedCategory || tool.category === selectedCategory;
 
-  const filteredTools = tools.filter(tool => {
-    const matchesSearch = tool.display_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         tool.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = !selectedCategory || tool.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+        return matchesSearch && matchesCategory;
+      }),
+    [searchQuery, selectedCategory, tools]
+  );
 
-  const handleSelectTool = (tool: Tool) => {
+  const selectTool = (tool: ToolOption) => {
     onToolSelected?.(tool);
     setOpen(false);
     setSearchQuery('');
   };
 
-  const getCategoryIcon = (category: string) => {
-    const icons: Record<string, string> = {
-      search: '🔍',
-      file: '📁',
-      api: '🔌',
-      code: '💻',
-      utility: '⚙️',
-    };
-    return icons[category] || '🔧';
-  };
+  const labelForCategory = (category: string) =>
+    categoryIcons[category] ?? category.charAt(0).toUpperCase() + category.slice(1);
 
   return (
     <div className="w-full">
@@ -101,10 +129,10 @@ export default function ToolSelector({
               onValueChange={setSearchQuery}
             />
 
-            <div className="flex gap-2 px-3 py-2 border-b flex-wrap">
+            <div className="flex flex-wrap gap-2 border-b px-3 py-2">
               <button
                 onClick={() => setSelectedCategory(null)}
-                className={`px-2 py-1 rounded text-sm transition ${
+                className={`rounded px-2 py-1 text-sm transition ${
                   selectedCategory === null
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -112,39 +140,44 @@ export default function ToolSelector({
               >
                 All
               </button>
-              {categories.map(category => (
+              {categories.map((category) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-2 py-1 rounded text-sm transition ${
+                  className={`rounded px-2 py-1 text-sm transition ${
                     selectedCategory === category
                       ? 'bg-blue-600 text-white'
                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                   }`}
                 >
-                  {getCategoryIcon(category)} {category}
+                  {labelForCategory(category)}
                 </button>
               ))}
             </div>
 
-            <CommandEmpty>No tools found.</CommandEmpty>
+            <CommandEmpty>{loading ? 'Loading tools...' : 'No tools found.'}</CommandEmpty>
 
-            {categories.map(category => {
-              const categoryTools = filteredTools.filter(t => t.category === category);
-              if (categoryTools.length === 0) return null;
+            {categories.map((category) => {
+              const categoryTools = filteredTools.filter((tool) => tool.category === category);
+              if (categoryTools.length === 0) {
+                return null;
+              }
 
               return (
-                <CommandGroup key={category} heading={`${getCategoryIcon(category)} ${category.charAt(0).toUpperCase() + category.slice(1)}`}>
-                  {categoryTools.map(tool => (
+                <CommandGroup
+                  key={category}
+                  heading={labelForCategory(category)}
+                >
+                  {categoryTools.map((tool) => (
                     <CommandItem
                       key={tool.id}
-                      value={tool.id}
-                      onSelect={() => handleSelectTool(tool)}
+                      value={`${tool.displayName} ${tool.description} ${tool.name}`}
+                      onSelect={() => selectTool(tool)}
                       className="cursor-pointer"
                     >
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium">{tool.display_name}</div>
-                        <div className="text-sm text-gray-600 truncate">{tool.description}</div>
+                      <div className="min-w-0 flex-1">
+                        <div className="font-medium">{tool.displayName}</div>
+                        <div className="truncate text-sm text-gray-600">{tool.description}</div>
                       </div>
                     </CommandItem>
                   ))}

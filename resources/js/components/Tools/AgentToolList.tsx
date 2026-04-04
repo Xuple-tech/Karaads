@@ -1,79 +1,83 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Eye, Copy } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { Copy, Eye } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-interface Tool {
+export interface AgentToolItem {
   id: string;
   name: string;
-  display_name: string;
+  displayName: string;
   description: string;
   category: string;
-  icon_url?: string;
-  rate_limit: number;
-  is_active: boolean;
-  parameters?: Record<string, any>;
+  status: string;
+  parameters: Record<string, any>;
+  outputSchema: Record<string, any>;
 }
 
 interface AgentToolListProps {
   projectId: string;
-  onToolSelected?: (tool: Tool) => void;
+  onToolSelected?: (tool: AgentToolItem) => void;
 }
 
-export default function AgentToolList({
-  projectId,
-  onToolSelected,
-}: AgentToolListProps) {
-  const [tools, setTools] = useState<Tool[]>([]);
+const categoryColors: Record<string, string> = {
+  search: 'bg-blue-100 text-blue-800',
+  file: 'bg-purple-100 text-purple-800',
+  api: 'bg-green-100 text-green-800',
+  code: 'bg-orange-100 text-orange-800',
+  utility: 'bg-gray-100 text-gray-800',
+  internal: 'bg-slate-100 text-slate-800',
+};
+
+function normalizeTool(tool: Record<string, any>): AgentToolItem {
+  return {
+    id: String(tool.id),
+    name: tool.slug ?? tool.name ?? String(tool.id),
+    displayName: tool.display_name ?? tool.name ?? tool.slug ?? 'Untitled tool',
+    description: tool.description ?? '',
+    category: tool.category ?? tool.type ?? 'internal',
+    status: tool.status ?? (tool.is_active ? 'active' : 'inactive'),
+    parameters: tool.parameters ?? tool.input_schema?.properties ?? {},
+    outputSchema: tool.return_schema ?? tool.output_schema ?? {},
+  };
+}
+
+export default function AgentToolList({ projectId, onToolSelected }: AgentToolListProps) {
+  const [tools, setTools] = useState<AgentToolItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
+    const fetchTools = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`/api/workspace/projects/${projectId}/tools`);
+        setTools((response.data.data ?? []).map(normalizeTool));
+      } catch (error) {
+        console.error('Failed to fetch workspace tools:', error);
+        toast.error('Failed to load tools');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchTools();
   }, [projectId]);
 
-  const fetchTools = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(`/api/projects/${projectId}/tools`);
-      setTools(response.data.data || []);
-    } catch (error) {
-      console.error('Failed to fetch tools:', error);
-      toast.error('Failed to load tools');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const categories = useMemo(
+    () => [...new Set(tools.map((tool) => tool.category))],
+    [tools]
+  );
 
-  const categories = [...new Set(tools.map(t => t.category))];
-  const filtered = selectedCategory
-    ? tools.filter(t => t.category === selectedCategory)
-    : tools;
-
-  const getCategoryIcon = (category: string) => {
-    const icons: Record<string, string> = {
-      search: '🔍',
-      file: '📁',
-      api: '🔌',
-      code: '💻',
-      utility: '⚙️',
-    };
-    return icons[category] || '🔧';
-  };
-
-  const getCategoryColor = (category: string) => {
-    const colors: Record<string, string> = {
-      search: 'bg-blue-100 text-blue-800',
-      file: 'bg-purple-100 text-purple-800',
-      api: 'bg-green-100 text-green-800',
-      code: 'bg-orange-100 text-orange-800',
-      utility: 'bg-gray-100 text-gray-800',
-    };
-    return colors[category] || 'bg-gray-100 text-gray-800';
-  };
+  const filteredTools = useMemo(
+    () =>
+      selectedCategory
+        ? tools.filter((tool) => tool.category === selectedCategory)
+        : tools,
+    [selectedCategory, tools]
+  );
 
   const copyToolName = (name: string) => {
     navigator.clipboard.writeText(name);
@@ -94,7 +98,7 @@ export default function AgentToolList({
     return (
       <Card>
         <CardContent className="pt-6">
-          <div className="text-center text-gray-500 py-8">
+          <div className="py-8 text-center text-gray-500">
             <p>No tools available.</p>
           </div>
         </CardContent>
@@ -104,11 +108,10 @@ export default function AgentToolList({
 
   return (
     <div className="space-y-6">
-      {/* Category Filter */}
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex flex-wrap gap-2">
         <button
           onClick={() => setSelectedCategory(null)}
-          className={`px-3 py-1 rounded-lg text-sm font-medium transition ${
+          className={`rounded-lg px-3 py-1 text-sm font-medium transition ${
             selectedCategory === null
               ? 'bg-blue-600 text-white'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -116,80 +119,78 @@ export default function AgentToolList({
         >
           All ({tools.length})
         </button>
-        {categories.map(category => {
-          const count = tools.filter(t => t.category === category).length;
+        {categories.map((category) => {
+          const count = tools.filter((tool) => tool.category === category).length;
           return (
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-3 py-1 rounded-lg text-sm font-medium transition flex items-center gap-1 ${
+              className={`rounded-lg px-3 py-1 text-sm font-medium transition ${
                 selectedCategory === category
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              {getCategoryIcon(category)} {category} ({count})
+              {category} ({count})
             </button>
           );
         })}
       </div>
 
-      {/* Tools Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {filtered.map(tool => (
-          <Card
-            key={tool.id}
-            className={`${tool.is_active ? 'hover:shadow-lg' : 'opacity-50'} transition cursor-default`}
-          >
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xl">{getCategoryIcon(tool.category)}</span>
-                    <CardTitle className="text-base line-clamp-2">{tool.display_name}</CardTitle>
+        {filteredTools.map((tool) => {
+          const active = tool.status === 'active';
+
+          return (
+            <Card
+              key={tool.id}
+              className={`${active ? 'hover:shadow-lg' : 'opacity-50'} transition`}
+            >
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <CardTitle className="line-clamp-2 text-base">{tool.displayName}</CardTitle>
+                    <CardDescription className="line-clamp-2 text-xs">
+                      {tool.description}
+                    </CardDescription>
                   </div>
-                  <CardDescription className="text-xs line-clamp-2">
-                    {tool.description}
-                  </CardDescription>
+                  <Badge className={categoryColors[tool.category] ?? 'bg-gray-100 text-gray-800'} variant="secondary">
+                    {tool.category}
+                  </Badge>
                 </div>
-                <Badge className={getCategoryColor(tool.category)} variant="secondary">
-                  {tool.category}
-                </Badge>
-              </div>
-            </CardHeader>
+              </CardHeader>
 
-            <CardContent className="space-y-3">
-              {/* Rate Limit */}
-              <div className="text-xs">
-                <p className="text-gray-600">Rate Limit: <span className="font-semibold text-gray-900">{tool.rate_limit}/min</span></p>
-              </div>
+              <CardContent className="space-y-3">
+                <div className="rounded bg-gray-50 p-2 font-mono text-xs text-gray-700">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="truncate">{tool.name}</span>
+                    <button
+                      onClick={() => copyToolName(tool.name)}
+                      className="rounded p-1 transition hover:bg-gray-200"
+                      title="Copy tool name"
+                    >
+                      <Copy size={14} className="text-gray-600" />
+                    </button>
+                  </div>
+                </div>
 
-              {/* Tool Name Display */}
-              <div className="bg-gray-50 p-2 rounded font-mono text-xs text-gray-700 break-all flex items-center justify-between">
-                <span className="flex-1 truncate">{tool.name}</span>
-                <button
-                  onClick={() => copyToolName(tool.name)}
-                  className="ml-2 p-1 hover:bg-gray-200 rounded transition"
-                  title="Copy tool name"
+                <div className="text-xs text-gray-600">
+                  Status: <span className="font-semibold text-gray-900">{tool.status}</span>
+                </div>
+
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => onToolSelected?.(tool)}
                 >
-                  <Copy size={14} className="text-gray-600" />
-                </button>
-              </div>
-
-              {/* Actions */}
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => onToolSelected?.(tool)}
-                className="w-full"
-                disabled={!tool.is_active}
-              >
-                <Eye size={14} className="mr-2" />
-                {tool.is_active ? 'View Details' : 'Inactive'}
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
+                  <Eye size={14} className="mr-2" />
+                  Inspect Tool
+                </Button>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );

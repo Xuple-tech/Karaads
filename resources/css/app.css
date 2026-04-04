@@ -79,110 +79,110 @@
 }
 
 :root {
-    /* ===== Kwati AI Dark Purple Theme ===== */
-    
+    /* ===== Kwati AI — Black/White Base, Purple Accent ===== */
+
     /* Base */
-    --background: #0a0515;            /* Deep purple-black */
-    --foreground: #ffffff;
+    --background: #0d0d0d;            /* Near-black */
+    --foreground: #f5f5f5;
 
     /* Surface */
-    --card: #1a1038;
-    --card-foreground: #ffffff;
+    --card: #141414;
+    --card-foreground: #f5f5f5;
 
-    --popover: #1a1038;
-    --popover-foreground: #ffffff;
+    --popover: #1a1a1a;
+    --popover-foreground: #f5f5f5;
 
-    /* Brand / Primary */
-    --primary: #6d44ff;               /* Vibrant purple */
+    /* Brand / Primary — Purple accent only */
+    --primary: #7c5cff;
     --primary-foreground: #ffffff;
 
     /* Secondary / Support */
-    --secondary: #5a36d9;
-    --secondary-foreground: #ffffff;
+    --secondary: #1e1e1e;
+    --secondary-foreground: #e0e0e0;
 
     /* Muted / Subtle UI */
-    --muted: #2d1b54;
-    --muted-foreground: #a0a0a0;
+    --muted: #1c1c1c;
+    --muted-foreground: #888888;
 
-    /* Accents */
-    --accent: #0d0042;
-    --accent-foreground: #ffffff;
+    /* Accents — neutral dark surface */
+    --accent: #1e1e1e;
+    --accent-foreground: #e0e0e0;
 
     /* Status */
-    --destructive: #ff4444;
+    --destructive: #ef4444;
     --destructive-foreground: #ffffff;
 
     /* UI Elements */
-    --border: #3d2e6b;
-    --input: #1a1038;
-    --ring: #6d44ff;
+    --border: #2a2a2a;
+    --input: #1a1a1a;
+    --ring: #7c5cff;
 
     /* Charts */
-    --chart-1: #6d44ff;
-    --chart-2: #7c5cff;
-    --chart-3: #5a36d9;
-    --chart-4: #8a6dff;
+    --chart-1: #7c5cff;
+    --chart-2: #a78bfa;
+    --chart-3: #6d44ff;
+    --chart-4: #c4b5fd;
     --chart-5: #4d2e99;
 
     /* Radius */
     --radius: 1.25rem;
 
     /* Sidebar */
-    --sidebar: #0a0515;
-    --sidebar-foreground: #ffffff;
-    --sidebar-primary: #6d44ff;
+    --sidebar: #0a0a0a;
+    --sidebar-foreground: #f5f5f5;
+    --sidebar-primary: #7c5cff;
     --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: #7c5cff;
-    --sidebar-accent-foreground: #ffffff;
-    --sidebar-border: #3d2e6b;
-    --sidebar-ring: #6d44ff;
+    --sidebar-accent: #1a1a1a;
+    --sidebar-accent-foreground: #e0e0e0;
+    --sidebar-border: #222222;
+    --sidebar-ring: #7c5cff;
 }
 
 .dark {
-    /* ===== Dark Mode — Same Theme but Slightly Deeper Accents ===== */
+    /* ===== Dark Mode — Pure Black Base, Purple Accent ===== */
 
-    --background: #090414;
-    --foreground: #ffffff;
+    --background: #080808;
+    --foreground: #f5f5f5;
 
-    --card: #140d2c;
-    --card-foreground: #ffffff;
+    --card: #101010;
+    --card-foreground: #f5f5f5;
 
-    --popover: #140d2c;
-    --popover-foreground: #ffffff;
+    --popover: #161616;
+    --popover-foreground: #f5f5f5;
 
-    --primary: #6d44ff;
+    --primary: #7c5cff;
     --primary-foreground: #ffffff;
 
-    --secondary: #5a36d9;
-    --secondary-foreground: #ffffff;
+    --secondary: #181818;
+    --secondary-foreground: #e0e0e0;
 
-    --muted: #241749;
-    --muted-foreground: #a0a0a0;
+    --muted: #161616;
+    --muted-foreground: #888888;
 
-    --accent: #0a0032;
-    --accent-foreground: #ffffff;
+    --accent: #1a1a1a;
+    --accent-foreground: #e0e0e0;
 
-    --destructive: #ff4444;
+    --destructive: #ef4444;
     --destructive-foreground: #ffffff;
 
-    --border: #3d2e6b;
-    --input: #140d2c;
-    --ring: #6d44ff;
+    --border: #242424;
+    --input: #161616;
+    --ring: #7c5cff;
 
-    --chart-1: #6d44ff;
-    --chart-2: #7c5cff;
-    --chart-3: #5a36d9;
-    --chart-4: #8a6dff;
+    --chart-1: #7c5cff;
+    --chart-2: #a78bfa;
+    --chart-3: #6d44ff;
+    --chart-4: #c4b5fd;
     --chart-5: #4d2e99;
 
-    --sidebar: #090414;
-    --sidebar-foreground: #ffffff;
-    --sidebar-primary: #6d44ff;
+    --sidebar: #060606;
+    --sidebar-foreground: #f5f5f5;
+    --sidebar-primary: #7c5cff;
     --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: #7c5cff;
-    --sidebar-accent-foreground: #ffffff;
-    --sidebar-border: #3d2e6b;
-    --sidebar-ring: #6d44ff;
+    --sidebar-accent: #161616;
+    --sidebar-accent-foreground: #e0e0e0;
+    --sidebar-border: #1e1e1e;
+    --sidebar-ring: #7c5cff;
 }
 
 @theme inline {
@@ -374,7 +374,6 @@
     }
     body {
         @apply bg-background text-foreground;
-        background-image: linear-gradient(135deg, rgba(10, 5, 21, 1) 0%, rgba(26, 16, 56, 1) 50%, rgba(16, 5, 30, 1) 100%);
     }
     body.buz-dark,body.buz-light {
         @apply bg-background text-foreground;

@@ -1,67 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
-* @see \App\Http\Controllers\AgentToolController::index
- * @see app/Http/Controllers/AgentToolController.php:28
- * @route '/api/projects/{project}/tools'
- */
-export const index = (args: { project: string | number } | [project: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index.url(args, options),
-    method: 'get',
-})
-
-index.definition = {
-    methods: ["get","head"],
-    url: '/api/projects/{project}/tools',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\AgentToolController::index
- * @see app/Http/Controllers/AgentToolController.php:28
- * @route '/api/projects/{project}/tools'
- */
-index.url = (args: { project: string | number } | [project: string | number ] | string | number, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { project: args }
-    }
-
-    
-    if (Array.isArray(args)) {
-        args = {
-                    project: args[0],
-                }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-                        project: args.project,
-                }
-
-    return index.definition.url
-            .replace('{project}', parsedArgs.project.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\AgentToolController::index
- * @see app/Http/Controllers/AgentToolController.php:28
- * @route '/api/projects/{project}/tools'
- */
-index.get = (args: { project: string | number } | [project: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index.url(args, options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\AgentToolController::index
- * @see app/Http/Controllers/AgentToolController.php:28
- * @route '/api/projects/{project}/tools'
- */
-index.head = (args: { project: string | number } | [project: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: index.url(args, options),
-    method: 'head',
-})
-
-/**
 * @see \App\Http\Controllers\AgentToolController::show
  * @see app/Http/Controllers/AgentToolController.php:45
  * @route '/api/projects/{project}/tools/{toolName}'
@@ -437,6 +375,6 @@ destroy.delete = (args: { project: string | number, toolName: string | number } 
     url: destroy.url(args, options),
     method: 'delete',
 })
-const AgentToolController = { index, show, execute, test, guidelines, store, update, destroy }
+const AgentToolController = { show, execute, test, guidelines, store, update, destroy }
 
 export default AgentToolController

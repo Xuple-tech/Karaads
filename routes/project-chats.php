@@ -3,6 +3,9 @@
 use App\Http\Controllers\AgentMemoryController;
 use App\Http\Controllers\AgentScheduleController;
 use App\Http\Controllers\AgentToolController;
+use App\Http\Controllers\Api\Workspace\AgentController as WorkspaceAgentController;
+use App\Http\Controllers\Api\Workspace\ChatController as WorkspaceChatController;
+use App\Http\Controllers\Api\Workspace\ToolController as WorkspaceToolController;
 use App\Http\Controllers\ProjectAgentController;
 use App\Http\Controllers\ProjectChatController;
 use App\Http\Controllers\ToolChainController;
@@ -15,13 +18,13 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['web', 'auth'])->prefix('api/projects')->group(function () {
     Route::prefix('{project}')->group(function () {
         // Conversations
-        Route::get('/conversations', [ProjectChatController::class, 'conversations'])->name('project.conversations.index');
-        Route::post('/conversations', [ProjectChatController::class, 'createConversation'])->name('project.conversations.create');
+        Route::get('/conversations', [WorkspaceChatController::class, 'conversations'])->name('project.conversations.index');
+        Route::post('/conversations', [WorkspaceChatController::class, 'createConversation'])->name('project.conversations.create');
 
         Route::prefix('conversations/{conversation}')->group(function () {
             // Conversation view and messages
             Route::get('/', [ProjectChatController::class, 'show'])->name('project.conversation.show');
-            Route::post('/messages', [ProjectChatController::class, 'sendMessage'])->name('project.conversation.message.create');
+            Route::post('/messages', [WorkspaceChatController::class, 'sendMessage'])->name('project.conversation.message.create');
             Route::get('/export', [ProjectChatController::class, 'exportConversation'])->name('project.conversation.export');
             Route::get('/statistics', [ProjectChatController::class, 'statistics'])->name('project.conversation.statistics');
             Route::get('/pinned', [ProjectChatController::class, 'pinnedMessages'])->name('project.conversation.pinned');
@@ -41,13 +44,13 @@ Route::middleware(['web', 'auth'])->prefix('api/projects')->group(function () {
 
         // Agent Management
         Route::prefix('agents')->group(function () {
-            Route::get('/', [ProjectAgentController::class, 'index'])->name('project.agents.index');
-            Route::post('/', [ProjectAgentController::class, 'store'])->name('project.agents.create');
+            Route::get('/', [WorkspaceAgentController::class, 'index'])->name('project.agents.index');
+            Route::post('/', [WorkspaceAgentController::class, 'store'])->name('project.agents.create');
 
             Route::prefix('{agent}')->group(function () {
-                Route::get('/', [ProjectAgentController::class, 'show'])->name('project.agent.show');
-                Route::put('/', [ProjectAgentController::class, 'update'])->name('project.agent.update');
-                Route::delete('/', [ProjectAgentController::class, 'destroy'])->name('project.agent.delete');
+                Route::get('/', [WorkspaceAgentController::class, 'show'])->name('project.agent.show');
+                Route::put('/', [WorkspaceAgentController::class, 'update'])->name('project.agent.update');
+                Route::delete('/', [WorkspaceAgentController::class, 'destroy'])->name('project.agent.delete');
                 Route::post('/toggle-status', [ProjectAgentController::class, 'toggleStatus'])->name('project.agent.toggle-status');
                 Route::get('/statistics', [ProjectAgentController::class, 'statistics'])->name('project.agent.statistics');
 
@@ -114,7 +117,7 @@ Route::middleware(['web', 'auth'])->prefix('api/projects')->group(function () {
 
         // Global Tools (managed by admins, available to all agents)
         Route::prefix('tools')->group(function () {
-            Route::get('/', [AgentToolController::class, 'index'])->name('tools.index');
+            Route::get('/', [WorkspaceToolController::class, 'index'])->name('tools.index');
             Route::get('/{toolName}', [AgentToolController::class, 'show'])->name('tools.show');
             Route::post('/{toolName}/execute', [AgentToolController::class, 'execute'])->name('tools.execute');
             Route::post('/{toolName}/test', [AgentToolController::class, 'test'])->name('tools.test');
