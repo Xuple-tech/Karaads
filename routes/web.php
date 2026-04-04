@@ -8,6 +8,7 @@ use App\Http\Controllers\SpaController;
 use App\Http\Controllers\Meta\MetaWebhookController;
 use App\Http\Controllers\Api\SessionAuthController;
 use App\Http\Controllers\Api\SpaConversationController;
+use App\Http\Controllers\Api\SpaVoiceConversationController;
 use App\Http\Controllers\ConversationShareController;
 use App\Http\Middleware\CheckSubscriptionRateLimit;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -232,6 +233,9 @@ Route::prefix('api/session')->group(function () {
 Route::middleware('auth')->prefix('api/spa')->group(function () {
     Route::get('/conversations', [SpaConversationController::class, 'index'])->name('spa.conversations.index');
     Route::get('/conversations/{conversation}', [SpaConversationController::class, 'show'])->name('spa.conversations.show');
+    Route::get('/voice/conversations', [SpaVoiceConversationController::class, 'index'])->name('spa.voice.index');
+    Route::post('/voice/conversations', [SpaVoiceConversationController::class, 'store'])->name('spa.voice.store');
+    Route::get('/voice/conversations/{conversation}', [SpaVoiceConversationController::class, 'show'])->name('spa.voice.show');
 });
 
 require __DIR__ . '/auth.php';

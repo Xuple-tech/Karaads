@@ -8,6 +8,7 @@ import ChatPreferenceController from './ChatPreferenceController'
 import PersonalizationController from './PersonalizationController'
 import SessionAuthController from './SessionAuthController'
 import SpaConversationController from './SpaConversationController'
+import SpaVoiceConversationController from './SpaVoiceConversationController'
 const Api = {
     AuthController: Object.assign(AuthController, AuthController),
 ChatController: Object.assign(ChatController, ChatController),
@@ -19,6 +20,7 @@ ChatPreferenceController: Object.assign(ChatPreferenceController, ChatPreference
 PersonalizationController: Object.assign(PersonalizationController, PersonalizationController),
 SessionAuthController: Object.assign(SessionAuthController, SessionAuthController),
 SpaConversationController: Object.assign(SpaConversationController, SpaConversationController),
+SpaVoiceConversationController: Object.assign(SpaVoiceConversationController, SpaVoiceConversationController),
 }
 
 export default Api
