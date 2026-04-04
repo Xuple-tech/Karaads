@@ -74,6 +74,36 @@ export default function ChatInput({
     const sidebarContext = useContext(SidebarContextProvider)
     const { getLanguageForSpeech, lang } = useLang()
 
+    const isValidFile = (file: File) =>
+        file.type.startsWith('image/') ||
+        file.type.startsWith('text/') ||
+        file.type === 'application/pdf' ||
+        file.type === 'application/vnd.ms-excel' ||
+        file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+        file.type === 'application/msword' ||
+        file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+
+    const addFiles = useCallback((incoming: File[]) => {
+        const MAX_SIZE = 30 * 1024 * 1024
+        const valid = incoming.filter(isValidFile)
+        const invalidCount = incoming.length - valid.length
+        const oversized = valid.filter(f => f.size > MAX_SIZE)
+        const accepted = valid.filter(f => f.size <= MAX_SIZE)
+
+        if (invalidCount > 0) toast.error(`${invalidCount} unsupported file${invalidCount > 1 ? 's' : ''} skipped`)
+        if (oversized.length > 0) toast.error(`${oversized.length} file${oversized.length > 1 ? 's' : ''} exceed 30 MB limit`)
+
+        if (accepted.length === 0) return
+
+        setFiles(prev => {
+            const slots = 10 - prev.length
+            if (slots <= 0) { toast.error('Maximum 10 files reached'); return prev }
+            const toAdd = accepted.slice(0, slots)
+            if (accepted.length > slots) toast.error(`Only ${slots} more file${slots > 1 ? 's' : ''} can be added`)
+            return [...prev, ...toAdd]
+        })
+    }, [setFiles])
+
     useEffect(() => {
         if (!recognition) {
             if (!("webkitSpeechRecognition" in window) && !("SpeechRecognition" in window)) {
@@ -173,36 +203,6 @@ useEffect(()=>{
             inputRef.current.style.height = "auto"
         }
     }
-
-    const isValidFile = (file: File) =>
-        file.type.startsWith('image/') ||
-        file.type.startsWith('text/') ||
-        file.type === 'application/pdf' ||
-        file.type === 'application/vnd.ms-excel' ||
-        file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-        file.type === 'application/msword' ||
-        file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-
-    const addFiles = useCallback((incoming: File[]) => {
-        const MAX_SIZE = 30 * 1024 * 1024
-        const valid = incoming.filter(isValidFile)
-        const invalidCount = incoming.length - valid.length
-        const oversized = valid.filter(f => f.size > MAX_SIZE)
-        const accepted = valid.filter(f => f.size <= MAX_SIZE)
-
-        if (invalidCount > 0) toast.error(`${invalidCount} unsupported file${invalidCount > 1 ? 's' : ''} skipped`)
-        if (oversized.length > 0) toast.error(`${oversized.length} file${oversized.length > 1 ? 's' : ''} exceed 30 MB limit`)
-
-        if (accepted.length === 0) return
-
-        setFiles(prev => {
-            const slots = 10 - prev.length
-            if (slots <= 0) { toast.error('Maximum 10 files reached'); return prev }
-            const toAdd = accepted.slice(0, slots)
-            if (accepted.length > slots) toast.error(`Only ${slots} more file${slots > 1 ? 's' : ''} can be added`)
-            return [...prev, ...toAdd]
-        })
-    }, [setFiles])
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.length) {

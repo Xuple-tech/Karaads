@@ -229,7 +229,6 @@ class AnalyticsService
     {
         $rates = [
             'grok' => 0.001 / 1000,
-            'openrouter' => 0.001 / 1000,
             'ollama' => 0, // Self-hosted, no cost
         ];
 

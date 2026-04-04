@@ -62,7 +62,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable();
             $table->uuid('saas_owner_id')->nullable();
-            $table->string('api_provider')->default('grok'); // grok, openrouter, ollama
+            $table->string('api_provider')->default('grok');
             $table->string('model');
             $table->string('endpoint');
             $table->integer('tokens_used')->default(0);
