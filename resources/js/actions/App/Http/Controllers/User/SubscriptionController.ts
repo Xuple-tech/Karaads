@@ -90,7 +90,7 @@ plans.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
  * @see app/Http/Controllers/User/SubscriptionController.php:45
  * @route '/ai-agents/subscriptions/{subscription}'
  */
-export const show = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -105,7 +105,7 @@ show.definition = {
  * @see app/Http/Controllers/User/SubscriptionController.php:45
  * @route '/ai-agents/subscriptions/{subscription}'
  */
-show.url = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+show.url = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { subscription: args }
     }
@@ -138,7 +138,7 @@ show.url = (args: { subscription: string | { id: string } } | [subscription: str
  * @see app/Http/Controllers/User/SubscriptionController.php:45
  * @route '/ai-agents/subscriptions/{subscription}'
  */
-show.get = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -147,7 +147,7 @@ show.get = (args: { subscription: string | { id: string } } | [subscription: str
  * @see app/Http/Controllers/User/SubscriptionController.php:45
  * @route '/ai-agents/subscriptions/{subscription}'
  */
-show.head = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -157,7 +157,7 @@ show.head = (args: { subscription: string | { id: string } } | [subscription: st
  * @see app/Http/Controllers/User/SubscriptionController.php:56
  * @route '/ai-agents/subscriptions/subscribe/{plan}'
  */
-export const subscribe = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const subscribe = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: subscribe.url(args, options),
     method: 'post',
 })
@@ -172,7 +172,7 @@ subscribe.definition = {
  * @see app/Http/Controllers/User/SubscriptionController.php:56
  * @route '/ai-agents/subscriptions/subscribe/{plan}'
  */
-subscribe.url = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+subscribe.url = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { plan: args }
     }
@@ -205,7 +205,7 @@ subscribe.url = (args: { plan: string | { id: string } } | [plan: string | { id:
  * @see app/Http/Controllers/User/SubscriptionController.php:56
  * @route '/ai-agents/subscriptions/subscribe/{plan}'
  */
-subscribe.post = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+subscribe.post = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: subscribe.url(args, options),
     method: 'post',
 })
@@ -215,7 +215,7 @@ subscribe.post = (args: { plan: string | { id: string } } | [plan: string | { id
  * @see app/Http/Controllers/User/SubscriptionController.php:93
  * @route '/ai-agents/subscriptions/cancel/{subscription}'
  */
-export const cancel = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const cancel = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: cancel.url(args, options),
     method: 'post',
 })
@@ -230,7 +230,7 @@ cancel.definition = {
  * @see app/Http/Controllers/User/SubscriptionController.php:93
  * @route '/ai-agents/subscriptions/cancel/{subscription}'
  */
-cancel.url = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+cancel.url = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { subscription: args }
     }
@@ -263,7 +263,7 @@ cancel.url = (args: { subscription: string | { id: string } } | [subscription: s
  * @see app/Http/Controllers/User/SubscriptionController.php:93
  * @route '/ai-agents/subscriptions/cancel/{subscription}'
  */
-cancel.post = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+cancel.post = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: cancel.url(args, options),
     method: 'post',
 })
@@ -273,7 +273,7 @@ cancel.post = (args: { subscription: string | { id: string } } | [subscription: 
  * @see app/Http/Controllers/User/SubscriptionController.php:106
  * @route '/ai-agents/subscriptions/resume/{subscription}'
  */
-export const resume = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const resume = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: resume.url(args, options),
     method: 'post',
 })
@@ -288,7 +288,7 @@ resume.definition = {
  * @see app/Http/Controllers/User/SubscriptionController.php:106
  * @route '/ai-agents/subscriptions/resume/{subscription}'
  */
-resume.url = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+resume.url = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { subscription: args }
     }
@@ -321,7 +321,7 @@ resume.url = (args: { subscription: string | { id: string } } | [subscription: s
  * @see app/Http/Controllers/User/SubscriptionController.php:106
  * @route '/ai-agents/subscriptions/resume/{subscription}'
  */
-resume.post = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+resume.post = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: resume.url(args, options),
     method: 'post',
 })
@@ -331,7 +331,7 @@ resume.post = (args: { subscription: string | { id: string } } | [subscription: 
  * @see app/Http/Controllers/User/SubscriptionController.php:119
  * @route '/ai-agents/subscriptions/upgrade/{subscription}'
  */
-export const upgrade = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const upgrade = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: upgrade.url(args, options),
     method: 'post',
 })
@@ -346,7 +346,7 @@ upgrade.definition = {
  * @see app/Http/Controllers/User/SubscriptionController.php:119
  * @route '/ai-agents/subscriptions/upgrade/{subscription}'
  */
-upgrade.url = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+upgrade.url = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { subscription: args }
     }
@@ -379,7 +379,7 @@ upgrade.url = (args: { subscription: string | { id: string } } | [subscription: 
  * @see app/Http/Controllers/User/SubscriptionController.php:119
  * @route '/ai-agents/subscriptions/upgrade/{subscription}'
  */
-upgrade.post = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+upgrade.post = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: upgrade.url(args, options),
     method: 'post',
 })

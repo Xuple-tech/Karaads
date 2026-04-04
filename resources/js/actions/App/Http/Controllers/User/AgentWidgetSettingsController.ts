@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
  * @see app/Http/Controllers/User/AgentWidgetSettingsController.php:13
  * @route '/ai-agents/agents/{agent}/widget-settings'
  */
-export const show = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ show.definition = {
  * @see app/Http/Controllers/User/AgentWidgetSettingsController.php:13
  * @route '/ai-agents/agents/{agent}/widget-settings'
  */
-show.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+show.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -52,7 +52,7 @@ show.url = (args: { agent: string | { id: string } } | [agent: string | { id: st
  * @see app/Http/Controllers/User/AgentWidgetSettingsController.php:13
  * @route '/ai-agents/agents/{agent}/widget-settings'
  */
-show.get = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -61,7 +61,7 @@ show.get = (args: { agent: string | { id: string } } | [agent: string | { id: st
  * @see app/Http/Controllers/User/AgentWidgetSettingsController.php:13
  * @route '/ai-agents/agents/{agent}/widget-settings'
  */
-show.head = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -71,7 +71,7 @@ show.head = (args: { agent: string | { id: string } } | [agent: string | { id: s
  * @see app/Http/Controllers/User/AgentWidgetSettingsController.php:25
  * @route '/ai-agents/agents/{agent}/widget-settings/edit'
  */
-export const edit = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -86,7 +86,7 @@ edit.definition = {
  * @see app/Http/Controllers/User/AgentWidgetSettingsController.php:25
  * @route '/ai-agents/agents/{agent}/widget-settings/edit'
  */
-edit.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+edit.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -119,7 +119,7 @@ edit.url = (args: { agent: string | { id: string } } | [agent: string | { id: st
  * @see app/Http/Controllers/User/AgentWidgetSettingsController.php:25
  * @route '/ai-agents/agents/{agent}/widget-settings/edit'
  */
-edit.get = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -128,7 +128,7 @@ edit.get = (args: { agent: string | { id: string } } | [agent: string | { id: st
  * @see app/Http/Controllers/User/AgentWidgetSettingsController.php:25
  * @route '/ai-agents/agents/{agent}/widget-settings/edit'
  */
-edit.head = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -138,7 +138,7 @@ edit.head = (args: { agent: string | { id: string } } | [agent: string | { id: s
  * @see app/Http/Controllers/User/AgentWidgetSettingsController.php:37
  * @route '/ai-agents/agents/{agent}/widget-settings'
  */
-export const update = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -153,7 +153,7 @@ update.definition = {
  * @see app/Http/Controllers/User/AgentWidgetSettingsController.php:37
  * @route '/ai-agents/agents/{agent}/widget-settings'
  */
-update.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+update.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -186,7 +186,7 @@ update.url = (args: { agent: string | { id: string } } | [agent: string | { id: 
  * @see app/Http/Controllers/User/AgentWidgetSettingsController.php:37
  * @route '/ai-agents/agents/{agent}/widget-settings'
  */
-update.put = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -196,7 +196,7 @@ update.put = (args: { agent: string | { id: string } } | [agent: string | { id: 
  * @see app/Http/Controllers/User/AgentWidgetSettingsController.php:77
  * @route '/ai-agents/agents/{agent}/widget-settings/preview'
  */
-export const preview = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const preview = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: preview.url(args, options),
     method: 'post',
 })
@@ -211,7 +211,7 @@ preview.definition = {
  * @see app/Http/Controllers/User/AgentWidgetSettingsController.php:77
  * @route '/ai-agents/agents/{agent}/widget-settings/preview'
  */
-preview.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+preview.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -244,7 +244,7 @@ preview.url = (args: { agent: string | { id: string } } | [agent: string | { id:
  * @see app/Http/Controllers/User/AgentWidgetSettingsController.php:77
  * @route '/ai-agents/agents/{agent}/widget-settings/preview'
  */
-preview.post = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+preview.post = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: preview.url(args, options),
     method: 'post',
 })
@@ -254,7 +254,7 @@ preview.post = (args: { agent: string | { id: string } } | [agent: string | { id
  * @see app/Http/Controllers/User/AgentWidgetSettingsController.php:92
  * @route '/ai-agents/agents/{agent}/widget-settings/reset'
  */
-export const reset = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const reset = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: reset.url(args, options),
     method: 'post',
 })
@@ -269,7 +269,7 @@ reset.definition = {
  * @see app/Http/Controllers/User/AgentWidgetSettingsController.php:92
  * @route '/ai-agents/agents/{agent}/widget-settings/reset'
  */
-reset.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+reset.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -302,7 +302,7 @@ reset.url = (args: { agent: string | { id: string } } | [agent: string | { id: s
  * @see app/Http/Controllers/User/AgentWidgetSettingsController.php:92
  * @route '/ai-agents/agents/{agent}/widget-settings/reset'
  */
-reset.post = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+reset.post = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: reset.url(args, options),
     method: 'post',
 })

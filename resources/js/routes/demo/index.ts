@@ -48,7 +48,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
  * @see app/Http/Controllers/Demo/DemoController.php:47
  * @route '/demo/agent/{agent}'
  */
-export const agent = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const agent = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: agent.url(args, options),
     method: 'get',
 })
@@ -63,7 +63,7 @@ agent.definition = {
  * @see app/Http/Controllers/Demo/DemoController.php:47
  * @route '/demo/agent/{agent}'
  */
-agent.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+agent.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -96,7 +96,7 @@ agent.url = (args: { agent: string | { id: string } } | [agent: string | { id: s
  * @see app/Http/Controllers/Demo/DemoController.php:47
  * @route '/demo/agent/{agent}'
  */
-agent.get = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+agent.get = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: agent.url(args, options),
     method: 'get',
 })
@@ -105,7 +105,7 @@ agent.get = (args: { agent: string | { id: string } } | [agent: string | { id: s
  * @see app/Http/Controllers/Demo/DemoController.php:47
  * @route '/demo/agent/{agent}'
  */
-agent.head = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+agent.head = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: agent.url(args, options),
     method: 'head',
 })
@@ -115,7 +115,7 @@ agent.head = (args: { agent: string | { id: string } } | [agent: string | { id: 
  * @see app/Http/Controllers/Demo/DemoController.php:66
  * @route '/demo/preview/{widgetSetting}'
  */
-export const preview = (args: { widgetSetting: string | { id: string } } | [widgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const preview = (args: { widgetSetting: string | number | { id: string | number } } | [widgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: preview.url(args, options),
     method: 'get',
 })
@@ -130,7 +130,7 @@ preview.definition = {
  * @see app/Http/Controllers/Demo/DemoController.php:66
  * @route '/demo/preview/{widgetSetting}'
  */
-preview.url = (args: { widgetSetting: string | { id: string } } | [widgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+preview.url = (args: { widgetSetting: string | number | { id: string | number } } | [widgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { widgetSetting: args }
     }
@@ -163,7 +163,7 @@ preview.url = (args: { widgetSetting: string | { id: string } } | [widgetSetting
  * @see app/Http/Controllers/Demo/DemoController.php:66
  * @route '/demo/preview/{widgetSetting}'
  */
-preview.get = (args: { widgetSetting: string | { id: string } } | [widgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+preview.get = (args: { widgetSetting: string | number | { id: string | number } } | [widgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: preview.url(args, options),
     method: 'get',
 })
@@ -172,7 +172,7 @@ preview.get = (args: { widgetSetting: string | { id: string } } | [widgetSetting
  * @see app/Http/Controllers/Demo/DemoController.php:66
  * @route '/demo/preview/{widgetSetting}'
  */
-preview.head = (args: { widgetSetting: string | { id: string } } | [widgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+preview.head = (args: { widgetSetting: string | number | { id: string | number } } | [widgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: preview.url(args, options),
     method: 'head',
 })

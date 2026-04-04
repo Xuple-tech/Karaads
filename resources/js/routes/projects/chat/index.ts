@@ -6,7 +6,7 @@ import messages4ba6e9 from './messages'
  * @see app/Http/Controllers/ProjectChatController.php:32
  * @route '/projects/{project}/chat'
  */
-export const index = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const index = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -21,7 +21,7 @@ index.definition = {
  * @see app/Http/Controllers/ProjectChatController.php:32
  * @route '/projects/{project}/chat'
  */
-index.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+index.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -54,7 +54,7 @@ index.url = (args: { project: string | { id: string } } | [project: string | { i
  * @see app/Http/Controllers/ProjectChatController.php:32
  * @route '/projects/{project}/chat'
  */
-index.get = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+index.get = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -63,7 +63,7 @@ index.get = (args: { project: string | { id: string } } | [project: string | { i
  * @see app/Http/Controllers/ProjectChatController.php:32
  * @route '/projects/{project}/chat'
  */
-index.head = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+index.head = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(args, options),
     method: 'head',
 })
@@ -73,7 +73,7 @@ index.head = (args: { project: string | { id: string } } | [project: string | { 
  * @see app/Http/Controllers/ProjectChatController.php:313
  * @route '/projects/{project}/chat/conversations/{conversation}/messages'
  */
-export const messages = (args: { project: string | { id: string }, conversation: string | { id: string } } | [project: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const messages = (args: { project: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [project: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: messages.url(args, options),
     method: 'get',
 })
@@ -88,7 +88,7 @@ messages.definition = {
  * @see app/Http/Controllers/ProjectChatController.php:313
  * @route '/projects/{project}/chat/conversations/{conversation}/messages'
  */
-messages.url = (args: { project: string | { id: string }, conversation: string | { id: string } } | [project: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions) => {
+messages.url = (args: { project: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [project: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -118,7 +118,7 @@ messages.url = (args: { project: string | { id: string }, conversation: string |
  * @see app/Http/Controllers/ProjectChatController.php:313
  * @route '/projects/{project}/chat/conversations/{conversation}/messages'
  */
-messages.get = (args: { project: string | { id: string }, conversation: string | { id: string } } | [project: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+messages.get = (args: { project: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [project: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: messages.url(args, options),
     method: 'get',
 })
@@ -127,7 +127,7 @@ messages.get = (args: { project: string | { id: string }, conversation: string |
  * @see app/Http/Controllers/ProjectChatController.php:313
  * @route '/projects/{project}/chat/conversations/{conversation}/messages'
  */
-messages.head = (args: { project: string | { id: string }, conversation: string | { id: string } } | [project: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+messages.head = (args: { project: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [project: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: messages.url(args, options),
     method: 'head',
 })
@@ -137,7 +137,7 @@ messages.head = (args: { project: string | { id: string }, conversation: string 
  * @see app/Http/Controllers/ProjectChatController.php:255
  * @route '/projects/{project}/chat/conversations/{conversation}/stream'
  */
-export const stream = (args: { project: string | { id: string }, conversation: string | { id: string } } | [project: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const stream = (args: { project: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [project: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: stream.url(args, options),
     method: 'post',
 })
@@ -152,7 +152,7 @@ stream.definition = {
  * @see app/Http/Controllers/ProjectChatController.php:255
  * @route '/projects/{project}/chat/conversations/{conversation}/stream'
  */
-stream.url = (args: { project: string | { id: string }, conversation: string | { id: string } } | [project: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions) => {
+stream.url = (args: { project: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [project: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -182,7 +182,7 @@ stream.url = (args: { project: string | { id: string }, conversation: string | {
  * @see app/Http/Controllers/ProjectChatController.php:255
  * @route '/projects/{project}/chat/conversations/{conversation}/stream'
  */
-stream.post = (args: { project: string | { id: string }, conversation: string | { id: string } } | [project: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+stream.post = (args: { project: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [project: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: stream.url(args, options),
     method: 'post',
 })

@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
  * @see app/Http/Controllers/ProjectAgentController.php:344
  * @route '/api/projects/{project}/agents/{agent}/executions'
  */
-export const index = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const index = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ index.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:344
  * @route '/api/projects/{project}/agents/{agent}/executions'
  */
-index.url = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions) => {
+index.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -49,7 +49,7 @@ index.url = (args: { project: string | { id: string }, agent: string | { id: str
  * @see app/Http/Controllers/ProjectAgentController.php:344
  * @route '/api/projects/{project}/agents/{agent}/executions'
  */
-index.get = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+index.get = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -58,7 +58,7 @@ index.get = (args: { project: string | { id: string }, agent: string | { id: str
  * @see app/Http/Controllers/ProjectAgentController.php:344
  * @route '/api/projects/{project}/agents/{agent}/executions'
  */
-index.head = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+index.head = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(args, options),
     method: 'head',
 })
@@ -68,7 +68,7 @@ index.head = (args: { project: string | { id: string }, agent: string | { id: st
  * @see app/Http/Controllers/ProjectAgentController.php:384
  * @route '/api/projects/{project}/agents/{agent}/executions/{log}'
  */
-export const show = (args: { project: string | { id: string }, agent: string | { id: string }, log: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, log: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, log: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, log: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -83,7 +83,7 @@ show.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:384
  * @route '/api/projects/{project}/agents/{agent}/executions/{log}'
  */
-show.url = (args: { project: string | { id: string }, agent: string | { id: string }, log: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, log: string | { id: string } ], options?: RouteQueryOptions) => {
+show.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, log: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, log: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -118,7 +118,7 @@ show.url = (args: { project: string | { id: string }, agent: string | { id: stri
  * @see app/Http/Controllers/ProjectAgentController.php:384
  * @route '/api/projects/{project}/agents/{agent}/executions/{log}'
  */
-show.get = (args: { project: string | { id: string }, agent: string | { id: string }, log: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, log: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, log: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, log: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -127,7 +127,7 @@ show.get = (args: { project: string | { id: string }, agent: string | { id: stri
  * @see app/Http/Controllers/ProjectAgentController.php:384
  * @route '/api/projects/{project}/agents/{agent}/executions/{log}'
  */
-show.head = (args: { project: string | { id: string }, agent: string | { id: string }, log: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, log: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, log: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, log: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })

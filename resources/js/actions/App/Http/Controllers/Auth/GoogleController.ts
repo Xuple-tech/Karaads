@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Auth\GoogleController::redirectToGoogle
- * @see app/Http/Controllers/Auth/GoogleController.php:21
+ * @see app/Http/Controllers/Auth/GoogleController.php:22
  * @route '/auth/google'
  */
 export const redirectToGoogle = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ redirectToGoogle.definition = {
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleController::redirectToGoogle
- * @see app/Http/Controllers/Auth/GoogleController.php:21
+ * @see app/Http/Controllers/Auth/GoogleController.php:22
  * @route '/auth/google'
  */
 redirectToGoogle.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ redirectToGoogle.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleController::redirectToGoogle
- * @see app/Http/Controllers/Auth/GoogleController.php:21
+ * @see app/Http/Controllers/Auth/GoogleController.php:22
  * @route '/auth/google'
  */
 redirectToGoogle.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ redirectToGoogle.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => 
 })
 /**
 * @see \App\Http\Controllers\Auth\GoogleController::redirectToGoogle
- * @see app/Http/Controllers/Auth/GoogleController.php:21
+ * @see app/Http/Controllers/Auth/GoogleController.php:22
  * @route '/auth/google'
  */
 redirectToGoogle.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ redirectToGoogle.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleController::handleGoogleCallback
- * @see app/Http/Controllers/Auth/GoogleController.php:37
+ * @see app/Http/Controllers/Auth/GoogleController.php:40
  * @route '/google/callback'
  */
 const handleGoogleCallbackdb9f099626d2ce3fba58b0b29a9dd0ae = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -59,7 +59,7 @@ handleGoogleCallbackdb9f099626d2ce3fba58b0b29a9dd0ae.definition = {
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleController::handleGoogleCallback
- * @see app/Http/Controllers/Auth/GoogleController.php:37
+ * @see app/Http/Controllers/Auth/GoogleController.php:40
  * @route '/google/callback'
  */
 handleGoogleCallbackdb9f099626d2ce3fba58b0b29a9dd0ae.url = (options?: RouteQueryOptions) => {
@@ -68,7 +68,7 @@ handleGoogleCallbackdb9f099626d2ce3fba58b0b29a9dd0ae.url = (options?: RouteQuery
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleController::handleGoogleCallback
- * @see app/Http/Controllers/Auth/GoogleController.php:37
+ * @see app/Http/Controllers/Auth/GoogleController.php:40
  * @route '/google/callback'
  */
 handleGoogleCallbackdb9f099626d2ce3fba58b0b29a9dd0ae.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -77,7 +77,7 @@ handleGoogleCallbackdb9f099626d2ce3fba58b0b29a9dd0ae.get = (options?: RouteQuery
 })
 /**
 * @see \App\Http\Controllers\Auth\GoogleController::handleGoogleCallback
- * @see app/Http/Controllers/Auth/GoogleController.php:37
+ * @see app/Http/Controllers/Auth/GoogleController.php:40
  * @route '/google/callback'
  */
 handleGoogleCallbackdb9f099626d2ce3fba58b0b29a9dd0ae.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -87,7 +87,7 @@ handleGoogleCallbackdb9f099626d2ce3fba58b0b29a9dd0ae.head = (options?: RouteQuer
 
     /**
 * @see \App\Http\Controllers\Auth\GoogleController::handleGoogleCallback
- * @see app/Http/Controllers/Auth/GoogleController.php:37
+ * @see app/Http/Controllers/Auth/GoogleController.php:40
  * @route '/mail/gmail'
  */
 const handleGoogleCallback900c4f51ddc630cd0ccd00d3d36fff12 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -102,7 +102,7 @@ handleGoogleCallback900c4f51ddc630cd0ccd00d3d36fff12.definition = {
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleController::handleGoogleCallback
- * @see app/Http/Controllers/Auth/GoogleController.php:37
+ * @see app/Http/Controllers/Auth/GoogleController.php:40
  * @route '/mail/gmail'
  */
 handleGoogleCallback900c4f51ddc630cd0ccd00d3d36fff12.url = (options?: RouteQueryOptions) => {
@@ -111,7 +111,7 @@ handleGoogleCallback900c4f51ddc630cd0ccd00d3d36fff12.url = (options?: RouteQuery
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleController::handleGoogleCallback
- * @see app/Http/Controllers/Auth/GoogleController.php:37
+ * @see app/Http/Controllers/Auth/GoogleController.php:40
  * @route '/mail/gmail'
  */
 handleGoogleCallback900c4f51ddc630cd0ccd00d3d36fff12.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -120,7 +120,7 @@ handleGoogleCallback900c4f51ddc630cd0ccd00d3d36fff12.get = (options?: RouteQuery
 })
 /**
 * @see \App\Http\Controllers\Auth\GoogleController::handleGoogleCallback
- * @see app/Http/Controllers/Auth/GoogleController.php:37
+ * @see app/Http/Controllers/Auth/GoogleController.php:40
  * @route '/mail/gmail'
  */
 handleGoogleCallback900c4f51ddc630cd0ccd00d3d36fff12.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({

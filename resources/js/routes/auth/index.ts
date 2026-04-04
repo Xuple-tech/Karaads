@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\Auth\GoogleController::google
- * @see app/Http/Controllers/Auth/GoogleController.php:21
+ * @see app/Http/Controllers/Auth/GoogleController.php:22
  * @route '/auth/google'
  */
 export const google = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ google.definition = {
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleController::google
- * @see app/Http/Controllers/Auth/GoogleController.php:21
+ * @see app/Http/Controllers/Auth/GoogleController.php:22
  * @route '/auth/google'
  */
 google.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ google.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Auth\GoogleController::google
- * @see app/Http/Controllers/Auth/GoogleController.php:21
+ * @see app/Http/Controllers/Auth/GoogleController.php:22
  * @route '/auth/google'
  */
 google.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ google.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Auth\GoogleController::google
- * @see app/Http/Controllers/Auth/GoogleController.php:21
+ * @see app/Http/Controllers/Auth/GoogleController.php:22
  * @route '/auth/google'
  */
 google.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({

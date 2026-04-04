@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
  * @see app/Http/Controllers/Admin/SubscriptionPlanAgentLimitsController.php:16
  * @route '/admin/subscriptions/plans/{plan}/agent-limits'
  */
-export const show = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ show.definition = {
  * @see app/Http/Controllers/Admin/SubscriptionPlanAgentLimitsController.php:16
  * @route '/admin/subscriptions/plans/{plan}/agent-limits'
  */
-show.url = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+show.url = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { plan: args }
     }
@@ -52,7 +52,7 @@ show.url = (args: { plan: string | { id: string } } | [plan: string | { id: stri
  * @see app/Http/Controllers/Admin/SubscriptionPlanAgentLimitsController.php:16
  * @route '/admin/subscriptions/plans/{plan}/agent-limits'
  */
-show.get = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -61,7 +61,7 @@ show.get = (args: { plan: string | { id: string } } | [plan: string | { id: stri
  * @see app/Http/Controllers/Admin/SubscriptionPlanAgentLimitsController.php:16
  * @route '/admin/subscriptions/plans/{plan}/agent-limits'
  */
-show.head = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -71,7 +71,7 @@ show.head = (args: { plan: string | { id: string } } | [plan: string | { id: str
  * @see app/Http/Controllers/Admin/SubscriptionPlanAgentLimitsController.php:34
  * @route '/admin/subscriptions/plans/{plan}/agent-limits'
  */
-export const update = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -86,7 +86,7 @@ update.definition = {
  * @see app/Http/Controllers/Admin/SubscriptionPlanAgentLimitsController.php:34
  * @route '/admin/subscriptions/plans/{plan}/agent-limits'
  */
-update.url = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+update.url = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { plan: args }
     }
@@ -119,7 +119,7 @@ update.url = (args: { plan: string | { id: string } } | [plan: string | { id: st
  * @see app/Http/Controllers/Admin/SubscriptionPlanAgentLimitsController.php:34
  * @route '/admin/subscriptions/plans/{plan}/agent-limits'
  */
-update.put = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -129,7 +129,7 @@ update.put = (args: { plan: string | { id: string } } | [plan: string | { id: st
  * @see app/Http/Controllers/Admin/SubscriptionPlanAgentLimitsController.php:68
  * @route '/admin/subscriptions/plans/{plan}/agent-limits/set-unlimited'
  */
-export const setUnlimited = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const setUnlimited = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: setUnlimited.url(args, options),
     method: 'post',
 })
@@ -144,7 +144,7 @@ setUnlimited.definition = {
  * @see app/Http/Controllers/Admin/SubscriptionPlanAgentLimitsController.php:68
  * @route '/admin/subscriptions/plans/{plan}/agent-limits/set-unlimited'
  */
-setUnlimited.url = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+setUnlimited.url = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { plan: args }
     }
@@ -177,7 +177,7 @@ setUnlimited.url = (args: { plan: string | { id: string } } | [plan: string | { 
  * @see app/Http/Controllers/Admin/SubscriptionPlanAgentLimitsController.php:68
  * @route '/admin/subscriptions/plans/{plan}/agent-limits/set-unlimited'
  */
-setUnlimited.post = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+setUnlimited.post = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: setUnlimited.url(args, options),
     method: 'post',
 })
@@ -187,7 +187,7 @@ setUnlimited.post = (args: { plan: string | { id: string } } | [plan: string | {
  * @see app/Http/Controllers/Admin/SubscriptionPlanAgentLimitsController.php:100
  * @route '/admin/subscriptions/plans/{plan}/agent-limits/statistics'
  */
-export const getStatistics = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const getStatistics = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getStatistics.url(args, options),
     method: 'get',
 })
@@ -202,7 +202,7 @@ getStatistics.definition = {
  * @see app/Http/Controllers/Admin/SubscriptionPlanAgentLimitsController.php:100
  * @route '/admin/subscriptions/plans/{plan}/agent-limits/statistics'
  */
-getStatistics.url = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+getStatistics.url = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { plan: args }
     }
@@ -235,7 +235,7 @@ getStatistics.url = (args: { plan: string | { id: string } } | [plan: string | {
  * @see app/Http/Controllers/Admin/SubscriptionPlanAgentLimitsController.php:100
  * @route '/admin/subscriptions/plans/{plan}/agent-limits/statistics'
  */
-getStatistics.get = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+getStatistics.get = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getStatistics.url(args, options),
     method: 'get',
 })
@@ -244,7 +244,7 @@ getStatistics.get = (args: { plan: string | { id: string } } | [plan: string | {
  * @see app/Http/Controllers/Admin/SubscriptionPlanAgentLimitsController.php:100
  * @route '/admin/subscriptions/plans/{plan}/agent-limits/statistics'
  */
-getStatistics.head = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+getStatistics.head = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: getStatistics.url(args, options),
     method: 'head',
 })

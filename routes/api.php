@@ -224,3 +224,4 @@ Route::prefix('agent')->group(function () {
 // Include secure API routes (new security-enhanced routing system)
 require __DIR__ . '/secure-api.php';
 require __DIR__ . '/widget-api.php';
+require __DIR__ . '/workspace-api.php';

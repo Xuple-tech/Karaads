@@ -124,7 +124,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/Admin/AIAgentController.php:126
  * @route '/admin/ai-agents/{aiAgent}'
  */
-export const show = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -139,7 +139,7 @@ show.definition = {
  * @see app/Http/Controllers/Admin/AIAgentController.php:126
  * @route '/admin/ai-agents/{aiAgent}'
  */
-show.url = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+show.url = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { aiAgent: args }
     }
@@ -172,7 +172,7 @@ show.url = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id
  * @see app/Http/Controllers/Admin/AIAgentController.php:126
  * @route '/admin/ai-agents/{aiAgent}'
  */
-show.get = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -181,7 +181,7 @@ show.get = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id
  * @see app/Http/Controllers/Admin/AIAgentController.php:126
  * @route '/admin/ai-agents/{aiAgent}'
  */
-show.head = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -191,7 +191,7 @@ show.head = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { i
  * @see app/Http/Controllers/Admin/AIAgentController.php:164
  * @route '/admin/ai-agents/{aiAgent}/edit'
  */
-export const edit = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -206,7 +206,7 @@ edit.definition = {
  * @see app/Http/Controllers/Admin/AIAgentController.php:164
  * @route '/admin/ai-agents/{aiAgent}/edit'
  */
-edit.url = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+edit.url = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { aiAgent: args }
     }
@@ -239,7 +239,7 @@ edit.url = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id
  * @see app/Http/Controllers/Admin/AIAgentController.php:164
  * @route '/admin/ai-agents/{aiAgent}/edit'
  */
-edit.get = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -248,7 +248,7 @@ edit.get = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id
  * @see app/Http/Controllers/Admin/AIAgentController.php:164
  * @route '/admin/ai-agents/{aiAgent}/edit'
  */
-edit.head = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -258,7 +258,7 @@ edit.head = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { i
  * @see app/Http/Controllers/Admin/AIAgentController.php:182
  * @route '/admin/ai-agents/{aiAgent}'
  */
-export const update = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -273,7 +273,7 @@ update.definition = {
  * @see app/Http/Controllers/Admin/AIAgentController.php:182
  * @route '/admin/ai-agents/{aiAgent}'
  */
-update.url = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+update.url = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { aiAgent: args }
     }
@@ -306,7 +306,7 @@ update.url = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { 
  * @see app/Http/Controllers/Admin/AIAgentController.php:182
  * @route '/admin/ai-agents/{aiAgent}'
  */
-update.put = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -316,7 +316,7 @@ update.put = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { 
  * @see app/Http/Controllers/Admin/AIAgentController.php:229
  * @route '/admin/ai-agents/{aiAgent}'
  */
-export const destroy = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -331,7 +331,7 @@ destroy.definition = {
  * @see app/Http/Controllers/Admin/AIAgentController.php:229
  * @route '/admin/ai-agents/{aiAgent}'
  */
-destroy.url = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+destroy.url = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { aiAgent: args }
     }
@@ -364,7 +364,7 @@ destroy.url = (args: { aiAgent: string | { id: string } } | [aiAgent: string | {
  * @see app/Http/Controllers/Admin/AIAgentController.php:229
  * @route '/admin/ai-agents/{aiAgent}'
  */
-destroy.delete = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -374,7 +374,7 @@ destroy.delete = (args: { aiAgent: string | { id: string } } | [aiAgent: string 
  * @see app/Http/Controllers/Admin/AIAgentController.php:249
  * @route '/admin/ai-agents/{aiAgent}/toggle'
  */
-export const toggle = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const toggle = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggle.url(args, options),
     method: 'patch',
 })
@@ -389,7 +389,7 @@ toggle.definition = {
  * @see app/Http/Controllers/Admin/AIAgentController.php:249
  * @route '/admin/ai-agents/{aiAgent}/toggle'
  */
-toggle.url = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+toggle.url = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { aiAgent: args }
     }
@@ -422,7 +422,7 @@ toggle.url = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { 
  * @see app/Http/Controllers/Admin/AIAgentController.php:249
  * @route '/admin/ai-agents/{aiAgent}/toggle'
  */
-toggle.patch = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+toggle.patch = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggle.url(args, options),
     method: 'patch',
 })
@@ -432,7 +432,7 @@ toggle.patch = (args: { aiAgent: string | { id: string } } | [aiAgent: string | 
  * @see app/Http/Controllers/Admin/AIAgentController.php:265
  * @route '/admin/ai-agents/{aiAgent}/clone'
  */
-export const clone = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const clone = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: clone.url(args, options),
     method: 'post',
 })
@@ -447,7 +447,7 @@ clone.definition = {
  * @see app/Http/Controllers/Admin/AIAgentController.php:265
  * @route '/admin/ai-agents/{aiAgent}/clone'
  */
-clone.url = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+clone.url = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { aiAgent: args }
     }
@@ -480,7 +480,7 @@ clone.url = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { i
  * @see app/Http/Controllers/Admin/AIAgentController.php:265
  * @route '/admin/ai-agents/{aiAgent}/clone'
  */
-clone.post = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+clone.post = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: clone.url(args, options),
     method: 'post',
 })
@@ -490,7 +490,7 @@ clone.post = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { 
  * @see app/Http/Controllers/Admin/AIAgentController.php:294
  * @route '/admin/ai-agents/{aiAgent}/export'
  */
-export const exportMethod = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const exportMethod = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: exportMethod.url(args, options),
     method: 'get',
 })
@@ -505,7 +505,7 @@ exportMethod.definition = {
  * @see app/Http/Controllers/Admin/AIAgentController.php:294
  * @route '/admin/ai-agents/{aiAgent}/export'
  */
-exportMethod.url = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+exportMethod.url = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { aiAgent: args }
     }
@@ -538,7 +538,7 @@ exportMethod.url = (args: { aiAgent: string | { id: string } } | [aiAgent: strin
  * @see app/Http/Controllers/Admin/AIAgentController.php:294
  * @route '/admin/ai-agents/{aiAgent}/export'
  */
-exportMethod.get = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+exportMethod.get = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: exportMethod.url(args, options),
     method: 'get',
 })
@@ -547,7 +547,7 @@ exportMethod.get = (args: { aiAgent: string | { id: string } } | [aiAgent: strin
  * @see app/Http/Controllers/Admin/AIAgentController.php:294
  * @route '/admin/ai-agents/{aiAgent}/export'
  */
-exportMethod.head = (args: { aiAgent: string | { id: string } } | [aiAgent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+exportMethod.head = (args: { aiAgent: string | number | { id: string | number } } | [aiAgent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: exportMethod.url(args, options),
     method: 'head',
 })

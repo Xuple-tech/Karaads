@@ -124,7 +124,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:180
  * @route '/saas-owner/subscriptions/{subscription}'
  */
-export const show = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -139,7 +139,7 @@ show.definition = {
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:180
  * @route '/saas-owner/subscriptions/{subscription}'
  */
-show.url = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+show.url = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { subscription: args }
     }
@@ -172,7 +172,7 @@ show.url = (args: { subscription: string | { id: string } } | [subscription: str
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:180
  * @route '/saas-owner/subscriptions/{subscription}'
  */
-show.get = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -181,7 +181,7 @@ show.get = (args: { subscription: string | { id: string } } | [subscription: str
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:180
  * @route '/saas-owner/subscriptions/{subscription}'
  */
-show.head = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -191,7 +191,7 @@ show.head = (args: { subscription: string | { id: string } } | [subscription: st
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:213
  * @route '/saas-owner/subscriptions/{subscription}/edit'
  */
-export const edit = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -206,7 +206,7 @@ edit.definition = {
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:213
  * @route '/saas-owner/subscriptions/{subscription}/edit'
  */
-edit.url = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+edit.url = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { subscription: args }
     }
@@ -239,7 +239,7 @@ edit.url = (args: { subscription: string | { id: string } } | [subscription: str
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:213
  * @route '/saas-owner/subscriptions/{subscription}/edit'
  */
-edit.get = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -248,7 +248,7 @@ edit.get = (args: { subscription: string | { id: string } } | [subscription: str
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:213
  * @route '/saas-owner/subscriptions/{subscription}/edit'
  */
-edit.head = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -258,7 +258,7 @@ edit.head = (args: { subscription: string | { id: string } } | [subscription: st
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:227
  * @route '/saas-owner/subscriptions/{subscription}'
  */
-export const update = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -273,7 +273,7 @@ update.definition = {
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:227
  * @route '/saas-owner/subscriptions/{subscription}'
  */
-update.url = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+update.url = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { subscription: args }
     }
@@ -306,7 +306,7 @@ update.url = (args: { subscription: string | { id: string } } | [subscription: s
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:227
  * @route '/saas-owner/subscriptions/{subscription}'
  */
-update.put = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -316,7 +316,7 @@ update.put = (args: { subscription: string | { id: string } } | [subscription: s
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:273
  * @route '/saas-owner/subscriptions/{subscription}/cancel'
  */
-export const cancel = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const cancel = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: cancel.url(args, options),
     method: 'post',
 })
@@ -331,7 +331,7 @@ cancel.definition = {
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:273
  * @route '/saas-owner/subscriptions/{subscription}/cancel'
  */
-cancel.url = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+cancel.url = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { subscription: args }
     }
@@ -364,7 +364,7 @@ cancel.url = (args: { subscription: string | { id: string } } | [subscription: s
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:273
  * @route '/saas-owner/subscriptions/{subscription}/cancel'
  */
-cancel.post = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+cancel.post = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: cancel.url(args, options),
     method: 'post',
 })
@@ -374,7 +374,7 @@ cancel.post = (args: { subscription: string | { id: string } } | [subscription: 
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:303
  * @route '/saas-owner/subscriptions/{subscription}/pause'
  */
-export const pause = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const pause = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: pause.url(args, options),
     method: 'post',
 })
@@ -389,7 +389,7 @@ pause.definition = {
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:303
  * @route '/saas-owner/subscriptions/{subscription}/pause'
  */
-pause.url = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+pause.url = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { subscription: args }
     }
@@ -422,7 +422,7 @@ pause.url = (args: { subscription: string | { id: string } } | [subscription: st
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:303
  * @route '/saas-owner/subscriptions/{subscription}/pause'
  */
-pause.post = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+pause.post = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: pause.url(args, options),
     method: 'post',
 })
@@ -432,7 +432,7 @@ pause.post = (args: { subscription: string | { id: string } } | [subscription: s
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:330
  * @route '/saas-owner/subscriptions/{subscription}/resume'
  */
-export const resume = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const resume = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: resume.url(args, options),
     method: 'post',
 })
@@ -447,7 +447,7 @@ resume.definition = {
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:330
  * @route '/saas-owner/subscriptions/{subscription}/resume'
  */
-resume.url = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+resume.url = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { subscription: args }
     }
@@ -480,7 +480,7 @@ resume.url = (args: { subscription: string | { id: string } } | [subscription: s
  * @see app/Http/Controllers/SaasOwner/SubscriptionManagementController.php:330
  * @route '/saas-owner/subscriptions/{subscription}/resume'
  */
-resume.post = (args: { subscription: string | { id: string } } | [subscription: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+resume.post = (args: { subscription: string | number | { id: string | number } } | [subscription: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: resume.url(args, options),
     method: 'post',
 })

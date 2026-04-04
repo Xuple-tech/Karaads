@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
  * @see app/Http/Controllers/WorkflowController.php:27
  * @route '/api/teams/{team}/workflows'
  */
-const index408cc9ce4ef6d6de4e65d0ce099db14a = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const index408cc9ce4ef6d6de4e65d0ce099db14a = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index408cc9ce4ef6d6de4e65d0ce099db14a.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ index408cc9ce4ef6d6de4e65d0ce099db14a.definition = {
  * @see app/Http/Controllers/WorkflowController.php:27
  * @route '/api/teams/{team}/workflows'
  */
-index408cc9ce4ef6d6de4e65d0ce099db14a.url = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+index408cc9ce4ef6d6de4e65d0ce099db14a.url = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { team: args }
     }
@@ -52,7 +52,7 @@ index408cc9ce4ef6d6de4e65d0ce099db14a.url = (args: { team: number | { id: number
  * @see app/Http/Controllers/WorkflowController.php:27
  * @route '/api/teams/{team}/workflows'
  */
-index408cc9ce4ef6d6de4e65d0ce099db14a.get = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+index408cc9ce4ef6d6de4e65d0ce099db14a.get = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index408cc9ce4ef6d6de4e65d0ce099db14a.url(args, options),
     method: 'get',
 })
@@ -61,7 +61,7 @@ index408cc9ce4ef6d6de4e65d0ce099db14a.get = (args: { team: number | { id: number
  * @see app/Http/Controllers/WorkflowController.php:27
  * @route '/api/teams/{team}/workflows'
  */
-index408cc9ce4ef6d6de4e65d0ce099db14a.head = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+index408cc9ce4ef6d6de4e65d0ce099db14a.head = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index408cc9ce4ef6d6de4e65d0ce099db14a.url(args, options),
     method: 'head',
 })
@@ -138,7 +138,7 @@ export const index = {
  * @see app/Http/Controllers/WorkflowController.php:50
  * @route '/api/teams/{team}/workflows'
  */
-const store408cc9ce4ef6d6de4e65d0ce099db14a = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+const store408cc9ce4ef6d6de4e65d0ce099db14a = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store408cc9ce4ef6d6de4e65d0ce099db14a.url(args, options),
     method: 'post',
 })
@@ -153,7 +153,7 @@ store408cc9ce4ef6d6de4e65d0ce099db14a.definition = {
  * @see app/Http/Controllers/WorkflowController.php:50
  * @route '/api/teams/{team}/workflows'
  */
-store408cc9ce4ef6d6de4e65d0ce099db14a.url = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+store408cc9ce4ef6d6de4e65d0ce099db14a.url = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { team: args }
     }
@@ -186,7 +186,7 @@ store408cc9ce4ef6d6de4e65d0ce099db14a.url = (args: { team: number | { id: number
  * @see app/Http/Controllers/WorkflowController.php:50
  * @route '/api/teams/{team}/workflows'
  */
-store408cc9ce4ef6d6de4e65d0ce099db14a.post = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+store408cc9ce4ef6d6de4e65d0ce099db14a.post = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store408cc9ce4ef6d6de4e65d0ce099db14a.url(args, options),
     method: 'post',
 })
@@ -254,7 +254,7 @@ export const store = {
  * @see app/Http/Controllers/WorkflowController.php:291
  * @route '/api/teams/{team}/executions'
  */
-const getTeamExecutionsa8186e7304330f6fd39f89587a60eb13 = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const getTeamExecutionsa8186e7304330f6fd39f89587a60eb13 = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getTeamExecutionsa8186e7304330f6fd39f89587a60eb13.url(args, options),
     method: 'get',
 })
@@ -269,7 +269,7 @@ getTeamExecutionsa8186e7304330f6fd39f89587a60eb13.definition = {
  * @see app/Http/Controllers/WorkflowController.php:291
  * @route '/api/teams/{team}/executions'
  */
-getTeamExecutionsa8186e7304330f6fd39f89587a60eb13.url = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+getTeamExecutionsa8186e7304330f6fd39f89587a60eb13.url = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { team: args }
     }
@@ -302,7 +302,7 @@ getTeamExecutionsa8186e7304330f6fd39f89587a60eb13.url = (args: { team: number | 
  * @see app/Http/Controllers/WorkflowController.php:291
  * @route '/api/teams/{team}/executions'
  */
-getTeamExecutionsa8186e7304330f6fd39f89587a60eb13.get = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+getTeamExecutionsa8186e7304330f6fd39f89587a60eb13.get = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getTeamExecutionsa8186e7304330f6fd39f89587a60eb13.url(args, options),
     method: 'get',
 })
@@ -311,7 +311,7 @@ getTeamExecutionsa8186e7304330f6fd39f89587a60eb13.get = (args: { team: number | 
  * @see app/Http/Controllers/WorkflowController.php:291
  * @route '/api/teams/{team}/executions'
  */
-getTeamExecutionsa8186e7304330f6fd39f89587a60eb13.head = (args: { team: number | { id: number } } | [team: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+getTeamExecutionsa8186e7304330f6fd39f89587a60eb13.head = (args: { team: string | number | { id: string | number } } | [team: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: getTeamExecutionsa8186e7304330f6fd39f89587a60eb13.url(args, options),
     method: 'head',
 })
@@ -388,7 +388,7 @@ export const getTeamExecutions = {
  * @see app/Http/Controllers/WorkflowController.php:79
  * @route '/api/workflows/{workflow}'
  */
-const show7df4eb07c58d220c3a8b994a750ee701 = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const show7df4eb07c58d220c3a8b994a750ee701 = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show7df4eb07c58d220c3a8b994a750ee701.url(args, options),
     method: 'get',
 })
@@ -403,7 +403,7 @@ show7df4eb07c58d220c3a8b994a750ee701.definition = {
  * @see app/Http/Controllers/WorkflowController.php:79
  * @route '/api/workflows/{workflow}'
  */
-show7df4eb07c58d220c3a8b994a750ee701.url = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+show7df4eb07c58d220c3a8b994a750ee701.url = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { workflow: args }
     }
@@ -436,7 +436,7 @@ show7df4eb07c58d220c3a8b994a750ee701.url = (args: { workflow: number | { id: num
  * @see app/Http/Controllers/WorkflowController.php:79
  * @route '/api/workflows/{workflow}'
  */
-show7df4eb07c58d220c3a8b994a750ee701.get = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show7df4eb07c58d220c3a8b994a750ee701.get = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show7df4eb07c58d220c3a8b994a750ee701.url(args, options),
     method: 'get',
 })
@@ -445,7 +445,7 @@ show7df4eb07c58d220c3a8b994a750ee701.get = (args: { workflow: number | { id: num
  * @see app/Http/Controllers/WorkflowController.php:79
  * @route '/api/workflows/{workflow}'
  */
-show7df4eb07c58d220c3a8b994a750ee701.head = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show7df4eb07c58d220c3a8b994a750ee701.head = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show7df4eb07c58d220c3a8b994a750ee701.url(args, options),
     method: 'head',
 })
@@ -522,7 +522,7 @@ export const show = {
  * @see app/Http/Controllers/WorkflowController.php:104
  * @route '/api/workflows/{workflow}'
  */
-const update7df4eb07c58d220c3a8b994a750ee701 = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+const update7df4eb07c58d220c3a8b994a750ee701 = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update7df4eb07c58d220c3a8b994a750ee701.url(args, options),
     method: 'put',
 })
@@ -537,7 +537,7 @@ update7df4eb07c58d220c3a8b994a750ee701.definition = {
  * @see app/Http/Controllers/WorkflowController.php:104
  * @route '/api/workflows/{workflow}'
  */
-update7df4eb07c58d220c3a8b994a750ee701.url = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+update7df4eb07c58d220c3a8b994a750ee701.url = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { workflow: args }
     }
@@ -570,7 +570,7 @@ update7df4eb07c58d220c3a8b994a750ee701.url = (args: { workflow: number | { id: n
  * @see app/Http/Controllers/WorkflowController.php:104
  * @route '/api/workflows/{workflow}'
  */
-update7df4eb07c58d220c3a8b994a750ee701.put = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update7df4eb07c58d220c3a8b994a750ee701.put = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update7df4eb07c58d220c3a8b994a750ee701.url(args, options),
     method: 'put',
 })
@@ -638,7 +638,7 @@ export const update = {
  * @see app/Http/Controllers/WorkflowController.php:125
  * @route '/api/workflows/{workflow}'
  */
-const destroy7df4eb07c58d220c3a8b994a750ee701 = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+const destroy7df4eb07c58d220c3a8b994a750ee701 = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy7df4eb07c58d220c3a8b994a750ee701.url(args, options),
     method: 'delete',
 })
@@ -653,7 +653,7 @@ destroy7df4eb07c58d220c3a8b994a750ee701.definition = {
  * @see app/Http/Controllers/WorkflowController.php:125
  * @route '/api/workflows/{workflow}'
  */
-destroy7df4eb07c58d220c3a8b994a750ee701.url = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+destroy7df4eb07c58d220c3a8b994a750ee701.url = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { workflow: args }
     }
@@ -686,7 +686,7 @@ destroy7df4eb07c58d220c3a8b994a750ee701.url = (args: { workflow: number | { id: 
  * @see app/Http/Controllers/WorkflowController.php:125
  * @route '/api/workflows/{workflow}'
  */
-destroy7df4eb07c58d220c3a8b994a750ee701.delete = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy7df4eb07c58d220c3a8b994a750ee701.delete = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy7df4eb07c58d220c3a8b994a750ee701.url(args, options),
     method: 'delete',
 })
@@ -754,7 +754,7 @@ export const destroy = {
  * @see app/Http/Controllers/WorkflowController.php:142
  * @route '/api/workflows/{workflow}/execute'
  */
-const execute1ce5617b066cff3c89e6157f01063b77 = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+const execute1ce5617b066cff3c89e6157f01063b77 = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: execute1ce5617b066cff3c89e6157f01063b77.url(args, options),
     method: 'post',
 })
@@ -769,7 +769,7 @@ execute1ce5617b066cff3c89e6157f01063b77.definition = {
  * @see app/Http/Controllers/WorkflowController.php:142
  * @route '/api/workflows/{workflow}/execute'
  */
-execute1ce5617b066cff3c89e6157f01063b77.url = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+execute1ce5617b066cff3c89e6157f01063b77.url = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { workflow: args }
     }
@@ -802,7 +802,7 @@ execute1ce5617b066cff3c89e6157f01063b77.url = (args: { workflow: number | { id: 
  * @see app/Http/Controllers/WorkflowController.php:142
  * @route '/api/workflows/{workflow}/execute'
  */
-execute1ce5617b066cff3c89e6157f01063b77.post = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+execute1ce5617b066cff3c89e6157f01063b77.post = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: execute1ce5617b066cff3c89e6157f01063b77.url(args, options),
     method: 'post',
 })
@@ -870,7 +870,7 @@ export const execute = {
  * @see app/Http/Controllers/WorkflowController.php:166
  * @route '/api/workflows/{workflow}/executions'
  */
-const executionHistory60c19d6ec5c257eaef194f424931d7cd = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const executionHistory60c19d6ec5c257eaef194f424931d7cd = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: executionHistory60c19d6ec5c257eaef194f424931d7cd.url(args, options),
     method: 'get',
 })
@@ -885,7 +885,7 @@ executionHistory60c19d6ec5c257eaef194f424931d7cd.definition = {
  * @see app/Http/Controllers/WorkflowController.php:166
  * @route '/api/workflows/{workflow}/executions'
  */
-executionHistory60c19d6ec5c257eaef194f424931d7cd.url = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+executionHistory60c19d6ec5c257eaef194f424931d7cd.url = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { workflow: args }
     }
@@ -918,7 +918,7 @@ executionHistory60c19d6ec5c257eaef194f424931d7cd.url = (args: { workflow: number
  * @see app/Http/Controllers/WorkflowController.php:166
  * @route '/api/workflows/{workflow}/executions'
  */
-executionHistory60c19d6ec5c257eaef194f424931d7cd.get = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+executionHistory60c19d6ec5c257eaef194f424931d7cd.get = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: executionHistory60c19d6ec5c257eaef194f424931d7cd.url(args, options),
     method: 'get',
 })
@@ -927,7 +927,7 @@ executionHistory60c19d6ec5c257eaef194f424931d7cd.get = (args: { workflow: number
  * @see app/Http/Controllers/WorkflowController.php:166
  * @route '/api/workflows/{workflow}/executions'
  */
-executionHistory60c19d6ec5c257eaef194f424931d7cd.head = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+executionHistory60c19d6ec5c257eaef194f424931d7cd.head = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: executionHistory60c19d6ec5c257eaef194f424931d7cd.url(args, options),
     method: 'head',
 })
@@ -1004,7 +1004,7 @@ export const executionHistory = {
  * @see app/Http/Controllers/WorkflowController.php:274
  * @route '/api/workflows/{workflow}/executions/{execution}'
  */
-const getExecutionfd45aab98c5f5ea3c493435ec5b067d5 = (args: { workflow: number | { id: number }, execution: number | { id: number } } | [workflow: number | { id: number }, execution: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const getExecutionfd45aab98c5f5ea3c493435ec5b067d5 = (args: { workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } } | [workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getExecutionfd45aab98c5f5ea3c493435ec5b067d5.url(args, options),
     method: 'get',
 })
@@ -1019,7 +1019,7 @@ getExecutionfd45aab98c5f5ea3c493435ec5b067d5.definition = {
  * @see app/Http/Controllers/WorkflowController.php:274
  * @route '/api/workflows/{workflow}/executions/{execution}'
  */
-getExecutionfd45aab98c5f5ea3c493435ec5b067d5.url = (args: { workflow: number | { id: number }, execution: number | { id: number } } | [workflow: number | { id: number }, execution: number | { id: number } ], options?: RouteQueryOptions) => {
+getExecutionfd45aab98c5f5ea3c493435ec5b067d5.url = (args: { workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } } | [workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     workflow: args[0],
@@ -1049,7 +1049,7 @@ getExecutionfd45aab98c5f5ea3c493435ec5b067d5.url = (args: { workflow: number | {
  * @see app/Http/Controllers/WorkflowController.php:274
  * @route '/api/workflows/{workflow}/executions/{execution}'
  */
-getExecutionfd45aab98c5f5ea3c493435ec5b067d5.get = (args: { workflow: number | { id: number }, execution: number | { id: number } } | [workflow: number | { id: number }, execution: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+getExecutionfd45aab98c5f5ea3c493435ec5b067d5.get = (args: { workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } } | [workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getExecutionfd45aab98c5f5ea3c493435ec5b067d5.url(args, options),
     method: 'get',
 })
@@ -1058,7 +1058,7 @@ getExecutionfd45aab98c5f5ea3c493435ec5b067d5.get = (args: { workflow: number | {
  * @see app/Http/Controllers/WorkflowController.php:274
  * @route '/api/workflows/{workflow}/executions/{execution}'
  */
-getExecutionfd45aab98c5f5ea3c493435ec5b067d5.head = (args: { workflow: number | { id: number }, execution: number | { id: number } } | [workflow: number | { id: number }, execution: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+getExecutionfd45aab98c5f5ea3c493435ec5b067d5.head = (args: { workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } } | [workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: getExecutionfd45aab98c5f5ea3c493435ec5b067d5.url(args, options),
     method: 'head',
 })
@@ -1133,7 +1133,7 @@ export const getExecution = {
  * @see app/Http/Controllers/WorkflowController.php:326
  * @route '/api/workflows/{workflow}/executions/{execution}/cancel'
  */
-const cancelExecution468c1978631fac11cafd9dadc74f8a19 = (args: { workflow: number | { id: number }, execution: number | { id: number } } | [workflow: number | { id: number }, execution: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+const cancelExecution468c1978631fac11cafd9dadc74f8a19 = (args: { workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } } | [workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: cancelExecution468c1978631fac11cafd9dadc74f8a19.url(args, options),
     method: 'post',
 })
@@ -1148,7 +1148,7 @@ cancelExecution468c1978631fac11cafd9dadc74f8a19.definition = {
  * @see app/Http/Controllers/WorkflowController.php:326
  * @route '/api/workflows/{workflow}/executions/{execution}/cancel'
  */
-cancelExecution468c1978631fac11cafd9dadc74f8a19.url = (args: { workflow: number | { id: number }, execution: number | { id: number } } | [workflow: number | { id: number }, execution: number | { id: number } ], options?: RouteQueryOptions) => {
+cancelExecution468c1978631fac11cafd9dadc74f8a19.url = (args: { workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } } | [workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     workflow: args[0],
@@ -1178,7 +1178,7 @@ cancelExecution468c1978631fac11cafd9dadc74f8a19.url = (args: { workflow: number 
  * @see app/Http/Controllers/WorkflowController.php:326
  * @route '/api/workflows/{workflow}/executions/{execution}/cancel'
  */
-cancelExecution468c1978631fac11cafd9dadc74f8a19.post = (args: { workflow: number | { id: number }, execution: number | { id: number } } | [workflow: number | { id: number }, execution: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+cancelExecution468c1978631fac11cafd9dadc74f8a19.post = (args: { workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } } | [workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: cancelExecution468c1978631fac11cafd9dadc74f8a19.url(args, options),
     method: 'post',
 })
@@ -1244,7 +1244,7 @@ export const cancelExecution = {
  * @see app/Http/Controllers/WorkflowController.php:350
  * @route '/api/workflows/{workflow}/executions/{execution}'
  */
-const deleteExecutionfd45aab98c5f5ea3c493435ec5b067d5 = (args: { workflow: number | { id: number }, execution: number | { id: number } } | [workflow: number | { id: number }, execution: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+const deleteExecutionfd45aab98c5f5ea3c493435ec5b067d5 = (args: { workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } } | [workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteExecutionfd45aab98c5f5ea3c493435ec5b067d5.url(args, options),
     method: 'delete',
 })
@@ -1259,7 +1259,7 @@ deleteExecutionfd45aab98c5f5ea3c493435ec5b067d5.definition = {
  * @see app/Http/Controllers/WorkflowController.php:350
  * @route '/api/workflows/{workflow}/executions/{execution}'
  */
-deleteExecutionfd45aab98c5f5ea3c493435ec5b067d5.url = (args: { workflow: number | { id: number }, execution: number | { id: number } } | [workflow: number | { id: number }, execution: number | { id: number } ], options?: RouteQueryOptions) => {
+deleteExecutionfd45aab98c5f5ea3c493435ec5b067d5.url = (args: { workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } } | [workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     workflow: args[0],
@@ -1289,7 +1289,7 @@ deleteExecutionfd45aab98c5f5ea3c493435ec5b067d5.url = (args: { workflow: number 
  * @see app/Http/Controllers/WorkflowController.php:350
  * @route '/api/workflows/{workflow}/executions/{execution}'
  */
-deleteExecutionfd45aab98c5f5ea3c493435ec5b067d5.delete = (args: { workflow: number | { id: number }, execution: number | { id: number } } | [workflow: number | { id: number }, execution: number | { id: number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+deleteExecutionfd45aab98c5f5ea3c493435ec5b067d5.delete = (args: { workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } } | [workflow: string | number | { id: string | number }, execution: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteExecutionfd45aab98c5f5ea3c493435ec5b067d5.url(args, options),
     method: 'delete',
 })
@@ -1355,7 +1355,7 @@ export const deleteExecution = {
  * @see app/Http/Controllers/WorkflowController.php:190
  * @route '/api/workflows/{workflow}/stats'
  */
-const stats435ca806ef68d9de825fbb1073857b9e = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const stats435ca806ef68d9de825fbb1073857b9e = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: stats435ca806ef68d9de825fbb1073857b9e.url(args, options),
     method: 'get',
 })
@@ -1370,7 +1370,7 @@ stats435ca806ef68d9de825fbb1073857b9e.definition = {
  * @see app/Http/Controllers/WorkflowController.php:190
  * @route '/api/workflows/{workflow}/stats'
  */
-stats435ca806ef68d9de825fbb1073857b9e.url = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+stats435ca806ef68d9de825fbb1073857b9e.url = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { workflow: args }
     }
@@ -1403,7 +1403,7 @@ stats435ca806ef68d9de825fbb1073857b9e.url = (args: { workflow: number | { id: nu
  * @see app/Http/Controllers/WorkflowController.php:190
  * @route '/api/workflows/{workflow}/stats'
  */
-stats435ca806ef68d9de825fbb1073857b9e.get = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+stats435ca806ef68d9de825fbb1073857b9e.get = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: stats435ca806ef68d9de825fbb1073857b9e.url(args, options),
     method: 'get',
 })
@@ -1412,7 +1412,7 @@ stats435ca806ef68d9de825fbb1073857b9e.get = (args: { workflow: number | { id: nu
  * @see app/Http/Controllers/WorkflowController.php:190
  * @route '/api/workflows/{workflow}/stats'
  */
-stats435ca806ef68d9de825fbb1073857b9e.head = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+stats435ca806ef68d9de825fbb1073857b9e.head = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: stats435ca806ef68d9de825fbb1073857b9e.url(args, options),
     method: 'head',
 })
@@ -1489,7 +1489,7 @@ export const stats = {
  * @see app/Http/Controllers/WorkflowController.php:202
  * @route '/api/workflows/{workflow}/publish'
  */
-const publishcc18967c769e6ac3bab7081eca60fc4d = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+const publishcc18967c769e6ac3bab7081eca60fc4d = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: publishcc18967c769e6ac3bab7081eca60fc4d.url(args, options),
     method: 'post',
 })
@@ -1504,7 +1504,7 @@ publishcc18967c769e6ac3bab7081eca60fc4d.definition = {
  * @see app/Http/Controllers/WorkflowController.php:202
  * @route '/api/workflows/{workflow}/publish'
  */
-publishcc18967c769e6ac3bab7081eca60fc4d.url = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+publishcc18967c769e6ac3bab7081eca60fc4d.url = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { workflow: args }
     }
@@ -1537,7 +1537,7 @@ publishcc18967c769e6ac3bab7081eca60fc4d.url = (args: { workflow: number | { id: 
  * @see app/Http/Controllers/WorkflowController.php:202
  * @route '/api/workflows/{workflow}/publish'
  */
-publishcc18967c769e6ac3bab7081eca60fc4d.post = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+publishcc18967c769e6ac3bab7081eca60fc4d.post = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: publishcc18967c769e6ac3bab7081eca60fc4d.url(args, options),
     method: 'post',
 })
@@ -1605,7 +1605,7 @@ export const publish = {
  * @see app/Http/Controllers/WorkflowController.php:226
  * @route '/api/workflows/{workflow}/revert'
  */
-const revert8c6e6412b35611b173350cde748fe1aa = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+const revert8c6e6412b35611b173350cde748fe1aa = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: revert8c6e6412b35611b173350cde748fe1aa.url(args, options),
     method: 'post',
 })
@@ -1620,7 +1620,7 @@ revert8c6e6412b35611b173350cde748fe1aa.definition = {
  * @see app/Http/Controllers/WorkflowController.php:226
  * @route '/api/workflows/{workflow}/revert'
  */
-revert8c6e6412b35611b173350cde748fe1aa.url = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+revert8c6e6412b35611b173350cde748fe1aa.url = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { workflow: args }
     }
@@ -1653,7 +1653,7 @@ revert8c6e6412b35611b173350cde748fe1aa.url = (args: { workflow: number | { id: n
  * @see app/Http/Controllers/WorkflowController.php:226
  * @route '/api/workflows/{workflow}/revert'
  */
-revert8c6e6412b35611b173350cde748fe1aa.post = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+revert8c6e6412b35611b173350cde748fe1aa.post = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: revert8c6e6412b35611b173350cde748fe1aa.url(args, options),
     method: 'post',
 })
@@ -1721,7 +1721,7 @@ export const revert = {
  * @see app/Http/Controllers/WorkflowController.php:248
  * @route '/api/workflows/{workflow}/versions'
  */
-const versions22c144ee36920878292fd2089a8f2958 = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const versions22c144ee36920878292fd2089a8f2958 = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: versions22c144ee36920878292fd2089a8f2958.url(args, options),
     method: 'get',
 })
@@ -1736,7 +1736,7 @@ versions22c144ee36920878292fd2089a8f2958.definition = {
  * @see app/Http/Controllers/WorkflowController.php:248
  * @route '/api/workflows/{workflow}/versions'
  */
-versions22c144ee36920878292fd2089a8f2958.url = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+versions22c144ee36920878292fd2089a8f2958.url = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { workflow: args }
     }
@@ -1769,7 +1769,7 @@ versions22c144ee36920878292fd2089a8f2958.url = (args: { workflow: number | { id:
  * @see app/Http/Controllers/WorkflowController.php:248
  * @route '/api/workflows/{workflow}/versions'
  */
-versions22c144ee36920878292fd2089a8f2958.get = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+versions22c144ee36920878292fd2089a8f2958.get = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: versions22c144ee36920878292fd2089a8f2958.url(args, options),
     method: 'get',
 })
@@ -1778,7 +1778,7 @@ versions22c144ee36920878292fd2089a8f2958.get = (args: { workflow: number | { id:
  * @see app/Http/Controllers/WorkflowController.php:248
  * @route '/api/workflows/{workflow}/versions'
  */
-versions22c144ee36920878292fd2089a8f2958.head = (args: { workflow: number | { id: number } } | [workflow: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+versions22c144ee36920878292fd2089a8f2958.head = (args: { workflow: string | number | { id: string | number } } | [workflow: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: versions22c144ee36920878292fd2089a8f2958.url(args, options),
     method: 'head',
 })
@@ -1855,7 +1855,7 @@ export const versions = {
  * @see app/Http/Controllers/WorkflowController.php:178
  * @route '/api/workflow-executions/{execution}'
  */
-const executionDetailsfe96484e96a05bd61845b48e5759b134 = (args: { execution: number | { id: number } } | [execution: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+const executionDetailsfe96484e96a05bd61845b48e5759b134 = (args: { execution: string | number | { id: string | number } } | [execution: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: executionDetailsfe96484e96a05bd61845b48e5759b134.url(args, options),
     method: 'get',
 })
@@ -1870,7 +1870,7 @@ executionDetailsfe96484e96a05bd61845b48e5759b134.definition = {
  * @see app/Http/Controllers/WorkflowController.php:178
  * @route '/api/workflow-executions/{execution}'
  */
-executionDetailsfe96484e96a05bd61845b48e5759b134.url = (args: { execution: number | { id: number } } | [execution: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+executionDetailsfe96484e96a05bd61845b48e5759b134.url = (args: { execution: string | number | { id: string | number } } | [execution: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { execution: args }
     }
@@ -1903,7 +1903,7 @@ executionDetailsfe96484e96a05bd61845b48e5759b134.url = (args: { execution: numbe
  * @see app/Http/Controllers/WorkflowController.php:178
  * @route '/api/workflow-executions/{execution}'
  */
-executionDetailsfe96484e96a05bd61845b48e5759b134.get = (args: { execution: number | { id: number } } | [execution: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+executionDetailsfe96484e96a05bd61845b48e5759b134.get = (args: { execution: string | number | { id: string | number } } | [execution: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: executionDetailsfe96484e96a05bd61845b48e5759b134.url(args, options),
     method: 'get',
 })
@@ -1912,7 +1912,7 @@ executionDetailsfe96484e96a05bd61845b48e5759b134.get = (args: { execution: numbe
  * @see app/Http/Controllers/WorkflowController.php:178
  * @route '/api/workflow-executions/{execution}'
  */
-executionDetailsfe96484e96a05bd61845b48e5759b134.head = (args: { execution: number | { id: number } } | [execution: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+executionDetailsfe96484e96a05bd61845b48e5759b134.head = (args: { execution: string | number | { id: string | number } } | [execution: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: executionDetailsfe96484e96a05bd61845b48e5759b134.url(args, options),
     method: 'head',
 })

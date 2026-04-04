@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
  * @see app/Http/Controllers/ProjectAgentController.php:238
  * @route '/api/projects/{project}/agents/{agent}/actions'
  */
-export const index = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const index = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ index.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:238
  * @route '/api/projects/{project}/agents/{agent}/actions'
  */
-index.url = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions) => {
+index.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -49,7 +49,7 @@ index.url = (args: { project: string | { id: string }, agent: string | { id: str
  * @see app/Http/Controllers/ProjectAgentController.php:238
  * @route '/api/projects/{project}/agents/{agent}/actions'
  */
-index.get = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+index.get = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -58,7 +58,7 @@ index.get = (args: { project: string | { id: string }, agent: string | { id: str
  * @see app/Http/Controllers/ProjectAgentController.php:238
  * @route '/api/projects/{project}/agents/{agent}/actions'
  */
-index.head = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+index.head = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(args, options),
     method: 'head',
 })
@@ -68,7 +68,7 @@ index.head = (args: { project: string | { id: string }, agent: string | { id: st
  * @see app/Http/Controllers/ProjectAgentController.php:263
  * @route '/api/projects/{project}/agents/{agent}/actions'
  */
-export const create = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const create = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: create.url(args, options),
     method: 'post',
 })
@@ -83,7 +83,7 @@ create.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:263
  * @route '/api/projects/{project}/agents/{agent}/actions'
  */
-create.url = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions) => {
+create.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -113,7 +113,7 @@ create.url = (args: { project: string | { id: string }, agent: string | { id: st
  * @see app/Http/Controllers/ProjectAgentController.php:263
  * @route '/api/projects/{project}/agents/{agent}/actions'
  */
-create.post = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+create.post = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: create.url(args, options),
     method: 'post',
 })
@@ -123,7 +123,7 @@ create.post = (args: { project: string | { id: string }, agent: string | { id: s
  * @see app/Http/Controllers/ProjectAgentController.php:300
  * @route '/api/projects/{project}/agents/{agent}/actions/{action}'
  */
-export const update = (args: { project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -138,7 +138,7 @@ update.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:300
  * @route '/api/projects/{project}/agents/{agent}/actions/{action}'
  */
-update.url = (args: { project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } ], options?: RouteQueryOptions) => {
+update.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -173,7 +173,7 @@ update.url = (args: { project: string | { id: string }, agent: string | { id: st
  * @see app/Http/Controllers/ProjectAgentController.php:300
  * @route '/api/projects/{project}/agents/{agent}/actions/{action}'
  */
-update.put = (args: { project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -183,7 +183,7 @@ update.put = (args: { project: string | { id: string }, agent: string | { id: st
  * @see app/Http/Controllers/ProjectAgentController.php:326
  * @route '/api/projects/{project}/agents/{agent}/actions/{action}'
  */
-export const deleteMethod = (args: { project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const deleteMethod = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteMethod.url(args, options),
     method: 'delete',
 })
@@ -198,7 +198,7 @@ deleteMethod.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:326
  * @route '/api/projects/{project}/agents/{agent}/actions/{action}'
  */
-deleteMethod.url = (args: { project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } ], options?: RouteQueryOptions) => {
+deleteMethod.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -233,7 +233,7 @@ deleteMethod.url = (args: { project: string | { id: string }, agent: string | { 
  * @see app/Http/Controllers/ProjectAgentController.php:326
  * @route '/api/projects/{project}/agents/{agent}/actions/{action}'
  */
-deleteMethod.delete = (args: { project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+deleteMethod.delete = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteMethod.url(args, options),
     method: 'delete',
 })

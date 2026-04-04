@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
  * @see app/Http/Controllers/User/AgentMessageController.php:13
  * @route '/ai-agents/agents/{agent}/messages'
  */
-export const index = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const index = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ index.definition = {
  * @see app/Http/Controllers/User/AgentMessageController.php:13
  * @route '/ai-agents/agents/{agent}/messages'
  */
-index.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+index.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -52,7 +52,7 @@ index.url = (args: { agent: string | { id: string } } | [agent: string | { id: s
  * @see app/Http/Controllers/User/AgentMessageController.php:13
  * @route '/ai-agents/agents/{agent}/messages'
  */
-index.get = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+index.get = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -61,7 +61,7 @@ index.get = (args: { agent: string | { id: string } } | [agent: string | { id: s
  * @see app/Http/Controllers/User/AgentMessageController.php:13
  * @route '/ai-agents/agents/{agent}/messages'
  */
-index.head = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+index.head = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(args, options),
     method: 'head',
 })
@@ -71,7 +71,7 @@ index.head = (args: { agent: string | { id: string } } | [agent: string | { id: 
  * @see app/Http/Controllers/User/AgentMessageController.php:36
  * @route '/ai-agents/agents/{agent}/messages/{message}/mark-read'
  */
-export const markRead = (args: { agent: string | { id: string }, message: string | { id: string } } | [agent: string | { id: string }, message: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const markRead = (args: { agent: string | number | { id: string | number }, message: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, message: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: markRead.url(args, options),
     method: 'post',
 })
@@ -86,7 +86,7 @@ markRead.definition = {
  * @see app/Http/Controllers/User/AgentMessageController.php:36
  * @route '/ai-agents/agents/{agent}/messages/{message}/mark-read'
  */
-markRead.url = (args: { agent: string | { id: string }, message: string | { id: string } } | [agent: string | { id: string }, message: string | { id: string } ], options?: RouteQueryOptions) => {
+markRead.url = (args: { agent: string | number | { id: string | number }, message: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, message: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     agent: args[0],
@@ -116,7 +116,7 @@ markRead.url = (args: { agent: string | { id: string }, message: string | { id: 
  * @see app/Http/Controllers/User/AgentMessageController.php:36
  * @route '/ai-agents/agents/{agent}/messages/{message}/mark-read'
  */
-markRead.post = (args: { agent: string | { id: string }, message: string | { id: string } } | [agent: string | { id: string }, message: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+markRead.post = (args: { agent: string | number | { id: string | number }, message: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, message: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: markRead.url(args, options),
     method: 'post',
 })

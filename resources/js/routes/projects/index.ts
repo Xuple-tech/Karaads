@@ -8,7 +8,7 @@ import versions7d9d1c from './versions'
  * @see app/Http/Controllers/ProjectController.php:148
  * @route '/projects/{project}'
  */
-export const update = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -23,7 +23,7 @@ update.definition = {
  * @see app/Http/Controllers/ProjectController.php:148
  * @route '/projects/{project}'
  */
-update.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+update.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -56,7 +56,7 @@ update.url = (args: { project: string | { id: string } } | [project: string | { 
  * @see app/Http/Controllers/ProjectController.php:148
  * @route '/projects/{project}'
  */
-update.put = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -66,7 +66,7 @@ update.put = (args: { project: string | { id: string } } | [project: string | { 
  * @see app/Http/Controllers/ProjectController.php:175
  * @route '/projects/{project}'
  */
-export const destroy = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -81,7 +81,7 @@ destroy.definition = {
  * @see app/Http/Controllers/ProjectController.php:175
  * @route '/projects/{project}'
  */
-destroy.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+destroy.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -114,17 +114,17 @@ destroy.url = (args: { project: string | { id: string } } | [project: string | {
  * @see app/Http/Controllers/ProjectController.php:175
  * @route '/projects/{project}'
  */
-destroy.delete = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
 
 /**
-* @see \App\Http\Controllers\ProjectController::dashboard
- * @see app/Http/Controllers/ProjectController.php:78
+* @see \App\Http\Controllers\WorkspaceController::dashboard
+ * @see app/Http/Controllers/WorkspaceController.php:24
  * @route '/projects/{project}/dashboard'
  */
-export const dashboard = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const dashboard = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: dashboard.url(args, options),
     method: 'get',
 })
@@ -135,11 +135,11 @@ dashboard.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\ProjectController::dashboard
- * @see app/Http/Controllers/ProjectController.php:78
+* @see \App\Http\Controllers\WorkspaceController::dashboard
+ * @see app/Http/Controllers/WorkspaceController.php:24
  * @route '/projects/{project}/dashboard'
  */
-dashboard.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+dashboard.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -168,20 +168,20 @@ dashboard.url = (args: { project: string | { id: string } } | [project: string |
 }
 
 /**
-* @see \App\Http\Controllers\ProjectController::dashboard
- * @see app/Http/Controllers/ProjectController.php:78
+* @see \App\Http\Controllers\WorkspaceController::dashboard
+ * @see app/Http/Controllers/WorkspaceController.php:24
  * @route '/projects/{project}/dashboard'
  */
-dashboard.get = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+dashboard.get = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: dashboard.url(args, options),
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\ProjectController::dashboard
- * @see app/Http/Controllers/ProjectController.php:78
+* @see \App\Http\Controllers\WorkspaceController::dashboard
+ * @see app/Http/Controllers/WorkspaceController.php:24
  * @route '/projects/{project}/dashboard'
  */
-dashboard.head = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+dashboard.head = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: dashboard.url(args, options),
     method: 'head',
 })
@@ -191,7 +191,7 @@ dashboard.head = (args: { project: string | { id: string } } | [project: string 
  * @see app/Http/Controllers/EnhancedProjectController.php:172
  * @route '/projects/{project}/generate-code'
  */
-export const generateCode = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const generateCode = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: generateCode.url(args, options),
     method: 'post',
 })
@@ -206,7 +206,7 @@ generateCode.definition = {
  * @see app/Http/Controllers/EnhancedProjectController.php:172
  * @route '/projects/{project}/generate-code'
  */
-generateCode.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+generateCode.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -239,7 +239,7 @@ generateCode.url = (args: { project: string | { id: string } } | [project: strin
  * @see app/Http/Controllers/EnhancedProjectController.php:172
  * @route '/projects/{project}/generate-code'
  */
-generateCode.post = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+generateCode.post = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: generateCode.url(args, options),
     method: 'post',
 })
@@ -249,7 +249,7 @@ generateCode.post = (args: { project: string | { id: string } } | [project: stri
  * @see app/Http/Controllers/EnhancedProjectController.php:214
  * @route '/projects/{project}/generate-analytics'
  */
-export const generateAnalytics = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const generateAnalytics = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: generateAnalytics.url(args, options),
     method: 'post',
 })
@@ -264,7 +264,7 @@ generateAnalytics.definition = {
  * @see app/Http/Controllers/EnhancedProjectController.php:214
  * @route '/projects/{project}/generate-analytics'
  */
-generateAnalytics.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+generateAnalytics.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -297,7 +297,7 @@ generateAnalytics.url = (args: { project: string | { id: string } } | [project: 
  * @see app/Http/Controllers/EnhancedProjectController.php:214
  * @route '/projects/{project}/generate-analytics'
  */
-generateAnalytics.post = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+generateAnalytics.post = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: generateAnalytics.url(args, options),
     method: 'post',
 })
@@ -307,7 +307,7 @@ generateAnalytics.post = (args: { project: string | { id: string } } | [project:
  * @see app/Http/Controllers/EnhancedProjectController.php:291
  * @route '/projects/{project}/analyze-quality'
  */
-export const analyzeQuality = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const analyzeQuality = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: analyzeQuality.url(args, options),
     method: 'post',
 })
@@ -322,7 +322,7 @@ analyzeQuality.definition = {
  * @see app/Http/Controllers/EnhancedProjectController.php:291
  * @route '/projects/{project}/analyze-quality'
  */
-analyzeQuality.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+analyzeQuality.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -355,7 +355,7 @@ analyzeQuality.url = (args: { project: string | { id: string } } | [project: str
  * @see app/Http/Controllers/EnhancedProjectController.php:291
  * @route '/projects/{project}/analyze-quality'
  */
-analyzeQuality.post = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+analyzeQuality.post = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: analyzeQuality.url(args, options),
     method: 'post',
 })
@@ -365,7 +365,7 @@ analyzeQuality.post = (args: { project: string | { id: string } } | [project: st
  * @see app/Http/Controllers/EnhancedProjectController.php:336
  * @route '/projects/{project}/deploy'
  */
-export const deploy = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const deploy = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: deploy.url(args, options),
     method: 'post',
 })
@@ -380,7 +380,7 @@ deploy.definition = {
  * @see app/Http/Controllers/EnhancedProjectController.php:336
  * @route '/projects/{project}/deploy'
  */
-deploy.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+deploy.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -413,7 +413,7 @@ deploy.url = (args: { project: string | { id: string } } | [project: string | { 
  * @see app/Http/Controllers/EnhancedProjectController.php:336
  * @route '/projects/{project}/deploy'
  */
-deploy.post = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+deploy.post = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: deploy.url(args, options),
     method: 'post',
 })
@@ -423,7 +423,7 @@ deploy.post = (args: { project: string | { id: string } } | [project: string | {
  * @see app/Http/Controllers/EnhancedProjectController.php:378
  * @route '/projects/{project}/metrics'
  */
-export const metrics = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const metrics = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: metrics.url(args, options),
     method: 'get',
 })
@@ -438,7 +438,7 @@ metrics.definition = {
  * @see app/Http/Controllers/EnhancedProjectController.php:378
  * @route '/projects/{project}/metrics'
  */
-metrics.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+metrics.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -471,7 +471,7 @@ metrics.url = (args: { project: string | { id: string } } | [project: string | {
  * @see app/Http/Controllers/EnhancedProjectController.php:378
  * @route '/projects/{project}/metrics'
  */
-metrics.get = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+metrics.get = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: metrics.url(args, options),
     method: 'get',
 })
@@ -480,7 +480,7 @@ metrics.get = (args: { project: string | { id: string } } | [project: string | {
  * @see app/Http/Controllers/EnhancedProjectController.php:378
  * @route '/projects/{project}/metrics'
  */
-metrics.head = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+metrics.head = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: metrics.url(args, options),
     method: 'head',
 })
@@ -490,7 +490,7 @@ metrics.head = (args: { project: string | { id: string } } | [project: string | 
  * @see app/Http/Controllers/ProjectController.php:577
  * @route '/projects/{project}/files'
  */
-export const files = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const files = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: files.url(args, options),
     method: 'get',
 })
@@ -505,7 +505,7 @@ files.definition = {
  * @see app/Http/Controllers/ProjectController.php:577
  * @route '/projects/{project}/files'
  */
-files.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+files.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -538,7 +538,7 @@ files.url = (args: { project: string | { id: string } } | [project: string | { i
  * @see app/Http/Controllers/ProjectController.php:577
  * @route '/projects/{project}/files'
  */
-files.get = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+files.get = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: files.url(args, options),
     method: 'get',
 })
@@ -547,7 +547,7 @@ files.get = (args: { project: string | { id: string } } | [project: string | { i
  * @see app/Http/Controllers/ProjectController.php:577
  * @route '/projects/{project}/files'
  */
-files.head = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+files.head = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: files.url(args, options),
     method: 'head',
 })
@@ -557,7 +557,7 @@ files.head = (args: { project: string | { id: string } } | [project: string | { 
  * @see app/Http/Controllers/ProjectController.php:196
  * @route '/projects/{project}/settings'
  */
-export const settings = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const settings = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: settings.url(args, options),
     method: 'get',
 })
@@ -572,7 +572,7 @@ settings.definition = {
  * @see app/Http/Controllers/ProjectController.php:196
  * @route '/projects/{project}/settings'
  */
-settings.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+settings.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -605,7 +605,7 @@ settings.url = (args: { project: string | { id: string } } | [project: string | 
  * @see app/Http/Controllers/ProjectController.php:196
  * @route '/projects/{project}/settings'
  */
-settings.get = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+settings.get = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: settings.url(args, options),
     method: 'get',
 })
@@ -614,7 +614,7 @@ settings.get = (args: { project: string | { id: string } } | [project: string | 
  * @see app/Http/Controllers/ProjectController.php:196
  * @route '/projects/{project}/settings'
  */
-settings.head = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+settings.head = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: settings.url(args, options),
     method: 'head',
 })
@@ -624,7 +624,7 @@ settings.head = (args: { project: string | { id: string } } | [project: string |
  * @see app/Http/Controllers/ProjectController.php:242
  * @route '/projects/{project}/collaboration'
  */
-export const collaboration = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const collaboration = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: collaboration.url(args, options),
     method: 'get',
 })
@@ -639,7 +639,7 @@ collaboration.definition = {
  * @see app/Http/Controllers/ProjectController.php:242
  * @route '/projects/{project}/collaboration'
  */
-collaboration.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+collaboration.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -672,7 +672,7 @@ collaboration.url = (args: { project: string | { id: string } } | [project: stri
  * @see app/Http/Controllers/ProjectController.php:242
  * @route '/projects/{project}/collaboration'
  */
-collaboration.get = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+collaboration.get = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: collaboration.url(args, options),
     method: 'get',
 })
@@ -681,7 +681,7 @@ collaboration.get = (args: { project: string | { id: string } } | [project: stri
  * @see app/Http/Controllers/ProjectController.php:242
  * @route '/projects/{project}/collaboration'
  */
-collaboration.head = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+collaboration.head = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: collaboration.url(args, options),
     method: 'head',
 })
@@ -691,7 +691,7 @@ collaboration.head = (args: { project: string | { id: string } } | [project: str
  * @see app/Http/Controllers/ProjectController.php:356
  * @route '/projects/{project}/analytics'
  */
-export const analytics = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const analytics = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: analytics.url(args, options),
     method: 'get',
 })
@@ -706,7 +706,7 @@ analytics.definition = {
  * @see app/Http/Controllers/ProjectController.php:356
  * @route '/projects/{project}/analytics'
  */
-analytics.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+analytics.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -739,7 +739,7 @@ analytics.url = (args: { project: string | { id: string } } | [project: string |
  * @see app/Http/Controllers/ProjectController.php:356
  * @route '/projects/{project}/analytics'
  */
-analytics.get = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+analytics.get = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: analytics.url(args, options),
     method: 'get',
 })
@@ -748,7 +748,7 @@ analytics.get = (args: { project: string | { id: string } } | [project: string |
  * @see app/Http/Controllers/ProjectController.php:356
  * @route '/projects/{project}/analytics'
  */
-analytics.head = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+analytics.head = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: analytics.url(args, options),
     method: 'head',
 })
@@ -758,7 +758,7 @@ analytics.head = (args: { project: string | { id: string } } | [project: string 
  * @see app/Http/Controllers/ProjectController.php:513
  * @route '/projects/{project}/activity'
  */
-export const activity = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const activity = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: activity.url(args, options),
     method: 'get',
 })
@@ -773,7 +773,7 @@ activity.definition = {
  * @see app/Http/Controllers/ProjectController.php:513
  * @route '/projects/{project}/activity'
  */
-activity.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+activity.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -806,7 +806,7 @@ activity.url = (args: { project: string | { id: string } } | [project: string | 
  * @see app/Http/Controllers/ProjectController.php:513
  * @route '/projects/{project}/activity'
  */
-activity.get = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+activity.get = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: activity.url(args, options),
     method: 'get',
 })
@@ -815,7 +815,7 @@ activity.get = (args: { project: string | { id: string } } | [project: string | 
  * @see app/Http/Controllers/ProjectController.php:513
  * @route '/projects/{project}/activity'
  */
-activity.head = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+activity.head = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: activity.url(args, options),
     method: 'head',
 })
@@ -825,7 +825,7 @@ activity.head = (args: { project: string | { id: string } } | [project: string |
  * @see app/Http/Controllers/ProjectController.php:390
  * @route '/projects/{project}/versions'
  */
-export const versions = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const versions = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: versions.url(args, options),
     method: 'get',
 })
@@ -840,7 +840,7 @@ versions.definition = {
  * @see app/Http/Controllers/ProjectController.php:390
  * @route '/projects/{project}/versions'
  */
-versions.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+versions.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -873,7 +873,7 @@ versions.url = (args: { project: string | { id: string } } | [project: string | 
  * @see app/Http/Controllers/ProjectController.php:390
  * @route '/projects/{project}/versions'
  */
-versions.get = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+versions.get = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: versions.url(args, options),
     method: 'get',
 })
@@ -882,7 +882,7 @@ versions.get = (args: { project: string | { id: string } } | [project: string | 
  * @see app/Http/Controllers/ProjectController.php:390
  * @route '/projects/{project}/versions'
  */
-versions.head = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+versions.head = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: versions.url(args, options),
     method: 'head',
 })
@@ -969,7 +969,7 @@ createFromTemplate.post = (options?: RouteQueryOptions): RouteDefinition<'post'>
  * @see app/Http/Controllers/ProjectController.php:482
  * @route '/projects/{project}/save-as-template'
  */
-export const saveAsTemplate = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const saveAsTemplate = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: saveAsTemplate.url(args, options),
     method: 'post',
 })
@@ -984,7 +984,7 @@ saveAsTemplate.definition = {
  * @see app/Http/Controllers/ProjectController.php:482
  * @route '/projects/{project}/save-as-template'
  */
-saveAsTemplate.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+saveAsTemplate.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -1017,7 +1017,7 @@ saveAsTemplate.url = (args: { project: string | { id: string } } | [project: str
  * @see app/Http/Controllers/ProjectController.php:482
  * @route '/projects/{project}/save-as-template'
  */
-saveAsTemplate.post = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+saveAsTemplate.post = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: saveAsTemplate.url(args, options),
     method: 'post',
 })
@@ -1027,7 +1027,7 @@ saveAsTemplate.post = (args: { project: string | { id: string } } | [project: st
  * @see app/Http/Controllers/ProjectController.php:531
  * @route '/projects/{project}/archive'
  */
-export const archive = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const archive = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: archive.url(args, options),
     method: 'post',
 })
@@ -1042,7 +1042,7 @@ archive.definition = {
  * @see app/Http/Controllers/ProjectController.php:531
  * @route '/projects/{project}/archive'
  */
-archive.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+archive.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -1075,7 +1075,7 @@ archive.url = (args: { project: string | { id: string } } | [project: string | {
  * @see app/Http/Controllers/ProjectController.php:531
  * @route '/projects/{project}/archive'
  */
-archive.post = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+archive.post = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: archive.url(args, options),
     method: 'post',
 })
@@ -1085,7 +1085,7 @@ archive.post = (args: { project: string | { id: string } } | [project: string | 
  * @see app/Http/Controllers/ProjectController.php:554
  * @route '/projects/{project}/restore'
  */
-export const restore = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const restore = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: restore.url(args, options),
     method: 'post',
 })
@@ -1100,7 +1100,7 @@ restore.definition = {
  * @see app/Http/Controllers/ProjectController.php:554
  * @route '/projects/{project}/restore'
  */
-restore.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+restore.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -1133,7 +1133,7 @@ restore.url = (args: { project: string | { id: string } } | [project: string | {
  * @see app/Http/Controllers/ProjectController.php:554
  * @route '/projects/{project}/restore'
  */
-restore.post = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+restore.post = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: restore.url(args, options),
     method: 'post',
 })

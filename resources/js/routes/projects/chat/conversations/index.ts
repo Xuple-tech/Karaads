@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
  * @see app/Http/Controllers/ProjectChatController.php:99
  * @route '/projects/{project}/chat/conversations'
  */
-export const create = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const create = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: create.url(args, options),
     method: 'post',
 })
@@ -19,7 +19,7 @@ create.definition = {
  * @see app/Http/Controllers/ProjectChatController.php:99
  * @route '/projects/{project}/chat/conversations'
  */
-create.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+create.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -52,7 +52,7 @@ create.url = (args: { project: string | { id: string } } | [project: string | { 
  * @see app/Http/Controllers/ProjectChatController.php:99
  * @route '/projects/{project}/chat/conversations'
  */
-create.post = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+create.post = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: create.url(args, options),
     method: 'post',
 })
@@ -62,7 +62,7 @@ create.post = (args: { project: string | { id: string } } | [project: string | {
  * @see app/Http/Controllers/ProjectChatController.php:335
  * @route '/projects/{project}/chat/conversations/{conversation}'
  */
-export const update = (args: { project: string | { id: string }, conversation: string | { id: string } } | [project: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { project: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [project: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -77,7 +77,7 @@ update.definition = {
  * @see app/Http/Controllers/ProjectChatController.php:335
  * @route '/projects/{project}/chat/conversations/{conversation}'
  */
-update.url = (args: { project: string | { id: string }, conversation: string | { id: string } } | [project: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions) => {
+update.url = (args: { project: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [project: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -107,7 +107,7 @@ update.url = (args: { project: string | { id: string }, conversation: string | {
  * @see app/Http/Controllers/ProjectChatController.php:335
  * @route '/projects/{project}/chat/conversations/{conversation}'
  */
-update.put = (args: { project: string | { id: string }, conversation: string | { id: string } } | [project: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { project: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [project: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -117,7 +117,7 @@ update.put = (args: { project: string | { id: string }, conversation: string | {
  * @see app/Http/Controllers/ProjectChatController.php:378
  * @route '/projects/{project}/chat/conversations/{conversation}'
  */
-export const deleteMethod = (args: { project: string | { id: string }, conversation: string | { id: string } } | [project: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const deleteMethod = (args: { project: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [project: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteMethod.url(args, options),
     method: 'delete',
 })
@@ -132,7 +132,7 @@ deleteMethod.definition = {
  * @see app/Http/Controllers/ProjectChatController.php:378
  * @route '/projects/{project}/chat/conversations/{conversation}'
  */
-deleteMethod.url = (args: { project: string | { id: string }, conversation: string | { id: string } } | [project: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions) => {
+deleteMethod.url = (args: { project: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [project: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -162,7 +162,7 @@ deleteMethod.url = (args: { project: string | { id: string }, conversation: stri
  * @see app/Http/Controllers/ProjectChatController.php:378
  * @route '/projects/{project}/chat/conversations/{conversation}'
  */
-deleteMethod.delete = (args: { project: string | { id: string }, conversation: string | { id: string } } | [project: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+deleteMethod.delete = (args: { project: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [project: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteMethod.url(args, options),
     method: 'delete',
 })

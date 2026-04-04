@@ -124,7 +124,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:80
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}'
  */
-export const show = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -139,7 +139,7 @@ show.definition = {
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:80
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}'
  */
-show.url = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+show.url = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentWidgetSetting: args }
     }
@@ -172,7 +172,7 @@ show.url = (args: { agentWidgetSetting: string | { id: string } } | [agentWidget
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:80
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}'
  */
-show.get = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -181,7 +181,7 @@ show.get = (args: { agentWidgetSetting: string | { id: string } } | [agentWidget
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:80
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}'
  */
-show.head = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -191,7 +191,7 @@ show.head = (args: { agentWidgetSetting: string | { id: string } } | [agentWidge
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:92
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}/edit'
  */
-export const edit = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -206,7 +206,7 @@ edit.definition = {
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:92
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}/edit'
  */
-edit.url = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+edit.url = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentWidgetSetting: args }
     }
@@ -239,7 +239,7 @@ edit.url = (args: { agentWidgetSetting: string | { id: string } } | [agentWidget
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:92
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}/edit'
  */
-edit.get = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -248,7 +248,7 @@ edit.get = (args: { agentWidgetSetting: string | { id: string } } | [agentWidget
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:92
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}/edit'
  */
-edit.head = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -258,7 +258,7 @@ edit.head = (args: { agentWidgetSetting: string | { id: string } } | [agentWidge
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:105
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}'
  */
-export const update = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -273,7 +273,7 @@ update.definition = {
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:105
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}'
  */
-update.url = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+update.url = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentWidgetSetting: args }
     }
@@ -306,7 +306,7 @@ update.url = (args: { agentWidgetSetting: string | { id: string } } | [agentWidg
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:105
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}'
  */
-update.put = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -316,7 +316,7 @@ update.put = (args: { agentWidgetSetting: string | { id: string } } | [agentWidg
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:132
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}'
  */
-export const destroy = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -331,7 +331,7 @@ destroy.definition = {
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:132
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}'
  */
-destroy.url = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+destroy.url = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentWidgetSetting: args }
     }
@@ -364,7 +364,7 @@ destroy.url = (args: { agentWidgetSetting: string | { id: string } } | [agentWid
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:132
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}'
  */
-destroy.delete = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -374,7 +374,7 @@ destroy.delete = (args: { agentWidgetSetting: string | { id: string } } | [agent
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:143
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}/script'
  */
-export const getScript = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const getScript = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getScript.url(args, options),
     method: 'get',
 })
@@ -389,7 +389,7 @@ getScript.definition = {
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:143
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}/script'
  */
-getScript.url = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+getScript.url = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentWidgetSetting: args }
     }
@@ -422,7 +422,7 @@ getScript.url = (args: { agentWidgetSetting: string | { id: string } } | [agentW
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:143
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}/script'
  */
-getScript.get = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+getScript.get = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getScript.url(args, options),
     method: 'get',
 })
@@ -431,7 +431,7 @@ getScript.get = (args: { agentWidgetSetting: string | { id: string } } | [agentW
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:143
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}/script'
  */
-getScript.head = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+getScript.head = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: getScript.url(args, options),
     method: 'head',
 })
@@ -441,7 +441,7 @@ getScript.head = (args: { agentWidgetSetting: string | { id: string } } | [agent
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:173
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}/preview'
  */
-export const preview = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const preview = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: preview.url(args, options),
     method: 'get',
 })
@@ -456,7 +456,7 @@ preview.definition = {
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:173
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}/preview'
  */
-preview.url = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+preview.url = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentWidgetSetting: args }
     }
@@ -489,7 +489,7 @@ preview.url = (args: { agentWidgetSetting: string | { id: string } } | [agentWid
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:173
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}/preview'
  */
-preview.get = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+preview.get = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: preview.url(args, options),
     method: 'get',
 })
@@ -498,7 +498,7 @@ preview.get = (args: { agentWidgetSetting: string | { id: string } } | [agentWid
  * @see app/Http/Controllers/Admin/AgentWidgetSettingsController.php:173
  * @route '/admin/agent-widget-settings/{agentWidgetSetting}/preview'
  */
-preview.head = (args: { agentWidgetSetting: string | { id: string } } | [agentWidgetSetting: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+preview.head = (args: { agentWidgetSetting: string | number | { id: string | number } } | [agentWidgetSetting: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: preview.url(args, options),
     method: 'head',
 })

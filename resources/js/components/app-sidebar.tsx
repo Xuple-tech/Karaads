@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { AudioLines, BookOpen, Folder, Mail, SquarePen, Zap, MessageCircle, Stars, BotMessageSquareIcon } from 'lucide-react';
+import { AudioLines, BookOpen, Folder, Mail, SquarePen, Zap, MessageCircle, Stars, BotMessageSquareIcon, PanelsTopLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import AppLogo from './app-logo';
 import ConversationLink from './chat/conversionLink';
@@ -27,6 +27,11 @@ const mainNavItems: NavItem[] = [
         title: 'Agents',
         href: dashboard.url(),
         icon: BotMessageSquareIcon,
+    },
+    {
+        title: 'Workspace',
+        href: '/workspace',
+        icon: PanelsTopLeft,
     },
     // {
     //     title: 'Meta Automation',

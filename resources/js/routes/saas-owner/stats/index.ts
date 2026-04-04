@@ -47,7 +47,7 @@ overview.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
  * @see app/Http/Controllers/SaasOwner/UserStatsController.php:111
  * @route '/saas-owner/stats/users/{user}'
  */
-export const userDetails = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const userDetails = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: userDetails.url(args, options),
     method: 'get',
 })
@@ -62,7 +62,7 @@ userDetails.definition = {
  * @see app/Http/Controllers/SaasOwner/UserStatsController.php:111
  * @route '/saas-owner/stats/users/{user}'
  */
-userDetails.url = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+userDetails.url = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { user: args }
     }
@@ -95,7 +95,7 @@ userDetails.url = (args: { user: string | { id: string } } | [user: string | { i
  * @see app/Http/Controllers/SaasOwner/UserStatsController.php:111
  * @route '/saas-owner/stats/users/{user}'
  */
-userDetails.get = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+userDetails.get = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: userDetails.url(args, options),
     method: 'get',
 })
@@ -104,7 +104,7 @@ userDetails.get = (args: { user: string | { id: string } } | [user: string | { i
  * @see app/Http/Controllers/SaasOwner/UserStatsController.php:111
  * @route '/saas-owner/stats/users/{user}'
  */
-userDetails.head = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+userDetails.head = (args: { user: string | number | { id: string | number } } | [user: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: userDetails.url(args, options),
     method: 'head',
 })

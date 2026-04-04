@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
  * @see app/Http/Controllers/ProjectChatController.php:159
  * @route '/api/projects/{project}/conversations/{conversation}/messages'
  */
-export const create = (args: { project: string | { id: string }, conversation: string | { id: string } } | [project: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const create = (args: { project: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [project: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: create.url(args, options),
     method: 'post',
 })
@@ -19,7 +19,7 @@ create.definition = {
  * @see app/Http/Controllers/ProjectChatController.php:159
  * @route '/api/projects/{project}/conversations/{conversation}/messages'
  */
-create.url = (args: { project: string | { id: string }, conversation: string | { id: string } } | [project: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions) => {
+create.url = (args: { project: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [project: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -49,7 +49,7 @@ create.url = (args: { project: string | { id: string }, conversation: string | {
  * @see app/Http/Controllers/ProjectChatController.php:159
  * @route '/api/projects/{project}/conversations/{conversation}/messages'
  */
-create.post = (args: { project: string | { id: string }, conversation: string | { id: string } } | [project: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+create.post = (args: { project: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [project: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: create.url(args, options),
     method: 'post',
 })

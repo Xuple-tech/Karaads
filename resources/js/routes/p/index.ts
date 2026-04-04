@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
-* @see \App\Http\Controllers\EnhancedProjectController::i
- * @see app/Http/Controllers/EnhancedProjectController.php:38
+* @see \App\Http\Controllers\WorkspaceController::i
+ * @see app/Http/Controllers/WorkspaceController.php:17
  * @route '/projects'
  */
 export const i = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -15,8 +15,8 @@ i.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\EnhancedProjectController::i
- * @see app/Http/Controllers/EnhancedProjectController.php:38
+* @see \App\Http\Controllers\WorkspaceController::i
+ * @see app/Http/Controllers/WorkspaceController.php:17
  * @route '/projects'
  */
 i.url = (options?: RouteQueryOptions) => {
@@ -24,8 +24,8 @@ i.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\EnhancedProjectController::i
- * @see app/Http/Controllers/EnhancedProjectController.php:38
+* @see \App\Http\Controllers\WorkspaceController::i
+ * @see app/Http/Controllers/WorkspaceController.php:17
  * @route '/projects'
  */
 i.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -33,8 +33,8 @@ i.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\EnhancedProjectController::i
- * @see app/Http/Controllers/EnhancedProjectController.php:38
+* @see \App\Http\Controllers\WorkspaceController::i
+ * @see app/Http/Controllers/WorkspaceController.php:17
  * @route '/projects'
  */
 i.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -43,8 +43,8 @@ i.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\EnhancedProjectController::c
- * @see app/Http/Controllers/EnhancedProjectController.php:59
+* @see \Illuminate\Routing\RedirectController::__invoke
+ * @see vendor/laravel/framework/src/Illuminate/Routing/RedirectController.php:19
  * @route '/projects/create'
  */
 export const c = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -53,13 +53,13 @@ export const c = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 
 c.definition = {
-    methods: ["get","head"],
+    methods: ["get","head","post","put","patch","delete","options"],
     url: '/projects/create',
-} satisfies RouteDefinition<["get","head"]>
+} satisfies RouteDefinition<["get","head","post","put","patch","delete","options"]>
 
 /**
-* @see \App\Http\Controllers\EnhancedProjectController::c
- * @see app/Http/Controllers/EnhancedProjectController.php:59
+* @see \Illuminate\Routing\RedirectController::__invoke
+ * @see vendor/laravel/framework/src/Illuminate/Routing/RedirectController.php:19
  * @route '/projects/create'
  */
 c.url = (options?: RouteQueryOptions) => {
@@ -67,8 +67,8 @@ c.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\EnhancedProjectController::c
- * @see app/Http/Controllers/EnhancedProjectController.php:59
+* @see \Illuminate\Routing\RedirectController::__invoke
+ * @see vendor/laravel/framework/src/Illuminate/Routing/RedirectController.php:19
  * @route '/projects/create'
  */
 c.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -76,13 +76,58 @@ c.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\EnhancedProjectController::c
- * @see app/Http/Controllers/EnhancedProjectController.php:59
+* @see \Illuminate\Routing\RedirectController::__invoke
+ * @see vendor/laravel/framework/src/Illuminate/Routing/RedirectController.php:19
  * @route '/projects/create'
  */
 c.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: c.url(options),
     method: 'head',
+})
+/**
+* @see \Illuminate\Routing\RedirectController::__invoke
+ * @see vendor/laravel/framework/src/Illuminate/Routing/RedirectController.php:19
+ * @route '/projects/create'
+ */
+c.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: c.url(options),
+    method: 'post',
+})
+/**
+* @see \Illuminate\Routing\RedirectController::__invoke
+ * @see vendor/laravel/framework/src/Illuminate/Routing/RedirectController.php:19
+ * @route '/projects/create'
+ */
+c.put = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+    url: c.url(options),
+    method: 'put',
+})
+/**
+* @see \Illuminate\Routing\RedirectController::__invoke
+ * @see vendor/laravel/framework/src/Illuminate/Routing/RedirectController.php:19
+ * @route '/projects/create'
+ */
+c.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: c.url(options),
+    method: 'patch',
+})
+/**
+* @see \Illuminate\Routing\RedirectController::__invoke
+ * @see vendor/laravel/framework/src/Illuminate/Routing/RedirectController.php:19
+ * @route '/projects/create'
+ */
+c.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: c.url(options),
+    method: 'delete',
+})
+/**
+* @see \Illuminate\Routing\RedirectController::__invoke
+ * @see vendor/laravel/framework/src/Illuminate/Routing/RedirectController.php:19
+ * @route '/projects/create'
+ */
+c.options = (options?: RouteQueryOptions): RouteDefinition<'options'> => ({
+    url: c.url(options),
+    method: 'options',
 })
 
 /**
@@ -120,11 +165,11 @@ s.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\ProjectController::sh
- * @see app/Http/Controllers/ProjectController.php:116
+* @see \App\Http\Controllers\WorkspaceController::sh
+ * @see app/Http/Controllers/WorkspaceController.php:24
  * @route '/projects/{project}'
  */
-export const sh = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const sh = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: sh.url(args, options),
     method: 'get',
 })
@@ -135,11 +180,11 @@ sh.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\ProjectController::sh
- * @see app/Http/Controllers/ProjectController.php:116
+* @see \App\Http\Controllers\WorkspaceController::sh
+ * @see app/Http/Controllers/WorkspaceController.php:24
  * @route '/projects/{project}'
  */
-sh.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+sh.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -168,20 +213,20 @@ sh.url = (args: { project: string | { id: string } } | [project: string | { id: 
 }
 
 /**
-* @see \App\Http\Controllers\ProjectController::sh
- * @see app/Http/Controllers/ProjectController.php:116
+* @see \App\Http\Controllers\WorkspaceController::sh
+ * @see app/Http/Controllers/WorkspaceController.php:24
  * @route '/projects/{project}'
  */
-sh.get = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+sh.get = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: sh.url(args, options),
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\ProjectController::sh
- * @see app/Http/Controllers/ProjectController.php:116
+* @see \App\Http\Controllers\WorkspaceController::sh
+ * @see app/Http/Controllers/WorkspaceController.php:24
  * @route '/projects/{project}'
  */
-sh.head = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+sh.head = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: sh.url(args, options),
     method: 'head',
 })
@@ -191,7 +236,7 @@ sh.head = (args: { project: string | { id: string } } | [project: string | { id:
  * @see app/Http/Controllers/ProjectController.php:133
  * @route '/projects/{project}/edit'
  */
-export const e = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const e = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: e.url(args, options),
     method: 'get',
 })
@@ -206,7 +251,7 @@ e.definition = {
  * @see app/Http/Controllers/ProjectController.php:133
  * @route '/projects/{project}/edit'
  */
-e.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+e.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -239,7 +284,7 @@ e.url = (args: { project: string | { id: string } } | [project: string | { id: s
  * @see app/Http/Controllers/ProjectController.php:133
  * @route '/projects/{project}/edit'
  */
-e.get = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+e.get = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: e.url(args, options),
     method: 'get',
 })
@@ -248,7 +293,7 @@ e.get = (args: { project: string | { id: string } } | [project: string | { id: s
  * @see app/Http/Controllers/ProjectController.php:133
  * @route '/projects/{project}/edit'
  */
-e.head = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+e.head = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: e.url(args, options),
     method: 'head',
 })

@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:17
  * @route '/admin/subscriptions/plans/{plan}/tools'
  */
-export const index = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const index = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ index.definition = {
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:17
  * @route '/admin/subscriptions/plans/{plan}/tools'
  */
-index.url = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+index.url = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { plan: args }
     }
@@ -52,7 +52,7 @@ index.url = (args: { plan: string | { id: string } } | [plan: string | { id: str
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:17
  * @route '/admin/subscriptions/plans/{plan}/tools'
  */
-index.get = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+index.get = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -61,7 +61,7 @@ index.get = (args: { plan: string | { id: string } } | [plan: string | { id: str
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:17
  * @route '/admin/subscriptions/plans/{plan}/tools'
  */
-index.head = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+index.head = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(args, options),
     method: 'head',
 })
@@ -71,7 +71,7 @@ index.head = (args: { plan: string | { id: string } } | [plan: string | { id: st
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:51
  * @route '/admin/subscriptions/plans/{plan}/tools'
  */
-export const store = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const store = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
 })
@@ -86,7 +86,7 @@ store.definition = {
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:51
  * @route '/admin/subscriptions/plans/{plan}/tools'
  */
-store.url = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+store.url = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { plan: args }
     }
@@ -119,7 +119,7 @@ store.url = (args: { plan: string | { id: string } } | [plan: string | { id: str
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:51
  * @route '/admin/subscriptions/plans/{plan}/tools'
  */
-store.post = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+store.post = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
 })
@@ -129,7 +129,7 @@ store.post = (args: { plan: string | { id: string } } | [plan: string | { id: st
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:96
  * @route '/admin/subscriptions/plans/{plan}/tools/{tool}'
  */
-export const update = (args: { plan: string | { id: string }, tool: string | { id: string } } | [plan: string | { id: string }, tool: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { plan: string | number | { id: string | number }, tool: string | number | { id: string | number } } | [plan: string | number | { id: string | number }, tool: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -144,7 +144,7 @@ update.definition = {
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:96
  * @route '/admin/subscriptions/plans/{plan}/tools/{tool}'
  */
-update.url = (args: { plan: string | { id: string }, tool: string | { id: string } } | [plan: string | { id: string }, tool: string | { id: string } ], options?: RouteQueryOptions) => {
+update.url = (args: { plan: string | number | { id: string | number }, tool: string | number | { id: string | number } } | [plan: string | number | { id: string | number }, tool: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     plan: args[0],
@@ -174,7 +174,7 @@ update.url = (args: { plan: string | { id: string }, tool: string | { id: string
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:96
  * @route '/admin/subscriptions/plans/{plan}/tools/{tool}'
  */
-update.put = (args: { plan: string | { id: string }, tool: string | { id: string } } | [plan: string | { id: string }, tool: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { plan: string | number | { id: string | number }, tool: string | number | { id: string | number } } | [plan: string | number | { id: string | number }, tool: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -184,7 +184,7 @@ update.put = (args: { plan: string | { id: string }, tool: string | { id: string
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:147
  * @route '/admin/subscriptions/plans/{plan}/tools/{tool}'
  */
-export const destroy = (args: { plan: string | { id: string }, tool: string | { id: string } } | [plan: string | { id: string }, tool: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { plan: string | number | { id: string | number }, tool: string | number | { id: string | number } } | [plan: string | number | { id: string | number }, tool: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -199,7 +199,7 @@ destroy.definition = {
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:147
  * @route '/admin/subscriptions/plans/{plan}/tools/{tool}'
  */
-destroy.url = (args: { plan: string | { id: string }, tool: string | { id: string } } | [plan: string | { id: string }, tool: string | { id: string } ], options?: RouteQueryOptions) => {
+destroy.url = (args: { plan: string | number | { id: string | number }, tool: string | number | { id: string | number } } | [plan: string | number | { id: string | number }, tool: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     plan: args[0],
@@ -229,7 +229,7 @@ destroy.url = (args: { plan: string | { id: string }, tool: string | { id: strin
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:147
  * @route '/admin/subscriptions/plans/{plan}/tools/{tool}'
  */
-destroy.delete = (args: { plan: string | { id: string }, tool: string | { id: string } } | [plan: string | { id: string }, tool: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { plan: string | number | { id: string | number }, tool: string | number | { id: string | number } } | [plan: string | number | { id: string | number }, tool: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -239,7 +239,7 @@ destroy.delete = (args: { plan: string | { id: string }, tool: string | { id: st
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:175
  * @route '/admin/subscriptions/plans/{plan}/tools/bulk-toggle'
  */
-export const bulkToggle = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const bulkToggle = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: bulkToggle.url(args, options),
     method: 'post',
 })
@@ -254,7 +254,7 @@ bulkToggle.definition = {
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:175
  * @route '/admin/subscriptions/plans/{plan}/tools/bulk-toggle'
  */
-bulkToggle.url = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+bulkToggle.url = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { plan: args }
     }
@@ -287,7 +287,7 @@ bulkToggle.url = (args: { plan: string | { id: string } } | [plan: string | { id
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:175
  * @route '/admin/subscriptions/plans/{plan}/tools/bulk-toggle'
  */
-bulkToggle.post = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+bulkToggle.post = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: bulkToggle.url(args, options),
     method: 'post',
 })
@@ -297,7 +297,7 @@ bulkToggle.post = (args: { plan: string | { id: string } } | [plan: string | { i
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:205
  * @route '/admin/subscriptions/plans/{plan}/tools/by-category'
  */
-export const getByCategory = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const getByCategory = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getByCategory.url(args, options),
     method: 'get',
 })
@@ -312,7 +312,7 @@ getByCategory.definition = {
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:205
  * @route '/admin/subscriptions/plans/{plan}/tools/by-category'
  */
-getByCategory.url = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+getByCategory.url = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { plan: args }
     }
@@ -345,7 +345,7 @@ getByCategory.url = (args: { plan: string | { id: string } } | [plan: string | {
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:205
  * @route '/admin/subscriptions/plans/{plan}/tools/by-category'
  */
-getByCategory.get = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+getByCategory.get = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getByCategory.url(args, options),
     method: 'get',
 })
@@ -354,7 +354,7 @@ getByCategory.get = (args: { plan: string | { id: string } } | [plan: string | {
  * @see app/Http/Controllers/Admin/SubscriptionPlanToolsController.php:205
  * @route '/admin/subscriptions/plans/{plan}/tools/by-category'
  */
-getByCategory.head = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+getByCategory.head = (args: { plan: string | number | { id: string | number } } | [plan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: getByCategory.url(args, options),
     method: 'head',
 })

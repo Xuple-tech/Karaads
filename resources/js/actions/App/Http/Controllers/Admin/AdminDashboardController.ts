@@ -229,7 +229,7 @@ configuration.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
  * @see app/Http/Controllers/Admin/AdminDashboardController.php:185
  * @route '/admin/management/configuration/{config}'
  */
-export const updateConfiguration = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const updateConfiguration = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateConfiguration.url(args, options),
     method: 'put',
 })
@@ -244,7 +244,7 @@ updateConfiguration.definition = {
  * @see app/Http/Controllers/Admin/AdminDashboardController.php:185
  * @route '/admin/management/configuration/{config}'
  */
-updateConfiguration.url = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+updateConfiguration.url = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { config: args }
     }
@@ -277,7 +277,7 @@ updateConfiguration.url = (args: { config: string | { id: string } } | [config: 
  * @see app/Http/Controllers/Admin/AdminDashboardController.php:185
  * @route '/admin/management/configuration/{config}'
  */
-updateConfiguration.put = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+updateConfiguration.put = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateConfiguration.url(args, options),
     method: 'put',
 })

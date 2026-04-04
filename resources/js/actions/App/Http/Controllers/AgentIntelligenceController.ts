@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
  * @see app/Http/Controllers/AgentIntelligenceController.php:42
  * @route '/projects/{project}/agents/{agent}/intelligence'
  */
-export const show = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ show.definition = {
  * @see app/Http/Controllers/AgentIntelligenceController.php:42
  * @route '/projects/{project}/agents/{agent}/intelligence'
  */
-show.url = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions) => {
+show.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -49,7 +49,7 @@ show.url = (args: { project: string | { id: string }, agent: string | { id: stri
  * @see app/Http/Controllers/AgentIntelligenceController.php:42
  * @route '/projects/{project}/agents/{agent}/intelligence'
  */
-show.get = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -58,7 +58,7 @@ show.get = (args: { project: string | { id: string }, agent: string | { id: stri
  * @see app/Http/Controllers/AgentIntelligenceController.php:42
  * @route '/projects/{project}/agents/{agent}/intelligence'
  */
-show.head = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -68,7 +68,7 @@ show.head = (args: { project: string | { id: string }, agent: string | { id: str
  * @see app/Http/Controllers/AgentIntelligenceController.php:260
  * @route '/projects/{project}/agents/{agent}/intelligence/summary'
  */
-export const summary = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const summary = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: summary.url(args, options),
     method: 'get',
 })
@@ -83,7 +83,7 @@ summary.definition = {
  * @see app/Http/Controllers/AgentIntelligenceController.php:260
  * @route '/projects/{project}/agents/{agent}/intelligence/summary'
  */
-summary.url = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions) => {
+summary.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -113,7 +113,7 @@ summary.url = (args: { project: string | { id: string }, agent: string | { id: s
  * @see app/Http/Controllers/AgentIntelligenceController.php:260
  * @route '/projects/{project}/agents/{agent}/intelligence/summary'
  */
-summary.get = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+summary.get = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: summary.url(args, options),
     method: 'get',
 })
@@ -122,7 +122,7 @@ summary.get = (args: { project: string | { id: string }, agent: string | { id: s
  * @see app/Http/Controllers/AgentIntelligenceController.php:260
  * @route '/projects/{project}/agents/{agent}/intelligence/summary'
  */
-summary.head = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+summary.head = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: summary.url(args, options),
     method: 'head',
 })
@@ -132,7 +132,7 @@ summary.head = (args: { project: string | { id: string }, agent: string | { id: 
  * @see app/Http/Controllers/AgentIntelligenceController.php:227
  * @route '/projects/{project}/agents/{agent}/intelligence/export-memories'
  */
-export const exportMemories = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const exportMemories = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: exportMemories.url(args, options),
     method: 'get',
 })
@@ -147,7 +147,7 @@ exportMemories.definition = {
  * @see app/Http/Controllers/AgentIntelligenceController.php:227
  * @route '/projects/{project}/agents/{agent}/intelligence/export-memories'
  */
-exportMemories.url = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions) => {
+exportMemories.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -177,7 +177,7 @@ exportMemories.url = (args: { project: string | { id: string }, agent: string | 
  * @see app/Http/Controllers/AgentIntelligenceController.php:227
  * @route '/projects/{project}/agents/{agent}/intelligence/export-memories'
  */
-exportMemories.get = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+exportMemories.get = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: exportMemories.url(args, options),
     method: 'get',
 })
@@ -186,7 +186,7 @@ exportMemories.get = (args: { project: string | { id: string }, agent: string | 
  * @see app/Http/Controllers/AgentIntelligenceController.php:227
  * @route '/projects/{project}/agents/{agent}/intelligence/export-memories'
  */
-exportMemories.head = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+exportMemories.head = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: exportMemories.url(args, options),
     method: 'head',
 })

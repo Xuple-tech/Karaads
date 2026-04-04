@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
  * @see app/Http/Controllers/User/AgentConversationController.php:14
  * @route '/ai-agents/agents/{agent}/conversations'
  */
-export const index = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const index = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ index.definition = {
  * @see app/Http/Controllers/User/AgentConversationController.php:14
  * @route '/ai-agents/agents/{agent}/conversations'
  */
-index.url = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+index.url = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agent: args }
     }
@@ -52,7 +52,7 @@ index.url = (args: { agent: string | { id: string } } | [agent: string | { id: s
  * @see app/Http/Controllers/User/AgentConversationController.php:14
  * @route '/ai-agents/agents/{agent}/conversations'
  */
-index.get = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+index.get = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -61,7 +61,7 @@ index.get = (args: { agent: string | { id: string } } | [agent: string | { id: s
  * @see app/Http/Controllers/User/AgentConversationController.php:14
  * @route '/ai-agents/agents/{agent}/conversations'
  */
-index.head = (args: { agent: string | { id: string } } | [agent: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+index.head = (args: { agent: string | number | { id: string | number } } | [agent: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(args, options),
     method: 'head',
 })
@@ -71,7 +71,7 @@ index.head = (args: { agent: string | { id: string } } | [agent: string | { id: 
  * @see app/Http/Controllers/User/AgentConversationController.php:38
  * @route '/ai-agents/agents/{agent}/conversations/{conversation}'
  */
-export const show = (args: { agent: string | { id: string }, conversation: string | { id: string } } | [agent: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -86,7 +86,7 @@ show.definition = {
  * @see app/Http/Controllers/User/AgentConversationController.php:38
  * @route '/ai-agents/agents/{agent}/conversations/{conversation}'
  */
-show.url = (args: { agent: string | { id: string }, conversation: string | { id: string } } | [agent: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions) => {
+show.url = (args: { agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     agent: args[0],
@@ -116,7 +116,7 @@ show.url = (args: { agent: string | { id: string }, conversation: string | { id:
  * @see app/Http/Controllers/User/AgentConversationController.php:38
  * @route '/ai-agents/agents/{agent}/conversations/{conversation}'
  */
-show.get = (args: { agent: string | { id: string }, conversation: string | { id: string } } | [agent: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -125,7 +125,7 @@ show.get = (args: { agent: string | { id: string }, conversation: string | { id:
  * @see app/Http/Controllers/User/AgentConversationController.php:38
  * @route '/ai-agents/agents/{agent}/conversations/{conversation}'
  */
-show.head = (args: { agent: string | { id: string }, conversation: string | { id: string } } | [agent: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -135,7 +135,7 @@ show.head = (args: { agent: string | { id: string }, conversation: string | { id
  * @see app/Http/Controllers/User/AgentConversationController.php:65
  * @route '/ai-agents/agents/{agent}/conversations/{conversation}'
  */
-export const destroy = (args: { agent: string | { id: string }, conversation: string | { id: string } } | [agent: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -150,7 +150,7 @@ destroy.definition = {
  * @see app/Http/Controllers/User/AgentConversationController.php:65
  * @route '/ai-agents/agents/{agent}/conversations/{conversation}'
  */
-destroy.url = (args: { agent: string | { id: string }, conversation: string | { id: string } } | [agent: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions) => {
+destroy.url = (args: { agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     agent: args[0],
@@ -180,7 +180,7 @@ destroy.url = (args: { agent: string | { id: string }, conversation: string | { 
  * @see app/Http/Controllers/User/AgentConversationController.php:65
  * @route '/ai-agents/agents/{agent}/conversations/{conversation}'
  */
-destroy.delete = (args: { agent: string | { id: string }, conversation: string | { id: string } } | [agent: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -190,7 +190,7 @@ destroy.delete = (args: { agent: string | { id: string }, conversation: string |
  * @see app/Http/Controllers/User/AgentConversationController.php:78
  * @route '/ai-agents/agents/{agent}/conversations/{conversation}/close'
  */
-export const close = (args: { agent: string | { id: string }, conversation: string | { id: string } } | [agent: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const close = (args: { agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: close.url(args, options),
     method: 'post',
 })
@@ -205,7 +205,7 @@ close.definition = {
  * @see app/Http/Controllers/User/AgentConversationController.php:78
  * @route '/ai-agents/agents/{agent}/conversations/{conversation}/close'
  */
-close.url = (args: { agent: string | { id: string }, conversation: string | { id: string } } | [agent: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions) => {
+close.url = (args: { agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     agent: args[0],
@@ -235,7 +235,7 @@ close.url = (args: { agent: string | { id: string }, conversation: string | { id
  * @see app/Http/Controllers/User/AgentConversationController.php:78
  * @route '/ai-agents/agents/{agent}/conversations/{conversation}/close'
  */
-close.post = (args: { agent: string | { id: string }, conversation: string | { id: string } } | [agent: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+close.post = (args: { agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: close.url(args, options),
     method: 'post',
 })
@@ -245,7 +245,7 @@ close.post = (args: { agent: string | { id: string }, conversation: string | { i
  * @see app/Http/Controllers/User/AgentConversationController.php:91
  * @route '/ai-agents/agents/{agent}/conversations/{conversation}/reopen'
  */
-export const reopen = (args: { agent: string | { id: string }, conversation: string | { id: string } } | [agent: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const reopen = (args: { agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: reopen.url(args, options),
     method: 'post',
 })
@@ -260,7 +260,7 @@ reopen.definition = {
  * @see app/Http/Controllers/User/AgentConversationController.php:91
  * @route '/ai-agents/agents/{agent}/conversations/{conversation}/reopen'
  */
-reopen.url = (args: { agent: string | { id: string }, conversation: string | { id: string } } | [agent: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions) => {
+reopen.url = (args: { agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     agent: args[0],
@@ -290,7 +290,7 @@ reopen.url = (args: { agent: string | { id: string }, conversation: string | { i
  * @see app/Http/Controllers/User/AgentConversationController.php:91
  * @route '/ai-agents/agents/{agent}/conversations/{conversation}/reopen'
  */
-reopen.post = (args: { agent: string | { id: string }, conversation: string | { id: string } } | [agent: string | { id: string }, conversation: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+reopen.post = (args: { agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } } | [agent: string | number | { id: string | number }, conversation: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: reopen.url(args, options),
     method: 'post',
 })

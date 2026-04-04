@@ -8,6 +8,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectChatController;
+use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\User;
 use App\Http\Controllers\Meta\MetaAccountController;
 use App\Http\Controllers\Meta\MetaMessageController;
@@ -155,17 +156,20 @@ Route::middleware('auth')->group(function () {
 
 // routes/web.php - Enhanced AI Project Routes
 Route::middleware(['auth', 'web'])->group(function () {
+    Route::get('/workspace', [WorkspaceController::class, 'index'])->name('workspace.index');
+    Route::get('/workspace/{project}', [WorkspaceController::class, 'show'])->name('workspace.show');
+
     // Enhanced Project CRUD with AI Features
-    Route::get('/projects', [EnhancedProjectController::class, 'index'])->name('p.i');
-    Route::get('/projects/create', [EnhancedProjectController::class, 'create'])->name('p.c');
+    Route::get('/projects', [WorkspaceController::class, 'index'])->name('p.i');
+    Route::redirect('/projects/create', '/workspace')->name('p.c');
     Route::post('/projects', [EnhancedProjectController::class, 'store'])->name('p.s');
-    Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('p.sh');
+    Route::get('/projects/{project}', [WorkspaceController::class, 'show'])->name('p.sh');
     Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])->name('p.e');
     Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
     Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
     // Enhanced Project Dashboard & AI Features
-    Route::get('/projects/{project}/dashboard', [EnhancedProjectController::class, 'dashboard'])->name('projects.dashboard');
+    Route::get('/projects/{project}/dashboard', [WorkspaceController::class, 'show'])->name('projects.dashboard');
     Route::put('/projects/{project}/settings', [EnhancedProjectController::class, 'updateSettings'])->name('projects.settings.update');
 
     // AI-Powered Features
@@ -208,7 +212,7 @@ Route::middleware(['auth', 'web'])->group(function () {
     Route::delete('/projects/{project}/files/{file}', [ProjectController::class, 'deleteFile'])->name('projects.files.delete');
 
     // Project Dashboard & Advanced Features
-    Route::get('/projects/{project}/dashboard', [ProjectController::class, 'dashboard'])->name('projects.dashboard');
+    Route::get('/projects/{project}/dashboard', [WorkspaceController::class, 'show'])->name('projects.dashboard');
     Route::get('/projects/{project}/settings', [ProjectController::class, 'settings'])->name('projects.settings');
     Route::put('/projects/{project}/settings', [ProjectController::class, 'updateSettings'])->name('projects.settings.update');
 

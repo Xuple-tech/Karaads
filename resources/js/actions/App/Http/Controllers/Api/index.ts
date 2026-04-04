@@ -8,6 +8,7 @@ import ChatPreferenceController from './ChatPreferenceController'
 import PersonalizationController from './PersonalizationController'
 import SubscriptionLimitsController from './SubscriptionLimitsController'
 import Widget from './Widget'
+import Workspace from './Workspace'
 import Demo from './Demo'
 const Api = {
     AuthController: Object.assign(AuthController, AuthController),
@@ -20,6 +21,7 @@ ChatPreferenceController: Object.assign(ChatPreferenceController, ChatPreference
 PersonalizationController: Object.assign(PersonalizationController, PersonalizationController),
 SubscriptionLimitsController: Object.assign(SubscriptionLimitsController, SubscriptionLimitsController),
 Widget: Object.assign(Widget, Widget),
+Workspace: Object.assign(Workspace, Workspace),
 Demo: Object.assign(Demo, Demo),
 }
 

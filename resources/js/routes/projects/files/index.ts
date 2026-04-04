@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
  * @see app/Http/Controllers/ProjectController.php:604
  * @route '/projects/{project}/files/upload'
  */
-export const upload = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const upload = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: upload.url(args, options),
     method: 'post',
 })
@@ -19,7 +19,7 @@ upload.definition = {
  * @see app/Http/Controllers/ProjectController.php:604
  * @route '/projects/{project}/files/upload'
  */
-upload.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+upload.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -52,7 +52,7 @@ upload.url = (args: { project: string | { id: string } } | [project: string | { 
  * @see app/Http/Controllers/ProjectController.php:604
  * @route '/projects/{project}/files/upload'
  */
-upload.post = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+upload.post = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: upload.url(args, options),
     method: 'post',
 })
@@ -62,7 +62,7 @@ upload.post = (args: { project: string | { id: string } } | [project: string | {
  * @see app/Http/Controllers/ProjectController.php:653
  * @route '/projects/{project}/files/{file}'
  */
-export const deleteMethod = (args: { project: string | { id: string }, file: string | { id: string } } | [project: string | { id: string }, file: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const deleteMethod = (args: { project: string | number | { id: string | number }, file: string | number | { id: string | number } } | [project: string | number | { id: string | number }, file: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteMethod.url(args, options),
     method: 'delete',
 })
@@ -77,7 +77,7 @@ deleteMethod.definition = {
  * @see app/Http/Controllers/ProjectController.php:653
  * @route '/projects/{project}/files/{file}'
  */
-deleteMethod.url = (args: { project: string | { id: string }, file: string | { id: string } } | [project: string | { id: string }, file: string | { id: string } ], options?: RouteQueryOptions) => {
+deleteMethod.url = (args: { project: string | number | { id: string | number }, file: string | number | { id: string | number } } | [project: string | number | { id: string | number }, file: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -107,7 +107,7 @@ deleteMethod.url = (args: { project: string | { id: string }, file: string | { i
  * @see app/Http/Controllers/ProjectController.php:653
  * @route '/projects/{project}/files/{file}'
  */
-deleteMethod.delete = (args: { project: string | { id: string }, file: string | { id: string } } | [project: string | { id: string }, file: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+deleteMethod.delete = (args: { project: string | number | { id: string | number }, file: string | number | { id: string | number } } | [project: string | number | { id: string | number }, file: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteMethod.url(args, options),
     method: 'delete',
 })

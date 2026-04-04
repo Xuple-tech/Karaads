@@ -124,7 +124,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/Admin/AgentUsageStatController.php:113
  * @route '/admin/agent-usage-stats/{agentUsageStat}'
  */
-export const show = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { agentUsageStat: string | number | { id: string | number } } | [agentUsageStat: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -139,7 +139,7 @@ show.definition = {
  * @see app/Http/Controllers/Admin/AgentUsageStatController.php:113
  * @route '/admin/agent-usage-stats/{agentUsageStat}'
  */
-show.url = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+show.url = (args: { agentUsageStat: string | number | { id: string | number } } | [agentUsageStat: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentUsageStat: args }
     }
@@ -172,7 +172,7 @@ show.url = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat:
  * @see app/Http/Controllers/Admin/AgentUsageStatController.php:113
  * @route '/admin/agent-usage-stats/{agentUsageStat}'
  */
-show.get = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { agentUsageStat: string | number | { id: string | number } } | [agentUsageStat: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -181,7 +181,7 @@ show.get = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat:
  * @see app/Http/Controllers/Admin/AgentUsageStatController.php:113
  * @route '/admin/agent-usage-stats/{agentUsageStat}'
  */
-show.head = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { agentUsageStat: string | number | { id: string | number } } | [agentUsageStat: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -191,7 +191,7 @@ show.head = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat
  * @see app/Http/Controllers/Admin/AgentUsageStatController.php:125
  * @route '/admin/agent-usage-stats/{agentUsageStat}/edit'
  */
-export const edit = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { agentUsageStat: string | number | { id: string | number } } | [agentUsageStat: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -206,7 +206,7 @@ edit.definition = {
  * @see app/Http/Controllers/Admin/AgentUsageStatController.php:125
  * @route '/admin/agent-usage-stats/{agentUsageStat}/edit'
  */
-edit.url = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+edit.url = (args: { agentUsageStat: string | number | { id: string | number } } | [agentUsageStat: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentUsageStat: args }
     }
@@ -239,7 +239,7 @@ edit.url = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat:
  * @see app/Http/Controllers/Admin/AgentUsageStatController.php:125
  * @route '/admin/agent-usage-stats/{agentUsageStat}/edit'
  */
-edit.get = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { agentUsageStat: string | number | { id: string | number } } | [agentUsageStat: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -248,7 +248,7 @@ edit.get = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat:
  * @see app/Http/Controllers/Admin/AgentUsageStatController.php:125
  * @route '/admin/agent-usage-stats/{agentUsageStat}/edit'
  */
-edit.head = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { agentUsageStat: string | number | { id: string | number } } | [agentUsageStat: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -258,7 +258,7 @@ edit.head = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat
  * @see app/Http/Controllers/Admin/AgentUsageStatController.php:138
  * @route '/admin/agent-usage-stats/{agentUsageStat}'
  */
-export const update = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { agentUsageStat: string | number | { id: string | number } } | [agentUsageStat: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -273,7 +273,7 @@ update.definition = {
  * @see app/Http/Controllers/Admin/AgentUsageStatController.php:138
  * @route '/admin/agent-usage-stats/{agentUsageStat}'
  */
-update.url = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+update.url = (args: { agentUsageStat: string | number | { id: string | number } } | [agentUsageStat: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentUsageStat: args }
     }
@@ -306,7 +306,7 @@ update.url = (args: { agentUsageStat: string | { id: string } } | [agentUsageSta
  * @see app/Http/Controllers/Admin/AgentUsageStatController.php:138
  * @route '/admin/agent-usage-stats/{agentUsageStat}'
  */
-update.put = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { agentUsageStat: string | number | { id: string | number } } | [agentUsageStat: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -316,7 +316,7 @@ update.put = (args: { agentUsageStat: string | { id: string } } | [agentUsageSta
  * @see app/Http/Controllers/Admin/AgentUsageStatController.php:175
  * @route '/admin/agent-usage-stats/{agentUsageStat}'
  */
-export const destroy = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { agentUsageStat: string | number | { id: string | number } } | [agentUsageStat: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -331,7 +331,7 @@ destroy.definition = {
  * @see app/Http/Controllers/Admin/AgentUsageStatController.php:175
  * @route '/admin/agent-usage-stats/{agentUsageStat}'
  */
-destroy.url = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+destroy.url = (args: { agentUsageStat: string | number | { id: string | number } } | [agentUsageStat: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentUsageStat: args }
     }
@@ -364,7 +364,7 @@ destroy.url = (args: { agentUsageStat: string | { id: string } } | [agentUsageSt
  * @see app/Http/Controllers/Admin/AgentUsageStatController.php:175
  * @route '/admin/agent-usage-stats/{agentUsageStat}'
  */
-destroy.delete = (args: { agentUsageStat: string | { id: string } } | [agentUsageStat: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { agentUsageStat: string | number | { id: string | number } } | [agentUsageStat: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })

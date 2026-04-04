@@ -124,7 +124,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/Admin/AgentTemplateController.php:72
  * @route '/admin/agent-templates/{agentTemplate}'
  */
-export const show = (args: { agentTemplate: string | { id: string } } | [agentTemplate: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { agentTemplate: string | number | { id: string | number } } | [agentTemplate: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -139,7 +139,7 @@ show.definition = {
  * @see app/Http/Controllers/Admin/AgentTemplateController.php:72
  * @route '/admin/agent-templates/{agentTemplate}'
  */
-show.url = (args: { agentTemplate: string | { id: string } } | [agentTemplate: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+show.url = (args: { agentTemplate: string | number | { id: string | number } } | [agentTemplate: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentTemplate: args }
     }
@@ -172,7 +172,7 @@ show.url = (args: { agentTemplate: string | { id: string } } | [agentTemplate: s
  * @see app/Http/Controllers/Admin/AgentTemplateController.php:72
  * @route '/admin/agent-templates/{agentTemplate}'
  */
-show.get = (args: { agentTemplate: string | { id: string } } | [agentTemplate: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { agentTemplate: string | number | { id: string | number } } | [agentTemplate: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -181,7 +181,7 @@ show.get = (args: { agentTemplate: string | { id: string } } | [agentTemplate: s
  * @see app/Http/Controllers/Admin/AgentTemplateController.php:72
  * @route '/admin/agent-templates/{agentTemplate}'
  */
-show.head = (args: { agentTemplate: string | { id: string } } | [agentTemplate: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { agentTemplate: string | number | { id: string | number } } | [agentTemplate: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -191,7 +191,7 @@ show.head = (args: { agentTemplate: string | { id: string } } | [agentTemplate: 
  * @see app/Http/Controllers/Admin/AgentTemplateController.php:84
  * @route '/admin/agent-templates/{agentTemplate}/edit'
  */
-export const edit = (args: { agentTemplate: string | { id: string } } | [agentTemplate: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { agentTemplate: string | number | { id: string | number } } | [agentTemplate: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -206,7 +206,7 @@ edit.definition = {
  * @see app/Http/Controllers/Admin/AgentTemplateController.php:84
  * @route '/admin/agent-templates/{agentTemplate}/edit'
  */
-edit.url = (args: { agentTemplate: string | { id: string } } | [agentTemplate: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+edit.url = (args: { agentTemplate: string | number | { id: string | number } } | [agentTemplate: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentTemplate: args }
     }
@@ -239,7 +239,7 @@ edit.url = (args: { agentTemplate: string | { id: string } } | [agentTemplate: s
  * @see app/Http/Controllers/Admin/AgentTemplateController.php:84
  * @route '/admin/agent-templates/{agentTemplate}/edit'
  */
-edit.get = (args: { agentTemplate: string | { id: string } } | [agentTemplate: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { agentTemplate: string | number | { id: string | number } } | [agentTemplate: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -248,7 +248,7 @@ edit.get = (args: { agentTemplate: string | { id: string } } | [agentTemplate: s
  * @see app/Http/Controllers/Admin/AgentTemplateController.php:84
  * @route '/admin/agent-templates/{agentTemplate}/edit'
  */
-edit.head = (args: { agentTemplate: string | { id: string } } | [agentTemplate: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { agentTemplate: string | number | { id: string | number } } | [agentTemplate: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -258,7 +258,7 @@ edit.head = (args: { agentTemplate: string | { id: string } } | [agentTemplate: 
  * @see app/Http/Controllers/Admin/AgentTemplateController.php:99
  * @route '/admin/agent-templates/{agentTemplate}'
  */
-export const update = (args: { agentTemplate: string | { id: string } } | [agentTemplate: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { agentTemplate: string | number | { id: string | number } } | [agentTemplate: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -273,7 +273,7 @@ update.definition = {
  * @see app/Http/Controllers/Admin/AgentTemplateController.php:99
  * @route '/admin/agent-templates/{agentTemplate}'
  */
-update.url = (args: { agentTemplate: string | { id: string } } | [agentTemplate: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+update.url = (args: { agentTemplate: string | number | { id: string | number } } | [agentTemplate: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentTemplate: args }
     }
@@ -306,7 +306,7 @@ update.url = (args: { agentTemplate: string | { id: string } } | [agentTemplate:
  * @see app/Http/Controllers/Admin/AgentTemplateController.php:99
  * @route '/admin/agent-templates/{agentTemplate}'
  */
-update.put = (args: { agentTemplate: string | { id: string } } | [agentTemplate: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { agentTemplate: string | number | { id: string | number } } | [agentTemplate: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -316,7 +316,7 @@ update.put = (args: { agentTemplate: string | { id: string } } | [agentTemplate:
  * @see app/Http/Controllers/Admin/AgentTemplateController.php:126
  * @route '/admin/agent-templates/{agentTemplate}'
  */
-export const destroy = (args: { agentTemplate: string | { id: string } } | [agentTemplate: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { agentTemplate: string | number | { id: string | number } } | [agentTemplate: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -331,7 +331,7 @@ destroy.definition = {
  * @see app/Http/Controllers/Admin/AgentTemplateController.php:126
  * @route '/admin/agent-templates/{agentTemplate}'
  */
-destroy.url = (args: { agentTemplate: string | { id: string } } | [agentTemplate: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+destroy.url = (args: { agentTemplate: string | number | { id: string | number } } | [agentTemplate: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentTemplate: args }
     }
@@ -364,7 +364,7 @@ destroy.url = (args: { agentTemplate: string | { id: string } } | [agentTemplate
  * @see app/Http/Controllers/Admin/AgentTemplateController.php:126
  * @route '/admin/agent-templates/{agentTemplate}'
  */
-destroy.delete = (args: { agentTemplate: string | { id: string } } | [agentTemplate: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { agentTemplate: string | number | { id: string | number } } | [agentTemplate: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -374,7 +374,7 @@ destroy.delete = (args: { agentTemplate: string | { id: string } } | [agentTempl
  * @see app/Http/Controllers/Admin/AgentTemplateController.php:142
  * @route '/admin/agent-templates/{agentTemplate}/toggle'
  */
-export const toggleStatus = (args: { agentTemplate: string | { id: string } } | [agentTemplate: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const toggleStatus = (args: { agentTemplate: string | number | { id: string | number } } | [agentTemplate: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleStatus.url(args, options),
     method: 'patch',
 })
@@ -389,7 +389,7 @@ toggleStatus.definition = {
  * @see app/Http/Controllers/Admin/AgentTemplateController.php:142
  * @route '/admin/agent-templates/{agentTemplate}/toggle'
  */
-toggleStatus.url = (args: { agentTemplate: string | { id: string } } | [agentTemplate: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+toggleStatus.url = (args: { agentTemplate: string | number | { id: string | number } } | [agentTemplate: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { agentTemplate: args }
     }
@@ -422,7 +422,7 @@ toggleStatus.url = (args: { agentTemplate: string | { id: string } } | [agentTem
  * @see app/Http/Controllers/Admin/AgentTemplateController.php:142
  * @route '/admin/agent-templates/{agentTemplate}/toggle'
  */
-toggleStatus.patch = (args: { agentTemplate: string | { id: string } } | [agentTemplate: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+toggleStatus.patch = (args: { agentTemplate: string | number | { id: string | number } } | [agentTemplate: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: toggleStatus.url(args, options),
     method: 'patch',
 })

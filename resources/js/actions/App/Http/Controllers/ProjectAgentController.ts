@@ -4,7 +4,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefa
  * @see app/Http/Controllers/ProjectAgentController.php:21
  * @route '/api/projects/{project}/agents'
  */
-export const index = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const index = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -19,7 +19,7 @@ index.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:21
  * @route '/api/projects/{project}/agents'
  */
-index.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+index.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -52,7 +52,7 @@ index.url = (args: { project: string | { id: string } } | [project: string | { i
  * @see app/Http/Controllers/ProjectAgentController.php:21
  * @route '/api/projects/{project}/agents'
  */
-index.get = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+index.get = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(args, options),
     method: 'get',
 })
@@ -61,7 +61,7 @@ index.get = (args: { project: string | { id: string } } | [project: string | { i
  * @see app/Http/Controllers/ProjectAgentController.php:21
  * @route '/api/projects/{project}/agents'
  */
-index.head = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+index.head = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(args, options),
     method: 'head',
 })
@@ -71,7 +71,7 @@ index.head = (args: { project: string | { id: string } } | [project: string | { 
  * @see app/Http/Controllers/ProjectAgentController.php:43
  * @route '/api/projects/{project}/agents'
  */
-export const store = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const store = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
 })
@@ -86,7 +86,7 @@ store.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:43
  * @route '/api/projects/{project}/agents'
  */
-store.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+store.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -119,7 +119,7 @@ store.url = (args: { project: string | { id: string } } | [project: string | { i
  * @see app/Http/Controllers/ProjectAgentController.php:43
  * @route '/api/projects/{project}/agents'
  */
-store.post = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+store.post = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(args, options),
     method: 'post',
 })
@@ -129,7 +129,7 @@ store.post = (args: { project: string | { id: string } } | [project: string | { 
  * @see app/Http/Controllers/ProjectAgentController.php:75
  * @route '/api/projects/{project}/agents/{agent}'
  */
-export const show = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -144,7 +144,7 @@ show.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:75
  * @route '/api/projects/{project}/agents/{agent}'
  */
-show.url = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions) => {
+show.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -174,7 +174,7 @@ show.url = (args: { project: string | { id: string }, agent: string | { id: stri
  * @see app/Http/Controllers/ProjectAgentController.php:75
  * @route '/api/projects/{project}/agents/{agent}'
  */
-show.get = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -183,7 +183,7 @@ show.get = (args: { project: string | { id: string }, agent: string | { id: stri
  * @see app/Http/Controllers/ProjectAgentController.php:75
  * @route '/api/projects/{project}/agents/{agent}'
  */
-show.head = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -193,7 +193,7 @@ show.head = (args: { project: string | { id: string }, agent: string | { id: str
  * @see app/Http/Controllers/ProjectAgentController.php:91
  * @route '/api/projects/{project}/agents/{agent}'
  */
-export const update = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -208,7 +208,7 @@ update.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:91
  * @route '/api/projects/{project}/agents/{agent}'
  */
-update.url = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions) => {
+update.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -238,7 +238,7 @@ update.url = (args: { project: string | { id: string }, agent: string | { id: st
  * @see app/Http/Controllers/ProjectAgentController.php:91
  * @route '/api/projects/{project}/agents/{agent}'
  */
-update.put = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -248,7 +248,7 @@ update.put = (args: { project: string | { id: string }, agent: string | { id: st
  * @see app/Http/Controllers/ProjectAgentController.php:118
  * @route '/api/projects/{project}/agents/{agent}'
  */
-export const destroy = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -263,7 +263,7 @@ destroy.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:118
  * @route '/api/projects/{project}/agents/{agent}'
  */
-destroy.url = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions) => {
+destroy.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -293,7 +293,7 @@ destroy.url = (args: { project: string | { id: string }, agent: string | { id: s
  * @see app/Http/Controllers/ProjectAgentController.php:118
  * @route '/api/projects/{project}/agents/{agent}'
  */
-destroy.delete = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -303,7 +303,7 @@ destroy.delete = (args: { project: string | { id: string }, agent: string | { id
  * @see app/Http/Controllers/ProjectAgentController.php:440
  * @route '/api/projects/{project}/agents/{agent}/toggle-status'
  */
-export const toggleStatus = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const toggleStatus = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: toggleStatus.url(args, options),
     method: 'post',
 })
@@ -318,7 +318,7 @@ toggleStatus.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:440
  * @route '/api/projects/{project}/agents/{agent}/toggle-status'
  */
-toggleStatus.url = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions) => {
+toggleStatus.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -348,7 +348,7 @@ toggleStatus.url = (args: { project: string | { id: string }, agent: string | { 
  * @see app/Http/Controllers/ProjectAgentController.php:440
  * @route '/api/projects/{project}/agents/{agent}/toggle-status'
  */
-toggleStatus.post = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+toggleStatus.post = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: toggleStatus.url(args, options),
     method: 'post',
 })
@@ -358,7 +358,7 @@ toggleStatus.post = (args: { project: string | { id: string }, agent: string | {
  * @see app/Http/Controllers/ProjectAgentController.php:400
  * @route '/api/projects/{project}/agents/{agent}/statistics'
  */
-export const statistics = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const statistics = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: statistics.url(args, options),
     method: 'get',
 })
@@ -373,7 +373,7 @@ statistics.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:400
  * @route '/api/projects/{project}/agents/{agent}/statistics'
  */
-statistics.url = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions) => {
+statistics.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -403,7 +403,7 @@ statistics.url = (args: { project: string | { id: string }, agent: string | { id
  * @see app/Http/Controllers/ProjectAgentController.php:400
  * @route '/api/projects/{project}/agents/{agent}/statistics'
  */
-statistics.get = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+statistics.get = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: statistics.url(args, options),
     method: 'get',
 })
@@ -412,7 +412,7 @@ statistics.get = (args: { project: string | { id: string }, agent: string | { id
  * @see app/Http/Controllers/ProjectAgentController.php:400
  * @route '/api/projects/{project}/agents/{agent}/statistics'
  */
-statistics.head = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+statistics.head = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: statistics.url(args, options),
     method: 'head',
 })
@@ -422,7 +422,7 @@ statistics.head = (args: { project: string | { id: string }, agent: string | { i
  * @see app/Http/Controllers/ProjectAgentController.php:136
  * @route '/api/projects/{project}/agents/{agent}/triggers'
  */
-export const triggers = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const triggers = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: triggers.url(args, options),
     method: 'get',
 })
@@ -437,7 +437,7 @@ triggers.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:136
  * @route '/api/projects/{project}/agents/{agent}/triggers'
  */
-triggers.url = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions) => {
+triggers.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -467,7 +467,7 @@ triggers.url = (args: { project: string | { id: string }, agent: string | { id: 
  * @see app/Http/Controllers/ProjectAgentController.php:136
  * @route '/api/projects/{project}/agents/{agent}/triggers'
  */
-triggers.get = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+triggers.get = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: triggers.url(args, options),
     method: 'get',
 })
@@ -476,7 +476,7 @@ triggers.get = (args: { project: string | { id: string }, agent: string | { id: 
  * @see app/Http/Controllers/ProjectAgentController.php:136
  * @route '/api/projects/{project}/agents/{agent}/triggers'
  */
-triggers.head = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+triggers.head = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: triggers.url(args, options),
     method: 'head',
 })
@@ -486,7 +486,7 @@ triggers.head = (args: { project: string | { id: string }, agent: string | { id:
  * @see app/Http/Controllers/ProjectAgentController.php:161
  * @route '/api/projects/{project}/agents/{agent}/triggers'
  */
-export const storeTrigger = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const storeTrigger = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: storeTrigger.url(args, options),
     method: 'post',
 })
@@ -501,7 +501,7 @@ storeTrigger.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:161
  * @route '/api/projects/{project}/agents/{agent}/triggers'
  */
-storeTrigger.url = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions) => {
+storeTrigger.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -531,7 +531,7 @@ storeTrigger.url = (args: { project: string | { id: string }, agent: string | { 
  * @see app/Http/Controllers/ProjectAgentController.php:161
  * @route '/api/projects/{project}/agents/{agent}/triggers'
  */
-storeTrigger.post = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+storeTrigger.post = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: storeTrigger.url(args, options),
     method: 'post',
 })
@@ -541,7 +541,7 @@ storeTrigger.post = (args: { project: string | { id: string }, agent: string | {
  * @see app/Http/Controllers/ProjectAgentController.php:194
  * @route '/api/projects/{project}/agents/{agent}/triggers/{trigger}'
  */
-export const updateTrigger = (args: { project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const updateTrigger = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateTrigger.url(args, options),
     method: 'put',
 })
@@ -556,7 +556,7 @@ updateTrigger.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:194
  * @route '/api/projects/{project}/agents/{agent}/triggers/{trigger}'
  */
-updateTrigger.url = (args: { project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } ], options?: RouteQueryOptions) => {
+updateTrigger.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -591,7 +591,7 @@ updateTrigger.url = (args: { project: string | { id: string }, agent: string | {
  * @see app/Http/Controllers/ProjectAgentController.php:194
  * @route '/api/projects/{project}/agents/{agent}/triggers/{trigger}'
  */
-updateTrigger.put = (args: { project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+updateTrigger.put = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateTrigger.url(args, options),
     method: 'put',
 })
@@ -601,7 +601,7 @@ updateTrigger.put = (args: { project: string | { id: string }, agent: string | {
  * @see app/Http/Controllers/ProjectAgentController.php:220
  * @route '/api/projects/{project}/agents/{agent}/triggers/{trigger}'
  */
-export const destroyTrigger = (args: { project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroyTrigger = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroyTrigger.url(args, options),
     method: 'delete',
 })
@@ -616,7 +616,7 @@ destroyTrigger.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:220
  * @route '/api/projects/{project}/agents/{agent}/triggers/{trigger}'
  */
-destroyTrigger.url = (args: { project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } ], options?: RouteQueryOptions) => {
+destroyTrigger.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -651,7 +651,7 @@ destroyTrigger.url = (args: { project: string | { id: string }, agent: string | 
  * @see app/Http/Controllers/ProjectAgentController.php:220
  * @route '/api/projects/{project}/agents/{agent}/triggers/{trigger}'
  */
-destroyTrigger.delete = (args: { project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroyTrigger.delete = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroyTrigger.url(args, options),
     method: 'delete',
 })
@@ -661,7 +661,7 @@ destroyTrigger.delete = (args: { project: string | { id: string }, agent: string
  * @see app/Http/Controllers/ProjectAgentController.php:461
  * @route '/api/projects/{project}/agents/{agent}/triggers/{trigger}/test'
  */
-export const testTrigger = (args: { project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const testTrigger = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: testTrigger.url(args, options),
     method: 'post',
 })
@@ -676,7 +676,7 @@ testTrigger.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:461
  * @route '/api/projects/{project}/agents/{agent}/triggers/{trigger}/test'
  */
-testTrigger.url = (args: { project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } ], options?: RouteQueryOptions) => {
+testTrigger.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -711,7 +711,7 @@ testTrigger.url = (args: { project: string | { id: string }, agent: string | { i
  * @see app/Http/Controllers/ProjectAgentController.php:461
  * @route '/api/projects/{project}/agents/{agent}/triggers/{trigger}/test'
  */
-testTrigger.post = (args: { project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, trigger: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+testTrigger.post = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, trigger: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: testTrigger.url(args, options),
     method: 'post',
 })
@@ -721,7 +721,7 @@ testTrigger.post = (args: { project: string | { id: string }, agent: string | { 
  * @see app/Http/Controllers/ProjectAgentController.php:238
  * @route '/api/projects/{project}/agents/{agent}/actions'
  */
-export const actions = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const actions = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: actions.url(args, options),
     method: 'get',
 })
@@ -736,7 +736,7 @@ actions.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:238
  * @route '/api/projects/{project}/agents/{agent}/actions'
  */
-actions.url = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions) => {
+actions.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -766,7 +766,7 @@ actions.url = (args: { project: string | { id: string }, agent: string | { id: s
  * @see app/Http/Controllers/ProjectAgentController.php:238
  * @route '/api/projects/{project}/agents/{agent}/actions'
  */
-actions.get = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+actions.get = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: actions.url(args, options),
     method: 'get',
 })
@@ -775,7 +775,7 @@ actions.get = (args: { project: string | { id: string }, agent: string | { id: s
  * @see app/Http/Controllers/ProjectAgentController.php:238
  * @route '/api/projects/{project}/agents/{agent}/actions'
  */
-actions.head = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+actions.head = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: actions.url(args, options),
     method: 'head',
 })
@@ -785,7 +785,7 @@ actions.head = (args: { project: string | { id: string }, agent: string | { id: 
  * @see app/Http/Controllers/ProjectAgentController.php:263
  * @route '/api/projects/{project}/agents/{agent}/actions'
  */
-export const storeAction = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const storeAction = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: storeAction.url(args, options),
     method: 'post',
 })
@@ -800,7 +800,7 @@ storeAction.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:263
  * @route '/api/projects/{project}/agents/{agent}/actions'
  */
-storeAction.url = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions) => {
+storeAction.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -830,7 +830,7 @@ storeAction.url = (args: { project: string | { id: string }, agent: string | { i
  * @see app/Http/Controllers/ProjectAgentController.php:263
  * @route '/api/projects/{project}/agents/{agent}/actions'
  */
-storeAction.post = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+storeAction.post = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: storeAction.url(args, options),
     method: 'post',
 })
@@ -840,7 +840,7 @@ storeAction.post = (args: { project: string | { id: string }, agent: string | { 
  * @see app/Http/Controllers/ProjectAgentController.php:300
  * @route '/api/projects/{project}/agents/{agent}/actions/{action}'
  */
-export const updateAction = (args: { project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const updateAction = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateAction.url(args, options),
     method: 'put',
 })
@@ -855,7 +855,7 @@ updateAction.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:300
  * @route '/api/projects/{project}/agents/{agent}/actions/{action}'
  */
-updateAction.url = (args: { project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } ], options?: RouteQueryOptions) => {
+updateAction.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -890,7 +890,7 @@ updateAction.url = (args: { project: string | { id: string }, agent: string | { 
  * @see app/Http/Controllers/ProjectAgentController.php:300
  * @route '/api/projects/{project}/agents/{agent}/actions/{action}'
  */
-updateAction.put = (args: { project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+updateAction.put = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateAction.url(args, options),
     method: 'put',
 })
@@ -900,7 +900,7 @@ updateAction.put = (args: { project: string | { id: string }, agent: string | { 
  * @see app/Http/Controllers/ProjectAgentController.php:326
  * @route '/api/projects/{project}/agents/{agent}/actions/{action}'
  */
-export const destroyAction = (args: { project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroyAction = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroyAction.url(args, options),
     method: 'delete',
 })
@@ -915,7 +915,7 @@ destroyAction.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:326
  * @route '/api/projects/{project}/agents/{agent}/actions/{action}'
  */
-destroyAction.url = (args: { project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } ], options?: RouteQueryOptions) => {
+destroyAction.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -950,7 +950,7 @@ destroyAction.url = (args: { project: string | { id: string }, agent: string | {
  * @see app/Http/Controllers/ProjectAgentController.php:326
  * @route '/api/projects/{project}/agents/{agent}/actions/{action}'
  */
-destroyAction.delete = (args: { project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, action: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroyAction.delete = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, action: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroyAction.url(args, options),
     method: 'delete',
 })
@@ -960,7 +960,7 @@ destroyAction.delete = (args: { project: string | { id: string }, agent: string 
  * @see app/Http/Controllers/ProjectAgentController.php:344
  * @route '/api/projects/{project}/agents/{agent}/executions'
  */
-export const executionLogs = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const executionLogs = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: executionLogs.url(args, options),
     method: 'get',
 })
@@ -975,7 +975,7 @@ executionLogs.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:344
  * @route '/api/projects/{project}/agents/{agent}/executions'
  */
-executionLogs.url = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions) => {
+executionLogs.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -1005,7 +1005,7 @@ executionLogs.url = (args: { project: string | { id: string }, agent: string | {
  * @see app/Http/Controllers/ProjectAgentController.php:344
  * @route '/api/projects/{project}/agents/{agent}/executions'
  */
-executionLogs.get = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+executionLogs.get = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: executionLogs.url(args, options),
     method: 'get',
 })
@@ -1014,7 +1014,7 @@ executionLogs.get = (args: { project: string | { id: string }, agent: string | {
  * @see app/Http/Controllers/ProjectAgentController.php:344
  * @route '/api/projects/{project}/agents/{agent}/executions'
  */
-executionLogs.head = (args: { project: string | { id: string }, agent: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+executionLogs.head = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: executionLogs.url(args, options),
     method: 'head',
 })
@@ -1024,7 +1024,7 @@ executionLogs.head = (args: { project: string | { id: string }, agent: string | 
  * @see app/Http/Controllers/ProjectAgentController.php:384
  * @route '/api/projects/{project}/agents/{agent}/executions/{log}'
  */
-export const executionLogDetail = (args: { project: string | { id: string }, agent: string | { id: string }, log: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, log: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const executionLogDetail = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, log: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, log: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: executionLogDetail.url(args, options),
     method: 'get',
 })
@@ -1039,7 +1039,7 @@ executionLogDetail.definition = {
  * @see app/Http/Controllers/ProjectAgentController.php:384
  * @route '/api/projects/{project}/agents/{agent}/executions/{log}'
  */
-executionLogDetail.url = (args: { project: string | { id: string }, agent: string | { id: string }, log: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, log: string | { id: string } ], options?: RouteQueryOptions) => {
+executionLogDetail.url = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, log: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, log: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     project: args[0],
@@ -1074,7 +1074,7 @@ executionLogDetail.url = (args: { project: string | { id: string }, agent: strin
  * @see app/Http/Controllers/ProjectAgentController.php:384
  * @route '/api/projects/{project}/agents/{agent}/executions/{log}'
  */
-executionLogDetail.get = (args: { project: string | { id: string }, agent: string | { id: string }, log: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, log: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+executionLogDetail.get = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, log: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, log: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: executionLogDetail.url(args, options),
     method: 'get',
 })
@@ -1083,7 +1083,7 @@ executionLogDetail.get = (args: { project: string | { id: string }, agent: strin
  * @see app/Http/Controllers/ProjectAgentController.php:384
  * @route '/api/projects/{project}/agents/{agent}/executions/{log}'
  */
-executionLogDetail.head = (args: { project: string | { id: string }, agent: string | { id: string }, log: string | { id: string } } | [project: string | { id: string }, agent: string | { id: string }, log: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+executionLogDetail.head = (args: { project: string | number | { id: string | number }, agent: string | number | { id: string | number }, log: string | number | { id: string | number } } | [project: string | number | { id: string | number }, agent: string | number | { id: string | number }, log: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: executionLogDetail.url(args, options),
     method: 'head',
 })

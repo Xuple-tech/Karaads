@@ -66,7 +66,7 @@ index.head = (args: { project: string | number } | [project: string | number ] |
  * @see app/Http/Controllers/ProjectChatController.php:99
  * @route '/api/projects/{project}/conversations'
  */
-export const create = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const create = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: create.url(args, options),
     method: 'post',
 })
@@ -81,7 +81,7 @@ create.definition = {
  * @see app/Http/Controllers/ProjectChatController.php:99
  * @route '/api/projects/{project}/conversations'
  */
-create.url = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+create.url = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { project: args }
     }
@@ -114,7 +114,7 @@ create.url = (args: { project: string | { id: string } } | [project: string | { 
  * @see app/Http/Controllers/ProjectChatController.php:99
  * @route '/api/projects/{project}/conversations'
  */
-create.post = (args: { project: string | { id: string } } | [project: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+create.post = (args: { project: string | number | { id: string | number } } | [project: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: create.url(args, options),
     method: 'post',
 })
