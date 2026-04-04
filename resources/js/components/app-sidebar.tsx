@@ -34,19 +34,19 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
-    const [conversations, setConversation] = useState<{ id: number; title: string }[]>([]);
+    const [conversations, setConversation] = useState<{ id: string; title: string }[]>([]);
     const projects = [];
     const { auth } = usePage().props;
     const [isLoadingProjects, setIsloadingProjects] = useState(true);
     const [isLoadingConversations, setIsLoadingConversations] = useState(true);
     const isFreePlan = auth.user.current_plan?.slug === 'free';
-    const handleConversationUpdate = (id: number, updates: { title: string }) => {
+    const handleConversationUpdate = (id: string, updates: { title: string }) => {
         setConversation(prev =>
             prev.map(conv => conv.id === id ? { ...conv, ...updates } : conv)
         );
     };
 
-    const handleConversationDelete = (id: number) => {
+    const handleConversationDelete = (id: string) => {
         setConversation(prev => prev.filter(conv => conv.id !== id));
     };
 
@@ -54,10 +54,10 @@ export function AppSidebar() {
         setIsLoadingConversations(true);
         try {
             // Fetch conversations from the API
-            fetch('/api/conversations/new-api-new-users0request')
+            fetch('/api/chat/conversations')
                 .then((response) => response.json())
-                .then((data: { cg_: { id: number; title: string }[] }) => {
-                    setConversation(data.cg_);
+                .then((data: { conversations: { id: string; title: string }[] }) => {
+                    setConversation(data.conversations ?? []);
                     setIsLoadingConversations(false);
                 })
                 .catch((error: Error) => {

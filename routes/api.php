@@ -3,7 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\ChatController;
+use App\Http\Controllers\Api\SessionAuthController;
+use App\Http\Controllers\Api\Chat\ConversationController as ChatConversationController;
+use App\Http\Controllers\Api\Chat\MessageController as ChatMessageController;
+use App\Http\Controllers\Api\SpaVoiceConversationController;
 use App\Http\Controllers\Api\VoiceConversationController;
 use App\Http\Controllers\Api\EmailController;
 use App\Http\Controllers\Api\ImageGenerationController;
@@ -17,22 +20,50 @@ use App\Http\Controllers\Admin\AIModeController;
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/register', [AuthController::class, 'register']);
 
+Route::prefix('session')->group(function () {
+    Route::get('/user', [SessionAuthController::class, 'session'])->name('session.user');
+    Route::post('/login', [SessionAuthController::class, 'login'])->name('session.login');
+    Route::post('/register', [SessionAuthController::class, 'register'])->name('session.register');
+    Route::post('/forgot-password', [SessionAuthController::class, 'forgotPassword'])->name('session.password.email');
+    Route::post('/reset-password', [SessionAuthController::class, 'resetPassword'])->name('session.password.reset');
+    Route::get('/verify-email/{id}/{hash}', [SessionAuthController::class, 'verifyEmail'])
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('session.verification.verify');
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('session')->group(function () {
+        Route::post('/logout', [SessionAuthController::class, 'logout'])->name('session.logout');
+        Route::post('/confirm-password', [SessionAuthController::class, 'confirmPassword'])->name('session.password.confirm');
+        Route::post('/email/verification-notification', [SessionAuthController::class, 'resendVerification'])
+            ->middleware('throttle:6,1')
+            ->name('session.verification.send');
+    });
+
+    Route::prefix('chat')->group(function () {
+        Route::get('/conversations', [ChatConversationController::class, 'index'])->name('chat.api.conversations.index');
+        Route::post('/conversations', [ChatConversationController::class, 'store'])->name('chat.api.conversations.store');
+        Route::get('/conversations/{conversation}', [ChatConversationController::class, 'show'])->name('chat.api.conversations.show');
+        Route::patch('/conversations/{conversation}', [ChatConversationController::class, 'update'])->name('chat.api.conversations.update');
+        Route::delete('/conversations/{conversation}', [ChatConversationController::class, 'destroy'])->name('chat.api.conversations.destroy');
+        Route::post('/messages', [ChatMessageController::class, 'store'])->name('chat.api.messages.store');
+        Route::post('/messages/{message}/regenerate', [ChatMessageController::class, 'regenerate'])->name('chat.api.messages.regenerate');
+        Route::get('/files/{file}', [ChatMessageController::class, 'file'])->name('chat.file.download');
+    });
+
+    Route::prefix('spa/voice')->group(function () {
+        Route::get('/conversations', [SpaVoiceConversationController::class, 'index'])->name('spa.voice.index');
+        Route::post('/conversations', [SpaVoiceConversationController::class, 'store'])->name('spa.voice.store');
+        Route::get('/conversations/{conversation}', [SpaVoiceConversationController::class, 'show'])->name('spa.voice.show');
+    });
+});
+
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     // Auth
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/user', [AuthController::class, 'user']);
     Route::post('/auth/refresh', [AuthController::class, 'refreshToken']);
-
-    // Chat/Conversations
-    Route::prefix('chat')->group(function () {
-        Route::post('/conversations', [ChatController::class, 'createConversation']);
-        Route::get('/conversations', [ChatController::class, 'listConversations']);
-        Route::get('/conversations/{id}', [ChatController::class, 'showConversation']);
-        Route::put('/conversations/{id}', [ChatController::class, 'updateConversation']);
-        Route::delete('/conversations/{id}', [ChatController::class, 'deleteConversation']);
-        Route::post('/message', [ChatController::class, 'sendMessage']);
-    });
 
     // Voice Conversations
     Route::prefix('voice')->group(function () {

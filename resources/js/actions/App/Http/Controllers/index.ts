@@ -1,7 +1,6 @@
 import Api from './Api'
 import Admin from './Admin'
 import SpaController from './SpaController'
-import ChatController from './ChatController'
 import MailController from './MailController'
 import User from './User'
 import ConversationShareController from './ConversationShareController'
@@ -22,7 +21,6 @@ const Controllers = {
     Api: Object.assign(Api, Api),
 Admin: Object.assign(Admin, Admin),
 SpaController: Object.assign(SpaController, SpaController),
-ChatController: Object.assign(ChatController, ChatController),
 MailController: Object.assign(MailController, MailController),
 User: Object.assign(User, User),
 ConversationShareController: Object.assign(ConversationShareController, ConversationShareController),

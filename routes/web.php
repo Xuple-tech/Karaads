@@ -1,16 +1,11 @@
 <?php
 
-use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\User;
 use App\Http\Controllers\SpaController;
 use App\Http\Controllers\Meta\MetaWebhookController;
-use App\Http\Controllers\Api\SessionAuthController;
-use App\Http\Controllers\Api\SpaConversationController;
-use App\Http\Controllers\Api\SpaVoiceConversationController;
 use App\Http\Controllers\ConversationShareController;
-use App\Http\Middleware\CheckSubscriptionRateLimit;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -24,29 +19,9 @@ Route::get('/', SpaController::class)->name('home');
 Route::get('/app', SpaController::class)->name('app');
 Route::get('/new', SpaController::class)->name('new');
 Route::get('/privacy-policy', SpaController::class)->name('privacy-policy');
-Route::middleware('auth')->get('/dashboard', SpaController::class)->name('dashboard');
+Route::get('/dashboard', SpaController::class)->name('dashboard');
 
-// Conversation management routes
-Route::middleware(['web',])->withoutMiddleware(VerifyCsrfToken::class)->prefix('api')->group(function () {
-    // Conversation CRUD
-    Route::get('/conversations/new-api-new-users0request', [ChatController::class, 'list'])->name('conversations.list');
-    Route::post('/conversations/c-sdnsnd-smmsm', [ChatController::class, 'create'])->name('conversations.create');
-    Route::put('/conversations/{id}', [ChatController::class, 'update'])->name('conversations.update');
-    Route::delete('/conversations/{id}', [ChatController::class, 'destroy'])->name('conversations.delete');
-    Route::delete('/conversations/clear', [ChatController::class, 'clearAll'])->name('conversations.clear');
-
-    // Conversation features
-    Route::get('/conversations/{id}/export', [ChatController::class, 'export'])->name('conversations.export');
-    Route::get('/conversations/statistics', [ChatController::class, 'statistics'])->name('conversations.statistics');
-    Route::post('/create/challenge/message', [ChatController::class, 'chat'])->name('chat.sendm')->middleware([
-        // CheckSubscriptionRateLimit::class
-    ]);
-    Route::post('/generate-canvas-content', [ChatController::class, 'generateCanvasContent'])->name('canvas.generate')->middleware(CheckSubscriptionRateLimit::class);
-
-    // Search conversations
-    Route::get('/conversations/search', [ChatController::class, 'search'])->name('conversations.search');
-    Route::get('/conversations/list', [ChatController::class, 'list'])->name('conversations.search');
-
+Route::middleware(['web'])->withoutMiddleware(VerifyCsrfToken::class)->prefix('api')->group(function () {
     // Email API routes
     Route::middleware('auth')->group(function () {
         // Email accounts
@@ -69,12 +44,9 @@ Route::middleware(['web',])->withoutMiddleware(VerifyCsrfToken::class)->prefix('
     });
 });
 
-// Public chat routes (existing)
 Route::middleware(['web'])->group(function () {
     Route::get('/c/new', SpaController::class)->name('chat.new');
     Route::get('/c/{conversation}', SpaController::class)->name('chat.show');
-    Route::post('/create-two-step-challagene', [ChatController::class, 'chat'])->name('chat.send')->withoutMiddleware(VerifyCsrfToken::class)->middleware(CheckSubscriptionRateLimit::class);
-    Route::post('/c/{messageId}/regenerate', [ChatController::class, 'regenerateMessage'])->name('chat.regenerate')->withoutMiddleware(VerifyCsrfToken::class)->middleware(CheckSubscriptionRateLimit::class);
     Route::post('/user/setting/language', [User::class, 'saveLanguage'])->name('user.setting.language')->withoutMiddleware(VerifyCsrfToken::class);
 
     // Shared Conversation Routes (Public Access)
@@ -212,30 +184,6 @@ Route::get('/3rd/details/privacy', function () {
 
 Route::get('/3rd/details/service', function () {
     return redirect()->route('terms');
-});
-
-Route::prefix('api/session')->group(function () {
-    Route::get('/user', [SessionAuthController::class, 'session'])->name('session.user');
-    Route::middleware('guest')->group(function () {
-        Route::post('/login', [SessionAuthController::class, 'login'])->name('session.login');
-        Route::post('/register', [SessionAuthController::class, 'register'])->name('session.register');
-        Route::post('/forgot-password', [SessionAuthController::class, 'forgotPassword'])->name('session.password.email');
-        Route::post('/reset-password', [SessionAuthController::class, 'resetPassword'])->name('session.password.reset');
-    });
-    Route::middleware('auth')->group(function () {
-        Route::post('/logout', [SessionAuthController::class, 'logout'])->name('session.logout');
-        Route::post('/confirm-password', [SessionAuthController::class, 'confirmPassword'])->name('session.password.confirm');
-        Route::post('/email/verification-notification', [SessionAuthController::class, 'resendVerification'])->middleware('throttle:6,1')->name('session.verification.send');
-        Route::get('/verify-email/{id}/{hash}', [SessionAuthController::class, 'verifyEmail'])->middleware(['signed', 'throttle:6,1'])->name('session.verification.verify');
-    });
-});
-
-Route::middleware('auth')->prefix('api/spa')->group(function () {
-    Route::get('/conversations', [SpaConversationController::class, 'index'])->name('spa.conversations.index');
-    Route::get('/conversations/{conversation}', [SpaConversationController::class, 'show'])->name('spa.conversations.show');
-    Route::get('/voice/conversations', [SpaVoiceConversationController::class, 'index'])->name('spa.voice.index');
-    Route::post('/voice/conversations', [SpaVoiceConversationController::class, 'store'])->name('spa.voice.store');
-    Route::get('/voice/conversations/{conversation}', [SpaVoiceConversationController::class, 'show'])->name('spa.voice.show');
 });
 
 require __DIR__ . '/auth.php';

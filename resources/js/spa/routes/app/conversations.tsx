@@ -6,7 +6,7 @@ import { apiRequest } from '@/spa/lib/api';
 export function Component() {
     const conversations = useQuery({
         queryKey: ['spa', 'conversations'],
-        queryFn: () => apiRequest<{ conversations: Array<{ id: string; title: string; last_message?: string | null }> }>('/api/spa/conversations'),
+        queryFn: () => apiRequest<{ conversations: Array<{ id: string; title: string; last_message?: string | null }> }>('/api/chat/conversations'),
     });
 
     return (

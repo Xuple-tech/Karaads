@@ -44,10 +44,10 @@ Route::middleware('guest')->group(function () {
 
 });
 
-Route::middleware('auth')->group(function () {
-    Route::get('verify-email', SpaController::class)
-        ->name('verification.notice');
+Route::get('verify-email', SpaController::class)
+    ->name('verification.notice');
 
+Route::middleware('auth')->group(function () {
     Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
         ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
@@ -56,11 +56,11 @@ Route::middleware('auth')->group(function () {
         ->middleware('throttle:6,1')
         ->name('verification.send');
 
-    Route::get('confirm-password', SpaController::class)
-        ->name('password.confirm');
-
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
 
     Route::match(['get', 'post'], 'logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });
+
+Route::get('confirm-password', SpaController::class)
+    ->name('password.confirm');

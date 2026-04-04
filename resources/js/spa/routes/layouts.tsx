@@ -175,7 +175,7 @@ function SpaSidebar() {
     const session = useSessionQuery();
     const conversations = useQuery({
         queryKey: ['spa', 'conversations'],
-        queryFn: () => apiRequest<{ conversations: Array<{ id: string; title: string }> }>('/api/spa/conversations'),
+        queryFn: () => apiRequest<{ conversations: Array<{ id: string; title: string }> }>('/api/chat/conversations'),
     });
 
     return (

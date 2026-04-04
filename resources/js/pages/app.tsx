@@ -12,7 +12,7 @@ export default function App({ children }): JSX.Element {
     const title = "Kwati Ai";
 
     // Pages that don't require layout (public pages)
-    const publicPages = ['Welcome', 'ChatInterface', 'PrivacyPolicy'];
+    const publicPages = ['Welcome', 'PrivacyPolicy'];
 
     const content = publicPages.includes(component) ? children : <Layout auth={auth}>{children}</Layout>;
 

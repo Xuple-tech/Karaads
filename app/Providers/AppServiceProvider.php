@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Contracts\ChatProvider;
+use App\Services\Chat\GrokChatProvider;
 use App\Services\GrokApiService;
 use App\Services\OpenAISpeechToTextService;
 use App\Services\OpenAITextToSpeechService;
@@ -18,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(ChatProvider::class, GrokChatProvider::class);
+
         $this->app->singleton(PodcastGenerationService::class, function ($app) {
         return new PodcastGenerationService(
             $app->make(GrokApiService::class),

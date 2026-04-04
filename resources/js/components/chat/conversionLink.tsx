@@ -23,8 +23,11 @@ export default function ConversationLink({ conversation, onConversationUpdate, o
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`/api/conversations/${id}`, {
+      const response = await fetch(`/api/chat/conversations/${id}`, {
         method: "DELETE",
+        headers: {
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || "",
+        },
       });
       const data = await response.json();
 
@@ -51,10 +54,11 @@ export default function ConversationLink({ conversation, onConversationUpdate, o
     if (editTitle.trim() === "") return;
 
     try {
-      const response = await fetch(`/api/conversations/${conversation.id}`, {
-        method: "PUT",
+      const response = await fetch(`/api/chat/conversations/${conversation.id}`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document.querySelector('meta[name=\"csrf-token\"]')?.getAttribute('content') || "",
         },
         body: JSON.stringify({ title: editTitle.trim() }),
       });

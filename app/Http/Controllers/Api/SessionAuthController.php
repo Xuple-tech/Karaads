@@ -7,12 +7,11 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
@@ -21,22 +20,39 @@ class SessionAuthController extends Controller
 {
     public function session(Request $request): JsonResponse
     {
+        $user = $this->resolveTokenUser($request);
+
         return response()->json([
             'success' => true,
-            'authenticated' => Auth::check(),
-            'user' => $request->user(),
+            'authenticated' => (bool) $user,
+            'user' => $user,
         ]);
     }
 
     public function login(LoginRequest $request): JsonResponse
     {
-        $request->authenticate();
-        $request->session()->regenerate();
+        $request->ensureIsNotRateLimited();
+
+        $user = User::query()->where('email', $request->string('email')->toString())->first();
+
+        if (! $user || ! Hash::check($request->string('password')->toString(), $user->password)) {
+            \Illuminate\Support\Facades\RateLimiter::hit($request->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => [__('auth.failed')],
+            ]);
+        }
+
+        \Illuminate\Support\Facades\RateLimiter::clear($request->throttleKey());
+
+        $user->tokens()->where('name', 'spa')->delete();
+        $token = $user->createToken('spa')->plainTextToken;
 
         return response()->json([
             'success' => true,
-            'user' => $request->user(),
-            'redirect_to' => $request->user()?->is_admin ? '/admin' : '/app',
+            'user' => $user,
+            'token' => $token,
+            'redirect_to' => $user->is_admin ? '/admin' : '/app',
         ]);
     }
 
@@ -55,21 +71,19 @@ class SessionAuthController extends Controller
         ]);
 
         event(new Registered($user));
-        Auth::login($user, true);
-        $request->session()->regenerate();
+        $token = $user->createToken('spa')->plainTextToken;
 
         return response()->json([
             'success' => true,
             'user' => $user,
+            'token' => $token,
             'redirect_to' => '/app',
         ], 201);
     }
 
     public function logout(Request $request): JsonResponse
     {
-        Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        $request->user()?->currentAccessToken()?->delete();
 
         return response()->json([
             'success' => true,
@@ -132,10 +146,15 @@ class SessionAuthController extends Controller
         ]);
     }
 
-    public function verifyEmail(EmailVerificationRequest $request)
+    public function verifyEmail(Request $request, string $id, string $hash)
     {
-        if (! $request->user()->hasVerifiedEmail()) {
-            $request->fulfill();
+        abort_unless($request->hasValidSignature(), 403);
+
+        $user = User::findOrFail($id);
+        abort_unless(hash_equals((string) $hash, sha1($user->getEmailForVerification())), 403);
+
+        if (! $user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
         }
 
         return redirect('/app?verified=1');
@@ -147,19 +166,37 @@ class SessionAuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (! Auth::guard('web')->validate([
-            'email' => $request->user()->email,
-            'password' => $request->string('password'),
-        ])) {
+        if (! Hash::check($request->string('password')->toString(), (string) $request->user()?->password)) {
             throw ValidationException::withMessages([
                 'password' => [__('auth.password')],
             ]);
         }
 
-        $request->session()->put('auth.password_confirmed_at', time());
-
         return response()->json([
             'success' => true,
         ]);
+    }
+
+    private function resolveTokenUser(Request $request): ?User
+    {
+        $token = $request->bearerToken();
+
+        if (! $token) {
+            return null;
+        }
+
+        $accessToken = PersonalAccessToken::findToken($token);
+
+        if (! $accessToken) {
+            return null;
+        }
+
+        $tokenable = $accessToken->tokenable;
+
+        if (! $tokenable instanceof User) {
+            return null;
+        }
+
+        return $tokenable;
     }
 }

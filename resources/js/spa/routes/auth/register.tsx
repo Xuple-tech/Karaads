@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { ApiError, apiRequest } from '@/spa/lib/api';
+import { setAuthToken } from '@/spa/lib/auth-token';
 import { queryClient } from '@/spa/lib/query-client';
 import { sessionQueryKey } from '@/spa/lib/session';
 
@@ -13,8 +14,9 @@ export function Component() {
     const [error, setError] = useState<string | null>(null);
 
     const register = useMutation({
-        mutationFn: () => apiRequest('/api/session/register', { method: 'POST', json: form }),
-        onSuccess: async () => {
+        mutationFn: () => apiRequest<{ token: string }>('/api/session/register', { method: 'POST', json: form }),
+        onSuccess: async (data) => {
+            setAuthToken(data.token);
             await queryClient.invalidateQueries({ queryKey: sessionQueryKey });
             navigate('/app');
         },

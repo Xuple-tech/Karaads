@@ -1,71 +1,31 @@
-export interface ToolCall {
+export interface ChatAttachment {
     id: string;
-    function: {
-        name: string;
-        arguments: string;
-    };
-}
-
-export interface ToolResult {
-    tool_call_id: string;
-    content: string;
-    tool_name: string;
-}
-
-export interface ChatFileAttachment {
-    id?: string;
-    filename: string;
-    filepath?: string;
-    mime_type: string;
-    file_size: number;
-    hash?: string;
-    status?: 'pending' | 'processing' | 'processed' | 'failed';
-    url?: string;
+    kind: 'file' | 'image' | 'audio' | 'video';
+    name: string;
+    mime_type?: string | null;
+    size?: number | null;
+    url?: string | null;
 }
 
 export interface Message {
-    id?: number;
+    id: string;
+    conversation_id?: string;
     role: 'user' | 'assistant' | 'tool';
+    status?: 'pending' | 'streaming' | 'completed' | 'failed';
+    provider?: string | null;
+    model?: string | null;
     content: string;
-    thinking?: string;
-    isStreaming?: boolean;
+    content_markdown?: string;
+    content_text?: string;
     created_at?: string;
-    type?: 'text' | 'image' | 'mixed';
-    image?: {
-        url: string;
-        metadata?: {
-            text_response?: string;
-            remaining_generations?: number;
-        };
-    };
-    images?: Array<{
-        url: string;
-        metadata?: {
-            text_response?: string;
-            remaining_generations?: number;
-        };
-    }>;
-    response?: string;
-    message?: string;
-    metadata?: {
-        prompt?: string;
-        remaining_generations?: number;
-        text_response?: string;
-        tool_status?: 'executing_tool' | 'tool_completed' | 'tool_failed' | 'continuing_conversation';
-        tool_name?: string;
-        tool_executing_message?: string;
-        [key: string]: string | number | boolean | null | undefined;
-    };
-    conversation_id?: number;
-    tool_calls?: ToolCall[];
-    tool_call_id?: string;
-    tool_name?: string;
-    files?: ChatFileAttachment[];
-    timestamp?: string;
+    type?: 'text' | 'image' | 'mixed' | 'file';
+    attachments?: ChatAttachment[];
+    isStreaming?: boolean;
+    error_message?: string | null;
 }
 
 export interface Conversation {
-    id: number;
+    id: string;
     title: string;
     created_at: string;
     updated_at: string;
@@ -74,7 +34,7 @@ export interface Conversation {
 export interface ChatProps {
     auth: {
         user: {
-            id: number;
+            id: string;
             name: string;
             email: string;
         } | null;

@@ -12,10 +12,21 @@ type ConversationResponse = {
         messages: Array<{
             id: string;
             role: string;
-            message: string;
-            thinking?: string;
-            metadata?: Record<string, unknown>;
+            status?: string;
+            provider?: string | null;
+            model?: string | null;
+            content_markdown: string;
+            content_text: string;
+            attachments?: Array<{
+                id: string;
+                kind: string;
+                name: string;
+                mime_type?: string | null;
+                size?: number | null;
+                url?: string | null;
+            }>;
             type?: string;
+            created_at?: string;
         }>;
     };
 };
@@ -25,18 +36,22 @@ export function Component() {
     const session = useSessionQuery();
     const conversation = useQuery({
         queryKey: ['spa', 'conversation', conversationId],
-        queryFn: () => apiRequest<ConversationResponse>(`/api/spa/conversations/${conversationId}`),
+        queryFn: () => apiRequest<ConversationResponse>(`/api/chat/conversations/${conversationId}`),
     });
 
     const messages =
         conversation.data?.conversation.messages.map((item) => ({
             id: item.id,
             role: item.role,
-            content: item.message,
-            message: item.message,
-            thinking: item.thinking,
-            metadata: item.metadata ?? {},
+            status: item.status,
+            provider: item.provider,
+            model: item.model,
+            content: item.content_markdown,
+            content_markdown: item.content_markdown,
+            content_text: item.content_text,
+            attachments: item.attachments ?? [],
             type: item.type ?? 'text',
+            created_at: item.created_at,
         })) ?? [];
 
     return (

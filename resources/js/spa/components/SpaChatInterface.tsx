@@ -1,589 +1,514 @@
-import { Message as MessageType } from '@/types/chat';
-import { useContext, useEffect, useRef, useState, useCallback, useMemo, memo } from 'react';
-import { toast } from 'sonner';
-import { SidebarContextProvider } from '@/components/ui/sidebar';
+import type { Message } from '@/types/chat';
+import { AlertCircle, Loader2, Wrench } from 'lucide-react';
+import { FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { AlertCircle, RefreshCw, Sparkles } from 'lucide-react';
 import ChatInput from '@/spa/components/SpaChatInput';
-import FeedBackForm from '@/components/chat/FeedBackform';
-import Message from '@/components/chat/Message';
-import LimitNotification from '@/components/LimitNotification';
-import { LoginDialog } from '@/components/LoginDialog';
-import { useToolStatus } from '@/hooks/useToolStatus';
-import ToolStatusDisplay from '@/components/chat/ToolStatusDisplay';
+import ChatMessageRenderer from '@/spa/components/ChatMessageRenderer';
+import { apiRequest } from '@/spa/lib/api';
+import { authHeaders } from '@/spa/lib/auth-token';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+type Activity = {
+    tool_name: string;
+    status: 'started' | 'completed' | 'failed';
+    message?: string | null;
+};
 
-interface ChatInterfaceProps {
-    isAuthenticated: boolean;
-    initialMessages?: MessageType[];
-    initialConversationId?: string | null;
-    userName?: string;
+type ChatState = {
+    messages: Message[];
+    conversationId: string | null;
+    activities: Activity[];
+};
+
+type ChatAction =
+    | { type: 'hydrate'; conversationId: string | null; messages: Message[] }
+    | { type: 'user.append'; message: Message }
+    | { type: 'assistant.create'; message: Message; conversationId?: string | null; replace?: boolean }
+    | { type: 'assistant.delta'; messageId: string; content: string }
+    | { type: 'attachment.add'; messageId: string; attachment: any }
+    | { type: 'assistant.complete'; messageId: string; content?: string; attachments?: any[] }
+    | { type: 'assistant.fail'; messageId: string; error: string }
+    | { type: 'activity'; activity: Activity }
+    | { type: 'activity.clear' };
+
+function reducer(state: ChatState, action: ChatAction): ChatState {
+    switch (action.type) {
+        case 'hydrate':
+            return { ...state, conversationId: action.conversationId, messages: action.messages };
+        case 'user.append':
+            return { ...state, messages: [...state.messages, action.message] };
+        case 'assistant.create': {
+            const baseMessages = action.replace ? state.messages.filter((message) => message.id !== action.message.id) : state.messages;
+            return {
+                ...state,
+                conversationId: action.conversationId ?? state.conversationId,
+                messages: [...baseMessages, action.message],
+            };
+        }
+        case 'assistant.delta':
+            return {
+                ...state,
+                messages: state.messages.map((message) =>
+                    message.id === action.messageId
+                        ? {
+                              ...message,
+                              content: (message.content || '') + action.content,
+                              content_markdown: (message.content_markdown || '') + action.content,
+                              isStreaming: true,
+                          }
+                        : message
+                ),
+            };
+        case 'attachment.add':
+            return {
+                ...state,
+                messages: state.messages.map((message) =>
+                    message.id === action.messageId
+                        ? { ...message, attachments: [...(message.attachments || []), action.attachment] }
+                        : message
+                ),
+            };
+        case 'assistant.complete':
+            return {
+                ...state,
+                messages: state.messages.map((message) =>
+                    message.id === action.messageId
+                        ? {
+                              ...message,
+                              content: action.content ?? message.content,
+                              content_markdown: action.content ?? message.content_markdown,
+                              attachments: action.attachments ?? message.attachments,
+                              isStreaming: false,
+                              status: 'completed',
+                          }
+                        : message
+                ),
+            };
+        case 'assistant.fail':
+            return {
+                ...state,
+                messages: state.messages.map((message) =>
+                    message.id === action.messageId
+                        ? { ...message, isStreaming: false, status: 'failed', error_message: action.error }
+                        : message
+                ),
+            };
+        case 'activity':
+            return {
+                ...state,
+                activities: [
+                    ...state.activities.filter((activity) => activity.tool_name !== action.activity.tool_name),
+                    action.activity,
+                ],
+            };
+        case 'activity.clear':
+            return { ...state, activities: [] };
+        default:
+            return state;
+    }
 }
 
-type ErrorState = { message: string; retryAction?: () => void } | null;
+async function readSse(
+    response: Response,
+    onEvent: (event: string, payload: any) => void
+) {
+    if (!response.body) {
+        throw new Error('Missing response body');
+    }
 
-type LimitError = {
-    message: string;
-    action: 'upgrade' | 'login';
-    type?: string;
-    limit?: number;
-    used?: number;
-    reset_at?: string;
-    reset_type?: 'daily' | 'monthly';
-    plan_name?: string;
-} | null;
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+            break;
+        }
 
-const WelcomeScreen = memo(({ userName }: { userName?: string }) => (
-    <div className="flex flex-col items-center justify-center min-h-[55vh] gap-6 animate-in fade-in-50 duration-500">
-        <div className="relative group">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-pink-500/20 to-violet-500/30 blur-2xl rounded-3xl animate-pulse" />
-            <div className="relative h-24 w-24 rounded-2xl border border-border/30 bg-card/80 backdrop-blur-sm flex items-center justify-center shadow-xl transition-transform group-hover:scale-105 duration-300">
-                <img src="/logo.png" className="h-14 w-auto drop-shadow-lg" alt="Kwati AI" />
-            </div>
-        </div>
-        <div className="text-center space-y-2 max-w-lg">
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
-                {userName ? `Hello, ${userName}` : 'Hello'}
-            </h1>
-            <p className="text-muted-foreground text-base sm:text-lg">
-                How can I help you today?
-            </p>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 w-full max-w-lg">
-            {[
-                'Summarise a document',
-                'Help me write code',
-                'Explain a concept',
-                'Draft an email',
-                'Translate text',
-                'Generate an image',
-            ].map(prompt => (
-                <button
-                    key={prompt}
-                    className="text-left text-xs text-muted-foreground border border-border/50 rounded-xl px-3 py-2.5 hover:bg-accent/50 hover:text-foreground hover:border-border transition-colors"
-                >
-                    {prompt}
-                </button>
-            ))}
-        </div>
-    </div>
-));
-WelcomeScreen.displayName = 'WelcomeScreen';
+        buffer += decoder.decode(value, { stream: true });
+        const chunks = buffer.split('\n\n');
+        buffer = chunks.pop() || '';
 
-const LoadingDots = memo(() => (
-    <div className="flex items-center gap-2 px-2 py-1">
-        {[0, 150, 300].map(delay => (
-            <span
-                key={delay}
-                className="h-1.5 w-1.5 rounded-full bg-primary/60 animate-bounce"
-                style={{ animationDelay: `${delay}ms` }}
-            />
-        ))}
-    </div>
-));
-LoadingDots.displayName = 'LoadingDots';
+        for (const chunk of chunks) {
+            let eventName = 'message';
+            let data = '';
 
-// ─── Main component ───────────────────────────────────────────────────────────
+            for (const line of chunk.split('\n')) {
+                if (line.startsWith('event: ')) {
+                    eventName = line.slice(7).trim();
+                }
+                if (line.startsWith('data: ')) {
+                    data += line.slice(6);
+                }
+            }
 
-export default function ChatInterface({
+            if (!data) {
+                continue;
+            }
+
+            onEvent(eventName, JSON.parse(data));
+        }
+    }
+}
+
+export default function SpaChatInterface({
     isAuthenticated,
     initialMessages = [],
     initialConversationId = null,
     userName,
-}: ChatInterfaceProps) {
-    const [feedbackOpen, setFeedbackOpen] = useState(false);
+}: {
+    isAuthenticated: boolean;
+    initialMessages?: Message[];
+    initialConversationId?: string | null;
+    userName?: string;
+}) {
+    const [state, dispatch] = useReducer(reducer, {
+        messages: initialMessages,
+        conversationId: initialConversationId,
+        activities: [],
+    });
     const [isLoading, setIsLoading] = useState(false);
     const [mode, setMode] = useState<'text' | 'image'>('text');
     const [files, setFiles] = useState<File[]>([]);
-    const [error, setError] = useState<ErrorState>(null);
-    const [limitError, setLimitError] = useState<LimitError>(null);
-    const [showLoginDialog, setShowLoginDialog] = useState(false);
-    const [loginDialogType, setLoginDialogType] = useState('unauthenticated');
-    const [retryCount, setRetryCount] = useState(0);
-    const [contentStarted, setContentStarted] = useState(false);
-
-    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [error, setError] = useState<string | null>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
-    const abortRef = useRef<AbortController | null>(null);
-
-    const { activeTools, updateToolStatus, clearAllTools } = useToolStatus();
-    const [messages, setMessages] = useState<MessageType[]>(initialMessages || []);
-    const sidebarContext = useContext(SidebarContextProvider);
-    const [conversation, setConversation] = useState<{ conversation_id: string | null }>({
-        conversation_id: initialConversationId || null,
-    });
+    const bottomRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        setMessages(initialMessages || []);
-    }, [initialMessages]);
+        dispatch({ type: 'hydrate', conversationId: initialConversationId, messages: initialMessages });
+    }, [initialConversationId, initialMessages]);
 
     useEffect(() => {
-        setConversation({ conversation_id: initialConversationId || null });
-    }, [initialConversationId]);
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [state.messages, state.activities.length]);
 
-    // ── Scroll ────────────────────────────────────────────────────────────────
+    const syncConversation = useCallback(async (conversationId: string) => {
+        const response = await apiRequest<{ conversation: { id: string; messages: any[] } }>(`/api/chat/conversations/${conversationId}`);
+        const mappedMessages: Message[] = response.conversation.messages.map((message: any) => ({
+            id: message.id,
+            conversation_id: message.conversation_id,
+            role: message.role,
+            status: message.status,
+            provider: message.provider,
+            model: message.model,
+            type: message.type,
+            content: message.content_markdown,
+            content_markdown: message.content_markdown,
+            content_text: message.content_text,
+            created_at: message.created_at,
+            attachments: message.attachments ?? [],
+        }));
 
-    const scrollToBottom = useCallback(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        dispatch({
+            type: 'hydrate',
+            conversationId,
+            messages: mappedMessages,
+        });
+        dispatch({ type: 'activity.clear' });
     }, []);
 
-    useEffect(() => {
-        const t = setTimeout(scrollToBottom, 80);
-        return () => clearTimeout(t);
-    }, [messages.length, scrollToBottom]);
+    const handleSubmit = useCallback(async (event: FormEvent, type: 'text' | 'image', attachedFiles?: File[]) => {
+        event.preventDefault();
+        const prompt = inputRef.current?.value?.trim();
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
-    const parseLimitError = useCallback((toolName: string, msg: string): LimitError => {
-        const lower = msg.toLowerCase();
-        if (!lower.includes('limit') && !lower.includes('exceeded') && !lower.includes('quota')) return null;
-        const reset_type = lower.includes('daily') ? 'daily' : 'monthly';
-        const messageMap: Record<string, string> = {
-            generate_image: 'Daily image generation limit reached. Upgrade to generate more images.',
-            web_search: 'Daily web search limit reached. Upgrade for unlimited searches.',
-        };
-        return {
-            message: messageMap[toolName] || 'Daily limit reached. Upgrade to continue.',
-            action: 'upgrade',
-            type: toolName,
-            reset_type,
-        };
-    }, []);
-
-    const createConversation = useCallback(async (title: string): Promise<string | null> => {
-        try {
-            const res = await fetch('/api/conversations/c-sdnsnd-smmsm', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title }),
-            });
-            if (!res.ok) throw new Error('Failed');
-            const data = await res.json();
-            return data.id;
-        } catch {
-            setError({ message: 'Could not start a new conversation. Please try again.' });
-            return null;
+        if (!prompt || isLoading) {
+            return;
         }
-    }, []);
 
-    const processFiles = useCallback(async (fileList: File[]) =>
-        Promise.all(fileList.map(async file => {
-            const data = await new Promise<string>((resolve, reject) => {
+        setError(null);
+        setIsLoading(true);
+        dispatch({ type: 'activity.clear' });
+
+        dispatch({
+            type: 'user.append',
+            message: {
+                id: `user-${Date.now()}`,
+                role: 'user',
+                content: prompt,
+                content_markdown: prompt,
+                content_text: prompt,
+                type,
+                attachments: attachedFiles?.map((file) => ({
+                    id: `${file.name}-${file.size}`,
+                    kind: file.type.startsWith('image/') ? 'image' : 'file',
+                    name: file.name,
+                    mime_type: file.type,
+                    size: file.size,
+                })) ?? [],
+            },
+        });
+
+        if (inputRef.current) {
+            inputRef.current.value = '';
+            inputRef.current.style.height = 'auto';
+        }
+
+        const processedFiles = await Promise.all((attachedFiles || []).map(async (file) => ({
+            name: file.name,
+            type: file.type,
+            data: await new Promise<string>((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = () => resolve(reader.result as string);
                 reader.onerror = reject;
                 reader.readAsDataURL(file);
-            });
-            return { name: file.name, type: file.type, data };
-        })), []);
+            }),
+        })));
 
-    // ── SSE stream handler ────────────────────────────────────────────────────
+        const response = await fetch('/api/chat/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'text/event-stream',
+                ...authHeaders(),
+            },
+            body: JSON.stringify({
+                conversation_id: state.conversationId,
+                message: prompt,
+                type,
+                model: 'grok-4-fast-reasoning',
+                files: processedFiles,
+            }),
+        });
 
-    const readStream = useCallback(async (
-        reader: ReadableStreamDefaultReader<Uint8Array>,
-        messageId: string | null,
-        onChunk: (data: any) => void,
-    ) => {
-        const decoder = new TextDecoder();
-        let buffer = '';
-        try {
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                buffer += decoder.decode(value, { stream: true });
-                const lines = buffer.split('\n');
-                buffer = lines.pop() || '';
-                for (const line of lines) {
-                    if (!line.trim() || !line.startsWith('data: ')) continue;
-                    try { onChunk(JSON.parse(line.substring(6))); } catch { /* skip bad JSON */ }
+        if (!response.ok) {
+            setIsLoading(false);
+            setError('Could not send message.');
+            return;
+        }
+
+        let assistantMessageId: string | null = null;
+        let conversationId = state.conversationId;
+
+        await readSse(response, async (eventName, payload) => {
+            if (eventName === 'message.created') {
+                assistantMessageId = payload.message.id;
+                conversationId = payload.conversation_id || conversationId;
+
+                if (conversationId && !state.conversationId) {
+                    history.replaceState({}, '', `/c/${conversationId}`);
                 }
+
+                dispatch({
+                    type: 'assistant.create',
+                    message: {
+                        id: payload.message.id,
+                        conversation_id: payload.conversation_id,
+                        role: 'assistant',
+                        status: 'streaming',
+                        provider: payload.message.provider,
+                        model: payload.message.model,
+                        content: '',
+                        content_markdown: '',
+                        attachments: [],
+                        isStreaming: true,
+                    },
+                    conversationId,
+                    replace: payload.replace ?? false,
+                });
             }
-        } finally {
-            reader.releaseLock();
-        }
-    }, []);
 
-    // ── Send message ──────────────────────────────────────────────────────────
+            if (eventName === 'message.delta' && assistantMessageId) {
+                dispatch({ type: 'assistant.delta', messageId: assistantMessageId, content: payload.content || '' });
+            }
 
-    const handleSubmit = useCallback(async (e: React.FormEvent, type: 'text' | 'image', attachedFiles?: File[]) => {
-        e.preventDefault();
-        const prompt = inputRef.current?.value?.trim();
-        if (!prompt) return;
+            if (eventName === 'tool.started') {
+                dispatch({
+                    type: 'activity',
+                    activity: {
+                        tool_name: payload.tool_name,
+                        status: 'started',
+                        message: payload.message,
+                    },
+                });
+            }
 
-        setError(null);
-        setLimitError(null);
-        clearAllTools();
-        setContentStarted(false);
+            if (eventName === 'tool.completed') {
+                dispatch({
+                    type: 'activity',
+                    activity: {
+                        tool_name: payload.tool_name,
+                        status: 'completed',
+                        message: payload.summary,
+                    },
+                });
+            }
 
-        const fileAttachments = attachedFiles?.map(f => ({ filename: f.name, mime_type: f.type, file_size: f.size })) || [];
+            if (eventName === 'tool.failed') {
+                dispatch({
+                    type: 'activity',
+                    activity: {
+                        tool_name: payload.tool_name,
+                        status: 'failed',
+                        message: payload.error,
+                    },
+                });
+            }
 
-        setMessages(prev => [...prev, {
-            role: 'user', content: prompt, type, timestamp: new Date().toISOString(), files: fileAttachments,
-        }]);
+            if (eventName === 'attachment.created' && assistantMessageId) {
+                dispatch({ type: 'attachment.add', messageId: assistantMessageId, attachment: payload.attachment });
+            }
 
-        if (inputRef.current) { inputRef.current.value = ''; inputRef.current.style.height = 'auto'; }
-
-        setIsLoading(true);
-        let convId = conversation.conversation_id;
-
-        if (!convId) {
-            convId = await createConversation(prompt);
-            if (!convId) { setIsLoading(false); return; }
-            setConversation({ conversation_id: convId });
-            history.replaceState({}, '', `/c/${convId}`);
-        }
-
-        setMessages(prev => [...prev, {
-            role: 'assistant', tool_call_id: null, tool_calls: null, tool_name: '',
-            content: '', thinking: '', isStreaming: true, type,
-        }]);
-
-        let processedFiles: any[] = [];
-        if (attachedFiles?.length) {
-            try { processedFiles = await processFiles(attachedFiles); }
-            catch {
-                setError({ message: 'Could not process attached files. Please try again.' });
+            if (eventName === 'message.failed' && assistantMessageId) {
+                dispatch({ type: 'assistant.fail', messageId: assistantMessageId, error: payload.error || 'Request failed' });
+                setError(payload.error || 'Request failed');
                 setIsLoading(false);
-                return;
-            }
-        }
-
-        abortRef.current = new AbortController();
-
-        try {
-            const res = await fetch('/api/create/challenge/message', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream' },
-                body: JSON.stringify({ message: prompt, stream: true, type: mode, conversation_id: convId, files: processedFiles }),
-                signal: abortRef.current.signal,
-            });
-
-            if (!res.ok) {
-                const data = await res.json();
-                if (data.login_required) {
-                    setShowLoginDialog(true);
-                    setLoginDialogType(data.type || 'unauthenticated');
-                    setMessages(prev => prev.filter((_, i) => !(i === prev.length - 1 && prev[i]?.isStreaming)));
-                    setIsLoading(false);
-                    return;
-                }
-                throw new Error(data.error || 'Server error');
             }
 
-            if (!res.body) throw new Error('No response body');
+            if (eventName === 'message.completed' && conversationId) {
+                await syncConversation(conversationId);
+                setIsLoading(false);
+            }
+        });
 
-            await readStream(res.body.getReader(), null, (data) => {
-                if (data.error && !data.tool_status) throw new Error(data.error);
-                if (data.done) return;
+        setFiles([]);
+        setIsLoading(false);
+    }, [isLoading, state.conversationId, syncConversation]);
 
-                // message_id
-                if (data.message_id) {
-                    setMessages(prev => {
-                        const next = [...prev];
-                        const last = next[next.length - 1];
-                        if (last?.role === 'assistant') last.id = data.message_id;
-                        return next;
-                    });
-                }
-
-                // tool status
-                if (data.tool_status) {
-                    const { tool_status, tool_name, error: toolErr, tool_executing_message, tool_result, references, search_results, search_query } = data;
-
-                    if (tool_status === 'executing') {
-                        updateToolStatus({ tool_name: tool_name || 'unknown', tool_status: 'executing_tool', tool_executing_message: tool_executing_message || data.message, metadata: data });
-                        setMessages(prev => {
-                            const next = [...prev];
-                            const last = next[next.length - 1];
-                            if (last?.role === 'assistant') {
-                                last.metadata = { ...last.metadata, tool_status: 'executing_tool', tool_name, tool_executing_message: data.message };
-                                last.isStreaming = true;
-                            }
-                            return next;
-                        });
-                    } else if (tool_status === 'failed' || tool_status === 'tool_failed') {
-                        updateToolStatus({ tool_name: tool_name || 'unknown', tool_status: 'tool_failed', tool_executing_message: toolErr || 'Failed', metadata: data });
-                        if (data.login_required) {
-                            setShowLoginDialog(true);
-                            setLoginDialogType(data.type || 'unauthenticated');
-                            setIsLoading(false);
-                            return;
-                        }
-                        const le = parseLimitError(tool_name || '', toolErr || '');
-                        if (le) setLimitError(le);
-                        setMessages(prev => {
-                            const next = [...prev];
-                            const last = next[next.length - 1];
-                            if (last?.role === 'assistant') {
-                                last.metadata = { ...last.metadata, tool_status: 'failed', tool_name, tool_error: toolErr };
-                                last.isStreaming = false;
-                            }
-                            return [...next];
-                        });
-                    } else if (tool_status === 'tool_completed') {
-                        updateToolStatus({ tool_name: tool_name || 'unknown', tool_status: 'tool_completed', metadata: data });
-                        setMessages(prev => {
-                            const next = [...prev];
-                            const last = next[next.length - 1];
-                            if (last?.role === 'assistant') {
-                                if (!last.metadata) last.metadata = {};
-                                last.metadata.tool_status = 'tool_completed';
-                                last.metadata.tool_results = [...(last.metadata.tool_results || []), { tool_name, result: tool_result }];
-                                if (tool_name === 'web_search') {
-                                    if (references) last.metadata.references = references;
-                                    if (search_results) last.metadata.search_results = search_results;
-                                    if (search_query) last.metadata.search_query = search_query;
-                                }
-                                last.isStreaming = false;
-                            }
-                            return [...next];
-                        });
-                    }
-                }
-
-                // thinking
-                if (data.thinking !== undefined) {
-                    setMessages(prev => {
-                        const next = [...prev];
-                        const last = next[next.length - 1];
-                        if (last?.role === 'assistant') last.thinking = (last.thinking || '') + data.thinking;
-                        return [...next];
-                    });
-                }
-
-                // content
-                if (data.content !== undefined && data.content.trim() !== '') {
-                    if (!contentStarted) { setContentStarted(true); clearAllTools(); }
-                    setMessages(prev => {
-                        const next = [...prev];
-                        const last = next[next.length - 1];
-                        if (last?.role === 'assistant') {
-                            last.content = (last.content || '') + data.content;
-                            if (last.metadata?.tool_status === 'executing_tool' && data.content.length > 10) {
-                                delete last.metadata.tool_status;
-                                delete last.metadata.tool_name;
-                                delete last.metadata.tool_executing_message;
-                            }
-                        }
-                        return [...next];
-                    });
-                }
-
-                // image
-                if (data.image) {
-                    setMessages(prev => {
-                        const next = [...prev];
-                        const last = next[next.length - 1];
-                        if (last?.role === 'assistant') {
-                            const img = { url: data.image.url, metadata: data.image.metadata };
-                            if (!last.images) last.images = last.image ? [last.image] : [];
-                            last.images.push(img);
-                            last.image = img;
-                            last.type = 'image';
-                            last.content = '';
-                            last.metadata = { ...(last.metadata || {}), tool_status: 'tool_completed' };
-                            last.isStreaming = false;
-                        }
-                        return [...next];
-                    });
-                }
-            });
-
-            // Finalize
-            setMessages(prev => {
-                const next = [...prev];
-                const last = next[next.length - 1];
-                if (last?.role === 'assistant') {
-                    last.isStreaming = false;
-                    if (last.metadata?.tool_status === 'executing_tool') {
-                        delete last.metadata.tool_status;
-                        delete last.metadata.tool_name;
-                    }
-                }
-                return [...next];
-            });
-
-            setIsLoading(false);
-            setFiles([]);
-            setRetryCount(0);
-            setContentStarted(false);
-
-        } catch (err: any) {
-            if (err.name === 'AbortError') return;
-
-            setMessages(prev => {
-                const next = [...prev];
-                if (next[next.length - 1]?.isStreaming) next.pop();
-                return next;
-            });
-
-            setError({
-                message: retryCount > 2
-                    ? 'Trouble connecting. Check your internet and try again.'
-                    : 'Something went wrong. Would you like to retry?',
-                retryAction: () => { setRetryCount(n => n + 1); handleSubmit(e, type, attachedFiles); },
-            });
-
-            setIsLoading(false);
-            setContentStarted(false);
-        }
-    }, [mode, conversation.conversation_id, createConversation, processFiles, parseLimitError, retryCount, contentStarted, clearAllTools, updateToolStatus, readStream]);
-
-    const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit(e, mode, files); }
-    }, [handleSubmit, mode, files]);
-
-    const handleRegenerate = useCallback(async (messageId: any) => {
+    const handleRegenerate = useCallback(async (messageId: string) => {
         setError(null);
         setIsLoading(true);
-        setContentStarted(false);
+        dispatch({ type: 'activity.clear' });
 
-        const msg = messages.find(m => m.id === messageId);
-        if (!msg) { setError({ message: 'Message not found' }); setIsLoading(false); return; }
+        const response = await fetch(`/api/chat/messages/${messageId}/regenerate`, {
+            method: 'POST',
+            headers: {
+                Accept: 'text/event-stream',
+                ...authHeaders(),
+            },
+        });
 
-        if (msg.role === 'user') {
-            const idx = messages.findIndex(m => m.id === messageId);
-            const next = messages.slice(idx + 1).find(m => m.role === 'assistant');
-            if (next?.id) { handleRegenerate(next.id); return; }
-            setError({ message: 'No response to regenerate.' });
+        if (!response.ok) {
+            setError('Could not regenerate message.');
             setIsLoading(false);
             return;
         }
 
-        try {
-            const res = await fetch(`/c/${messageId}/regenerate`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream' },
-                body: JSON.stringify({ stream: true }),
-            });
-            if (!res.ok || !res.body) throw new Error('Regeneration failed');
+        await readSse(response, async (eventName, payload) => {
+            if (eventName === 'message.created') {
+                dispatch({
+                    type: 'assistant.create',
+                    message: {
+                        id: payload.message.id,
+                        conversation_id: payload.conversation_id || state.conversationId || undefined,
+                        role: 'assistant',
+                        status: 'streaming',
+                        content: '',
+                        content_markdown: '',
+                        attachments: [],
+                        isStreaming: true,
+                    },
+                    replace: true,
+                });
+            }
 
-            setMessages(prev => prev.map(m => m.id === messageId ? { ...m, content: '', thinking: '', isStreaming: true } : m));
+            if (eventName === 'message.delta') {
+                dispatch({ type: 'assistant.delta', messageId, content: payload.content || '' });
+            }
 
-            await readStream(res.body.getReader(), messageId, (data) => {
-                if (data.error) throw new Error(data.error);
-                if (data.done) {
-                    setMessages(prev => prev.map(m => m.id === messageId ? { ...m, isStreaming: false } : m));
-                    return;
-                }
-                if (data.thinking !== undefined)
-                    setMessages(prev => prev.map(m => m.id === messageId ? { ...m, thinking: (m.thinking || '') + data.thinking } : m));
-                if (data.content !== undefined)
-                    setMessages(prev => prev.map(m => m.id === messageId ? { ...m, content: (m.content || '') + data.content } : m));
-            });
+            if (eventName === 'tool.started') {
+                dispatch({ type: 'activity', activity: { tool_name: payload.tool_name, status: 'started', message: payload.message } });
+            }
 
-            setIsLoading(false);
-        } catch {
-            setError({ message: 'Could not regenerate. Please try again.', retryAction: () => handleRegenerate(messageId) });
-            setIsLoading(false);
+            if (eventName === 'tool.completed') {
+                dispatch({ type: 'activity', activity: { tool_name: payload.tool_name, status: 'completed', message: payload.summary } });
+            }
+
+            if (eventName === 'tool.failed') {
+                dispatch({ type: 'activity', activity: { tool_name: payload.tool_name, status: 'failed', message: payload.error } });
+            }
+
+            if (eventName === 'attachment.created') {
+                dispatch({ type: 'attachment.add', messageId, attachment: payload.attachment });
+            }
+
+            if (eventName === 'message.completed' && state.conversationId) {
+                await syncConversation(state.conversationId);
+                setIsLoading(false);
+            }
+
+            if (eventName === 'message.failed') {
+                setError(payload.error || 'Regeneration failed');
+                dispatch({ type: 'assistant.fail', messageId, error: payload.error || 'Regeneration failed' });
+                setIsLoading(false);
+            }
+        });
+    }, [state.conversationId, syncConversation]);
+
+    const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            handleSubmit(event as unknown as FormEvent, mode, files);
         }
-    }, [messages, readStream]);
+    }, [files, handleSubmit, mode]);
 
-    const containerClass = useMemo(() =>
-        `relative mx-auto flex w-full flex-col px-4 pt-6 pb-36 transition-all duration-300 ${sidebarContext?.open ? 'max-w-3xl' : 'max-w-4xl'}`,
-        [sidebarContext?.open]
-    );
+    const welcome = useMemo(() => state.messages.length === 0, [state.messages.length]);
 
     return (
-        <div className="flex w-full flex-col min-h-screen bg-background">
-            <FeedBackForm state={feedbackOpen} changeState={() => setFeedbackOpen(f => !f)} />
-            <LoginDialog open={showLoginDialog} onOpenChange={setShowLoginDialog} limitType={loginDialogType} />
+        <div className="flex min-h-screen w-full flex-col bg-background">
+            <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col px-4 pb-36 pt-6">
+                {welcome ? (
+                    <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 text-center">
+                        <h1 className="text-4xl font-semibold tracking-tight">{userName ? `Hello, ${userName}` : 'Start a new chat'}</h1>
+                        <p className="max-w-xl text-muted-foreground">Clean markdown rendering, structured source cards, and a stable streaming experience now run through the new chat runtime.</p>
+                    </div>
+                ) : null}
 
-            <div className={containerClass}>
-
-                {/* Welcome */}
-                {messages.length === 0 && <WelcomeScreen userName={userName} />}
-
-                {/* Limit error */}
-                {limitError && (
-                    <LimitNotification
-                        error={limitError}
-                        onClose={() => setLimitError(null)}
-                        onUpgrade={() => { window.location.href = '/subscription/pricing'; }}
-                    />
-                )}
-
-                {/* Error banner */}
-                {error && (
-                    <Alert variant="destructive" className="mb-4 animate-in slide-in-from-top-2 duration-300">
+                {error ? (
+                    <Alert className="mb-4" variant="destructive">
                         <AlertCircle className="h-4 w-4" />
-                        <AlertDescription className="flex items-center justify-between gap-3">
-                            <span className="flex-1">{error.message}</span>
-                            <div className="flex gap-2 shrink-0">
-                                <Button variant="outline" size="sm" onClick={() => setError(null)}>Dismiss</Button>
-                                {error.retryAction && (
-                                    <Button variant="destructive" size="sm" onClick={error.retryAction}>
-                                        <RefreshCw className="h-3 w-3 mr-1" />
-                                        Retry
-                                    </Button>
-                                )}
-                            </div>
-                        </AlertDescription>
+                        <AlertDescription>{error}</AlertDescription>
                     </Alert>
-                )}
+                ) : null}
 
-                {/* Messages */}
-                <div className="space-y-2">
-                    {messages.map((message, index) => {
-                        const hasContent = (message.content?.trim() || message.images?.length || message.image);
-                        if (!hasContent) return null;
-                        return (
-                            <div
-                                key={message.id || index}
-                                className="animate-in fade-in-50 slide-in-from-bottom-1 duration-300"
-                                style={{ animationDelay: `${Math.min(index * 30, 300)}ms` }}
-                            >
-                                <Message
-                                    message={message}
-                                    onRegenerate={handleRegenerate}
-                                    isProcessing={isLoading}
-                                    onFeedback={() => setFeedbackOpen(true)}
-                                />
+                {state.activities.length > 0 ? (
+                    <div className="mb-4 space-y-2">
+                        {state.activities.map((activity) => (
+                            <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-card/70 px-4 py-3 text-sm" key={activity.tool_name}>
+                                <Wrench className="h-4 w-4 text-primary" />
+                                <span className="font-medium">{activity.tool_name.replace(/_/g, ' ')}</span>
+                                <Badge variant="secondary" className="capitalize">{activity.status}</Badge>
+                                {activity.message ? <span className="text-muted-foreground">{activity.message}</span> : null}
                             </div>
-                        );
-                    })}
+                        ))}
+                    </div>
+                ) : null}
+
+                <div className="space-y-4">
+                    {state.messages.map((message) => (
+                        <ChatMessageRenderer key={message.id} message={message} onRegenerate={message.role === 'assistant' ? handleRegenerate : undefined} />
+                    ))}
+                    {isLoading ? (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            Streaming response...
+                        </div>
+                    ) : null}
                 </div>
 
-                {/* Tool status */}
-                {activeTools.length > 0 && !contentStarted && (
-                    <div className="mt-4 animate-in fade-in-50 duration-300">
-                        <ToolStatusDisplay tools={activeTools} compact className="mb-2" />
-                    </div>
-                )}
-
-                {/* Loading */}
-                {isLoading && (
-                    <div className="mt-4 px-2">
-                        <LoadingDots />
-                    </div>
-                )}
-
-                <div ref={messagesEndRef} />
+                <div ref={bottomRef} />
             </div>
 
-            {/* Guest nudge */}
-            {!isAuthenticated && (
-                <div className="fixed bottom-28 left-0 right-0 pointer-events-none z-10 flex justify-center px-4">
-                    <p className="text-sm text-muted-foreground bg-background/90 backdrop-blur-md border border-border/50 rounded-full px-5 py-2 shadow-sm">
-                        Log in for a personalized experience
-                    </p>
+            {!isAuthenticated ? (
+                <div className="fixed bottom-28 left-0 right-0 z-10 flex justify-center px-4">
+                    <div className="rounded-full border border-border/50 bg-background/90 px-4 py-2 text-sm text-muted-foreground backdrop-blur">
+                        Sign in for saved chat history and billing-backed limits.
+                    </div>
                 </div>
-            )}
+            ) : null}
 
             <ChatInput
-                mode={mode}
-                setMode={setMode}
-                ref={inputRef}
+                files={files}
                 handleKeyDown={handleKeyDown}
-                onSend={handleSubmit}
                 isAuthenticated={isAuthenticated}
                 is_processing={isLoading}
-                files={files}
+                mode={mode}
+                onSend={handleSubmit}
+                ref={inputRef}
                 setFiles={setFiles}
+                setMode={(nextMode) => setMode(nextMode as 'text' | 'image')}
             />
         </div>
     );

@@ -4,6 +4,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { ApiError, apiRequest } from '@/spa/lib/api';
+import { setAuthToken } from '@/spa/lib/auth-token';
 import { queryClient } from '@/spa/lib/query-client';
 import { sessionQueryKey } from '@/spa/lib/session';
 
@@ -17,11 +18,12 @@ export function Component() {
 
     const login = useMutation({
         mutationFn: () =>
-            apiRequest<{ redirect_to?: string }>('/api/session/login', {
+            apiRequest<{ redirect_to?: string; token: string }>('/api/session/login', {
                 method: 'POST',
                 json: { email, password },
             }),
         onSuccess: async (data) => {
+            setAuthToken(data.token);
             await queryClient.invalidateQueries({ queryKey: sessionQueryKey });
             navigate(data.redirect_to || redirect);
         },
@@ -41,7 +43,7 @@ export function Component() {
             <form className="w-full space-y-5 rounded-3xl border border-border/70 bg-card p-8" onSubmit={onSubmit}>
                 <div>
                     <h1 className="text-3xl font-semibold">Sign in</h1>
-                    <p className="mt-2 text-sm text-muted-foreground">Session auth now powers the SPA runtime.</p>
+                    <p className="mt-2 text-sm text-muted-foreground">Token auth now powers the SPA runtime.</p>
                 </div>
                 <label className="block space-y-2">
                     <span className="text-sm">Email</span>
