@@ -1,110 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
-* @see \App\Http\Controllers\VoiceConversationController::index
- * @see app/Http/Controllers/VoiceConversationController.php:29
- * @route '/voice-chat'
- */
-export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index.url(options),
-    method: 'get',
-})
-
-index.definition = {
-    methods: ["get","head"],
-    url: '/voice-chat',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\VoiceConversationController::index
- * @see app/Http/Controllers/VoiceConversationController.php:29
- * @route '/voice-chat'
- */
-index.url = (options?: RouteQueryOptions) => {
-    return index.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\VoiceConversationController::index
- * @see app/Http/Controllers/VoiceConversationController.php:29
- * @route '/voice-chat'
- */
-index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index.url(options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\VoiceConversationController::index
- * @see app/Http/Controllers/VoiceConversationController.php:29
- * @route '/voice-chat'
- */
-index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: index.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\VoiceConversationController::show
- * @see app/Http/Controllers/VoiceConversationController.php:43
- * @route '/c/{conversation}/voice'
- */
-export const show = (args: { conversation: string | number } | [conversation: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: show.url(args, options),
-    method: 'get',
-})
-
-show.definition = {
-    methods: ["get","head"],
-    url: '/c/{conversation}/voice',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\VoiceConversationController::show
- * @see app/Http/Controllers/VoiceConversationController.php:43
- * @route '/c/{conversation}/voice'
- */
-show.url = (args: { conversation: string | number } | [conversation: string | number ] | string | number, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { conversation: args }
-    }
-
-    
-    if (Array.isArray(args)) {
-        args = {
-                    conversation: args[0],
-                }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-                        conversation: args.conversation,
-                }
-
-    return show.definition.url
-            .replace('{conversation}', parsedArgs.conversation.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\VoiceConversationController::show
- * @see app/Http/Controllers/VoiceConversationController.php:43
- * @route '/c/{conversation}/voice'
- */
-show.get = (args: { conversation: string | number } | [conversation: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: show.url(args, options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\VoiceConversationController::show
- * @see app/Http/Controllers/VoiceConversationController.php:43
- * @route '/c/{conversation}/voice'
- */
-show.head = (args: { conversation: string | number } | [conversation: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: show.url(args, options),
-    method: 'head',
-})
-
-/**
 * @see \App\Http\Controllers\VoiceConversationController::start
  * @see app/Http/Controllers/VoiceConversationController.php:0
  * @route '/api/voice/start'
@@ -363,6 +258,6 @@ streamAudio.head = (args: { messageId: string | number } | [messageId: string | 
     url: streamAudio.url(args, options),
     method: 'head',
 })
-const VoiceConversationController = { index, show, start, processAudio, processText, end, history, streamAudio }
+const VoiceConversationController = { start, processAudio, processText, end, history, streamAudio }
 
 export default VoiceConversationController

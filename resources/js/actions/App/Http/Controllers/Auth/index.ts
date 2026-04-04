@@ -3,7 +3,6 @@ import AuthenticatedSessionController from './AuthenticatedSessionController'
 import PasswordResetLinkController from './PasswordResetLinkController'
 import NewPasswordController from './NewPasswordController'
 import GoogleController from './GoogleController'
-import EmailVerificationPromptController from './EmailVerificationPromptController'
 import VerifyEmailController from './VerifyEmailController'
 import EmailVerificationNotificationController from './EmailVerificationNotificationController'
 import ConfirmablePasswordController from './ConfirmablePasswordController'
@@ -13,7 +12,6 @@ AuthenticatedSessionController: Object.assign(AuthenticatedSessionController, Au
 PasswordResetLinkController: Object.assign(PasswordResetLinkController, PasswordResetLinkController),
 NewPasswordController: Object.assign(NewPasswordController, NewPasswordController),
 GoogleController: Object.assign(GoogleController, GoogleController),
-EmailVerificationPromptController: Object.assign(EmailVerificationPromptController, EmailVerificationPromptController),
 VerifyEmailController: Object.assign(VerifyEmailController, VerifyEmailController),
 EmailVerificationNotificationController: Object.assign(EmailVerificationNotificationController, EmailVerificationNotificationController),
 ConfirmablePasswordController: Object.assign(ConfirmablePasswordController, ConfirmablePasswordController),

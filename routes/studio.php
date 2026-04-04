@@ -1,16 +1,17 @@
 <?php
 
+use App\Http\Controllers\SpaController;
 use App\Http\Controllers\PodcastController;
 use App\Http\Controllers\StudioController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/studio', [StudioController::class, 'index'])->name('studio.index');
+Route::get('/studio', SpaController::class)->name('studio.index');
 
     // routes/web.php or routes/api.php
     Route::middleware(['auth', 'verified'])->group(function () {
         // Page routes
-        Route::get('/studio/podcast-master', [PodcastController::class, 'index'])->name('podcast.library');
-        Route::get('/podcast/generate', [PodcastController::class, 'create'])->name('podcast.generate');
+        Route::get('/studio/podcast-master', SpaController::class)->name('podcast.library');
+        Route::get('/podcast/generate', SpaController::class)->name('podcast.generate');
 
         // API routes
         Route::post('/podcast/generate', [PodcastController::class, 'generate']);

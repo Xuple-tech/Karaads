@@ -6,6 +6,8 @@ import ImageGenerationController from './ImageGenerationController'
 import SettingsController from './SettingsController'
 import ChatPreferenceController from './ChatPreferenceController'
 import PersonalizationController from './PersonalizationController'
+import SessionAuthController from './SessionAuthController'
+import SpaConversationController from './SpaConversationController'
 const Api = {
     AuthController: Object.assign(AuthController, AuthController),
 ChatController: Object.assign(ChatController, ChatController),
@@ -15,6 +17,8 @@ ImageGenerationController: Object.assign(ImageGenerationController, ImageGenerat
 SettingsController: Object.assign(SettingsController, SettingsController),
 ChatPreferenceController: Object.assign(ChatPreferenceController, ChatPreferenceController),
 PersonalizationController: Object.assign(PersonalizationController, PersonalizationController),
+SessionAuthController: Object.assign(SessionAuthController, SessionAuthController),
+SpaConversationController: Object.assign(SpaConversationController, SpaConversationController),
 }
 
 export default Api

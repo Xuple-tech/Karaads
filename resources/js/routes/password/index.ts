@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
-* @see \App\Http\Controllers\Auth\PasswordResetLinkController::request
- * @see app/Http/Controllers/Auth/PasswordResetLinkController.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/forgot-password'
  */
 export const request = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -15,8 +15,8 @@ request.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\Auth\PasswordResetLinkController::request
- * @see app/Http/Controllers/Auth/PasswordResetLinkController.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/forgot-password'
  */
 request.url = (options?: RouteQueryOptions) => {
@@ -24,8 +24,8 @@ request.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\Auth\PasswordResetLinkController::request
- * @see app/Http/Controllers/Auth/PasswordResetLinkController.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/forgot-password'
  */
 request.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -33,8 +33,8 @@ request.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\Auth\PasswordResetLinkController::request
- * @see app/Http/Controllers/Auth/PasswordResetLinkController.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/forgot-password'
  */
 request.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -77,8 +77,8 @@ email.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\Auth\NewPasswordController::reset
- * @see app/Http/Controllers/Auth/NewPasswordController.php:23
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/reset-password/{token}'
  */
 export const reset = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -92,8 +92,8 @@ reset.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\Auth\NewPasswordController::reset
- * @see app/Http/Controllers/Auth/NewPasswordController.php:23
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/reset-password/{token}'
  */
 reset.url = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -120,8 +120,8 @@ reset.url = (args: { token: string | number } | [token: string | number ] | stri
 }
 
 /**
-* @see \App\Http\Controllers\Auth\NewPasswordController::reset
- * @see app/Http/Controllers/Auth/NewPasswordController.php:23
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/reset-password/{token}'
  */
 reset.get = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -129,8 +129,8 @@ reset.get = (args: { token: string | number } | [token: string | number ] | stri
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\Auth\NewPasswordController::reset
- * @see app/Http/Controllers/Auth/NewPasswordController.php:23
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/reset-password/{token}'
  */
 reset.head = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -173,8 +173,8 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\Auth\ConfirmablePasswordController::confirm
- * @see app/Http/Controllers/Auth/ConfirmablePasswordController.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/confirm-password'
  */
 export const confirm = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -188,8 +188,8 @@ confirm.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\Auth\ConfirmablePasswordController::confirm
- * @see app/Http/Controllers/Auth/ConfirmablePasswordController.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/confirm-password'
  */
 confirm.url = (options?: RouteQueryOptions) => {
@@ -197,8 +197,8 @@ confirm.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\Auth\ConfirmablePasswordController::confirm
- * @see app/Http/Controllers/Auth/ConfirmablePasswordController.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/confirm-password'
  */
 confirm.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -206,8 +206,8 @@ confirm.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\Auth\ConfirmablePasswordController::confirm
- * @see app/Http/Controllers/Auth/ConfirmablePasswordController.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/confirm-password'
  */
 confirm.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -216,8 +216,8 @@ confirm.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\Settings\PasswordController::edit
- * @see app/Http/Controllers/Settings/PasswordController.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/settings/password'
  */
 export const edit = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -231,8 +231,8 @@ edit.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\Settings\PasswordController::edit
- * @see app/Http/Controllers/Settings/PasswordController.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/settings/password'
  */
 edit.url = (options?: RouteQueryOptions) => {
@@ -240,8 +240,8 @@ edit.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\Settings\PasswordController::edit
- * @see app/Http/Controllers/Settings/PasswordController.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/settings/password'
  */
 edit.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -249,8 +249,8 @@ edit.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\Settings\PasswordController::edit
- * @see app/Http/Controllers/Settings/PasswordController.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/settings/password'
  */
 edit.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({

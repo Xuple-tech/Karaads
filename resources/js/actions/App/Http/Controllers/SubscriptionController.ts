@@ -1,96 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../wayfinder'
 /**
-* @see \App\Http\Controllers\SubscriptionController::pricing
- * @see app/Http/Controllers/SubscriptionController.php:46
- * @route '/subscription/pricing'
- */
-const pricing236c33d8cfcce6f1d3853952aa4dca21 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: pricing236c33d8cfcce6f1d3853952aa4dca21.url(options),
-    method: 'get',
-})
-
-pricing236c33d8cfcce6f1d3853952aa4dca21.definition = {
-    methods: ["get","head"],
-    url: '/subscription/pricing',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\SubscriptionController::pricing
- * @see app/Http/Controllers/SubscriptionController.php:46
- * @route '/subscription/pricing'
- */
-pricing236c33d8cfcce6f1d3853952aa4dca21.url = (options?: RouteQueryOptions) => {
-    return pricing236c33d8cfcce6f1d3853952aa4dca21.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\SubscriptionController::pricing
- * @see app/Http/Controllers/SubscriptionController.php:46
- * @route '/subscription/pricing'
- */
-pricing236c33d8cfcce6f1d3853952aa4dca21.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: pricing236c33d8cfcce6f1d3853952aa4dca21.url(options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\SubscriptionController::pricing
- * @see app/Http/Controllers/SubscriptionController.php:46
- * @route '/subscription/pricing'
- */
-pricing236c33d8cfcce6f1d3853952aa4dca21.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: pricing236c33d8cfcce6f1d3853952aa4dca21.url(options),
-    method: 'head',
-})
-
-    /**
-* @see \App\Http\Controllers\SubscriptionController::pricing
- * @see app/Http/Controllers/SubscriptionController.php:46
- * @route '/pricing'
- */
-const pricinga6735397690d30570f358ff62fa3ef24 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: pricinga6735397690d30570f358ff62fa3ef24.url(options),
-    method: 'get',
-})
-
-pricinga6735397690d30570f358ff62fa3ef24.definition = {
-    methods: ["get","head"],
-    url: '/pricing',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\SubscriptionController::pricing
- * @see app/Http/Controllers/SubscriptionController.php:46
- * @route '/pricing'
- */
-pricinga6735397690d30570f358ff62fa3ef24.url = (options?: RouteQueryOptions) => {
-    return pricinga6735397690d30570f358ff62fa3ef24.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\SubscriptionController::pricing
- * @see app/Http/Controllers/SubscriptionController.php:46
- * @route '/pricing'
- */
-pricinga6735397690d30570f358ff62fa3ef24.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: pricinga6735397690d30570f358ff62fa3ef24.url(options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\SubscriptionController::pricing
- * @see app/Http/Controllers/SubscriptionController.php:46
- * @route '/pricing'
- */
-pricinga6735397690d30570f358ff62fa3ef24.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: pricinga6735397690d30570f358ff62fa3ef24.url(options),
-    method: 'head',
-})
-
-export const pricing = {
-    '/subscription/pricing': pricing236c33d8cfcce6f1d3853952aa4dca21,
-    '/pricing': pricinga6735397690d30570f358ff62fa3ef24,
-}
-
-/**
 * @see \App\Http\Controllers\SubscriptionController::getPlans
  * @see app/Http/Controllers/SubscriptionController.php:64
  * @route '/api/subscription/plans'
@@ -173,92 +82,6 @@ handleCheckoutSuccess.get = (options?: RouteQueryOptions): RouteDefinition<'get'
  */
 handleCheckoutSuccess.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: handleCheckoutSuccess.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\SubscriptionController::index
- * @see app/Http/Controllers/SubscriptionController.php:28
- * @route '/subscription'
- */
-export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index.url(options),
-    method: 'get',
-})
-
-index.definition = {
-    methods: ["get","head"],
-    url: '/subscription',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\SubscriptionController::index
- * @see app/Http/Controllers/SubscriptionController.php:28
- * @route '/subscription'
- */
-index.url = (options?: RouteQueryOptions) => {
-    return index.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\SubscriptionController::index
- * @see app/Http/Controllers/SubscriptionController.php:28
- * @route '/subscription'
- */
-index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index.url(options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\SubscriptionController::index
- * @see app/Http/Controllers/SubscriptionController.php:28
- * @route '/subscription'
- */
-index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: index.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\SubscriptionController::billing
- * @see app/Http/Controllers/SubscriptionController.php:364
- * @route '/billing'
- */
-export const billing = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: billing.url(options),
-    method: 'get',
-})
-
-billing.definition = {
-    methods: ["get","head"],
-    url: '/billing',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\SubscriptionController::billing
- * @see app/Http/Controllers/SubscriptionController.php:364
- * @route '/billing'
- */
-billing.url = (options?: RouteQueryOptions) => {
-    return billing.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\SubscriptionController::billing
- * @see app/Http/Controllers/SubscriptionController.php:364
- * @route '/billing'
- */
-billing.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: billing.url(options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\SubscriptionController::billing
- * @see app/Http/Controllers/SubscriptionController.php:364
- * @route '/billing'
- */
-billing.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: billing.url(options),
     method: 'head',
 })
 
@@ -483,6 +306,6 @@ getUsageStats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
     url: getUsageStats.url(options),
     method: 'head',
 })
-const SubscriptionController = { pricing, getPlans, handleCheckoutSuccess, index, billing, getMySubscription, upgrade, downgrade, cancel, startTrial, getUsageStats }
+const SubscriptionController = { getPlans, handleCheckoutSuccess, getMySubscription, upgrade, downgrade, cancel, startTrial, getUsageStats }
 
 export default SubscriptionController

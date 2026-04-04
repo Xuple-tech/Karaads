@@ -1,67 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
-* @see \App\Http\Controllers\ConversationShareController::viewShare
- * @see app/Http/Controllers/ConversationShareController.php:128
- * @route '/share/{token}'
- */
-export const viewShare = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: viewShare.url(args, options),
-    method: 'get',
-})
-
-viewShare.definition = {
-    methods: ["get","head"],
-    url: '/share/{token}',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\ConversationShareController::viewShare
- * @see app/Http/Controllers/ConversationShareController.php:128
- * @route '/share/{token}'
- */
-viewShare.url = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { token: args }
-    }
-
-    
-    if (Array.isArray(args)) {
-        args = {
-                    token: args[0],
-                }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-                        token: args.token,
-                }
-
-    return viewShare.definition.url
-            .replace('{token}', parsedArgs.token.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\ConversationShareController::viewShare
- * @see app/Http/Controllers/ConversationShareController.php:128
- * @route '/share/{token}'
- */
-viewShare.get = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: viewShare.url(args, options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\ConversationShareController::viewShare
- * @see app/Http/Controllers/ConversationShareController.php:128
- * @route '/share/{token}'
- */
-viewShare.head = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: viewShare.url(args, options),
-    method: 'head',
-})
-
-/**
 * @see \App\Http\Controllers\ConversationShareController::getSharedConversationData
  * @see app/Http/Controllers/ConversationShareController.php:161
  * @route '/api/share/{token}/data'
@@ -386,6 +324,6 @@ listUserShares.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => 
     url: listUserShares.url(options),
     method: 'head',
 })
-const ConversationShareController = { viewShare, getSharedConversationData, createShare, getShare, updateShare, revokeShare, listUserShares }
+const ConversationShareController = { getSharedConversationData, createShare, getShare, updateShare, revokeShare, listUserShares }
 
 export default ConversationShareController

@@ -1,12 +1,13 @@
 <?php
+use App\Http\Controllers\SpaController;
 // routes/web.php
 
 use App\Http\Controllers\VoiceConversationController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
-Route::get('/voice-chat', [VoiceConversationController::class, 'index'])->name('voice.chat');
+Route::get('/voice-chat', SpaController::class)->name('voice.chat');
 Route::middleware(['auth'])->group(function () {
-    Route::get('/c/{conversation}/voice', [VoiceConversationController::class, 'show'])
+    Route::get('/c/{conversation}/voice', SpaController::class)
         ->name('voice.conversation');
 });
 
@@ -24,4 +25,3 @@ Route::middleware(['auth:sanctum'])->withoutMiddleware(VerifyCsrfToken::class)->
 
 });
 });
-

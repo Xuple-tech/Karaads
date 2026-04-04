@@ -10,6 +10,7 @@ use App\Http\Controllers\Meta\MetaMessageController;
 use App\Http\Controllers\Meta\MetaPreferenceController;
 use App\Http\Controllers\Meta\MetaWebhookController;
 use App\Http\Controllers\Api\SessionAuthController;
+use App\Http\Controllers\Api\SpaConversationController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ConversationShareController;
 use App\Http\Middleware\ImageGenerationRateLimit;
@@ -235,6 +236,11 @@ Route::prefix('api/session')->group(function () {
         Route::post('/email/verification-notification', [SessionAuthController::class, 'resendVerification'])->middleware('throttle:6,1')->name('session.verification.send');
         Route::get('/verify-email/{id}/{hash}', [SessionAuthController::class, 'verifyEmail'])->middleware(['signed', 'throttle:6,1'])->name('session.verification.verify');
     });
+});
+
+Route::middleware('auth')->prefix('api/spa')->group(function () {
+    Route::get('/conversations', [SpaConversationController::class, 'index'])->name('spa.conversations.index');
+    Route::get('/conversations/{conversation}', [SpaConversationController::class, 'show'])->name('spa.conversations.show');
 });
 
 require __DIR__ . '/auth.php';

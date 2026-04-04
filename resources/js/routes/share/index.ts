@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
-* @see \App\Http\Controllers\ConversationShareController::view
- * @see app/Http/Controllers/ConversationShareController.php:128
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/share/{token}'
  */
 export const view = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -15,8 +15,8 @@ view.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\ConversationShareController::view
- * @see app/Http/Controllers/ConversationShareController.php:128
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/share/{token}'
  */
 view.url = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -43,8 +43,8 @@ view.url = (args: { token: string | number } | [token: string | number ] | strin
 }
 
 /**
-* @see \App\Http\Controllers\ConversationShareController::view
- * @see app/Http/Controllers/ConversationShareController.php:128
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/share/{token}'
  */
 view.get = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -52,8 +52,8 @@ view.get = (args: { token: string | number } | [token: string | number ] | strin
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\ConversationShareController::view
- * @see app/Http/Controllers/ConversationShareController.php:128
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/share/{token}'
  */
 view.head = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({

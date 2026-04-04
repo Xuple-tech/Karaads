@@ -2,51 +2,8 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../
 import setting from './setting'
 import conversations from './conversations'
 /**
-* @see \App\Http\Controllers\MailController::library
- * @see app/Http/Controllers/MailController.php:33
- * @route '/mails'
- */
-export const library = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: library.url(options),
-    method: 'get',
-})
-
-library.definition = {
-    methods: ["get","head"],
-    url: '/mails',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\MailController::library
- * @see app/Http/Controllers/MailController.php:33
- * @route '/mails'
- */
-library.url = (options?: RouteQueryOptions) => {
-    return library.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\MailController::library
- * @see app/Http/Controllers/MailController.php:33
- * @route '/mails'
- */
-library.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: library.url(options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\MailController::library
- * @see app/Http/Controllers/MailController.php:33
- * @route '/mails'
- */
-library.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: library.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\User\UserSettingsController::settings
- * @see app/Http/Controllers/User/UserSettingsController.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/user/settings'
  */
 export const settings = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -60,8 +17,8 @@ settings.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\User\UserSettingsController::settings
- * @see app/Http/Controllers/User/UserSettingsController.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/user/settings'
  */
 settings.url = (options?: RouteQueryOptions) => {
@@ -69,8 +26,8 @@ settings.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\User\UserSettingsController::settings
- * @see app/Http/Controllers/User/UserSettingsController.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/user/settings'
  */
 settings.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -78,8 +35,8 @@ settings.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\User\UserSettingsController::settings
- * @see app/Http/Controllers/User/UserSettingsController.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/user/settings'
  */
 settings.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -88,7 +45,8 @@ settings.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
- * @see routes/user.php:19
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/user/help'
  */
 export const help = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -102,7 +60,8 @@ help.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/user.php:19
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/user/help'
  */
 help.url = (options?: RouteQueryOptions) => {
@@ -110,7 +69,8 @@ help.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/user.php:19
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/user/help'
  */
 help.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -118,7 +78,8 @@ help.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/user.php:19
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/user/help'
  */
 help.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -127,7 +88,8 @@ help.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
- * @see routes/user.php:24
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/user/subscription'
  */
 export const subscription = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -141,7 +103,8 @@ subscription.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/user.php:24
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/user/subscription'
  */
 subscription.url = (options?: RouteQueryOptions) => {
@@ -149,7 +112,8 @@ subscription.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/user.php:24
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/user/subscription'
  */
 subscription.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -157,7 +121,8 @@ subscription.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/user.php:24
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/user/subscription'
  */
 subscription.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -166,7 +131,6 @@ subscription.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 const user = {
     setting: Object.assign(setting, setting),
-library: Object.assign(library, library),
 conversations: Object.assign(conversations, conversations),
 settings: Object.assign(settings, settings),
 help: Object.assign(help, help),

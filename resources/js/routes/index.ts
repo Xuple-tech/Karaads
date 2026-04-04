@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../wayfinder'
 /**
-* @see \App\Http\Controllers\ChatController::home
- * @see app/Http/Controllers/ChatController.php:31
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/'
  */
 export const home = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -15,8 +15,8 @@ home.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\ChatController::home
- * @see app/Http/Controllers/ChatController.php:31
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/'
  */
 home.url = (options?: RouteQueryOptions) => {
@@ -24,8 +24,8 @@ home.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\ChatController::home
- * @see app/Http/Controllers/ChatController.php:31
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/'
  */
 home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -33,8 +33,8 @@ home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\ChatController::home
- * @see app/Http/Controllers/ChatController.php:31
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/'
  */
 home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -43,8 +43,8 @@ home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\ChatController::app
- * @see app/Http/Controllers/ChatController.php:31
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/app'
  */
 export const app = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -58,8 +58,8 @@ app.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\ChatController::app
- * @see app/Http/Controllers/ChatController.php:31
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/app'
  */
 app.url = (options?: RouteQueryOptions) => {
@@ -67,8 +67,8 @@ app.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\ChatController::app
- * @see app/Http/Controllers/ChatController.php:31
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/app'
  */
 app.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -76,8 +76,8 @@ app.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\ChatController::app
- * @see app/Http/Controllers/ChatController.php:31
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/app'
  */
 app.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -86,8 +86,8 @@ app.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\ChatController::newMethod
- * @see app/Http/Controllers/ChatController.php:31
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/new'
  */
 export const newMethod = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -101,8 +101,8 @@ newMethod.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\ChatController::newMethod
- * @see app/Http/Controllers/ChatController.php:31
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/new'
  */
 newMethod.url = (options?: RouteQueryOptions) => {
@@ -110,8 +110,8 @@ newMethod.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\ChatController::newMethod
- * @see app/Http/Controllers/ChatController.php:31
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/new'
  */
 newMethod.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -119,8 +119,8 @@ newMethod.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\ChatController::newMethod
- * @see app/Http/Controllers/ChatController.php:31
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/new'
  */
 newMethod.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -129,8 +129,8 @@ newMethod.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\ChatController::privacyPolicy
- * @see app/Http/Controllers/ChatController.php:52
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/privacy-policy'
  */
 export const privacyPolicy = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -144,8 +144,8 @@ privacyPolicy.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\ChatController::privacyPolicy
- * @see app/Http/Controllers/ChatController.php:52
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/privacy-policy'
  */
 privacyPolicy.url = (options?: RouteQueryOptions) => {
@@ -153,8 +153,8 @@ privacyPolicy.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\ChatController::privacyPolicy
- * @see app/Http/Controllers/ChatController.php:52
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/privacy-policy'
  */
 privacyPolicy.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -162,8 +162,8 @@ privacyPolicy.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\ChatController::privacyPolicy
- * @see app/Http/Controllers/ChatController.php:52
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/privacy-policy'
  */
 privacyPolicy.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -172,7 +172,8 @@ privacyPolicy.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 })
 
 /**
- * @see routes/web.php:35
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/dashboard'
  */
 export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -186,7 +187,8 @@ dashboard.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:35
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/dashboard'
  */
 dashboard.url = (options?: RouteQueryOptions) => {
@@ -194,7 +196,8 @@ dashboard.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/web.php:35
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/dashboard'
  */
 dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -202,7 +205,8 @@ dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/web.php:35
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/dashboard'
  */
 dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -211,8 +215,8 @@ dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\PageController::privacy
- * @see app/Http/Controllers/PageController.php:13
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/privacy'
  */
 export const privacy = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -226,8 +230,8 @@ privacy.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\PageController::privacy
- * @see app/Http/Controllers/PageController.php:13
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/privacy'
  */
 privacy.url = (options?: RouteQueryOptions) => {
@@ -235,8 +239,8 @@ privacy.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\PageController::privacy
- * @see app/Http/Controllers/PageController.php:13
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/privacy'
  */
 privacy.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -244,8 +248,8 @@ privacy.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\PageController::privacy
- * @see app/Http/Controllers/PageController.php:13
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/privacy'
  */
 privacy.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -254,8 +258,8 @@ privacy.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\PageController::terms
- * @see app/Http/Controllers/PageController.php:25
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/terms'
  */
 export const terms = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -269,8 +273,8 @@ terms.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\PageController::terms
- * @see app/Http/Controllers/PageController.php:25
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/terms'
  */
 terms.url = (options?: RouteQueryOptions) => {
@@ -278,8 +282,8 @@ terms.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\PageController::terms
- * @see app/Http/Controllers/PageController.php:25
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/terms'
  */
 terms.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -287,8 +291,8 @@ terms.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\PageController::terms
- * @see app/Http/Controllers/PageController.php:25
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/terms'
  */
 terms.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -297,8 +301,8 @@ terms.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\PageController::termsOfService
- * @see app/Http/Controllers/PageController.php:25
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/terms-of-service'
  */
 export const termsOfService = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -312,8 +316,8 @@ termsOfService.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\PageController::termsOfService
- * @see app/Http/Controllers/PageController.php:25
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/terms-of-service'
  */
 termsOfService.url = (options?: RouteQueryOptions) => {
@@ -321,8 +325,8 @@ termsOfService.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\PageController::termsOfService
- * @see app/Http/Controllers/PageController.php:25
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/terms-of-service'
  */
 termsOfService.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -330,8 +334,8 @@ termsOfService.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\PageController::termsOfService
- * @see app/Http/Controllers/PageController.php:25
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/terms-of-service'
  */
 termsOfService.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -340,8 +344,8 @@ termsOfService.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => 
 })
 
 /**
-* @see \App\Http\Controllers\Auth\RegisteredUserController::register
- * @see app/Http/Controllers/Auth/RegisteredUserController.php:22
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/register'
  */
 export const register = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -355,8 +359,8 @@ register.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\Auth\RegisteredUserController::register
- * @see app/Http/Controllers/Auth/RegisteredUserController.php:22
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/register'
  */
 register.url = (options?: RouteQueryOptions) => {
@@ -364,8 +368,8 @@ register.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\Auth\RegisteredUserController::register
- * @see app/Http/Controllers/Auth/RegisteredUserController.php:22
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/register'
  */
 register.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -373,8 +377,8 @@ register.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\Auth\RegisteredUserController::register
- * @see app/Http/Controllers/Auth/RegisteredUserController.php:22
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/register'
  */
 register.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -383,8 +387,8 @@ register.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::login
- * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:20
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/login'
  */
 export const login = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -398,8 +402,8 @@ login.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::login
- * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:20
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/login'
  */
 login.url = (options?: RouteQueryOptions) => {
@@ -407,8 +411,8 @@ login.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::login
- * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:20
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/login'
  */
 login.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -416,8 +420,8 @@ login.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::login
- * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:20
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/login'
  */
 login.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -478,7 +482,8 @@ logout.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
- * @see routes/settings.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/settings/appearance'
  */
 export const appearance = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -492,7 +497,8 @@ appearance.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/settings.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/settings/appearance'
  */
 appearance.url = (options?: RouteQueryOptions) => {
@@ -500,7 +506,8 @@ appearance.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/settings.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/settings/appearance'
  */
 appearance.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -508,7 +515,8 @@ appearance.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/settings.php:18
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/settings/appearance'
  */
 appearance.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -517,7 +525,8 @@ appearance.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
- * @see routes/settings.php:23
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/settings/personalization'
  */
 export const personalization = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -531,7 +540,8 @@ personalization.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/settings.php:23
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/settings/personalization'
  */
 personalization.url = (options?: RouteQueryOptions) => {
@@ -539,7 +549,8 @@ personalization.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/settings.php:23
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/settings/personalization'
  */
 personalization.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -547,7 +558,8 @@ personalization.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => (
     method: 'get',
 })
 /**
- * @see routes/settings.php:23
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/settings/personalization'
  */
 personalization.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -556,8 +568,8 @@ personalization.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =>
 })
 
 /**
-* @see \App\Http\Controllers\SubscriptionController::pricing
- * @see app/Http/Controllers/SubscriptionController.php:46
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/pricing'
  */
 export const pricing = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -571,8 +583,8 @@ pricing.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\SubscriptionController::pricing
- * @see app/Http/Controllers/SubscriptionController.php:46
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/pricing'
  */
 pricing.url = (options?: RouteQueryOptions) => {
@@ -580,8 +592,8 @@ pricing.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\SubscriptionController::pricing
- * @see app/Http/Controllers/SubscriptionController.php:46
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/pricing'
  */
 pricing.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -589,8 +601,8 @@ pricing.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\SubscriptionController::pricing
- * @see app/Http/Controllers/SubscriptionController.php:46
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/pricing'
  */
 pricing.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({

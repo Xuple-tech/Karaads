@@ -138,73 +138,10 @@ sync.post = (args: { accountId: string | number } | [accountId: string | number 
     url: sync.url(args, options),
     method: 'post',
 })
-
-/**
-* @see \App\Http\Controllers\MailController::show
- * @see app/Http/Controllers/MailController.php:48
- * @route '/emails/accounts/{accountId}/emails'
- */
-export const show = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: show.url(args, options),
-    method: 'get',
-})
-
-show.definition = {
-    methods: ["get","head"],
-    url: '/emails/accounts/{accountId}/emails',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\MailController::show
- * @see app/Http/Controllers/MailController.php:48
- * @route '/emails/accounts/{accountId}/emails'
- */
-show.url = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { accountId: args }
-    }
-
-    
-    if (Array.isArray(args)) {
-        args = {
-                    accountId: args[0],
-                }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-                        accountId: args.accountId,
-                }
-
-    return show.definition.url
-            .replace('{accountId}', parsedArgs.accountId.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\MailController::show
- * @see app/Http/Controllers/MailController.php:48
- * @route '/emails/accounts/{accountId}/emails'
- */
-show.get = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: show.url(args, options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\MailController::show
- * @see app/Http/Controllers/MailController.php:48
- * @route '/emails/accounts/{accountId}/emails'
- */
-show.head = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: show.url(args, options),
-    method: 'head',
-})
 const accounts = {
     imap: Object.assign(imap, imap),
 disconnect: Object.assign(disconnect, disconnect),
 sync: Object.assign(sync, sync),
-show: Object.assign(show, show),
 }
 
 export default accounts

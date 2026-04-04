@@ -181,55 +181,11 @@ deleteMethod.delete = (args: { ruleId: string | number } | [ruleId: string | num
     url: deleteMethod.url(args, options),
     method: 'delete',
 })
-
-/**
-* @see \App\Http\Controllers\MailController::index
- * @see app/Http/Controllers/MailController.php:65
- * @route '/emails/rules'
- */
-export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index.url(options),
-    method: 'get',
-})
-
-index.definition = {
-    methods: ["get","head"],
-    url: '/emails/rules',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\MailController::index
- * @see app/Http/Controllers/MailController.php:65
- * @route '/emails/rules'
- */
-index.url = (options?: RouteQueryOptions) => {
-    return index.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\MailController::index
- * @see app/Http/Controllers/MailController.php:65
- * @route '/emails/rules'
- */
-index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: index.url(options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\MailController::index
- * @see app/Http/Controllers/MailController.php:65
- * @route '/emails/rules'
- */
-index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: index.url(options),
-    method: 'head',
-})
 const rules = {
     list: Object.assign(list, list),
 create: Object.assign(create, create),
 update: Object.assign(update, update),
 delete: Object.assign(deleteMethod, deleteMethod),
-index: Object.assign(index, index),
 }
 
 export default rules

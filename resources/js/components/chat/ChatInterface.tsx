@@ -39,9 +39,10 @@ type LimitError = {
 
 const WelcomeScreen = memo(({ userName }: { userName?: string }) => (
     <div className="flex flex-col items-center justify-center min-h-[55vh] gap-6 animate-in fade-in-50 duration-500">
-        <div className="relative">
-            <div className="h-20 w-20 rounded-2xl border border-border/40 bg-card flex items-center justify-center shadow-sm">
-                <img src="/logo.png" className="h-12 w-auto" alt="Kwati AI" />
+        <div className="relative group">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-pink-500/20 to-violet-500/30 blur-2xl rounded-3xl animate-pulse" />
+            <div className="relative h-24 w-24 rounded-2xl border border-border/30 bg-card/80 backdrop-blur-sm flex items-center justify-center shadow-xl transition-transform group-hover:scale-105 duration-300">
+                <img src="/logo.png" className="h-14 w-auto drop-shadow-lg" alt="Kwati AI" />
             </div>
         </div>
         <div className="text-center space-y-2 max-w-lg">

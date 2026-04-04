@@ -34,8 +34,8 @@ sendm.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\ChatController::newMethod
- * @see app/Http/Controllers/ChatController.php:60
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/c/new'
  */
 export const newMethod = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -49,8 +49,8 @@ newMethod.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\ChatController::newMethod
- * @see app/Http/Controllers/ChatController.php:60
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/c/new'
  */
 newMethod.url = (options?: RouteQueryOptions) => {
@@ -58,8 +58,8 @@ newMethod.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\ChatController::newMethod
- * @see app/Http/Controllers/ChatController.php:60
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/c/new'
  */
 newMethod.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -67,8 +67,8 @@ newMethod.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\ChatController::newMethod
- * @see app/Http/Controllers/ChatController.php:60
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/c/new'
  */
 newMethod.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -77,11 +77,11 @@ newMethod.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\ChatController::show
- * @see app/Http/Controllers/ChatController.php:98
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/c/{conversation}'
  */
-export const show = (args: { conversation: string | { id: string } } | [conversation: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { conversation: string | number } | [conversation: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -92,18 +92,15 @@ show.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\ChatController::show
- * @see app/Http/Controllers/ChatController.php:98
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/c/{conversation}'
  */
-show.url = (args: { conversation: string | { id: string } } | [conversation: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+show.url = (args: { conversation: string | number } | [conversation: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { conversation: args }
     }
 
-            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-            args = { conversation: args.id }
-        }
     
     if (Array.isArray(args)) {
         args = {
@@ -114,9 +111,7 @@ show.url = (args: { conversation: string | { id: string } } | [conversation: str
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-                        conversation: typeof args.conversation === 'object'
-                ? args.conversation.id
-                : args.conversation,
+                        conversation: args.conversation,
                 }
 
     return show.definition.url
@@ -125,20 +120,20 @@ show.url = (args: { conversation: string | { id: string } } | [conversation: str
 }
 
 /**
-* @see \App\Http\Controllers\ChatController::show
- * @see app/Http/Controllers/ChatController.php:98
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/c/{conversation}'
  */
-show.get = (args: { conversation: string | { id: string } } | [conversation: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { conversation: string | number } | [conversation: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\ChatController::show
- * @see app/Http/Controllers/ChatController.php:98
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/c/{conversation}'
  */
-show.head = (args: { conversation: string | { id: string } } | [conversation: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { conversation: string | number } | [conversation: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })

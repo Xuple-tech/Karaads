@@ -1,8 +1,8 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../wayfinder'
 import audio from './audio'
 /**
-* @see \App\Http\Controllers\VoiceConversationController::chat
- * @see app/Http/Controllers/VoiceConversationController.php:29
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/voice-chat'
  */
 export const chat = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,8 +16,8 @@ chat.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\VoiceConversationController::chat
- * @see app/Http/Controllers/VoiceConversationController.php:29
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/voice-chat'
  */
 chat.url = (options?: RouteQueryOptions) => {
@@ -25,8 +25,8 @@ chat.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \App\Http\Controllers\VoiceConversationController::chat
- * @see app/Http/Controllers/VoiceConversationController.php:29
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/voice-chat'
  */
 chat.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,8 +34,8 @@ chat.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\VoiceConversationController::chat
- * @see app/Http/Controllers/VoiceConversationController.php:29
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/voice-chat'
  */
 chat.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,8 +44,8 @@ chat.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
-* @see \App\Http\Controllers\VoiceConversationController::conversation
- * @see app/Http/Controllers/VoiceConversationController.php:43
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/c/{conversation}/voice'
  */
 export const conversation = (args: { conversation: string | number } | [conversation: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -59,8 +59,8 @@ conversation.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \App\Http\Controllers\VoiceConversationController::conversation
- * @see app/Http/Controllers/VoiceConversationController.php:43
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/c/{conversation}/voice'
  */
 conversation.url = (args: { conversation: string | number } | [conversation: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -87,8 +87,8 @@ conversation.url = (args: { conversation: string | number } | [conversation: str
 }
 
 /**
-* @see \App\Http\Controllers\VoiceConversationController::conversation
- * @see app/Http/Controllers/VoiceConversationController.php:43
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/c/{conversation}/voice'
  */
 conversation.get = (args: { conversation: string | number } | [conversation: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -96,8 +96,8 @@ conversation.get = (args: { conversation: string | number } | [conversation: str
     method: 'get',
 })
 /**
-* @see \App\Http\Controllers\VoiceConversationController::conversation
- * @see app/Http/Controllers/VoiceConversationController.php:43
+* @see \App\Http\Controllers\SpaController::__invoke
+ * @see app/Http/Controllers/SpaController.php:9
  * @route '/c/{conversation}/voice'
  */
 conversation.head = (args: { conversation: string | number } | [conversation: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
