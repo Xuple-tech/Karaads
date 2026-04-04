@@ -1,87 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../wayfinder'
 /**
-* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::destroy
- * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:54
- * @route '/console/logout'
- */
-const destroyc9b21414370297c8c41e66c625a4283a = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: destroyc9b21414370297c8c41e66c625a4283a.url(options),
-    method: 'post',
-})
-
-destroyc9b21414370297c8c41e66c625a4283a.definition = {
-    methods: ["post"],
-    url: '/console/logout',
-} satisfies RouteDefinition<["post"]>
-
-/**
-* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::destroy
- * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:54
- * @route '/console/logout'
- */
-destroyc9b21414370297c8c41e66c625a4283a.url = (options?: RouteQueryOptions) => {
-    return destroyc9b21414370297c8c41e66c625a4283a.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::destroy
- * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:54
- * @route '/console/logout'
- */
-destroyc9b21414370297c8c41e66c625a4283a.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: destroyc9b21414370297c8c41e66c625a4283a.url(options),
-    method: 'post',
-})
-
-    /**
-* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::destroy
- * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:54
- * @route '/logout'
- */
-const destroyf732b903d9f8919b4c24bef1f8bb897a = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: destroyf732b903d9f8919b4c24bef1f8bb897a.url(options),
-    method: 'get',
-})
-
-destroyf732b903d9f8919b4c24bef1f8bb897a.definition = {
-    methods: ["get","head"],
-    url: '/logout',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::destroy
- * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:54
- * @route '/logout'
- */
-destroyf732b903d9f8919b4c24bef1f8bb897a.url = (options?: RouteQueryOptions) => {
-    return destroyf732b903d9f8919b4c24bef1f8bb897a.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::destroy
- * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:54
- * @route '/logout'
- */
-destroyf732b903d9f8919b4c24bef1f8bb897a.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: destroyf732b903d9f8919b4c24bef1f8bb897a.url(options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::destroy
- * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:54
- * @route '/logout'
- */
-destroyf732b903d9f8919b4c24bef1f8bb897a.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: destroyf732b903d9f8919b4c24bef1f8bb897a.url(options),
-    method: 'head',
-})
-
-export const destroy = {
-    '/console/logout': destroyc9b21414370297c8c41e66c625a4283a,
-    '/logout': destroyf732b903d9f8919b4c24bef1f8bb897a,
-}
-
-/**
 * @see \App\Http\Controllers\Auth\AuthenticatedSessionController::create
  * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:20
  * @route '/login'
@@ -157,6 +75,58 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
-const AuthenticatedSessionController = { destroy, create, store }
+
+/**
+* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::destroy
+ * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:54
+ * @route '/logout'
+ */
+export const destroy = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: destroy.url(options),
+    method: 'get',
+})
+
+destroy.definition = {
+    methods: ["get","post","head"],
+    url: '/logout',
+} satisfies RouteDefinition<["get","post","head"]>
+
+/**
+* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::destroy
+ * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:54
+ * @route '/logout'
+ */
+destroy.url = (options?: RouteQueryOptions) => {
+    return destroy.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::destroy
+ * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:54
+ * @route '/logout'
+ */
+destroy.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: destroy.url(options),
+    method: 'get',
+})
+/**
+* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::destroy
+ * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:54
+ * @route '/logout'
+ */
+destroy.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: destroy.url(options),
+    method: 'post',
+})
+/**
+* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::destroy
+ * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:54
+ * @route '/logout'
+ */
+destroy.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: destroy.url(options),
+    method: 'head',
+})
+const AuthenticatedSessionController = { create, store, destroy }
 
 export default AuthenticatedSessionController

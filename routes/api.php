@@ -12,11 +12,6 @@ use App\Http\Controllers\Api\ChatPreferenceController;
 use App\Http\Controllers\Api\PersonalizationController;
 use App\Http\Controllers\Admin\PersonalizationAdminController;
 use App\Http\Controllers\Admin\AIModeController;
-use App\Http\Controllers\TeamController;
-use App\Http\Controllers\WorkflowController;
-use App\Http\Controllers\MCPServerController;
-use App\Http\Controllers\Api\SubscriptionLimitsController;
-use App\Http\Controllers\Agent\PageContentExplainerController;
 
 // Public routes
 Route::post('/auth/login', [AuthController::class, 'login']);
@@ -100,18 +95,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/personalization/descriptions', [PersonalizationController::class, 'getDescriptions']);
     });
 
-    // Subscription Limits & Feature Access
-    Route::prefix('subscription')->group(function () {
-        Route::get('/limits', [SubscriptionLimitsController::class, 'show']);
-        Route::post('/check-agent-creation', [SubscriptionLimitsController::class, 'checkAgentCreation']);
-        Route::post('/check-agent-activation', [SubscriptionLimitsController::class, 'checkAgentActivation']);
-        Route::post('/check-tools', [SubscriptionLimitsController::class, 'checkToolsUsage']);
-        Route::get('/features', [SubscriptionLimitsController::class, 'getFeatures']);
-        Route::get('/features/{featureKey}', [SubscriptionLimitsController::class, 'checkFeature']);
-        Route::get('/tools', [SubscriptionLimitsController::class, 'getTools']);
-        Route::get('/tools/{toolKey}', [SubscriptionLimitsController::class, 'checkTool']);
-    });
-
     // Admin routes for AI Mode management
     Route::prefix('admin/ai-modes')->middleware('admin')->group(function () {
         Route::get('/', [AIModeController::class, 'index']);
@@ -137,91 +120,4 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/{id}', [PersonalizationAdminController::class, 'updateTemplate']);
         Route::delete('/{id}', [PersonalizationAdminController::class, 'deleteTemplate']);
     });
-
-    // Phase 4: Enterprise Teams Management
-    Route::prefix('teams')->group(function () {
-        Route::get('/', [TeamController::class, 'index']);
-        Route::post('/', [TeamController::class, 'store']);
-        Route::get('/{team}', [TeamController::class, 'show']);
-        Route::put('/{team}', [TeamController::class, 'update']);
-        Route::delete('/{team}', [TeamController::class, 'destroy']);
-
-        // Team members management
-        Route::get('/{team}/members', [TeamController::class, 'members']);
-        Route::post('/{team}/members/invite', [TeamController::class, 'inviteMember']);
-        Route::delete('/{team}/members/{member}', [TeamController::class, 'removeMember']);
-        Route::put('/{team}/members/{member}/role', [TeamController::class, 'updateMemberRole']);
-
-        // Team invitations
-        Route::get('/{team}/invitations', [TeamController::class, 'invitations']);
-        Route::post('/invitations/{invitation}/accept', [TeamController::class, 'acceptInvitation']);
-        Route::post('/invitations/{invitation}/decline', [TeamController::class, 'declineInvitation']);
-
-        // Activity logs
-        Route::get('/{team}/activity', [TeamController::class, 'activityLog']);
-
-        // Workflows within team
-        Route::get('/{team}/workflows', [WorkflowController::class, 'index']);
-        Route::post('/{team}/workflows', [WorkflowController::class, 'store']);
-
-        // Team executions
-        Route::get('/{team}/executions', [WorkflowController::class, 'getTeamExecutions']);
-    });
-
-    // Phase 4: Workflow Management
-    Route::prefix('workflows')->group(function () {
-        Route::get('/{workflow}', [WorkflowController::class, 'show']);
-        Route::put('/{workflow}', [WorkflowController::class, 'update']);
-        Route::delete('/{workflow}', [WorkflowController::class, 'destroy']);
-        Route::post('/{workflow}/execute', [WorkflowController::class, 'execute']);
-        Route::get('/{workflow}/executions', [WorkflowController::class, 'executionHistory']);
-        Route::get('/{workflow}/executions/{execution}', [WorkflowController::class, 'getExecution']);
-        Route::post('/{workflow}/executions/{execution}/cancel', [WorkflowController::class, 'cancelExecution']);
-        Route::delete('/{workflow}/executions/{execution}', [WorkflowController::class, 'deleteExecution']);
-        Route::get('/{workflow}/stats', [WorkflowController::class, 'stats']);
-        Route::post('/{workflow}/publish', [WorkflowController::class, 'publish']);
-        Route::post('/{workflow}/revert', [WorkflowController::class, 'revert']);
-        Route::get('/{workflow}/versions', [WorkflowController::class, 'versions']);
-    });
-
-    // Execution history
-    Route::get('/workflow-executions/{execution}', [WorkflowController::class, 'executionDetails']);
-
-    // Available tools for workflow builder
-    Route::get('/tools/available', [WorkflowController::class, 'availableTools']);
-
-    // Phase 4: MCP Server (Model Context Protocol)
-    Route::prefix('mcp')->group(function () {
-        // Public MCP protocol endpoints (session-based auth)
-        Route::post('/initialize', [MCPServerController::class, 'initialize']);
-        Route::post('/tools/list', [MCPServerController::class, 'toolsList']);
-        Route::post('/tools/call', [MCPServerController::class, 'toolsCall']);
-        Route::post('/resources/list', [MCPServerController::class, 'resourcesList']);
-        Route::post('/resources/read', [MCPServerController::class, 'resourcesRead']);
-
-        // Session management
-        Route::post('/sessions', [MCPServerController::class, 'createSession']);
-        Route::post('/sessions/{session}/validate', [MCPServerController::class, 'validateSession']);
-        Route::delete('/sessions/{session}', [MCPServerController::class, 'revokeSession']);
-
-        // Server configuration (requires auth)
-        Route::get('/servers', [MCPServerController::class, 'serversList']);
-        Route::post('/servers', [MCPServerController::class, 'registerServer']);
-        Route::put('/servers/{server}', [MCPServerController::class, 'updateServer']);
-        Route::post('/servers/{server}/test', [MCPServerController::class, 'testConnection']);
-        Route::get('/logs', [MCPServerController::class, 'logs']);
-    });
 });
-
-/**
- * Agent API Routes
- * Page Content Explainer and related agent features
- */
-Route::prefix('agent')->group(function () {
-    Route::post('/explain-page-content', [PageContentExplainerController::class, 'explainPageContent']);
-});
-
-// Include secure API routes (new security-enhanced routing system)
-require __DIR__ . '/secure-api.php';
-require __DIR__ . '/widget-api.php';
-require __DIR__ . '/workspace-api.php';

@@ -13,18 +13,12 @@ return new class extends Migration
     {
         Schema::create('conversation_shares', function (Blueprint $table) {
             $table->id();
-            $table->string('conversation_id');
+            $table->char('conversation_id', 255);
             $table->string('share_token')->unique();
             $table->boolean('is_public')->default(false);
             $table->boolean('is_active')->default(true);
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
-
-            // Foreign key
-            $table->foreign('conversation_id')
-                  ->references('id')
-                  ->on('conversations')
-                  ->onDelete('cascade');
 
             // Indexes
             $table->index('share_token');

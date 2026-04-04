@@ -183,7 +183,7 @@ auditLogs.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\AdminDashboardController::configuration
- * @see app/Http/Controllers/Admin/AdminDashboardController.php:175
+ * @see app/Http/Controllers/Admin/AdminDashboardController.php:166
  * @route '/admin/management/configuration'
  */
 export const configuration = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -198,7 +198,7 @@ configuration.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AdminDashboardController::configuration
- * @see app/Http/Controllers/Admin/AdminDashboardController.php:175
+ * @see app/Http/Controllers/Admin/AdminDashboardController.php:166
  * @route '/admin/management/configuration'
  */
 configuration.url = (options?: RouteQueryOptions) => {
@@ -207,7 +207,7 @@ configuration.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\AdminDashboardController::configuration
- * @see app/Http/Controllers/Admin/AdminDashboardController.php:175
+ * @see app/Http/Controllers/Admin/AdminDashboardController.php:166
  * @route '/admin/management/configuration'
  */
 configuration.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -216,7 +216,7 @@ configuration.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Admin\AdminDashboardController::configuration
- * @see app/Http/Controllers/Admin/AdminDashboardController.php:175
+ * @see app/Http/Controllers/Admin/AdminDashboardController.php:166
  * @route '/admin/management/configuration'
  */
 configuration.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -226,10 +226,10 @@ configuration.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 
 /**
 * @see \App\Http\Controllers\Admin\AdminDashboardController::updateConfiguration
- * @see app/Http/Controllers/Admin/AdminDashboardController.php:185
+ * @see app/Http/Controllers/Admin/AdminDashboardController.php:176
  * @route '/admin/management/configuration/{config}'
  */
-export const updateConfiguration = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const updateConfiguration = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateConfiguration.url(args, options),
     method: 'put',
 })
@@ -241,10 +241,10 @@ updateConfiguration.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AdminDashboardController::updateConfiguration
- * @see app/Http/Controllers/Admin/AdminDashboardController.php:185
+ * @see app/Http/Controllers/Admin/AdminDashboardController.php:176
  * @route '/admin/management/configuration/{config}'
  */
-updateConfiguration.url = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+updateConfiguration.url = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { config: args }
     }
@@ -274,10 +274,10 @@ updateConfiguration.url = (args: { config: string | number | { id: string | numb
 
 /**
 * @see \App\Http\Controllers\Admin\AdminDashboardController::updateConfiguration
- * @see app/Http/Controllers/Admin/AdminDashboardController.php:185
+ * @see app/Http/Controllers/Admin/AdminDashboardController.php:176
  * @route '/admin/management/configuration/{config}'
  */
-updateConfiguration.put = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+updateConfiguration.put = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateConfiguration.url(args, options),
     method: 'put',
 })

@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (! Schema::hasTable('conversations') || Schema::hasColumn('conversations', 'type')) {
+            return;
+        }
+
         Schema::table('conversations', function (Blueprint $table) {
             $table->enum('type', ['text', 'voice', 'video'])->default('text');
         });
@@ -21,6 +25,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropColumns('conversations', ['type']);
+        if (Schema::hasTable('conversations') && Schema::hasColumn('conversations', 'type')) {
+            Schema::dropColumns('conversations', ['type']);
+        }
     }
 };

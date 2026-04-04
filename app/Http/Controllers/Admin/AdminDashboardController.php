@@ -109,7 +109,7 @@ class AdminDashboardController extends \Illuminate\Routing\Controller
                 ->where('updated_at', '>=', Carbon::now()->subDays(30))
                 ->count(),
             'trialToUpgradeRate' => $this->calculateTrialToUpgradeRate(),
-            'trialAgentsCreated' => $this->getTrialAgentsCount(),
+            'trialAgentsCreated' => 0,
             'expiredTrialsThisMonth' => Subscription::where('status', 'expired')
                 ->whereMonth('updated_at', Carbon::now()->month)
                 ->whereYear('updated_at', Carbon::now()->year)
@@ -158,15 +158,6 @@ class AdminDashboardController extends \Illuminate\Routing\Controller
             ->count();
 
         return round(($upgradedFromTrial / $totalTrialsEver) * 100, 1);
-    }
-
-    /**
-     * Get total agents created by trial users
-     */
-    private function getTrialAgentsCount()
-    {
-        $trialUserIds = Subscription::where('status', 'trial')->pluck('user_id');
-        return \App\Models\AIAgent::whereIn('user_id', $trialUserIds)->count();
     }
 
     /**

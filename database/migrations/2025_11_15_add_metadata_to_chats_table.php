@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (! Schema::hasTable('chats')) {
+            return;
+        }
+
         Schema::table('chats', function (Blueprint $table) {
             if (!Schema::hasColumn('chats', 'metadata')) {
                 $table->json('metadata')->nullable()->after('response');
@@ -23,6 +27,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (! Schema::hasTable('chats')) {
+            return;
+        }
+
         Schema::table('chats', function (Blueprint $table) {
             if (Schema::hasColumn('chats', 'metadata')) {
                 $table->dropColumn('metadata');

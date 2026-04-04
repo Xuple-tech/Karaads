@@ -13,7 +13,6 @@ class Conversation extends Model
     protected $keyType = 'string';
     protected $fillable = [
         'user_id',
-        'projects_id',
         'title',
         'context',
         'description',
@@ -48,11 +47,6 @@ class Conversation extends Model
     {
         return $this->voiceConversations()->exists();
     }
-    public function project(): BelongsTo
-    {
-        return $this->belongsTo(Projects::class, 'projects_id');
-    }
-
     public function shares(): HasMany
     {
         return $this->hasMany(ConversationShare::class);

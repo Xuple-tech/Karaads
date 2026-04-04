@@ -124,7 +124,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/SaasOwner/CustomPromptController.php:89
  * @route '/saas-owner/prompts/{prompt}'
  */
-export const show = (args: { prompt: string | number | { id: string | number } } | [prompt: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { prompt: string | { id: string } } | [prompt: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -139,7 +139,7 @@ show.definition = {
  * @see app/Http/Controllers/SaasOwner/CustomPromptController.php:89
  * @route '/saas-owner/prompts/{prompt}'
  */
-show.url = (args: { prompt: string | number | { id: string | number } } | [prompt: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+show.url = (args: { prompt: string | { id: string } } | [prompt: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { prompt: args }
     }
@@ -172,7 +172,7 @@ show.url = (args: { prompt: string | number | { id: string | number } } | [promp
  * @see app/Http/Controllers/SaasOwner/CustomPromptController.php:89
  * @route '/saas-owner/prompts/{prompt}'
  */
-show.get = (args: { prompt: string | number | { id: string | number } } | [prompt: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { prompt: string | { id: string } } | [prompt: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -181,7 +181,7 @@ show.get = (args: { prompt: string | number | { id: string | number } } | [promp
  * @see app/Http/Controllers/SaasOwner/CustomPromptController.php:89
  * @route '/saas-owner/prompts/{prompt}'
  */
-show.head = (args: { prompt: string | number | { id: string | number } } | [prompt: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { prompt: string | { id: string } } | [prompt: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -191,7 +191,7 @@ show.head = (args: { prompt: string | number | { id: string | number } } | [prom
  * @see app/Http/Controllers/SaasOwner/CustomPromptController.php:101
  * @route '/saas-owner/prompts/{prompt}/edit'
  */
-export const edit = (args: { prompt: string | number | { id: string | number } } | [prompt: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { prompt: string | { id: string } } | [prompt: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -206,7 +206,7 @@ edit.definition = {
  * @see app/Http/Controllers/SaasOwner/CustomPromptController.php:101
  * @route '/saas-owner/prompts/{prompt}/edit'
  */
-edit.url = (args: { prompt: string | number | { id: string | number } } | [prompt: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { prompt: string | { id: string } } | [prompt: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { prompt: args }
     }
@@ -239,7 +239,7 @@ edit.url = (args: { prompt: string | number | { id: string | number } } | [promp
  * @see app/Http/Controllers/SaasOwner/CustomPromptController.php:101
  * @route '/saas-owner/prompts/{prompt}/edit'
  */
-edit.get = (args: { prompt: string | number | { id: string | number } } | [prompt: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { prompt: string | { id: string } } | [prompt: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -248,7 +248,7 @@ edit.get = (args: { prompt: string | number | { id: string | number } } | [promp
  * @see app/Http/Controllers/SaasOwner/CustomPromptController.php:101
  * @route '/saas-owner/prompts/{prompt}/edit'
  */
-edit.head = (args: { prompt: string | number | { id: string | number } } | [prompt: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { prompt: string | { id: string } } | [prompt: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -258,7 +258,7 @@ edit.head = (args: { prompt: string | number | { id: string | number } } | [prom
  * @see app/Http/Controllers/SaasOwner/CustomPromptController.php:113
  * @route '/saas-owner/prompts/{prompt}'
  */
-export const update = (args: { prompt: string | number | { id: string | number } } | [prompt: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { prompt: string | { id: string } } | [prompt: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -273,7 +273,7 @@ update.definition = {
  * @see app/Http/Controllers/SaasOwner/CustomPromptController.php:113
  * @route '/saas-owner/prompts/{prompt}'
  */
-update.url = (args: { prompt: string | number | { id: string | number } } | [prompt: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { prompt: string | { id: string } } | [prompt: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { prompt: args }
     }
@@ -306,7 +306,7 @@ update.url = (args: { prompt: string | number | { id: string | number } } | [pro
  * @see app/Http/Controllers/SaasOwner/CustomPromptController.php:113
  * @route '/saas-owner/prompts/{prompt}'
  */
-update.put = (args: { prompt: string | number | { id: string | number } } | [prompt: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { prompt: string | { id: string } } | [prompt: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -316,7 +316,7 @@ update.put = (args: { prompt: string | number | { id: string | number } } | [pro
  * @see app/Http/Controllers/SaasOwner/CustomPromptController.php:137
  * @route '/saas-owner/prompts/{prompt}/test'
  */
-export const test = (args: { prompt: string | number | { id: string | number } } | [prompt: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const test = (args: { prompt: string | { id: string } } | [prompt: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: test.url(args, options),
     method: 'post',
 })
@@ -331,7 +331,7 @@ test.definition = {
  * @see app/Http/Controllers/SaasOwner/CustomPromptController.php:137
  * @route '/saas-owner/prompts/{prompt}/test'
  */
-test.url = (args: { prompt: string | number | { id: string | number } } | [prompt: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+test.url = (args: { prompt: string | { id: string } } | [prompt: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { prompt: args }
     }
@@ -364,7 +364,7 @@ test.url = (args: { prompt: string | number | { id: string | number } } | [promp
  * @see app/Http/Controllers/SaasOwner/CustomPromptController.php:137
  * @route '/saas-owner/prompts/{prompt}/test'
  */
-test.post = (args: { prompt: string | number | { id: string | number } } | [prompt: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+test.post = (args: { prompt: string | { id: string } } | [prompt: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: test.url(args, options),
     method: 'post',
 })
@@ -374,7 +374,7 @@ test.post = (args: { prompt: string | number | { id: string | number } } | [prom
  * @see app/Http/Controllers/SaasOwner/CustomPromptController.php:157
  * @route '/saas-owner/prompts/{prompt}'
  */
-export const destroy = (args: { prompt: string | number | { id: string | number } } | [prompt: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { prompt: string | { id: string } } | [prompt: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -389,7 +389,7 @@ destroy.definition = {
  * @see app/Http/Controllers/SaasOwner/CustomPromptController.php:157
  * @route '/saas-owner/prompts/{prompt}'
  */
-destroy.url = (args: { prompt: string | number | { id: string | number } } | [prompt: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { prompt: string | { id: string } } | [prompt: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { prompt: args }
     }
@@ -422,7 +422,7 @@ destroy.url = (args: { prompt: string | number | { id: string | number } } | [pr
  * @see app/Http/Controllers/SaasOwner/CustomPromptController.php:157
  * @route '/saas-owner/prompts/{prompt}'
  */
-destroy.delete = (args: { prompt: string | number | { id: string | number } } | [prompt: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { prompt: string | { id: string } } | [prompt: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })

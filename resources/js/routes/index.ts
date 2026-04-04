@@ -172,6 +172,45 @@ privacyPolicy.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 })
 
 /**
+ * @see routes/web.php:35
+ * @route '/dashboard'
+ */
+export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: dashboard.url(options),
+    method: 'get',
+})
+
+dashboard.definition = {
+    methods: ["get","head"],
+    url: '/dashboard',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+ * @see routes/web.php:35
+ * @route '/dashboard'
+ */
+dashboard.url = (options?: RouteQueryOptions) => {
+    return dashboard.definition.url + queryParams(options)
+}
+
+/**
+ * @see routes/web.php:35
+ * @route '/dashboard'
+ */
+dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: dashboard.url(options),
+    method: 'get',
+})
+/**
+ * @see routes/web.php:35
+ * @route '/dashboard'
+ */
+dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: dashboard.url(options),
+    method: 'head',
+})
+
+/**
 * @see \App\Http\Controllers\PageController::privacy
  * @see app/Http/Controllers/PageController.php:13
  * @route '/privacy'
@@ -397,9 +436,9 @@ export const logout = (options?: RouteQueryOptions): RouteDefinition<'get'> => (
 })
 
 logout.definition = {
-    methods: ["get","head"],
+    methods: ["get","post","head"],
     url: '/logout',
-} satisfies RouteDefinition<["get","head"]>
+} satisfies RouteDefinition<["get","post","head"]>
 
 /**
 * @see \App\Http\Controllers\Auth\AuthenticatedSessionController::logout
@@ -418,6 +457,15 @@ logout.url = (options?: RouteQueryOptions) => {
 logout.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: logout.url(options),
     method: 'get',
+})
+/**
+* @see \App\Http\Controllers\Auth\AuthenticatedSessionController::logout
+ * @see app/Http/Controllers/Auth/AuthenticatedSessionController.php:54
+ * @route '/logout'
+ */
+logout.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: logout.url(options),
+    method: 'post',
 })
 /**
 * @see \App\Http\Controllers\Auth\AuthenticatedSessionController::logout

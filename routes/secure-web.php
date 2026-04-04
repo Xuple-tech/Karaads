@@ -1,10 +1,8 @@
 <?php
 
-use App\Http\Controllers\AgentIntelligenceController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MailController;
-use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\User;
 use App\Http\Controllers\Meta\MetaAccountController;
 use App\Http\Controllers\Meta\MetaMessageController;
@@ -142,56 +140,6 @@ Route::middleware(array_merge($webSecurityMiddleware, ['auth']))->group(function
     });
 });
 
-// Project Routes with enhanced security and obfuscation
-Route::middleware(array_merge($webSecurityMiddleware, ['auth']))->group(function () {
-    // Project CRUD with obfuscated endpoints
-    Route::get('/projects/secure/list/q2w5e8r1', [ProjectController::class, 'index'])->name('secure.projects.index');
-    Route::get('/projects/show/{uuid}/t4y7u0i3', [ProjectController::class, 'show'])->name('secure.projects.show');
-    Route::get('/projects/edit/{uuid}/p6a9s2d5', [ProjectController::class, 'edit'])->name('secure.projects.edit');
-    Route::post('/projects/create/secure/l8z1x4c7', [ProjectController::class, 'store'])->name('secure.projects.store');
-    Route::put('/projects/update/{uuid}/v0b3n6m9', [ProjectController::class, 'update'])->name('secure.projects.update');
-    Route::delete('/projects/delete/{uuid}/k2j5h8g1', [ProjectController::class, 'destroy'])->name('secure.projects.destroy');
-
-    // File Management Routes with enhanced security
-    Route::post('/projects/files/upload/{uuid}/f4d7s0a3', [ProjectController::class, 'uploadFiles'])->name('secure.projects.files.upload');
-    Route::delete('/projects/files/delete/{uuid}/{fileUuid}/w6e9r2t5', [ProjectController::class, 'deleteFile'])->name('secure.projects.files.delete');
-
-    // Project Dashboard & Advanced Features
-    Route::get('/projects/dashboard/{uuid}/y8u1i4o7', [ProjectController::class, 'dashboard'])->name('secure.projects.dashboard');
-    Route::get('/projects/settings/{uuid}/q0w3e6r9', [ProjectController::class, 'settings'])->name('secure.projects.settings');
-    Route::put('/projects/settings/update/{uuid}/z2x5c8v1', [ProjectController::class, 'updateSettings'])->name('secure.projects.settings.update');
-
-    // Project Collaboration & Team Management
-    Route::get('/projects/collaboration/{uuid}/b4n7m0k3', [ProjectController::class, 'collaboration'])->name('secure.projects.collaboration');
-    Route::post('/projects/members/add/{uuid}/h6g9f2d5', [ProjectController::class, 'addMember'])->name('secure.projects.members.add');
-    Route::put('/projects/members/update/{uuid}/{memberUuid}/j8k1l4z7', [ProjectController::class, 'updateMember'])->name('secure.projects.members.update');
-    Route::delete('/projects/members/remove/{uuid}/{memberUuid}/s0a3d6f9', [ProjectController::class, 'removeMember'])->name('secure.projects.members.remove');
-
-    // Project Analytics & Activity
-    Route::get('/projects/analytics/{uuid}/p2o5i8u1', [ProjectController::class, 'analytics'])->name('secure.projects.analytics');
-    Route::get('/projects/activity/{uuid}/c4v7b0n3', [ProjectController::class, 'activity'])->name('secure.projects.activity');
-
-    // Project Versions with obfuscation
-    Route::get('/projects/versions/{uuid}/x6z9a2s5', [ProjectController::class, 'versions'])->name('secure.projects.versions');
-    Route::post('/projects/versions/create/{uuid}/m8k1j4h7', [ProjectController::class, 'createVersion'])->name('secure.projects.versions.create');
-
-    // Project Templates with enhanced security
-    Route::get('/projects/templates/secure/g0f3d6s9', [ProjectController::class, 'templates'])->name('secure.projects.templates');
-    Route::post('/projects/from-template/create/q2w5e8r1', [ProjectController::class, 'createFromTemplate'])->name('secure.projects.createFromTemplate');
-    Route::post('/projects/save-template/{uuid}/t4y7u0i3', [ProjectController::class, 'saveAsTemplate'])->name('secure.projects.saveAsTemplate');
-
-    // Project Status Management
-    Route::post('/projects/archive/{uuid}/p6a9s2d5', [ProjectController::class, 'archive'])->name('secure.projects.archive');
-    Route::post('/projects/restore/{uuid}/l8z1x4c7', [ProjectController::class, 'restore'])->name('secure.projects.restore');
-
-    // Agent Intelligence Dashboard Routes with heavy obfuscation
-    Route::prefix('projects/agents/intelligence/{uuid}/{agentUuid}')->group(function () {
-        Route::get('/dashboard/v0b3n6m9', [AgentIntelligenceController::class, 'show'])->name('secure.agent.intelligence.show');
-        Route::get('/summary/secure/k2j5h8g1', [AgentIntelligenceController::class, 'summary'])->name('secure.agent.intelligence.summary');
-        Route::get('/export-memories/f4d7s0a3', [AgentIntelligenceController::class, 'exportMemories'])->name('secure.agent.intelligence.export-memories');
-    });
-});
-
 // Media routes with enhanced security
 Route::get('/media/secure/{path}/w6e9r2t5', [ImageController::class, 'show'])
     ->where('path', '.*')
@@ -232,4 +180,3 @@ Route::get('/system/test/ip/q0w3e6r9', function () {
 // Include other secure route files
 require __DIR__ . '/secure-auth.php';
 require __DIR__ . '/secure-admin.php';
-require __DIR__ . '/secure-project-chats.php';

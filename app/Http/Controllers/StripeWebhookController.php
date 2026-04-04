@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Services\StripeService;
-use App\Services\DeveloperApiBillingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Stripe\Webhook;
@@ -13,7 +12,7 @@ class StripeWebhookController extends Controller
 {
     protected $stripeService;
 
-    public function __construct(StripeService $stripeService, protected DeveloperApiBillingService $developerApiBillingService)
+    public function __construct(StripeService $stripeService)
     {
         $this->stripeService = $stripeService;
     }
@@ -44,7 +43,6 @@ class StripeWebhookController extends Controller
                 'customer.subscription.created' => $this->handleSubscriptionCreated($event),
                 'invoice.payment_succeeded' => $this->handlePaymentSucceeded($event),
                 'invoice.payment_failed' => $this->handlePaymentFailed($event),
-                'checkout.session.completed' => $this->handleCheckoutSessionCompleted($event),
                 default => Log::info('Unhandled Stripe event: ' . $event['type']),
             };
 
@@ -112,38 +110,5 @@ class StripeWebhookController extends Controller
         if (isset($invoice['subscription'])) {
             Log::warning('Payment failed for subscription: ' . $invoice['subscription']);
         }
-    }
-
-    protected function handleCheckoutSessionCompleted(array $event): void
-    {
-        $session = $event['data']['object'];
-
-        if (($session['metadata']['purpose'] ?? null) !== 'developer_wallet_topup') {
-            return;
-        }
-
-        $userId = $session['metadata']['user_id'] ?? null;
-        if (!$userId) {
-            return;
-        }
-
-        $user = \App\Models\User::find($userId);
-        if (!$user) {
-            return;
-        }
-
-        $amountUsd = ((float) ($session['amount_total'] ?? 0)) / 100;
-        if ($amountUsd <= 0) {
-            return;
-        }
-
-        $this->developerApiBillingService->creditWallet(
-            $user,
-            $amountUsd,
-            'topup',
-            'Stripe top-up',
-            ['stripe_checkout_session_id' => $session['id']],
-            $session['id']
-        );
     }
 }

@@ -12,11 +12,20 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (! Schema::hasTable('conversations')) {
+            return;
+        }
+
         Schema::table('conversations', function (Blueprint $table) {
-            // Voice mode support
-            $table->string('mode')->default('text')->after('type'); // 'text' or 'voice'
-            $table->string('language')->default('en')->after('mode'); // Language code
-            $table->json('voice_settings')->nullable()->after('language'); // Voice preferences
+            if (! Schema::hasColumn('conversations', 'mode')) {
+                $table->string('mode')->default('text')->after('type');
+            }
+            if (! Schema::hasColumn('conversations', 'language')) {
+                $table->string('language')->default('en')->after('mode');
+            }
+            if (! Schema::hasColumn('conversations', 'voice_settings')) {
+                $table->json('voice_settings')->nullable()->after('language');
+            }
         });
     }
 
@@ -25,8 +34,20 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (! Schema::hasTable('conversations')) {
+            return;
+        }
+
         Schema::table('conversations', function (Blueprint $table) {
-            $table->dropColumn(['mode', 'language', 'voice_settings']);
+            $columns = array_filter([
+                Schema::hasColumn('conversations', 'mode') ? 'mode' : null,
+                Schema::hasColumn('conversations', 'language') ? 'language' : null,
+                Schema::hasColumn('conversations', 'voice_settings') ? 'voice_settings' : null,
+            ]);
+
+            if ($columns !== []) {
+                $table->dropColumn($columns);
+            }
         });
     }
 };

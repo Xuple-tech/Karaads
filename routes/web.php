@@ -1,14 +1,8 @@
 <?php
 
-use App\Http\Controllers\AgentController;
-use App\Http\Controllers\AgentIntelligenceController;
 use App\Http\Controllers\ChatController;
-use App\Http\Controllers\EnhancedProjectController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MailController;
-use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\ProjectChatController;
-use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\User;
 use App\Http\Controllers\Meta\MetaAccountController;
 use App\Http\Controllers\Meta\MetaMessageController;
@@ -31,15 +25,16 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
-require __DIR__ . '/console-web.php';
-require __DIR__ . '/developer-api.php';
-
 // Public chat route
 Route::get('/', [ChatController::class, 'index'])->name('home');
 Route::get('/app', [ChatController::class, 'index'])->name('app');
 Route::get('/new', [ChatController::class, 'index'])->name('new');
 Route::get('/privacy-policy', [ChatController::class, 'privacyPolicy'])->name('privacy-policy');
 // Route::get('/c/{id}', [ChatController::class, 'index'])->name('cshow');
+
+Route::middleware('auth')->get('/dashboard', function () {
+    return Inertia::render('new');
+})->name('dashboard');
 
 // Conversation management routes
 Route::middleware(['web',])->withoutMiddleware(VerifyCsrfToken::class)->prefix('api')->group(function () {
@@ -86,9 +81,6 @@ Route::middleware(['web',])->withoutMiddleware(VerifyCsrfToken::class)->prefix('
 
 // Public chat routes (existing)
 Route::middleware(['web'])->group(function () {
-    Route::get('/widget/embed/{agentSlug}', [App\Http\Controllers\WidgetController::class, 'embed'])
-        ->name('widget.embed')
-        ->middleware(\App\Http\Middleware\AllowIframe::class);
     Route::get('/c/new', [ChatController::class, 'create'])->name('chat.new');
     Route::get('/c/{conversation}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('/create-two-step-challagene', [ChatController::class, 'chat'])->name('chat.send')->withoutMiddleware(VerifyCsrfToken::class)->middleware(CheckSubscriptionRateLimit::class);
@@ -151,99 +143,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/accounts/{metaAccount}/preferences', [MetaPreferenceController::class, 'update'])->name('preferences.update');
         Route::get('/preferences/global', [MetaPreferenceController::class, 'globalPreferences'])->name('preferences.global');
         Route::post('/preferences/global', [MetaPreferenceController::class, 'updateGlobalPreferences'])->name('preferences.global.update');
-    });
-});
-
-// routes/web.php - Enhanced AI Project Routes
-Route::middleware(['auth', 'web'])->group(function () {
-    Route::get('/workspace', [WorkspaceController::class, 'index'])->name('workspace.index');
-    Route::get('/workspace/{project}', [WorkspaceController::class, 'show'])->name('workspace.show');
-
-    // Enhanced Project CRUD with AI Features
-    Route::get('/projects', [WorkspaceController::class, 'index'])->name('p.i');
-    Route::redirect('/projects/create', '/workspace')->name('p.c');
-    Route::post('/projects', [EnhancedProjectController::class, 'store'])->name('p.s');
-    Route::get('/projects/{project}', [WorkspaceController::class, 'show'])->name('p.sh');
-    Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])->name('p.e');
-    Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
-    Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
-
-    // Enhanced Project Dashboard & AI Features
-    Route::get('/projects/{project}/dashboard', [WorkspaceController::class, 'show'])->name('projects.dashboard');
-    Route::put('/projects/{project}/settings', [EnhancedProjectController::class, 'updateSettings'])->name('projects.settings.update');
-
-    // AI-Powered Features
-    Route::post('/projects/{project}/generate-code', [EnhancedProjectController::class, 'generateCode'])->name('projects.generate-code');
-    Route::post('/projects/{project}/generate-analytics', [EnhancedProjectController::class, 'generateAnalytics'])->name('projects.generate-analytics');
-    Route::post('/projects/{project}/analyze-quality', [EnhancedProjectController::class, 'analyzeCodeQuality'])->name('projects.analyze-quality');
-    Route::post('/projects/{project}/deploy', [EnhancedProjectController::class, 'deploy'])->name('projects.deploy');
-    Route::get('/projects/{project}/metrics', [EnhancedProjectController::class, 'getMetrics'])->name('projects.metrics');
-
-    // Project Chat & Conversations
-    Route::prefix('projects/{project}/chat')->name('projects.chat.')->group(function () {
-        Route::get('/', [ProjectChatController::class, 'index'])->name('index');
-
-        // Conversations
-        Route::post('/conversations', [ProjectChatController::class, 'createConversation'])->name('conversations.create');
-        Route::get('/conversations/{conversation}/messages', [ProjectChatController::class, 'getMessages'])->name('messages');
-        Route::put('/conversations/{conversation}', [ProjectChatController::class, 'updateConversation'])->name('conversations.update');
-        Route::delete('/conversations/{conversation}', [ProjectChatController::class, 'deleteConversation'])->name('conversations.delete');
-
-        // Messages
-        Route::post('/conversations/{conversation}/messages', [ProjectChatController::class, 'sendMessage'])->name('messages.send');
-        Route::post('/conversations/{conversation}/stream', [ProjectChatController::class, 'streamAIResponse'])->name('stream');
-        Route::post('/conversations/{conversation}/messages/{chat}/pin', [ProjectChatController::class, 'togglePinMessage'])->name('messages.pin');
-    });
-
-    // Agent Management Routes
-    Route::prefix('agents')->name('agents.')->group(function () {
-        Route::get('/', [AgentController::class, 'index'])->name('index');
-        Route::get('/{agent}', [AgentController::class, 'show'])->name('show');
-        Route::post('/', [AgentController::class, 'store'])->name('store');
-        Route::put('/{agent}', [AgentController::class, 'update'])->name('update');
-        Route::delete('/{agent}', [AgentController::class, 'destroy'])->name('destroy');
-        Route::get('/capability/{capability}', [AgentController::class, 'getByCapability'])->name('by-capability');
-        Route::get('/tools/available', [AgentController::class, 'getAvailableTools'])->name('tools');
-    });
-
-    // File Management Routes
-    Route::get('/projects/{project}/files', [ProjectController::class, 'files'])->name('projects.files');
-    Route::post('/projects/{project}/files/upload', [ProjectController::class, 'uploadFiles'])->name('projects.files.upload');
-    Route::delete('/projects/{project}/files/{file}', [ProjectController::class, 'deleteFile'])->name('projects.files.delete');
-
-    // Project Dashboard & Advanced Features
-    Route::get('/projects/{project}/dashboard', [WorkspaceController::class, 'show'])->name('projects.dashboard');
-    Route::get('/projects/{project}/settings', [ProjectController::class, 'settings'])->name('projects.settings');
-    Route::put('/projects/{project}/settings', [ProjectController::class, 'updateSettings'])->name('projects.settings.update');
-
-    // Project Collaboration & Team Management
-    Route::get('/projects/{project}/collaboration', [ProjectController::class, 'collaboration'])->name('projects.collaboration');
-    Route::post('/projects/{project}/members', [ProjectController::class, 'addMember'])->name('projects.members.add');
-    Route::put('/projects/{project}/members/{member}', [ProjectController::class, 'updateMember'])->name('projects.members.update');
-    Route::delete('/projects/{project}/members/{member}', [ProjectController::class, 'removeMember'])->name('projects.members.remove');
-
-    // Project Analytics & Activity
-    Route::get('/projects/{project}/analytics', [ProjectController::class, 'analytics'])->name('projects.analytics');
-    Route::get('/projects/{project}/activity', [ProjectController::class, 'activity'])->name('projects.activity');
-
-    // Project Versions
-    Route::get('/projects/{project}/versions', [ProjectController::class, 'versions'])->name('projects.versions');
-    Route::post('/projects/{project}/versions', [ProjectController::class, 'createVersion'])->name('projects.versions.create');
-
-    // Project Templates
-    Route::get('/projects/templates', [ProjectController::class, 'templates'])->name('projects.templates');
-    Route::post('/projects/from-template', [ProjectController::class, 'createFromTemplate'])->name('projects.createFromTemplate');
-    Route::post('/projects/{project}/save-as-template', [ProjectController::class, 'saveAsTemplate'])->name('projects.saveAsTemplate');
-
-    // Project Status Management
-    Route::post('/projects/{project}/archive', [ProjectController::class, 'archive'])->name('projects.archive');
-    Route::post('/projects/{project}/restore', [ProjectController::class, 'restore'])->name('projects.restore');
-
-    // Agent Intelligence Dashboard Routes
-    Route::prefix('projects/{project}/agents/{agent}')->group(function () {
-        Route::get('/intelligence', [AgentIntelligenceController::class, 'show'])->name('agent.intelligence.show');
-        Route::get('/intelligence/summary', [AgentIntelligenceController::class, 'summary'])->name('agent.intelligence.summary');
-        Route::get('/intelligence/export-memories', [AgentIntelligenceController::class, 'exportMemories'])->name('agent.intelligence.export-memories');
     });
 });
 
@@ -373,8 +272,5 @@ require __DIR__ . '/paystack.php';
 require __DIR__ . '/voice-conversation.php';
 require __DIR__ . '/user.php';
 require __DIR__ . '/currency.php';
-require __DIR__ . '/project-chats.php';
 require __DIR__ . '/studio.php';
 require __DIR__ . '/docs.php';
-
-require __DIR__ . '/aiaidgetfeatures.php';

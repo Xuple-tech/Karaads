@@ -55,6 +55,6 @@ class RegisteredUserController extends Controller
             return redirect()->to($redirectTarget);
         }
 
-        return redirect()->intended('/new');
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 }

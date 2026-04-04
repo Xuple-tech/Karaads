@@ -11,9 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (! Schema::hasTable('conversations')) {
+            return;
+        }
+
         Schema::table('conversations', function (Blueprint $table) {
-            $table->boolean('ai_generated_title')->default(false)->after('canvas_mode');
-            $table->timestamp('title_generated_at')->nullable()->after('ai_generated_title');
+            if (! Schema::hasColumn('conversations', 'ai_generated_title')) {
+                $table->boolean('ai_generated_title')->default(false)->after('canvas_mode');
+            }
+            if (! Schema::hasColumn('conversations', 'title_generated_at')) {
+                $table->timestamp('title_generated_at')->nullable()->after('ai_generated_title');
+            }
         });
     }
 
@@ -22,8 +30,19 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (! Schema::hasTable('conversations')) {
+            return;
+        }
+
         Schema::table('conversations', function (Blueprint $table) {
-            $table->dropColumn(['ai_generated_title', 'title_generated_at']);
+            $columns = array_filter([
+                Schema::hasColumn('conversations', 'ai_generated_title') ? 'ai_generated_title' : null,
+                Schema::hasColumn('conversations', 'title_generated_at') ? 'title_generated_at' : null,
+            ]);
+
+            if ($columns !== []) {
+                $table->dropColumn($columns);
+            }
         });
     }
 };

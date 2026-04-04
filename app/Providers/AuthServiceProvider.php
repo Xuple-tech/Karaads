@@ -2,9 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Projects;
-use App\Models\Site;
-use App\Policies\ProjectPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -14,10 +11,7 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @var array<class-string, class-string>
      */
-    protected $policies = [
-        Projects::class => ProjectPolicy::class,
-        // Site::class 
-    ];
+    protected $policies = [];
 
     /**
      * Register any authentication / authorization services.

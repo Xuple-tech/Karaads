@@ -6,10 +6,6 @@ import ImageGenerationController from './ImageGenerationController'
 import SettingsController from './SettingsController'
 import ChatPreferenceController from './ChatPreferenceController'
 import PersonalizationController from './PersonalizationController'
-import SubscriptionLimitsController from './SubscriptionLimitsController'
-import Widget from './Widget'
-import Workspace from './Workspace'
-import Demo from './Demo'
 const Api = {
     AuthController: Object.assign(AuthController, AuthController),
 ChatController: Object.assign(ChatController, ChatController),
@@ -19,10 +15,6 @@ ImageGenerationController: Object.assign(ImageGenerationController, ImageGenerat
 SettingsController: Object.assign(SettingsController, SettingsController),
 ChatPreferenceController: Object.assign(ChatPreferenceController, ChatPreferenceController),
 PersonalizationController: Object.assign(PersonalizationController, PersonalizationController),
-SubscriptionLimitsController: Object.assign(SubscriptionLimitsController, SubscriptionLimitsController),
-Widget: Object.assign(Widget, Widget),
-Workspace: Object.assign(Workspace, Workspace),
-Demo: Object.assign(Demo, Demo),
 }
 
 export default Api

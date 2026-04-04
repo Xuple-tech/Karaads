@@ -1,12 +1,6 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../wayfinder'
 import setting from './setting'
 import conversations from './conversations'
-import developerApi from './developer-api'
-import sites from './sites'
-import agents from './agents'
-import subscriptions from './subscriptions'
-import templates from './templates'
-import analytics from './analytics'
 /**
 * @see \App\Http\Controllers\MailController::library
  * @see app/Http/Controllers/MailController.php:33
@@ -94,7 +88,7 @@ settings.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
- * @see routes/user.php:25
+ * @see routes/user.php:23
  * @route '/user/help'
  */
 export const help = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -108,7 +102,7 @@ help.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/user.php:25
+ * @see routes/user.php:23
  * @route '/user/help'
  */
 help.url = (options?: RouteQueryOptions) => {
@@ -116,7 +110,7 @@ help.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/user.php:25
+ * @see routes/user.php:23
  * @route '/user/help'
  */
 help.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -124,7 +118,7 @@ help.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/user.php:25
+ * @see routes/user.php:23
  * @route '/user/help'
  */
 help.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -133,7 +127,7 @@ help.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
- * @see routes/user.php:30
+ * @see routes/user.php:28
  * @route '/user/subscription'
  */
 export const subscription = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -147,7 +141,7 @@ subscription.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/user.php:30
+ * @see routes/user.php:28
  * @route '/user/subscription'
  */
 subscription.url = (options?: RouteQueryOptions) => {
@@ -155,7 +149,7 @@ subscription.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/user.php:30
+ * @see routes/user.php:28
  * @route '/user/subscription'
  */
 subscription.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -163,54 +157,11 @@ subscription.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/user.php:30
+ * @see routes/user.php:28
  * @route '/user/subscription'
  */
 subscription.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: subscription.url(options),
-    method: 'head',
-})
-
-/**
-* @see \App\Http\Controllers\User\DashboardController::dashboard
- * @see app/Http/Controllers/User/DashboardController.php:16
- * @route '/ai-agents/dashboard'
- */
-export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: dashboard.url(options),
-    method: 'get',
-})
-
-dashboard.definition = {
-    methods: ["get","head"],
-    url: '/ai-agents/dashboard',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\User\DashboardController::dashboard
- * @see app/Http/Controllers/User/DashboardController.php:16
- * @route '/ai-agents/dashboard'
- */
-dashboard.url = (options?: RouteQueryOptions) => {
-    return dashboard.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\User\DashboardController::dashboard
- * @see app/Http/Controllers/User/DashboardController.php:16
- * @route '/ai-agents/dashboard'
- */
-dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: dashboard.url(options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\User\DashboardController::dashboard
- * @see app/Http/Controllers/User/DashboardController.php:16
- * @route '/ai-agents/dashboard'
- */
-dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: dashboard.url(options),
     method: 'head',
 })
 const user = {
@@ -220,13 +171,6 @@ conversations: Object.assign(conversations, conversations),
 settings: Object.assign(settings, settings),
 help: Object.assign(help, help),
 subscription: Object.assign(subscription, subscription),
-developerApi: Object.assign(developerApi, developerApi),
-dashboard: Object.assign(dashboard, dashboard),
-sites: Object.assign(sites, sites),
-agents: Object.assign(agents, agents),
-subscriptions: Object.assign(subscriptions, subscriptions),
-templates: Object.assign(templates, templates),
-analytics: Object.assign(analytics, analytics),
 }
 
 export default user

@@ -93,8 +93,6 @@ class Kernel extends HttpKernel
         'saas_owner' => \App\Http\Middleware\SaasOwnerMiddleware::class,
         'track' => TrackRequest::class,
         'bot.detection' => BotDetection::class,
-        'widget.auth' => \App\Http\Middleware\WidgetAuthMiddleware::class,
-        'check-agent-trial' => \App\Http\Middleware\CheckAgentTrialExpiry::class,
         'cors' => CorsMiddleware::class,
         'auth.console' => AuthenticateConsole::class,
     ];

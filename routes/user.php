@@ -1,8 +1,6 @@
 <?php
 
 use App\Http\Controllers\Api\ChatPreferenceController;
-use App\Http\Controllers\Developer\DeveloperPortalController;
-use App\Support\ConsoleUrl;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\User\UserConversationController;
 use App\Http\Controllers\User\UserSettingsController;
@@ -37,12 +35,6 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
             'availablePlans' => \App\Models\SubscriptionPlan::getActivePlans(),
         ]);
     })->name('subscription');
-
-    Route::prefix('developer-api')->name('developer-api.')->group(function () {
-        Route::get('/', function () {
-            return redirect()->away(ConsoleUrl::consoleUrl(request()));
-        })->name('index');
-    });
 });
 
 Route::middleware('web')->prefix('/api-/_0001/user')->group(function () {

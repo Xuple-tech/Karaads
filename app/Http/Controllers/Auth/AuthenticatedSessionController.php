@@ -45,7 +45,7 @@ class AuthenticatedSessionController extends Controller
         if($user->is_admin){
             return redirect()->intended('/admin');
         }
-        return redirect()->intended('/new');
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**
@@ -58,6 +58,6 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/new');
+        return redirect('/');
     }
 }

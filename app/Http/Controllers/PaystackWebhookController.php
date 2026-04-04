@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Services\DeveloperApiBillingService;
 use App\Services\PaystackService;
-use App\Support\ConsoleUrl;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,7 +12,6 @@ class PaystackWebhookController extends Controller
 {
     public function __construct(
         private readonly PaystackService $paystackService,
-        private readonly DeveloperApiBillingService $developerApiBillingService,
     ) {
     }
 
@@ -24,7 +20,7 @@ class PaystackWebhookController extends Controller
         $reference = (string) ($request->query('reference') ?: $request->query('trxref'));
 
         if ($reference === '') {
-            return redirect($this->consoleBillingUrl($request));
+            return redirect()->route('billing.index');
         }
 
         try {
@@ -36,7 +32,7 @@ class PaystackWebhookController extends Controller
             ]);
         }
 
-        return redirect($this->consoleBillingUrl($request));
+        return redirect()->route('billing.index');
     }
 
     public function webhook(Request $request): JsonResponse
@@ -85,12 +81,6 @@ class PaystackWebhookController extends Controller
             return;
         }
 
-        /** @var User|null $user */
-        $user = User::find($userId);
-        if (! $user) {
-            return;
-        }
-
         $amountUsd = (float) ($metadata['amount_usd'] ?? 0);
         if ($amountUsd <= 0) {
             $amountUsd = $this->paystackService->convertCheckoutMinorAmountToUsd(
@@ -103,23 +93,5 @@ class PaystackWebhookController extends Controller
         if ($amountUsd <= 0) {
             return;
         }
-
-        $this->developerApiBillingService->creditWallet(
-            $user,
-            $amountUsd,
-            'topup',
-            'Paystack top-up',
-            [
-                'paystack_reference' => $reference,
-                'paystack_transaction_id' => $transaction['id'] ?? null,
-                'currency' => $transaction['currency'] ?? $this->paystackService->getCheckoutCurrency(),
-            ],
-            (string) $reference
-        );
-    }
-
-    private function consoleBillingUrl(Request $request): string
-    {
-        return ConsoleUrl::urlForPath($request, ConsoleUrl::basePath() . '/billing');
     }
 }

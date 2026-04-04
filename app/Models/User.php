@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -329,46 +328,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     // In User.php model, add these relationships:
 
-    public function sites(): HasMany
-    {
-        return $this->hasMany(Site::class);
-    }
-
-    public function aiAgents(): HasMany
-    {
-        return $this->hasMany(AIAgent::class);
-    }
-
-    public function agentSubscriptions(): HasMany
-    {
-        return $this->hasMany(SiteSubscription::class);
-    }
-
-    public function developerApiKeys(): HasMany
-    {
-        return $this->hasMany(DeveloperApiKey::class);
-    }
-
-    public function developerWallet(): HasOne
-    {
-        return $this->hasOne(DeveloperWallet::class);
-    }
-
-    public function developerUsageRecords(): HasMany
-    {
-        return $this->hasMany(DeveloperUsageRecord::class);
-    }
-
-    public function getTotalAgentsCount(): int
-    {
-        return $this->aiAgents()->count();
-    }
-
-    public function getActiveSitesCount(): int
-    {
-        return $this->sites()->where('is_active', true)->count();
-    }
-
     public function isOnTrial(): bool
     {
         $subscription = $this->currentSubscription();
@@ -398,21 +357,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $subscription?->trial_ends_at;
     }
 
-    public function canCreateAgents(): bool
-    {
-        $subscription = $this->currentSubscription();
-
-        if (!$subscription) {
-            return false;
-        }
-
-        if ($subscription->is_trial) {
-            return $subscription->isInTrial();
-        }
-
-        return $subscription->isActive();
-    }
-
     public function getTrialDaysRemaining(): int
     {
         if (!$this->isOnTrial()) {
@@ -428,24 +372,4 @@ class User extends Authenticatable implements MustVerifyEmail
         return (int) now()->diffInDays($subscription->trial_ends_at, false);
     }
 
-    public function getAgentCreationQuota(): int
-    {
-        $subscription = $this->currentSubscription();
-
-        if (!$subscription) {
-            return 0;
-        }
-
-        $plan = $subscription->plan;
-
-        return $plan->max_agents_per_team ?? $plan->max_concurrent_agents ?? 1;
-    }
-
-    public function getRemainingAgentQuota(): int
-    {
-        $quota = $this->getAgentCreationQuota();
-        $used = $this->aiAgents()->count();
-
-        return max(0, $quota - $used);
-    }
 }

@@ -124,7 +124,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/Admin/GrokApiController.php:69
  * @route '/admin/grok-api/{config}'
  */
-export const show = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -139,7 +139,7 @@ show.definition = {
  * @see app/Http/Controllers/Admin/GrokApiController.php:69
  * @route '/admin/grok-api/{config}'
  */
-show.url = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+show.url = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { config: args }
     }
@@ -172,7 +172,7 @@ show.url = (args: { config: string | number | { id: string | number } } | [confi
  * @see app/Http/Controllers/Admin/GrokApiController.php:69
  * @route '/admin/grok-api/{config}'
  */
-show.get = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -181,7 +181,7 @@ show.get = (args: { config: string | number | { id: string | number } } | [confi
  * @see app/Http/Controllers/Admin/GrokApiController.php:69
  * @route '/admin/grok-api/{config}'
  */
-show.head = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
@@ -191,7 +191,7 @@ show.head = (args: { config: string | number | { id: string | number } } | [conf
  * @see app/Http/Controllers/Admin/GrokApiController.php:77
  * @route '/admin/grok-api/{config}/edit'
  */
-export const edit = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -206,7 +206,7 @@ edit.definition = {
  * @see app/Http/Controllers/Admin/GrokApiController.php:77
  * @route '/admin/grok-api/{config}/edit'
  */
-edit.url = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { config: args }
     }
@@ -239,7 +239,7 @@ edit.url = (args: { config: string | number | { id: string | number } } | [confi
  * @see app/Http/Controllers/Admin/GrokApiController.php:77
  * @route '/admin/grok-api/{config}/edit'
  */
-edit.get = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -248,7 +248,7 @@ edit.get = (args: { config: string | number | { id: string | number } } | [confi
  * @see app/Http/Controllers/Admin/GrokApiController.php:77
  * @route '/admin/grok-api/{config}/edit'
  */
-edit.head = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -258,7 +258,7 @@ edit.head = (args: { config: string | number | { id: string | number } } | [conf
  * @see app/Http/Controllers/Admin/GrokApiController.php:85
  * @route '/admin/grok-api/{config}'
  */
-export const update = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -273,7 +273,7 @@ update.definition = {
  * @see app/Http/Controllers/Admin/GrokApiController.php:85
  * @route '/admin/grok-api/{config}'
  */
-update.url = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { config: args }
     }
@@ -306,7 +306,7 @@ update.url = (args: { config: string | number | { id: string | number } } | [con
  * @see app/Http/Controllers/Admin/GrokApiController.php:85
  * @route '/admin/grok-api/{config}'
  */
-update.put = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -316,7 +316,7 @@ update.put = (args: { config: string | number | { id: string | number } } | [con
  * @see app/Http/Controllers/Admin/GrokApiController.php:106
  * @route '/admin/grok-api/{config}/test'
  */
-export const test = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const test = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: test.url(args, options),
     method: 'post',
 })
@@ -331,7 +331,7 @@ test.definition = {
  * @see app/Http/Controllers/Admin/GrokApiController.php:106
  * @route '/admin/grok-api/{config}/test'
  */
-test.url = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+test.url = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { config: args }
     }
@@ -364,7 +364,7 @@ test.url = (args: { config: string | number | { id: string | number } } | [confi
  * @see app/Http/Controllers/Admin/GrokApiController.php:106
  * @route '/admin/grok-api/{config}/test'
  */
-test.post = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+test.post = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: test.url(args, options),
     method: 'post',
 })
@@ -374,7 +374,7 @@ test.post = (args: { config: string | number | { id: string | number } } | [conf
  * @see app/Http/Controllers/Admin/GrokApiController.php:119
  * @route '/admin/grok-api/{config}/deactivate'
  */
-export const deactivate = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const deactivate = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: deactivate.url(args, options),
     method: 'post',
 })
@@ -389,7 +389,7 @@ deactivate.definition = {
  * @see app/Http/Controllers/Admin/GrokApiController.php:119
  * @route '/admin/grok-api/{config}/deactivate'
  */
-deactivate.url = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+deactivate.url = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { config: args }
     }
@@ -422,7 +422,7 @@ deactivate.url = (args: { config: string | number | { id: string | number } } | 
  * @see app/Http/Controllers/Admin/GrokApiController.php:119
  * @route '/admin/grok-api/{config}/deactivate'
  */
-deactivate.post = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+deactivate.post = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: deactivate.url(args, options),
     method: 'post',
 })
@@ -432,7 +432,7 @@ deactivate.post = (args: { config: string | number | { id: string | number } } |
  * @see app/Http/Controllers/Admin/GrokApiController.php:131
  * @route '/admin/grok-api/{config}'
  */
-export const destroy = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -447,7 +447,7 @@ destroy.definition = {
  * @see app/Http/Controllers/Admin/GrokApiController.php:131
  * @route '/admin/grok-api/{config}'
  */
-destroy.url = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { config: args }
     }
@@ -480,7 +480,7 @@ destroy.url = (args: { config: string | number | { id: string | number } } | [co
  * @see app/Http/Controllers/Admin/GrokApiController.php:131
  * @route '/admin/grok-api/{config}'
  */
-destroy.delete = (args: { config: string | number | { id: string | number } } | [config: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { config: string | { id: string } } | [config: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })

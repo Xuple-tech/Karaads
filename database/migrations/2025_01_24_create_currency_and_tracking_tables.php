@@ -9,8 +9,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Disable foreign key checks temporarily
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        }
 
         // Currency exchange rates table
         Schema::create('currency_rates', function (Blueprint $table) {
@@ -130,13 +131,16 @@ return new class extends Migration
             $table->index(['alert_type', 'severity']);
         });
 
-        // Re-enable foreign key checks
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        }
     }
 
     public function down(): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        }
 
         Schema::dropIfExists('suspicious_activity_alerts');
         Schema::dropIfExists('user_currency_preferences');
@@ -145,6 +149,8 @@ return new class extends Migration
         Schema::dropIfExists('request_logs');
         Schema::dropIfExists('currency_rates');
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        }
     }
 };

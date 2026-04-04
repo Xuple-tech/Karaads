@@ -106,8 +106,8 @@ class CurrencyFallbackTest extends TestCase
 
         $converted = $this->currencyService->convertPrice(100, 'USD', 'EUR', 2);
 
-        // Should have 2 decimal places
-        $this->assertEquals(2, strlen(explode('.', (string)$converted)[1] ?? ''));
+        // Floats do not preserve trailing zeroes when cast to string, so format explicitly.
+        $this->assertSame('92.00', number_format($converted, 2, '.', ''));
     }
 
     /**

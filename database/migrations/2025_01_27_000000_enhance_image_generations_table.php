@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (! Schema::hasTable('image_generations')) {
+            return;
+        }
+
         Schema::table('image_generations', function (Blueprint $table) {
-            // Add new columns if they don't exist
-            $table->uuid('id')->change(); // Change id to UUID
+            $table->uuid('id')->change();
             if (!Schema::hasColumn('image_generations', 'user_id')) {
                 $table->uuid('user_id')->nullable()->after('id');
             }
@@ -78,21 +81,29 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (! Schema::hasTable('image_generations')) {
+            return;
+        }
+
         Schema::table('image_generations', function (Blueprint $table) {
-            $table->dropColumn([
-                'revised_prompt',
-                'image_path',
-                'image_content',
-                'model',
-                'provider',
-                'size',
-                'quality',
-                'style',
-                'operation',
-                'status',
-                'error_message',
-                'metadata'
+            $columns = array_filter([
+                Schema::hasColumn('image_generations', 'revised_prompt') ? 'revised_prompt' : null,
+                Schema::hasColumn('image_generations', 'image_path') ? 'image_path' : null,
+                Schema::hasColumn('image_generations', 'image_content') ? 'image_content' : null,
+                Schema::hasColumn('image_generations', 'model') ? 'model' : null,
+                Schema::hasColumn('image_generations', 'provider') ? 'provider' : null,
+                Schema::hasColumn('image_generations', 'size') ? 'size' : null,
+                Schema::hasColumn('image_generations', 'quality') ? 'quality' : null,
+                Schema::hasColumn('image_generations', 'style') ? 'style' : null,
+                Schema::hasColumn('image_generations', 'operation') ? 'operation' : null,
+                Schema::hasColumn('image_generations', 'status') ? 'status' : null,
+                Schema::hasColumn('image_generations', 'error_message') ? 'error_message' : null,
+                Schema::hasColumn('image_generations', 'metadata') ? 'metadata' : null,
             ]);
+
+            if ($columns !== []) {
+                $table->dropColumn($columns);
+            }
         });
     }
 };

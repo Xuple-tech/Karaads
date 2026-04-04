@@ -124,7 +124,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/SaasOwner/TeamMemberController.php:85
  * @route '/saas-owner/team-members/{member}/edit'
  */
-export const edit = (args: { member: string | number | { id: string | number } } | [member: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { member: string | { id: string } } | [member: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -139,7 +139,7 @@ edit.definition = {
  * @see app/Http/Controllers/SaasOwner/TeamMemberController.php:85
  * @route '/saas-owner/team-members/{member}/edit'
  */
-edit.url = (args: { member: string | number | { id: string | number } } | [member: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { member: string | { id: string } } | [member: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { member: args }
     }
@@ -172,7 +172,7 @@ edit.url = (args: { member: string | number | { id: string | number } } | [membe
  * @see app/Http/Controllers/SaasOwner/TeamMemberController.php:85
  * @route '/saas-owner/team-members/{member}/edit'
  */
-edit.get = (args: { member: string | number | { id: string | number } } | [member: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { member: string | { id: string } } | [member: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -181,7 +181,7 @@ edit.get = (args: { member: string | number | { id: string | number } } | [membe
  * @see app/Http/Controllers/SaasOwner/TeamMemberController.php:85
  * @route '/saas-owner/team-members/{member}/edit'
  */
-edit.head = (args: { member: string | number | { id: string | number } } | [member: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { member: string | { id: string } } | [member: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
@@ -191,7 +191,7 @@ edit.head = (args: { member: string | number | { id: string | number } } | [memb
  * @see app/Http/Controllers/SaasOwner/TeamMemberController.php:97
  * @route '/saas-owner/team-members/{member}'
  */
-export const update = (args: { member: string | number | { id: string | number } } | [member: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { member: string | { id: string } } | [member: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -206,7 +206,7 @@ update.definition = {
  * @see app/Http/Controllers/SaasOwner/TeamMemberController.php:97
  * @route '/saas-owner/team-members/{member}'
  */
-update.url = (args: { member: string | number | { id: string | number } } | [member: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { member: string | { id: string } } | [member: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { member: args }
     }
@@ -239,7 +239,7 @@ update.url = (args: { member: string | number | { id: string | number } } | [mem
  * @see app/Http/Controllers/SaasOwner/TeamMemberController.php:97
  * @route '/saas-owner/team-members/{member}'
  */
-update.put = (args: { member: string | number | { id: string | number } } | [member: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { member: string | { id: string } } | [member: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -249,7 +249,7 @@ update.put = (args: { member: string | number | { id: string | number } } | [mem
  * @see app/Http/Controllers/SaasOwner/TeamMemberController.php:136
  * @route '/saas-owner/team-members/{member}/deactivate'
  */
-export const deactivate = (args: { member: string | number | { id: string | number } } | [member: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const deactivate = (args: { member: string | { id: string } } | [member: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: deactivate.url(args, options),
     method: 'post',
 })
@@ -264,7 +264,7 @@ deactivate.definition = {
  * @see app/Http/Controllers/SaasOwner/TeamMemberController.php:136
  * @route '/saas-owner/team-members/{member}/deactivate'
  */
-deactivate.url = (args: { member: string | number | { id: string | number } } | [member: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+deactivate.url = (args: { member: string | { id: string } } | [member: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { member: args }
     }
@@ -297,7 +297,7 @@ deactivate.url = (args: { member: string | number | { id: string | number } } | 
  * @see app/Http/Controllers/SaasOwner/TeamMemberController.php:136
  * @route '/saas-owner/team-members/{member}/deactivate'
  */
-deactivate.post = (args: { member: string | number | { id: string | number } } | [member: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+deactivate.post = (args: { member: string | { id: string } } | [member: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: deactivate.url(args, options),
     method: 'post',
 })
@@ -307,7 +307,7 @@ deactivate.post = (args: { member: string | number | { id: string | number } } |
  * @see app/Http/Controllers/SaasOwner/TeamMemberController.php:119
  * @route '/saas-owner/team-members/{member}'
  */
-export const destroy = (args: { member: string | number | { id: string | number } } | [member: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { member: string | { id: string } } | [member: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -322,7 +322,7 @@ destroy.definition = {
  * @see app/Http/Controllers/SaasOwner/TeamMemberController.php:119
  * @route '/saas-owner/team-members/{member}'
  */
-destroy.url = (args: { member: string | number | { id: string | number } } | [member: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { member: string | { id: string } } | [member: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { member: args }
     }
@@ -355,7 +355,7 @@ destroy.url = (args: { member: string | number | { id: string | number } } | [me
  * @see app/Http/Controllers/SaasOwner/TeamMemberController.php:119
  * @route '/saas-owner/team-members/{member}'
  */
-destroy.delete = (args: { member: string | number | { id: string | number } } | [member: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { member: string | { id: string } } | [member: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })

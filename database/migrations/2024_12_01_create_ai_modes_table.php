@@ -24,15 +24,24 @@ return new class extends Migration
         });
 
         // Add ai_mode_id and call_by_name to users table
-        Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('ai_mode_id')->nullable()->after('language');
-            $table->boolean('call_by_name')->default(false)->after('ai_mode_id');
+        if (Schema::hasTable('users')) {
+            Schema::table('users', function (Blueprint $table) {
+                if (! Schema::hasColumn('users', 'ai_mode_id')) {
+                    $table->unsignedBigInteger('ai_mode_id')->nullable();
+                }
 
-            $table->foreign('ai_mode_id')
-                ->references('id')
-                ->on('ai_modes')
-                ->onDelete('set null');
-        });
+                if (! Schema::hasColumn('users', 'call_by_name')) {
+                    $table->boolean('call_by_name')->default(false);
+                }
+            });
+
+            Schema::table('users', function (Blueprint $table) {
+                $table->foreign('ai_mode_id')
+                    ->references('id')
+                    ->on('ai_modes')
+                    ->onDelete('set null');
+            });
+        }
     }
 
     /**
@@ -40,10 +49,24 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['ai_mode_id']);
-            $table->dropColumn(['ai_mode_id', 'call_by_name']);
-        });
+        if (Schema::hasTable('users')) {
+            Schema::table('users', function (Blueprint $table) {
+                if (Schema::hasColumn('users', 'ai_mode_id')) {
+                    $table->dropForeign(['ai_mode_id']);
+                }
+            });
+
+            Schema::table('users', function (Blueprint $table) {
+                $columns = array_filter([
+                    Schema::hasColumn('users', 'ai_mode_id') ? 'ai_mode_id' : null,
+                    Schema::hasColumn('users', 'call_by_name') ? 'call_by_name' : null,
+                ]);
+
+                if ($columns !== []) {
+                    $table->dropColumn($columns);
+                }
+            });
+        }
 
         Schema::dropIfExists('ai_modes');
     }

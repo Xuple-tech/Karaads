@@ -228,7 +228,4 @@ class Subscription extends Model
                     ->orWhere('trial_ends_at', '>', now());
             });
     }
-    public function agentPlans(){
-        return $this->hasOne(AgentPlan::class,'subscription_id','id');
-    }
 }

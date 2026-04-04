@@ -5,21 +5,10 @@ import staff from './staff'
 import saasOwners from './saas-owners'
 import management from './management'
 import grokApi from './grok-api'
-import developerApi from './developer-api'
 import prompts from './prompts'
 import aiModes from './ai-modes'
 import personalizations from './personalizations'
 import personalizationTemplates from './personalization-templates'
-import agentTemplates from './agent-templates'
-import agentKnowledgeBases from './agent-knowledge-bases'
-import agentTools from './agent-tools'
-import agentPlans from './agent-plans'
-import agentApiKeys from './agent-api-keys'
-import agentWidgetSettings from './agent-widget-settings'
-import aiAgents from './ai-agents'
-import sites from './sites'
-import agentUsageStats from './agent-usage-stats'
-import siteSubscriptions from './site-subscriptions'
 import subscriptions from './subscriptions'
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::dashboard
@@ -202,21 +191,10 @@ saasOwners: Object.assign(saasOwners, saasOwners),
 managementDashboard: Object.assign(managementDashboard, managementDashboard),
 management: Object.assign(management, management),
 grokApi: Object.assign(grokApi, grokApi),
-developerApi: Object.assign(developerApi, developerApi),
 prompts: Object.assign(prompts, prompts),
 aiModes: Object.assign(aiModes, aiModes),
 personalizations: Object.assign(personalizations, personalizations),
 personalizationTemplates: Object.assign(personalizationTemplates, personalizationTemplates),
-agentTemplates: Object.assign(agentTemplates, agentTemplates),
-agentKnowledgeBases: Object.assign(agentKnowledgeBases, agentKnowledgeBases),
-agentTools: Object.assign(agentTools, agentTools),
-agentPlans: Object.assign(agentPlans, agentPlans),
-agentApiKeys: Object.assign(agentApiKeys, agentApiKeys),
-agentWidgetSettings: Object.assign(agentWidgetSettings, agentWidgetSettings),
-aiAgents: Object.assign(aiAgents, aiAgents),
-sites: Object.assign(sites, sites),
-agentUsageStats: Object.assign(agentUsageStats, agentUsageStats),
-siteSubscriptions: Object.assign(siteSubscriptions, siteSubscriptions),
 subscriptions: Object.assign(subscriptions, subscriptions),
 }
 

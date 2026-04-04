@@ -12,22 +12,14 @@ import {
     MessageSquare,
     Globe,
     Shield,
-    Bot,
     UserCog,
     HandCoins,
     ChevronDown,
     ChevronRight,
     FileText,
-    BookOpen,
-    Wrench,
-    Key,
-    Layout as LayoutIcon,
-    BarChart2,
-    CreditCard,
     ClipboardList,
     Bell,
-    Cpu,
-    Code2
+    Cpu
 } from 'lucide-react';
 import {
     Sidebar,
@@ -45,16 +37,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import admin, { dashboard, managementDashboard, userStats } from '@/routes/admin';
 import aiModes from '@/routes/admin/ai-modes';
 import prompts from '@/routes/admin/prompts';
-import agentTemplates from '@/routes/admin/agent-templates';
-import aiAgents from '@/routes/admin/ai-agents';
-import agentKnowledgeBases from '@/routes/admin/agent-knowledge-bases';
-import agentTools from '@/routes/admin/agent-tools';
-import agentApiKeys from '@/routes/admin/agent-api-keys';
-import agentWidgetSettings from '@/routes/admin/agent-widget-settings';
-import agentUsageStats from '@/routes/admin/agent-usage-stats';
-import sites from '@/routes/admin/sites';
-import siteSubscriptions from '@/routes/admin/site-subscriptions';
-import agentPlans from '@/routes/admin/agent-plans';
 import plans from '@/routes/admin/subscriptions/plans';
 import { logout } from '@/routes';
 
@@ -85,30 +67,14 @@ const MENU_GROUPS = [
         title: 'AI Tools',
         items: [
             { name: 'AI Prompts', icon: MessageSquare, route: prompts.index.url() },
-            { name: 'AI Modes', icon: Bot, route: aiModes.index.url() },
+            { name: 'AI Modes', icon: Cpu, route: aiModes.index.url() },
         ]
     },
     {
-        id: 'agents',
-        title: 'AI Agents',
+        id: 'billing',
+        title: 'Billing',
         items: [
-            { name: 'AI Agents', icon: Bot, route: aiAgents.index.url() },
-            { name: 'Agent Templates', icon: FileText, route: agentTemplates.index.url() },
-            { name: 'Knowledge Base', icon: BookOpen, route: agentKnowledgeBases.index.url() },
-            { name: 'Agent Tools', icon: Wrench, route: agentTools.index.url() },
-            { name: 'API Keys', icon: Key, route: agentApiKeys.index.url() },
-            { name: 'Widget Settings', icon: LayoutIcon, route: agentWidgetSettings.index.url() },
-            { name: 'Usage Statistics', icon: BarChart2, route: agentUsageStats.index.url() },
-        ]
-    },
-    {
-        id: 'sites',
-        title: 'Sites & Subscriptions',
-        items: [
-            { name: 'Sites', icon: Globe, route: sites.index.url() },
-            { name: 'Subscriptions', icon: CreditCard, route: siteSubscriptions.index.url() },
-            { name: 'Subscription Plans', icon: HandCoins, route: agentPlans.index.url() },
-            { name: "App Subscribtion", icon: Cpu, route: plans.index.url() }
+            { name: "Subscription Plans", icon: HandCoins, route: plans.index.url() }
         ]
     },
     {
@@ -125,8 +91,7 @@ const MENU_GROUPS = [
             { name: 'Configuration', icon: Shield, route: admin.management.configuration.url() },
             { name: 'Audit Logs', icon: ClipboardList, route: admin.management.auditLogs.url() },
             { name: 'Alerts', icon: Bell, route: admin.management.alerts.url() },
-            { name: 'Developer Console', icon: Code2, route: '/admin/developer-api' },
-            // { name: 'Grok API', icon: Cpu, route: admin.grokApi.index.url() },
+            { name: 'Grok API', icon: Cpu, route: admin.grokApi.index.url() },
         ]
     }
 ];

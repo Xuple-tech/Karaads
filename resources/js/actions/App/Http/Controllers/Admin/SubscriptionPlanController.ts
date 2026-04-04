@@ -121,10 +121,10 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::edit
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:95
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:87
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/edit'
  */
-export const edit = (args: { subscriptionPlan: string | number | { id: string | number } } | [subscriptionPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -136,10 +136,10 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::edit
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:95
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:87
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/edit'
  */
-edit.url = (args: { subscriptionPlan: string | number | { id: string | number } } | [subscriptionPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { subscriptionPlan: args }
     }
@@ -169,29 +169,29 @@ edit.url = (args: { subscriptionPlan: string | number | { id: string | number } 
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::edit
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:95
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:87
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/edit'
  */
-edit.get = (args: { subscriptionPlan: string | number | { id: string | number } } | [subscriptionPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::edit
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:95
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:87
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/edit'
  */
-edit.head = (args: { subscriptionPlan: string | number | { id: string | number } } | [subscriptionPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::update
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:106
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:98
  * @route '/admin/subscriptions/plans/{subscriptionPlan}'
  */
-export const update = (args: { subscriptionPlan: string | number | { id: string | number } } | [subscriptionPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -203,10 +203,10 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::update
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:106
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:98
  * @route '/admin/subscriptions/plans/{subscriptionPlan}'
  */
-update.url = (args: { subscriptionPlan: string | number | { id: string | number } } | [subscriptionPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { subscriptionPlan: args }
     }
@@ -236,20 +236,20 @@ update.url = (args: { subscriptionPlan: string | number | { id: string | number 
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::update
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:106
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:98
  * @route '/admin/subscriptions/plans/{subscriptionPlan}'
  */
-update.put = (args: { subscriptionPlan: string | number | { id: string | number } } | [subscriptionPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::destroy
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:158
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:142
  * @route '/admin/subscriptions/plans/{subscriptionPlan}'
  */
-export const destroy = (args: { subscriptionPlan: string | number | { id: string | number } } | [subscriptionPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -261,10 +261,10 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::destroy
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:158
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:142
  * @route '/admin/subscriptions/plans/{subscriptionPlan}'
  */
-destroy.url = (args: { subscriptionPlan: string | number | { id: string | number } } | [subscriptionPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { subscriptionPlan: args }
     }
@@ -294,20 +294,20 @@ destroy.url = (args: { subscriptionPlan: string | number | { id: string | number
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::destroy
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:158
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:142
  * @route '/admin/subscriptions/plans/{subscriptionPlan}'
  */
-destroy.delete = (args: { subscriptionPlan: string | number | { id: string | number } } | [subscriptionPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::deactivate
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:187
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:171
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/deactivate'
  */
-export const deactivate = (args: { subscriptionPlan: string | number | { id: string | number } } | [subscriptionPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const deactivate = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: deactivate.url(args, options),
     method: 'patch',
 })
@@ -319,10 +319,10 @@ deactivate.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::deactivate
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:187
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:171
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/deactivate'
  */
-deactivate.url = (args: { subscriptionPlan: string | number | { id: string | number } } | [subscriptionPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+deactivate.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { subscriptionPlan: args }
     }
@@ -352,20 +352,20 @@ deactivate.url = (args: { subscriptionPlan: string | number | { id: string | num
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::deactivate
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:187
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:171
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/deactivate'
  */
-deactivate.patch = (args: { subscriptionPlan: string | number | { id: string | number } } | [subscriptionPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+deactivate.patch = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: deactivate.url(args, options),
     method: 'patch',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::getStats
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:211
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:195
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/stats'
  */
-export const getStats = (args: { subscriptionPlan: string | number | { id: string | number } } | [subscriptionPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const getStats = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getStats.url(args, options),
     method: 'get',
 })
@@ -377,10 +377,10 @@ getStats.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::getStats
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:211
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:195
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/stats'
  */
-getStats.url = (args: { subscriptionPlan: string | number | { id: string | number } } | [subscriptionPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+getStats.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { subscriptionPlan: args }
     }
@@ -410,19 +410,19 @@ getStats.url = (args: { subscriptionPlan: string | number | { id: string | numbe
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::getStats
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:211
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:195
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/stats'
  */
-getStats.get = (args: { subscriptionPlan: string | number | { id: string | number } } | [subscriptionPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+getStats.get = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getStats.url(args, options),
     method: 'get',
 })
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::getStats
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:211
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:195
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/stats'
  */
-getStats.head = (args: { subscriptionPlan: string | number | { id: string | number } } | [subscriptionPlan: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+getStats.head = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: getStats.url(args, options),
     method: 'head',
 })

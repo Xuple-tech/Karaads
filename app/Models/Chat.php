@@ -18,20 +18,12 @@ class Chat extends Model
         'response',
         'metadata',
         'role',
-        'type', // 'text' or 'image'
-        'content_type', // 'text', 'markdown', 'code', 'rich_html'
-        'mentions',
-        'is_pinned',
+        'type',
         'reply_to_id',
-        'agent_id',
-        'tags',
     ];
 
     protected $casts = [
         'metadata' => 'array',
-        'mentions' => 'json',
-        'is_pinned' => 'boolean',
-        'tags' => 'json',
     ];
 
     public function conversation(): BelongsTo
@@ -42,11 +34,6 @@ class Chat extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function agent(): BelongsTo
-    {
-        return $this->belongsTo(Agent::class);
     }
 
     public function imageGeneration()
@@ -78,67 +65,4 @@ class Chat extends Model
         return $this->hasMany(Chat::class, 'reply_to_id');
     }
 
-    /**
-     * Get mentioned user IDs
-     */
-    public function getMentionedUserIds(): array
-    {
-        return $this->mentions ?? [];
-    }
-
-    /**
-     * Check if user is mentioned
-     */
-    public function isMentionedUser(string $userId): bool
-    {
-        return in_array($userId, $this->getMentionedUserIds());
-    }
-
-    /**
-     * Add mention to message
-     */
-    public function addMention(string $userId): void
-    {
-        $mentions = $this->getMentionedUserIds();
-        if (!in_array($userId, $mentions)) {
-            $mentions[] = $userId;
-            $this->update(['mentions' => $mentions]);
-        }
-    }
-
-    /**
-     * Pin message
-     */
-    public function pin(): void
-    {
-        $this->update(['is_pinned' => true]);
-    }
-
-    /**
-     * Unpin message
-     */
-    public function unpin(): void
-    {
-        $this->update(['is_pinned' => false]);
-    }
-
-    /**
-     * Add tag to message
-     */
-    public function addTag(string $tag): void
-    {
-        $tags = $this->tags ?? [];
-        if (!in_array($tag, $tags)) {
-            $tags[] = $tag;
-            $this->update(['tags' => $tags]);
-        }
-    }
-
-    /**
-     * Has tag
-     */
-    public function hasTag(string $tag): bool
-    {
-        return in_array($tag, $this->tags ?? []);
-    }
 }

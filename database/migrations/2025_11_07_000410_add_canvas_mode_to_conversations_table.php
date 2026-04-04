@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (! Schema::hasTable('conversations') || Schema::hasColumn('conversations', 'canvas_mode')) {
+            return;
+        }
+
         Schema::table('conversations', function (Blueprint $table) {
             $table->boolean('canvas_mode')->default(false)->after('context');
         });
@@ -21,6 +25,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (! Schema::hasTable('conversations') || ! Schema::hasColumn('conversations', 'canvas_mode')) {
+            return;
+        }
+
         Schema::table('conversations', function (Blueprint $table) {
             $table->dropColumn('canvas_mode');
         });

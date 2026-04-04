@@ -12,12 +12,23 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (! Schema::hasTable('chats')) {
+            return;
+        }
+
         Schema::table('chats', function (Blueprint $table) {
-            // Voice message support
-            $table->string('type')->default('text')->after('response'); // 'text' or 'audio'
-            $table->boolean('is_voice')->default(false)->after('type'); // From voice mode
-            $table->string('audio_path')->nullable()->after('is_voice'); // Path to audio file
-            $table->integer('audio_duration')->nullable()->after('audio_path'); // Duration in seconds
+            if (! Schema::hasColumn('chats', 'type')) {
+                $table->string('type')->default('text')->after('response');
+            }
+            if (! Schema::hasColumn('chats', 'is_voice')) {
+                $table->boolean('is_voice')->default(false)->after('type');
+            }
+            if (! Schema::hasColumn('chats', 'audio_path')) {
+                $table->string('audio_path')->nullable()->after('is_voice');
+            }
+            if (! Schema::hasColumn('chats', 'audio_duration')) {
+                $table->integer('audio_duration')->nullable()->after('audio_path');
+            }
         });
     }
 
@@ -26,8 +37,21 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (! Schema::hasTable('chats')) {
+            return;
+        }
+
         Schema::table('chats', function (Blueprint $table) {
-            $table->dropColumn(['type', 'is_voice', 'audio_path', 'audio_duration', 'metadata']);
+            $columns = array_filter([
+                Schema::hasColumn('chats', 'type') ? 'type' : null,
+                Schema::hasColumn('chats', 'is_voice') ? 'is_voice' : null,
+                Schema::hasColumn('chats', 'audio_path') ? 'audio_path' : null,
+                Schema::hasColumn('chats', 'audio_duration') ? 'audio_duration' : null,
+            ]);
+
+            if ($columns !== []) {
+                $table->dropColumn($columns);
+            }
         });
     }
 };
