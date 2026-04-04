@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Message as MessageType } from '@/types/chat';
-import { Clipboard, DownloadCloud, RefreshCcw, Sparkles, CheckCircle, AlertTriangle, Search, Globe, Image as ImageIcon, FileText, File, Music, Video, BookOpen, ExternalLink, Copy, MoreVertical, X } from 'lucide-react';
+import { DownloadCloud, RefreshCcw, Sparkles, CheckCircle, AlertTriangle, Image as ImageIcon, FileText, FileSpreadsheet, File, Music, Video, BookOpen, ExternalLink, Copy, X } from 'lucide-react';
 import { toast } from 'sonner';
 import MarkdownMessage from '../MarkdownMessage';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader } from '../ui/card';
@@ -158,6 +158,7 @@ const FileAttachments = memo(({ files }: FileAttachmentsProps) => {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const [selectedFile, setSelectedFile] = useState<FileAttachment | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   if (!files?.length) return null;
 
@@ -183,158 +184,178 @@ const FileAttachments = memo(({ files }: FileAttachmentsProps) => {
     setIsPreviewOpen(true);
   };
 
-  const isImageFile = (file: FileAttachment) => {
-    return file.mime_type?.startsWith('image/') || 
-           file.filename.match(/\.(jpg|jpeg|png|gif|webp|bmp)$/i);
+  const isImageFile = (file: FileAttachment) =>
+    !!(file.mime_type?.startsWith('image/') || file.filename.match(/\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i));
+
+  const isVideoFile = (file: FileAttachment) =>
+    !!(file.mime_type?.startsWith('video/') || file.filename.match(/\.(mp4|mov|avi|webm|mkv)$/i));
+
+  const isPdfFile = (file: FileAttachment) =>
+    !!(file.mime_type?.includes('pdf') || file.filename.endsWith('.pdf'));
+
+  const isSpreadsheet = (file: FileAttachment) =>
+    !!(file.mime_type?.includes('spreadsheet') || file.mime_type === 'application/vnd.ms-excel' || file.filename.match(/\.xlsx?$/i));
+
+  const getFileTypeInfo = (file: FileAttachment): { icon: React.ReactNode; color: string; ext: string } => {
+    const ext = file.filename.split('.').pop()?.toUpperCase() || '?';
+    if (isImageFile(file)) return { icon: <ImageIcon className="h-4 w-4" />, color: 'text-violet-400 bg-violet-400/10', ext };
+    if (isVideoFile(file)) return { icon: <Video className="h-4 w-4" />, color: 'text-blue-400 bg-blue-400/10', ext };
+    if (file.mime_type?.startsWith('audio/')) return { icon: <Music className="h-4 w-4" />, color: 'text-pink-400 bg-pink-400/10', ext };
+    if (isPdfFile(file)) return { icon: <FileText className="h-4 w-4" />, color: 'text-red-400 bg-red-400/10', ext: 'PDF' };
+    if (isSpreadsheet(file)) return { icon: <FileSpreadsheet className="h-4 w-4" />, color: 'text-green-400 bg-green-400/10', ext: ext || 'XLS' };
+    if (file.filename.match(/\.docx?$/i)) return { icon: <FileText className="h-4 w-4" />, color: 'text-blue-400 bg-blue-400/10', ext };
+    return { icon: <File className="h-4 w-4" />, color: 'text-muted-foreground bg-muted', ext };
   };
 
-  const isVideoFile = (file: FileAttachment) => {
-    return file.mime_type?.startsWith('video/') || 
-           file.filename.match(/\.(mp4|mov|avi|webm|mkv)$/i);
-  };
+  const imageFiles = files.filter(isImageFile);
+  const otherFiles = files.filter(f => !isImageFile(f));
 
-  const getFileIcon = (file: FileAttachment) => {
-    if (isImageFile(file)) return <ImageIcon className="h-4 w-4" />;
-    if (isVideoFile(file)) return <Video className="h-4 w-4" />;
-    if (file.mime_type?.startsWith('audio/')) return <Music className="h-4 w-4" />;
-    if (file.mime_type?.includes('pdf') || file.filename.endsWith('.pdf')) 
-      return <FileText className="h-4 w-4" />;
-    return <File className="h-4 w-4" />;
-  };
+  const maxImages = isMobile ? 4 : 6;
+  const visibleImages = showAll ? imageFiles : imageFiles.slice(0, maxImages);
+  const hiddenCount = imageFiles.length - maxImages;
 
-  // Calculate grid columns based on screen size
-  const gridCols = isMobile ? 'grid-cols-2' : 'grid-cols-3';
-  const maxVisibleFiles = isMobile ? 4 : 6;
-  
   return (
     <>
-      <div className="mb-4">
-        <div className={`grid ${gridCols} gap-3`}>
-          {files.slice(0, maxVisibleFiles).map((file, idx) => (
-            <div
-              key={idx}
-              className={`
-                group relative aspect-square rounded-lg border overflow-hidden 
-                bg-card hover:bg-accent/50 transition-all cursor-pointer
-                hover:scale-[1.02] active:scale-[0.98]
-              `}
-              onClick={() => handlePreview(file)}
-            >
-              {/* Image thumbnail */}
-              {isImageFile(file) && file.url ? (
-                <div className="relative w-full h-full">
-                  <img
-                    src={file.url}
-                    alt={file.filename}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                  {/* Overlay on hover */}
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
-                </div>
-              ) : (
-                /* File icon for non-images */
-                <div className="flex flex-col items-center justify-center h-full p-4">
-                  <div className="p-3 rounded-lg bg-muted mb-2">
-                    {getFileIcon(file)}
+      <div className="mb-3 space-y-2">
+        {/* Image grid */}
+        {imageFiles.length > 0 && (
+          <div className={`grid gap-1.5 ${isMobile ? 'grid-cols-2' : imageFiles.length === 1 ? 'grid-cols-1' : 'grid-cols-3'}`}>
+            {visibleImages.map((file, idx) => (
+              <div
+                key={idx}
+                className="group relative rounded-xl overflow-hidden bg-muted cursor-pointer border border-border/30 hover:border-border transition-colors"
+                style={{ aspectRatio: imageFiles.length === 1 ? '16/9' : '1/1' }}
+                onClick={() => handlePreview(file)}
+              >
+                {file.url ? (
+                  <>
+                    <img
+                      src={file.url}
+                      alt={file.filename}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors" />
+                    <div className="absolute bottom-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        className="h-7 w-7 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+                        onClick={(e) => handleDownload(e, file)}
+                        title="Download"
+                      >
+                        <DownloadCloud className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-muted">
+                    <ImageIcon className="h-8 w-8 text-muted-foreground" />
                   </div>
-                  <div className="text-center w-full px-2">
-                    <p className="text-xs font-medium truncate">
-                      {file.filename}
-                    </p>
-                    <p className="text-[10px] text-muted-foreground mt-1">
-                      {formatFileSize(file.file_size)}
-                    </p>
+                )}
+              </div>
+            ))}
+            {/* Show more tile */}
+            {!showAll && hiddenCount > 0 && (
+              <button
+                onClick={() => setShowAll(true)}
+                className="relative rounded-xl overflow-hidden bg-muted border border-border/30 hover:border-border cursor-pointer flex items-center justify-center transition-colors aspect-square"
+              >
+                <span className="text-sm font-semibold text-muted-foreground">+{hiddenCount} more</span>
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Non-image files — horizontal list */}
+        {otherFiles.length > 0 && (
+          <div className="space-y-1.5">
+            {otherFiles.map((file, idx) => {
+              const { icon, color, ext } = getFileTypeInfo(file);
+              return (
+                <div
+                  key={idx}
+                  className="group flex items-center gap-3 rounded-xl border border-border/30 hover:border-border bg-card/60 hover:bg-card px-3 py-2.5 cursor-pointer transition-all"
+                  onClick={() => handlePreview(file)}
+                >
+                  <div className={`h-9 w-9 rounded-lg flex flex-col items-center justify-center gap-0.5 flex-shrink-0 ${color}`}>
+                    {icon}
+                    <span className="text-[8px] font-bold leading-none">{ext}</span>
                   </div>
-                </div>
-              )}
-              
-              {/* Download button for images */}
-              {isImageFile(file) && (
-                <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button
-                    variant="secondary"
-                    size="icon"
-                    className="h-7 w-7 rounded-full bg-background/80 backdrop-blur-sm"
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate leading-tight">{file.filename}</p>
+                    <p className="text-xs text-muted-foreground">{formatFileSize(file.file_size)}</p>
+                  </div>
+                  <button
+                    className="h-7 w-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent opacity-0 group-hover:opacity-100 transition-all"
                     onClick={(e) => handleDownload(e, file)}
+                    title="Download"
                   >
                     <DownloadCloud className="h-3.5 w-3.5" />
-                  </Button>
+                  </button>
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
-        
-        {/* Show more indicator */}
-        {files.length > maxVisibleFiles && (
-          <p className="text-xs text-muted-foreground text-center mt-3">
-            +{files.length - maxVisibleFiles} more files
-          </p>
+              );
+            })}
+          </div>
         )}
       </div>
 
       {/* Preview Dialog */}
       <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] p-0">
-          <DialogHeader className="p-4 border-b">
-            <DialogTitle className="flex items-center justify-between">
-              <span className="truncate">
-                {selectedFile?.filename}
-              </span>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                  onClick={(e) => selectedFile && handleDownload(e, selectedFile)}
-                >
-                  <DownloadCloud className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                  onClick={() => setIsPreviewOpen(false)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
+        <DialogContent className="max-w-4xl max-h-[90vh] p-0 overflow-hidden">
+          <DialogHeader className="px-5 py-3.5 border-b flex-row items-center justify-between space-y-0">
+            <DialogTitle className="text-sm font-medium truncate max-w-[70%]">
+              {selectedFile?.filename}
             </DialogTitle>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={(e) => selectedFile && handleDownload(e, selectedFile)}
+                title="Download"
+              >
+                <DownloadCloud className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => setIsPreviewOpen(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
           </DialogHeader>
-          
-          <div className="flex-1 p-4 overflow-auto">
+
+          <div className="overflow-auto p-4">
             {selectedFile && (
-              <div className="flex items-center justify-center min-h-[60vh]">
+              <div className="flex items-center justify-center min-h-[55vh]">
                 {isImageFile(selectedFile) && selectedFile.url ? (
                   <img
                     src={selectedFile.url}
                     alt={selectedFile.filename}
-                    className="max-w-full max-h-[70vh] object-contain rounded-lg"
+                    className="max-w-full max-h-[70vh] object-contain rounded-xl"
                   />
                 ) : isVideoFile(selectedFile) && selectedFile.url ? (
-                  <video
-                    controls
-                    className="max-w-full max-h-[70vh] rounded-lg"
-                  >
+                  <video controls className="max-w-full max-h-[70vh] rounded-xl">
                     <source src={selectedFile.url} type={selectedFile.mime_type} />
-                    Your browser does not support the video tag.
                   </video>
                 ) : (
                   <div className="text-center p-8">
-                    <div className="inline-flex items-center justify-center p-6 rounded-full bg-muted mb-4">
-                      {getFileIcon(selectedFile)}
-                    </div>
-                    <h3 className="font-medium mb-2">{selectedFile.filename}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
+                    {(() => {
+                      const { icon, color } = getFileTypeInfo(selectedFile);
+                      return (
+                        <div className={`inline-flex items-center justify-center h-20 w-20 rounded-2xl mb-4 ${color}`}>
+                          <span className="scale-[2]">{icon}</span>
+                        </div>
+                      );
+                    })()}
+                    <p className="font-medium mb-1">{selectedFile.filename}</p>
+                    <p className="text-sm text-muted-foreground mb-5">
                       {formatFileSize(selectedFile.file_size)}
                     </p>
-                    <Button
-                      variant="default"
-                      onClick={(e) => handleDownload(e, selectedFile)}
-                    >
+                    <Button onClick={(e) => handleDownload(e, selectedFile)}>
                       <DownloadCloud className="h-4 w-4 mr-2" />
-                      Download File
+                      Download
                     </Button>
                   </div>
                 )}
@@ -508,31 +529,28 @@ References.displayName = 'References';
 // Thinking process component
 const ThinkingProcess = memo(({ thinking }: { thinking: string }) => {
   const [expanded, setExpanded] = useState(false);
-  const isMobile = useMediaQuery('(max-width: 768px)');
 
   if (!thinking?.trim()) return null;
 
-  const shouldTruncate = thinking.length > 200;
-  const displayText = expanded || !shouldTruncate ? thinking : thinking.slice(0, 200) + '...';
+  const shouldTruncate = thinking.length > 180;
+  const displayText = expanded || !shouldTruncate ? thinking : thinking.slice(0, 180) + '…';
 
   return (
-    <div className="mb-4 p-3 rounded-lg bg-muted/30 border">
-      <div className="flex items-center gap-2 mb-2">
-        <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
-        <span className="text-sm font-medium">Thinking</span>
-      </div>
-      <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-        {displayText}
-      </p>
-      {shouldTruncate && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setExpanded(!expanded)}
-          className="mt-2 h-7 text-xs"
-        >
-          {expanded ? 'Show less' : 'Show more'}
-        </Button>
+    <div className="mb-3 rounded-lg border border-border/40 bg-muted/20 overflow-hidden">
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="flex items-center gap-2 w-full px-3 py-2 text-left hover:bg-muted/30 transition-colors"
+      >
+        <div className="h-1.5 w-1.5 rounded-full bg-primary/70 animate-pulse shrink-0" />
+        <span className="text-xs font-medium text-muted-foreground">Thinking</span>
+        <span className="ml-auto text-xs text-muted-foreground/60">{expanded ? '▲' : '▼'}</span>
+      </button>
+      {expanded && (
+        <div className="px-3 pb-3">
+          <p className="text-xs text-muted-foreground whitespace-pre-wrap leading-relaxed border-t border-border/30 pt-2">
+            {displayText}
+          </p>
+        </div>
       )}
     </div>
   );
@@ -636,9 +654,13 @@ export default function Message({ message, onRegenerate, isProcessing, onFeedbac
   const hasImages = images.length > 0;
 
   return (
-    <div className={`flex ${isUserMessage ? 'justify-end' : 'justify-start'} mb-6`}>
-      <div className={`max-w-[90%] ${isMobile ? 'max-w-[95%]' : 'max-w-[80%]'}`}>
-        <div className={`rounded-xl p-4 ${isUserMessage ? 'bg-primary/10' : 'bg-card border'}`}>
+    <div className={`group flex ${isUserMessage ? 'justify-end' : 'justify-start'} mb-5`}>
+      <div className={`${isMobile ? 'max-w-[95%]' : isUserMessage ? 'max-w-[78%]' : 'max-w-[85%]'} w-full`}>
+        <div className={`rounded-2xl px-4 py-3 ${
+          isUserMessage
+            ? 'bg-primary/15 border border-primary/20 ml-auto w-fit max-w-full'
+            : 'bg-card/60 border border-border/40'
+        }`}>
 
           {/* File attachments for user messages */}
           {isUserMessage && message.files?.length > 0 && (
@@ -687,57 +709,49 @@ export default function Message({ message, onRegenerate, isProcessing, onFeedbac
               toolResults={message.metadata?.tool_results || []}
             />
           )}
+        </div>
 
-          {/* Message actions */}
-          <div className={`mt-3 flex gap-2 ${isUserMessage ? 'justify-end' : 'justify-start'}`}>
-            {!isUserMessage && hasContent && !content.startsWith('Error:') && (
-              <>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8"
-                  onClick={handleCopy}
-                >
-                  {copied ? (
-                    <>
-                      <CheckCircle className="h-4 w-4 mr-2 text-green-500" />
-                      
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-4 w-4 mr-2" />
+        {/* Message actions — appear on hover below bubble */}
+        {!isUserMessage && hasContent && !content.startsWith('Error:') && (
+          <div className="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150 px-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 text-muted-foreground hover:text-foreground"
+              onClick={handleCopy}
+              title={copied ? 'Copied!' : 'Copy'}
+            >
+              {copied
+                ? <CheckCircle className="h-3.5 w-3.5 text-green-500" />
+                : <Copy className="h-3.5 w-3.5" />
+              }
+            </Button>
 
-                    </>
-                  )}
-                </Button>
+            {onRegenerate && !isProcessing && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                onClick={() => onRegenerate(message.id!)}
+                title="Regenerate"
+              >
+                <RefreshCcw className="h-3.5 w-3.5" />
+              </Button>
+            )}
 
-                {onRegenerate && !isProcessing && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8"
-                    onClick={() => onRegenerate(message.id!)}
-                  >
-                    <RefreshCcw className="h-4 w-4 mr-2" />
-                    Regenerate
-                  </Button>
-                )}
-
-                {onFeedback && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8"
-                    onClick={onFeedback}
-                  >
-                    <Sparkles className="h-4 w-4 mr-2" />
-                    Feedback
-                  </Button>
-                )}
-              </>
+            {onFeedback && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                onClick={onFeedback}
+                title="Feedback"
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+              </Button>
             )}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

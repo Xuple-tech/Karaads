@@ -117,7 +117,10 @@ export function AppSidebar() {
                                 />
                             ))
                         ) : (
-                            <div className="text-muted-foreground">No conversations found.</div>
+                            <div className="px-2 py-4 text-center">
+                                <p className="text-xs text-muted-foreground">No conversations yet.</p>
+                                <p className="text-xs text-muted-foreground/60 mt-0.5">Start a new chat to begin.</p>
+                            </div>
                         )}
                     </div>
                 </div>
@@ -125,9 +128,9 @@ export function AppSidebar() {
 
             <SidebarFooter className="border-t border-sidebar-border/50 pt-2">
                 {isFreePlan && (
-                    <Button asChild variant="outline" className="w-full border-amber-200/60 bg-gradient-to-r from-amber-50 to-orange-50 font-semibold text-amber-900 hover:from-amber-100 hover:to-orange-100 dark:border-amber-800/60 dark:from-amber-950/60 dark:to-orange-950/60 dark:text-amber-100 dark:hover:from-amber-900/60 dark:hover:to-orange-900/60">
+                    <Button asChild variant="default" className="w-full bg-primary/90 hover:bg-primary font-semibold text-primary-foreground shadow-sm">
                         <Link href="/pricing" as="button" prefetch>
-                            <Zap className="mr-1.5 h-3.5 w-3.5 text-amber-500" />
+                            <Zap className="mr-1.5 h-3.5 w-3.5" />
                             Upgrade to Pro
                         </Link>
                     </Button>

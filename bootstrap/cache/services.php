@@ -37,9 +37,8 @@
     33 => 'Pest\\Laravel\\PestServiceProvider',
     34 => 'Torann\\GeoIP\\GeoIPServiceProvider',
     35 => 'App\\Providers\\AppServiceProvider',
-    36 => 'App\\Providers\\OpenRouterServiceProvider',
-    37 => 'App\\Providers\\SecureRoutingServiceProvider',
-    38 => 'App\\Providers\\AppServiceProvider',
+    36 => 'App\\Providers\\SecureRoutingServiceProvider',
+    37 => 'App\\Providers\\AppServiceProvider',
   ),
   'eager' => 
   array (
@@ -64,9 +63,8 @@
     18 => 'Pest\\Laravel\\PestServiceProvider',
     19 => 'Torann\\GeoIP\\GeoIPServiceProvider',
     20 => 'App\\Providers\\AppServiceProvider',
-    21 => 'App\\Providers\\OpenRouterServiceProvider',
-    22 => 'App\\Providers\\SecureRoutingServiceProvider',
-    23 => 'App\\Providers\\AppServiceProvider',
+    21 => 'App\\Providers\\SecureRoutingServiceProvider',
+    22 => 'App\\Providers\\AppServiceProvider',
   ),
   'deferred' => 
   array (

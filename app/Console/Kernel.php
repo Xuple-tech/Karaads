@@ -13,10 +13,6 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\AddOllamaApiKey::class,
-        \App\Console\Commands\ListOllamaApiKeys::class,
-        \App\Console\Commands\ResetOllamaKeyCounts::class,
-        \App\Console\Commands\TestOllamaConnection::class,
         \App\Console\Commands\GenerateConversationTitles::class,
         \App\Console\Commands\ListConversations::class,
     ];

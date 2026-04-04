@@ -1,16 +1,12 @@
 <?php
 
 use App\Http\Controllers\Api\ChatPreferenceController;
-use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\User\UserConversationController;
 use App\Http\Controllers\User\UserSettingsController;
 use Illuminate\Support\Facades\Route;
 
 // ========== USER ROUTES ==========
 Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
-    // Dashboard
-    // Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
-
     // Conversations
     Route::prefix('conversations')->name('conversations.')->group(function () {
         Route::get('/', [UserConversationController::class, 'index'])->name('index');

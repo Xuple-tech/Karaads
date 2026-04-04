@@ -6,6 +6,7 @@ use App\Models\MetaMessage;
 use App\Models\MetaConversation;
 use App\Models\MetaAccount;
 use App\Models\MetaMessageDraft;
+use App\Services\GrokApiService;
 use App\Services\MetaApiService;
 use App\Services\MetaMessageAnalyzerService;
 use Illuminate\Bus\Queueable;
@@ -162,18 +163,15 @@ class ProcessMetaWebhookMessage implements ShouldQueue
                 ])
                 ->toArray();
 
-            // Call your AI service (GROK, Ollama, etc.) to generate response
-            $grokService = app(\App\Services\OllamaCloudService::class);
+            // Use the primary chat service for automated reply generation.
+            $grokService = app(GrokApiService::class);
 
             $prompt = $this->buildPrompt($analysis, $tone, $customPrompt);
 
-            $response = $grokService->chat(
-                message: $prompt,
-                conversationUuid: $this->conversation->id,
-                personalizationSettings: [
-                    'sentiment' => $analysis['sentiment'] ?? 'neutral',
-                    'category' => $analysis['category'] ?? 'general',
-                ],
+            $response = $grokService->generateChat(
+                prompt: $prompt,
+                model: 'grok-4-fast-reasoning',
+                history: $history,
             );
 
             return $response;

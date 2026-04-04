@@ -5,9 +5,7 @@ namespace App\Http\Controllers\SaasOwner;
 use App\Models\SaasInstanceSettings;
 use App\Models\SaasTeamMember;
 use App\Models\Chat;
-use App\Models\Conversation;
 use App\Services\AnalyticsService;
-use App\Services\PermissionService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 

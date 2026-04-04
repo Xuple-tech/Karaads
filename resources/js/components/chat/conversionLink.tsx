@@ -2,14 +2,15 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"; // adjust import to your path
+} from "@/components/ui/dropdown-menu";
 import { Link } from "@inertiajs/react";
-
-import { MoreVertical, Edit3, Share2 } from "lucide-react";
+import { MoreVertical, Edit3, Share2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import ConversationShareDialog from "@/components/chat/ConversationShareDialog";
+import toast from "react-hot-toast";
 
 export default function ConversationLink({ conversation, onConversationUpdate, onConversationDelete }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -21,8 +22,6 @@ export default function ConversationLink({ conversation, onConversationUpdate, o
   };
 
   const handleDelete = async (id) => {
-    if (!confirm("Are you sure you want to delete this conversation?")) return;
-
     try {
       const response = await fetch(`/api/conversations/${id}`, {
         method: "DELETE",
@@ -30,16 +29,16 @@ export default function ConversationLink({ conversation, onConversationUpdate, o
       const data = await response.json();
 
       if (data.success) {
-        alert("Conversation deleted successfully!");
+        toast.success("Conversation deleted");
         if (onConversationDelete) {
           onConversationDelete(id);
         }
       } else {
-        alert("Failed to delete conversation");
+        toast.error("Failed to delete conversation");
       }
     } catch (error) {
       console.error("Delete error:", error);
-      alert("Failed to delete conversation");
+      toast.error("Failed to delete conversation");
     }
   };
 
@@ -67,11 +66,11 @@ export default function ConversationLink({ conversation, onConversationUpdate, o
           onConversationUpdate(conversation.id, { title: editTitle.trim() });
         }
       } else {
-        alert("Failed to update title");
+        toast.error("Failed to update title");
       }
     } catch (error) {
       console.error("Update error:", error);
-      alert("Failed to update title");
+      toast.error("Failed to update title");
     }
   };
 
@@ -89,7 +88,7 @@ export default function ConversationLink({ conversation, onConversationUpdate, o
   };
 
   return (
-    <div className="relative group flex items-center justify-between px-2 py-1 rounded-xl hover:bg-accent">
+    <div className="relative group flex items-center gap-1 px-1 py-0.5 rounded-lg hover:bg-accent/60 transition-colors">
       {/* The Link or Edit Input */}
       {isEditing ? (
         <Input
@@ -97,7 +96,7 @@ export default function ConversationLink({ conversation, onConversationUpdate, o
           onChange={(e) => setEditTitle(e.target.value)}
           onBlur={handleSaveTitle}
           onKeyDown={handleKeyDown}
-          className="text-sm p-2 h-auto border-none bg-transparent focus:bg-background"
+          className="text-sm px-2 py-1 h-7 border-none bg-background/50 focus-visible:ring-1 focus-visible:ring-primary/50 rounded-md"
           autoFocus
         />
       ) : (
@@ -105,30 +104,32 @@ export default function ConversationLink({ conversation, onConversationUpdate, o
           key={conversation.id}
           href={`/c/${conversation.id}`}
           data-tujo-csr
-          className="text-foreground hover:text-primary block truncate p-2 text-sm w-full"
+          className="text-sm text-foreground/80 hover:text-foreground block truncate px-2 py-1.5 w-full leading-tight"
         >
           {conversation.title}
         </Link>
       )}
 
       {/* Dropdown - Only shows on hover */}
-      <div className="lg:invisible group-hover:visible transition-opacity duration-200">
+      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 shrink-0">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="p-2 text-muted-foreground hover:text-primary">
-              <MoreVertical size={16} />
+            <button className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
+              <MoreVertical size={14} />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="w-44">
             <DropdownMenuItem onClick={handleEditTitle}>
-              <Edit3 size={16} className="mr-2" />
-              Edit Title
+              <Edit3 size={14} className="mr-2" />
+              Rename
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleShare}>
-              <Share2 size={16} className="mr-2" />
+              <Share2 size={14} className="mr-2" />
               Share
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDelete(conversation.id)} className="text-red-500">
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => handleDelete(conversation.id)} className="text-destructive focus:text-destructive">
+              <Trash2 size={14} className="mr-2" />
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>

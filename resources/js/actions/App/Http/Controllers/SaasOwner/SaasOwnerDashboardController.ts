@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::index
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:24
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:22
  * @route '/saas-owner'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::index
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:24
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:22
  * @route '/saas-owner'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::index
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:24
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:22
  * @route '/saas-owner'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::index
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:24
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:22
  * @route '/saas-owner'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::analytics
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:57
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:55
  * @route '/saas-owner/analytics'
  */
 export const analytics = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -59,7 +59,7 @@ analytics.definition = {
 
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::analytics
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:57
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:55
  * @route '/saas-owner/analytics'
  */
 analytics.url = (options?: RouteQueryOptions) => {
@@ -68,7 +68,7 @@ analytics.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::analytics
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:57
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:55
  * @route '/saas-owner/analytics'
  */
 analytics.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -77,7 +77,7 @@ analytics.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::analytics
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:57
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:55
  * @route '/saas-owner/analytics'
  */
 analytics.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -87,7 +87,7 @@ analytics.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::subscription
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:85
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:83
  * @route '/saas-owner/subscription'
  */
 export const subscription = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -102,7 +102,7 @@ subscription.definition = {
 
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::subscription
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:85
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:83
  * @route '/saas-owner/subscription'
  */
 subscription.url = (options?: RouteQueryOptions) => {
@@ -111,7 +111,7 @@ subscription.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::subscription
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:85
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:83
  * @route '/saas-owner/subscription'
  */
 subscription.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -120,7 +120,7 @@ subscription.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::subscription
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:85
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:83
  * @route '/saas-owner/subscription'
  */
 subscription.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -130,7 +130,7 @@ subscription.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::billing
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:103
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:101
  * @route '/saas-owner/billing'
  */
 export const billing = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -145,7 +145,7 @@ billing.definition = {
 
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::billing
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:103
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:101
  * @route '/saas-owner/billing'
  */
 billing.url = (options?: RouteQueryOptions) => {
@@ -154,7 +154,7 @@ billing.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::billing
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:103
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:101
  * @route '/saas-owner/billing'
  */
 billing.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -163,7 +163,7 @@ billing.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::billing
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:103
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:101
  * @route '/saas-owner/billing'
  */
 billing.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -173,7 +173,7 @@ billing.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::settings
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:121
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:119
  * @route '/saas-owner/settings'
  */
 export const settings = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -188,7 +188,7 @@ settings.definition = {
 
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::settings
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:121
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:119
  * @route '/saas-owner/settings'
  */
 settings.url = (options?: RouteQueryOptions) => {
@@ -197,7 +197,7 @@ settings.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::settings
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:121
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:119
  * @route '/saas-owner/settings'
  */
 settings.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -206,7 +206,7 @@ settings.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\SaasOwner\SaasOwnerDashboardController::settings
- * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:121
+ * @see app/Http/Controllers/SaasOwner/SaasOwnerDashboardController.php:119
  * @route '/saas-owner/settings'
  */
 settings.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({

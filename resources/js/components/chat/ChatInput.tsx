@@ -1,6 +1,6 @@
 import type React from "react"
-import { FileUp, Mic, MicOff, SendHorizonal, Square, X, PenTool, Image as ImageIcon, FileText, File, Plus, Paperclip, Settings2Icon } from "lucide-react"
-import { type FormEvent, type KeyboardEvent, type RefObject, useContext, useEffect, useRef, useState } from "react"
+import { FileUp, Mic, MicOff, SendHorizonal, Square, X, Image as ImageIcon, FileText, FileSpreadsheet, File as FileIcon, Paperclip } from "lucide-react"
+import { type FormEvent, type KeyboardEvent, type RefObject, useCallback, useContext, useEffect, useRef, useState } from "react"
 import { Button } from "../ui/button"
 import { SidebarContextProvider } from "../ui/sidebar"
 import { useLang } from "@/hooks/use-lang"
@@ -8,8 +8,7 @@ import ImageToggle from "./ImageToggle"
 import CanvasEditor from "./CanvasEditor"
 import toast from "react-hot-toast"
 import { cn } from "@/lib/utils"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
-import { Badge } from "../ui/badge"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip"
 import { usePage } from "@inertiajs/react"
 
@@ -126,6 +125,24 @@ useEffect(()=>{
     }
 
 },[]);
+
+    // Paste images from clipboard
+    useEffect(() => {
+        const handlePaste = (e: ClipboardEvent) => {
+            const items = Array.from(e.clipboardData?.items || [])
+            const imageFiles = items
+                .filter(item => item.kind === 'file' && item.type.startsWith('image/'))
+                .map(item => item.getAsFile())
+                .filter(Boolean) as File[]
+            if (imageFiles.length > 0) {
+                e.preventDefault()
+                addFiles(imageFiles)
+            }
+        }
+        document.addEventListener('paste', handlePaste)
+        return () => document.removeEventListener('paste', handlePaste)
+    }, [addFiles])
+
     const toggleRecording = () => {
         if (isRecording) {
             recognition?.stop()
@@ -157,41 +174,40 @@ useEffect(()=>{
         }
     }
 
+    const isValidFile = (file: File) =>
+        file.type.startsWith('image/') ||
+        file.type.startsWith('text/') ||
+        file.type === 'application/pdf' ||
+        file.type === 'application/vnd.ms-excel' ||
+        file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+        file.type === 'application/msword' ||
+        file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+
+    const addFiles = useCallback((incoming: File[]) => {
+        const MAX_SIZE = 30 * 1024 * 1024
+        const valid = incoming.filter(isValidFile)
+        const invalidCount = incoming.length - valid.length
+        const oversized = valid.filter(f => f.size > MAX_SIZE)
+        const accepted = valid.filter(f => f.size <= MAX_SIZE)
+
+        if (invalidCount > 0) toast.error(`${invalidCount} unsupported file${invalidCount > 1 ? 's' : ''} skipped`)
+        if (oversized.length > 0) toast.error(`${oversized.length} file${oversized.length > 1 ? 's' : ''} exceed 30 MB limit`)
+
+        if (accepted.length === 0) return
+
+        setFiles(prev => {
+            const slots = 10 - prev.length
+            if (slots <= 0) { toast.error('Maximum 10 files reached'); return prev }
+            const toAdd = accepted.slice(0, slots)
+            if (accepted.length > slots) toast.error(`Only ${slots} more file${slots > 1 ? 's' : ''} can be added`)
+            return [...prev, ...toAdd]
+        })
+    }, [setFiles])
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files.length > 0) {
-            const allFiles = Array.from(e.target.files)
-            let validFiles = allFiles.filter(file =>
-                file.type.startsWith('image/') ||
-                file.type.startsWith('text/') ||
-                file.type === 'application/vnd.ms-excel' ||
-                file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            )
-            const invalidTypeCount = allFiles.length - validFiles.length
-            const maxSize = 30 * 1024 * 1024
-            const oversizedFiles = validFiles.filter(file => file.size > maxSize)
-            validFiles = validFiles.filter(file => file.size <= maxSize)
-
-            const skippedCount = invalidTypeCount + oversizedFiles.length
-            if (skippedCount > 0) {
-                let errorMsg = ''
-                if (invalidTypeCount > 0) errorMsg += `${invalidTypeCount} unsupported file(s) skipped. `
-                if (oversizedFiles.length > 0) errorMsg += `${oversizedFiles.length} file(s) too large (max 30MB each).`
-                toast.error(errorMsg)
-            }
-
-            if (validFiles.length > 0) {
-                setFiles((prev) => {
-                    const newTotal = prev.length + validFiles.length
-                    if (newTotal > 10) {
-                        const toAdd = validFiles.slice(0, 10 - prev.length)
-                        toast.success(`${toAdd.length} file(s) selected (max 10 files)`)
-                        return [...prev, ...toAdd]
-                    } else {
-                        toast.success(`${validFiles.length} file(s) selected`)
-                        return [...prev, ...validFiles]
-                    }
-                })
-            }
+        if (e.target.files?.length) {
+            addFiles(Array.from(e.target.files))
+            e.target.value = ''
         }
     }
 
@@ -208,46 +224,15 @@ useEffect(()=>{
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault()
         setIsDragging(false)
-
-        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-            const allFiles = Array.from(e.dataTransfer.files)
-            let validFiles = allFiles.filter(file =>
-                file.type.startsWith('image/') ||
-                file.type.startsWith('text/') ||
-                file.type === 'application/vnd.ms-excel' ||
-                file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            )
-            const invalidTypeCount = allFiles.length - validFiles.length
-            const maxSize = 30 * 1024 * 1024
-            const oversizedFiles = validFiles.filter(file => file.size > maxSize)
-            validFiles = validFiles.filter(file => file.size <= maxSize)
-
-            const skippedCount = invalidTypeCount + oversizedFiles.length
-            if (skippedCount > 0) {
-                let errorMsg = ''
-                if (invalidTypeCount > 0) errorMsg += `${invalidTypeCount} unsupported file(s) skipped. `
-                if (oversizedFiles.length > 0) errorMsg += `${oversizedFiles.length} file(s) too large (max 30MB each).`
-                toast.error(errorMsg)
-            }
-
-            if (validFiles.length > 0) {
-                setFiles((prev) => {
-                    const newTotal = prev.length + validFiles.length
-                    if (newTotal > 10) {
-                        const toAdd = validFiles.slice(0, 10 - prev.length)
-                        toast.success(`${toAdd.length} file(s) dropped (max 10 files)`)
-                        return [...prev, ...toAdd]
-                    } else {
-                        toast.success(`${validFiles.length} file(s) dropped`)
-                        return [...prev, ...validFiles]
-                    }
-                })
-            }
-        }
+        if (e.dataTransfer.files?.length) addFiles(Array.from(e.dataTransfer.files))
     }
 
     const removeFile = (index: number) => {
         setFiles(files.filter((_, i) => i !== index))
+    }
+
+    const clearAllFiles = () => {
+        setFiles([])
     }
 
     const handleSaveCanvas = (content: string, language: string) => {
@@ -280,16 +265,33 @@ useEffect(()=>{
         fileInputRef.current?.click()
     }
 
+    const formatSize = (bytes: number) => {
+        if (bytes < 1024) return `${bytes} B`
+        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+        return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+    }
+
+    const getFileTypeInfo = (file: File): { icon: React.ReactNode; color: string; ext: string } => {
+        const ext = file.name.split('.').pop()?.toUpperCase() || '?'
+        if (file.type.startsWith('image/')) return { icon: <ImageIcon className="h-4 w-4" />, color: 'text-violet-400 bg-violet-400/10', ext }
+        if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) return { icon: <FileText className="h-4 w-4" />, color: 'text-red-400 bg-red-400/10', ext: 'PDF' }
+        if (file.type.includes('spreadsheet') || file.type === 'application/vnd.ms-excel') return { icon: <FileSpreadsheet className="h-4 w-4" />, color: 'text-green-400 bg-green-400/10', ext: ext || 'XLS' }
+        if (file.type.includes('word') || file.name.match(/\.docx?$/i)) return { icon: <FileText className="h-4 w-4" />, color: 'text-blue-400 bg-blue-400/10', ext: ext || 'DOC' }
+        return { icon: <FileIcon className="h-4 w-4" />, color: 'text-muted-foreground bg-muted', ext }
+    }
+
     const getFilePreview = (file: File, index: number) => {
-        const isImage = file.type.startsWith("image/")
+        const isImage = file.type.startsWith('image/')
+        const { icon, color, ext } = getFileTypeInfo(file)
 
         return (
             <div
                 key={index}
-                className="relative group bg-muted/50 hover:bg-muted border border-border rounded-lg p-2 flex items-center gap-2 transition-all duration-200"
+                className="relative group flex items-center gap-2.5 bg-background/50 hover:bg-background border border-border/50 rounded-xl p-2 transition-all duration-150"
             >
+                {/* Thumbnail or icon */}
                 {isImage ? (
-                    <div className="h-10 w-10 rounded-md overflow-hidden bg-muted flex-shrink-0">
+                    <div className="h-11 w-11 rounded-lg overflow-hidden bg-muted flex-shrink-0 border border-border/40">
                         <img
                             src={URL.createObjectURL(file)}
                             alt={file.name}
@@ -297,25 +299,27 @@ useEffect(()=>{
                         />
                     </div>
                 ) : (
-                    <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <FileText className="h-5 w-5 text-primary" />
+                    <div className={`h-11 w-11 rounded-lg flex flex-col items-center justify-center flex-shrink-0 gap-0.5 ${color}`}>
+                        {icon}
+                        <span className="text-[9px] font-bold leading-none">{ext}</span>
                     </div>
                 )}
+
+                {/* File info */}
                 <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium truncate">{file.name}</p>
-                    <p className="text-[10px] text-muted-foreground">
-                        {(file.size / 1024).toFixed(1)} KB
-                    </p>
+                    <p className="text-xs font-medium truncate leading-tight">{file.name}</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">{formatSize(file.size)}</p>
                 </div>
-                <Button
+
+                {/* Remove button — always visible on mobile, hover on desktop */}
+                <button
                     type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="h-5 w-5 flex items-center justify-center rounded-full bg-muted/80 hover:bg-destructive/20 hover:text-destructive text-muted-foreground transition-colors md:opacity-0 md:group-hover:opacity-100 flex-shrink-0"
                     onClick={() => removeFile(index)}
+                    title="Remove file"
                 >
                     <X className="h-3 w-3" />
-                </Button>
+                </button>
             </div>
         )
     }
@@ -341,43 +345,48 @@ useEffect(()=>{
                     <form onSubmit={handleFormSubmit} className="relative">
                         {/* Drag Overlay */}
                         {isDragging && (
-                            <div className="absolute inset-0 -top-20 bg-primary/5 border-2 border-dashed border-primary rounded-2xl flex items-center justify-center z-10 backdrop-blur-sm">
-                                <div className="text-center">
-                                    <FileUp className="h-12 w-12 text-primary mx-auto mb-2" />
-                                    <p className="text-sm font-medium">Drop files to upload</p>
+                            <div className="absolute inset-0 -top-20 rounded-2xl border-2 border-dashed border-primary bg-primary/5 backdrop-blur-sm flex flex-col items-center justify-center z-10 gap-2">
+                                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                                    <FileUp className="h-6 w-6 text-primary" />
                                 </div>
+                                <p className="text-sm font-medium text-primary">Drop to attach</p>
+                                <p className="text-xs text-muted-foreground">Images, PDFs, docs, spreadsheets · max 30 MB each</p>
                             </div>
                         )}
 
                         {/* File Previews */}
                         {files.length > 0 && (
-                            <div className="mb-3 bg-card border border-border rounded-xl p-3 shadow-sm">
-                                <div className="flex items-center justify-between mb-2">
-                                    <span className="text-xs font-medium text-muted-foreground">
-                                        Attached Files
+                            <div className="mb-2 bg-card/60 border border-border/40 rounded-2xl p-2.5">
+                                <div className="flex items-center justify-between mb-2 px-0.5">
+                                    <span className="text-[11px] font-semibold text-muted-foreground">
+                                        {files.length} / 10 attached
                                     </span>
-                                    <Badge variant="secondary" className="text-xs">
-                                        {files.length}/10
-                                    </Badge>
+                                    <button
+                                        type="button"
+                                        onClick={clearAllFiles}
+                                        className="text-[11px] text-muted-foreground/70 hover:text-destructive transition-colors"
+                                    >
+                                        Clear all
+                                    </button>
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-48 overflow-y-auto custom-scrollbar pr-0.5">
                                     {files.map((file, index) => getFilePreview(file, index))}
                                 </div>
                             </div>
                         )}
 
                         {/* Main Input Container */}
-                        <div className="bg-card border border-border rounded-2xl shadow-lg overflow-hidden">
+                        <div className="bg-card border border-border/60 rounded-2xl shadow-md overflow-hidden focus-within:border-primary/40 focus-within:shadow-lg focus-within:shadow-primary/5 transition-all duration-200">
                             <div className="relative">
                                 <textarea
                                     ref={inputRef}
                                     onChange={handleInputChange}
                                     placeholder={
                                         mode === "text"
-                                            ? "Ask anything..."
-                                            : "Describe the image you want to generate..."
+                                            ? "Ask anything…"
+                                            : "Describe the image you want to generate…"
                                     }
-                                    className="w-full resize-none bg-transparent px-4 pt-4 pb-3 text-sm focus:outline-none custom-scrollbar max-h-40 overflow-y-auto"
+                                    className="w-full resize-none bg-transparent px-4 pt-3.5 pb-2 text-sm focus:outline-none custom-scrollbar max-h-[160px] overflow-y-auto placeholder:text-muted-foreground/50"
                                     rows={1}
                                     onKeyDown={handleKeyDown}
                                     autoFocus
@@ -386,43 +395,42 @@ useEffect(()=>{
                             </div>
 
                             {/* Controls Bar */}
-                            <div className="flex items-center justify-between px-3 pb-1 pt-1 border-t border-border/50">
+                            <div className="flex items-center justify-between px-2.5 pb-2 pt-1 border-t border-border/30">
                                 <div className="flex items-center gap-1">
-                                    {/* Attachment Menu */}
+                                                    {/* Attach files */}
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-8 w-8 relative text-muted-foreground hover:text-foreground"
+                                                onClick={triggerFileInput}
+                                            >
+                                                <Paperclip className="h-4 w-4" />
+                                                {files.length > 0 && (
+                                                    <span className="absolute -top-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-primary flex items-center justify-center text-[9px] text-primary-foreground font-medium">
+                                                        {files.length}
+                                                    </span>
+                                                )}
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>Attach files</TooltipContent>
+                                    </Tooltip>
+
+                                    {/* Image mode toggle */}
                                     <DropdownMenu>
-                                        <Tooltip>
-                                            <TooltipTrigger asChild>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button
-                                                        type="button"
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="h-9 w-9 relative"
-                                                    >
-                                                        <Settings2Icon className="h-4 w-4" />
-                                                        {files.length > 0 && (
-                                                            <Badge
-                                                                variant="destructive"
-                                                                className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px]"
-                                                            >
-                                                                {files.length}
-                                                            </Badge>
-                                                        )}
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                            </TooltipTrigger>
-                                            <TooltipContent>Tools</TooltipContent>
-                                        </Tooltip>
-                                        <DropdownMenuContent align="start" className="w-48">
-                                            <DropdownMenuItem onClick={triggerFileInput}>
-                                                <FileUp className="h-4 w-4 mr-2" />
-                                                Upload Files
-                                            </DropdownMenuItem>
-                                            {/* <DropdownMenuItem onClick={() => setShowCanvasEditor(true)}>
-                                                <PenTool className="h-4 w-4 mr-2" />
-                                                Canvas Editor
-                                            </DropdownMenuItem> */}
-                                            <DropdownMenuSeparator />
+                                        <DropdownMenuTrigger asChild>
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                className={cn("h-8 w-8 text-muted-foreground hover:text-foreground", mode === 'image' && "text-primary")}
+                                            >
+                                                <ImageIcon className="h-4 w-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="start" className="w-44">
                                             <DropdownMenuItem asChild>
                                                 <ImageToggle mode={mode} onToggle={setMode} />
                                             </DropdownMenuItem>
@@ -434,12 +442,12 @@ useEffect(()=>{
                                         <TooltipTrigger asChild>
                                             <Button
                                                 type="button"
-                                                variant={isRecording ? "default" : "ghost"}
+                                                variant="ghost"
                                                 size="icon"
                                                 onClick={toggleRecording}
                                                 className={cn(
-                                                    "h-9 w-9",
-                                                    isRecording && "bg-destructive hover:bg-destructive/90"
+                                                    "h-8 w-8 text-muted-foreground hover:text-foreground",
+                                                    isRecording && "text-destructive hover:text-destructive bg-destructive/10"
                                                 )}
                                             >
                                                 {isRecording ? (
@@ -456,10 +464,10 @@ useEffect(()=>{
 
                                     {/* Mode Badge */}
                                     {mode === "image" && (
-                                        <Badge variant="secondary" className="ml-2 text-xs">
-                                            <ImageIcon className="h-3 w-3 mr-1" />
-                                            Image Mode
-                                        </Badge>
+                                        <span className="ml-1 inline-flex items-center gap-1 text-[10px] font-medium text-primary bg-primary/10 rounded-full px-2 py-0.5">
+                                            <ImageIcon className="h-2.5 w-2.5" />
+                                            Image
+                                        </span>
                                     )}
                                 </div>
 
@@ -471,19 +479,19 @@ useEffect(()=>{
                                             size="icon"
                                             disabled={is_processing}
                                             className={cn(
-                                                "h-9 w-9 rounded-lg transition-all",
-                                                is_processing && "animate-pulse"
+                                                "h-8 w-8 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm transition-all",
+                                                is_processing && "opacity-80"
                                             )}
                                         >
                                             {is_processing ? (
-                                                <Square className="h-4 w-4" />
+                                                <Square className="h-3.5 w-3.5" />
                                             ) : (
-                                                <SendHorizonal className="h-4 w-4" />
+                                                <SendHorizonal className="h-3.5 w-3.5" />
                                             )}
                                         </Button>
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                        {is_processing ? "Processing..." : "Send message"}
+                                        {is_processing ? "Processing…" : "Send (Enter)"}
                                     </TooltipContent>
                                 </Tooltip>
                             </div>
@@ -503,7 +511,7 @@ useEffect(()=>{
                             type="file"
                             ref={fileInputRef}
                             onChange={handleFileChange}
-                            accept="image/*,text/*,.xlsx,.xls"
+                            accept="image/*,text/*,.pdf,.xlsx,.xls,.doc,.docx"
                             className="hidden"
                             multiple
                         />
