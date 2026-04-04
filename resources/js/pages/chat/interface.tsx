@@ -1,362 +1,252 @@
-import NewChatComponent from "@/components/chat/newChatComponent";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Link as InertiaLink, usePage } from "@inertiajs/react"
-import { Bell, Building2Icon, ChartBarStackedIcon, Code, icons, LaptopMinimal, MessageCirclePlus, Mic, Target, Clock, Trash2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Link, usePage } from "@inertiajs/react";
+import {
+    Building2Icon, ChartBarStackedIcon, Clock, Code,
+    MessageCirclePlus, Mic, RefreshCw, Target, Trash2
+} from "lucide-react";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
-export default function ChatInterface() {
-    const { auth } = usePage().props;
-    const topics = [
-        { id: 1, name: "Business", icon: Building2Icon },
-        { id: 2, name: "Health", icon: Target },
-        { id: 3, name: "Develop", icon: LaptopMinimal },
-        { id: 4, name: "Finance", icon: ChartBarStackedIcon },
-    ];
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-    interface Conversation {
-        id: number | string;
-        title?: string;
-        created_at?: string;
-        // add other fields returned by the API as needed
-    }
+interface Conversation {
+    id: number | string;
+    title?: string;
+    created_at?: string;
+}
 
-    const conversationUrl = "/api/conversations/new-api-new-users0request";
-    const [conversationsList, setConversationsList] = useState<Conversation[] | null>(null);
-    const [isFetchError, setIsFetchError] = useState({ status: false, message: "" });
-    const [isLoading, setIsLoading] = useState(true);
-    const [fetchStateTimestamp, setFetchStateTimestamp] = useState(Date.now());
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
-    const fetchConversations = async () => {
-        setIsLoading(true);
-        setIsFetchError({ status: false, message: "" });
+function formatDate(input: string | number | Date) {
+    const date = new Date(input);
+    const diff = Math.floor((Date.now() - date.getTime()) / 86_400_000);
+    if (diff === 0) return "Today";
+    if (diff === 1) return "Yesterday";
+    if (diff < 7) return `${diff} days ago`;
+    return date.toLocaleDateString();
+}
 
-        try {
-            const response = await fetch(conversationUrl);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
+// ─── Sub-components ───────────────────────────────────────────────────────────
 
-            if (data.success && data.cg_) {
-                setConversationsList(data.cg_);
-            } else {
-                // console.log(data);
-                setConversationsList([]);
-            }
-        } catch (error) {
-            console.error('Fetch error:', error);
-            setIsFetchError({
-                status: true,
-                message: "An error occurred while getting the conversations"
-            });
-            setConversationsList([]);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+const topics = [
+    { id: 1, name: "Business", icon: Building2Icon },
+    { id: 2, name: "Health", icon: Target },
+    { id: 3, name: "Develop", icon: Code },
+    { id: 4, name: "Finance", icon: ChartBarStackedIcon },
+];
 
-    useEffect(() => {
-        fetchConversations();
-    }, [fetchStateTimestamp]);
+function TopicCard({ name, icon: Icon }: { name: string; icon: React.ElementType }) {
+    return (
+        <Link href="#">
+            <div className="flex flex-col items-center gap-2.5 p-4 rounded-2xl border border-border/40 bg-card/50 hover:bg-card hover:border-border transition-all duration-150 cursor-pointer">
+                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Icon className="w-5 h-5 text-primary" />
+                </div>
+                <span className="text-xs font-medium text-center">{name}</span>
+            </div>
+        </Link>
+    );
+}
 
-    const handleRefresh = () => {
-        setFetchStateTimestamp(Date.now());
-    };
-
-    type ConversationId = number | string;
-
-    interface DeleteRequestOptions {
-        method: 'DELETE';
-        headers: Record<string, string>;
-    }
-
-    const handleDeleteConversation = async (conversationId: ConversationId): Promise<void> => {
-        if (!confirm('Are you sure you want to delete this conversation?')) {
-            return;
-        }
-
-        try {
-            const csrfToken: string = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement | null)?.getAttribute('content') ?? '';
-
-            const options: DeleteRequestOptions = {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken
-                }
-            };
-
-            const response: Response = await fetch(`/conversations/${conversationId}`, options);
-
-            if (response.ok) {
-                // Refresh the conversations list
-                setFetchStateTimestamp(Date.now());
-            } else {
-                throw new Error('Failed to delete conversation');
-            }
-        } catch (error) {
-            console.error('Delete error:', error);
-            alert('Failed to delete conversation');
-        }
-    };
-
-    // Skeleton loader component
-    const ConversationSkeleton = () => (
-        <div className="space-y-3">
-            {[...Array(3)].map((_, index) => (
-                <div key={index} className="p-4 bg-primary/5 backdrop-blur-3xl rounded-2xl animate-pulse">
-                    <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                            <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
-                            <div className="h-3 bg-gray-300 rounded w-1/2"></div>
-                        </div>
-                        <div className="h-8 w-8 bg-gray-300 rounded-full ml-4"></div>
+function ConversationSkeleton() {
+    return (
+        <div className="space-y-2">
+            {[1, 2, 3].map(i => (
+                <div key={i} className="flex items-center gap-3 p-3 rounded-xl border border-border/30">
+                    <Skeleton className="h-8 w-8 rounded-full" />
+                    <div className="flex-1 space-y-1.5">
+                        <Skeleton className="h-3.5 w-3/4 rounded" />
+                        <Skeleton className="h-2.5 w-1/3 rounded" />
                     </div>
                 </div>
             ))}
         </div>
     );
+}
 
-    // Format date for display
-    type DateInput = string | number | Date;
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
-    interface FormatDateFn {
-        (dateInput: DateInput): string;
-    }
+export default function ChatHomePage() {
+    const { auth } = usePage().props as any;
 
-    const formatDate: FormatDateFn = (dateInput) => {
-        const date = new Date(dateInput);
-        const now = new Date();
-        const diffTime = Math.abs(now.getTime() - date.getTime());
-        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    const [conversations, setConversations] = useState<Conversation[] | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [fetchError, setFetchError] = useState(false);
+    const [tick, setTick] = useState(0);
 
-        if (diffDays === 0) {
-            return 'Today';
-        } else if (diffDays === 1) {
-            return 'Yesterday';
-        } else if (diffDays < 7) {
-            return `${diffDays} days ago`;
-        } else {
-            return date.toLocaleDateString();
+    const fetchConversations = async () => {
+        setIsLoading(true);
+        setFetchError(false);
+        try {
+            const res = await fetch("/api/conversations/new-api-new-users0request");
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            setConversations(data.success && data.cg_ ? data.cg_ : []);
+        } catch {
+            setFetchError(true);
+            setConversations([]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => { fetchConversations(); }, [tick]);
+
+    const handleDelete = async (id: number | string) => {
+        const csrf = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? "";
+        try {
+            const res = await fetch(`/conversations/${id}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json", "X-CSRF-TOKEN": csrf },
+            });
+            if (!res.ok) throw new Error();
+            toast.success("Conversation deleted");
+            setTick(t => t + 1);
+        } catch {
+            toast.error("Failed to delete conversation");
         }
     };
 
     return (
-        <>
-            <div className="app-container-seelect-home home-app min-h-screen">
-                {/* Top Section */}
-                <div className="top-section">
-                    <div className="flex justify-between items-center p-4 sm:p-6 rounded-2xl">
-                        <div className="logo-section">
-                            <img src="/logo.png" alt="kWATI aI LOGO" className="h-12 w-auto" />
-                        </div>
+        <div className="min-h-screen max-w-lg mx-auto px-4 pb-10">
 
-                        <div className="flex flex-row flex-wrap
-                        ">
-                            {auth.user && <>
-                                <div className="avater-s3ct flex items-center gap-2 sm:gap-3">
-                                    <Avatar className="w-8 h-8 sm:w-10 sm:h-10">
-                                        <AvatarFallback className="text-sm sm:text-base">
-                                            {auth.user.name.slice(0, 1)}
-                                        </AvatarFallback>
-                                        <AvatarImage src={auth.user.avatr}></AvatarImage>
-                                    </Avatar>
-                                    {/* <span className="text-sm sm:text-base font-medium">
-                                    {auth.user.name}
-                                </span> */}
-                                </div>
-                                <div className="bell-section">
-                                    <div className="p-2 rounded bg-transparent backdrop-blur-3xl">
-                                        <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
-                                    </div>
-                                </div>
-                            </>
-                            }
-                            {!auth.user && <>
-                                <div className="w-full gap-2 flex justify-center sm:justify-start">
-                                    <Button asChild size={'lg'} variant={'outline'} className="w-auto sm:w-auto">
-                                        <InertiaLink href="/login">
-                                            Login
-                                        </InertiaLink>
-                                    </Button>
-                                    <Button asChild size={'lg'} className="w-auto sm:w-auto">
-                                        <InertiaLink href="/register">
-                                            Register
-                                        </InertiaLink>
-                                    </Button>
-                                </div>
-                            </>}
-                        </div>
+            {/* Header */}
+            <div className="flex items-center justify-between py-5">
+                <img src="/logo.png" alt="Kwati AI" className="h-9 w-auto" />
+
+                {auth.user ? (
+                    <div className="flex items-center gap-2">
+                        <Avatar className="h-9 w-9">
+                            <AvatarImage src={auth.user.avatar} />
+                            <AvatarFallback className="text-sm font-semibold">
+                                {auth.user.name?.slice(0, 1)}
+                            </AvatarFallback>
+                        </Avatar>
                     </div>
-                </div>
-
-                {/* Main Content */}
-                <div className="p-4 sm:p-6">
-                    {/* Action Buttons Grid */}
-                    <div className="grid gap-3 sm:gap-4 grid-cols-2">
-                        <InertiaLink href="/new" >
-                            <div className="p-3 sm:p-4 flex flex-col content-center justify-center items-center gap-3 sm:gap-4 bg-primary/5 backdrop-blur-3xl rounded-2xl hover:bg-primary/10 transition-colors">
-                                <div className="rounded-2xl p-3 sm:p-4 bg-primary/5 backdrop-blur-3xl">
-                                    <MessageCirclePlus className="w-16 h-16 sm:w-20 sm:h-20" />
-                                </div>
-                                <h6 className="title text-sm sm:text-base font-medium text-center">
-                                    New Chat
-                                </h6>
-                            </div>
-                        </InertiaLink>
-
-                        <InertiaLink href="/voice-chat" >
-                            <div className="p-3 sm:p-4 flex flex-col content-center justify-center items-center gap-3 sm:gap-4 bg-primary/5 backdrop-blur-3xl rounded-2xl hover:bg-primary/10 transition-colors">
-                                <div className="rounded-2xl p-3 sm:p-4 bg-primary/5 backdrop-blur-3xl">
-                                    <Mic className="w-16 h-16 sm:w-20 sm:h-20" />
-                                </div>
-                                <h6 className="title text-sm sm:text-base font-medium text-center">
-                                    Voice Chat
-                                </h6>
-                            </div>
-                        </InertiaLink>
+                ) : (
+                    <div className="flex items-center gap-2">
+                        <Button asChild variant="ghost" size="sm">
+                            <Link href="/login">Login</Link>
+                        </Button>
+                        <Button asChild size="sm">
+                            <Link href="/register">Register</Link>
+                        </Button>
                     </div>
-
-                    {/* Topics Section */}
-                    <div className="midd-section mt-6 sm:mt-8">
-                        <div className="flex items-center justify-between mb-4">
-                            <h4 className="title text-lg sm:text-xl font-semibold">Topics</h4>
-                            <Button variant="ghost" size="sm" className="text-xs sm:text-sm">
-                                See All
-                            </Button>
-                        </div>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-                            {topics.map((topic) => (
-                                <InertiaLink href="#" key={topic.id}>
-                                    <div className="p-3 sm:p-4 flex flex-col content-center justify-center items-center gap-2 sm:gap-3 bg-primary/5 backdrop-blur-3xl rounded-2xl hover:bg-primary/10 transition-colors">
-                                        <div className="rounded-full p-3 sm:p-4 bg-primary/5 backdrop-blur-3xl">
-                                            <topic.icon className="w-6 h-6 sm:w-8 sm:h-8" />
-                                        </div>
-                                        <h6 className="title text-xs sm:text-sm font-medium text-center">
-                                            {topic.name}
-                                        </h6>
-                                    </div>
-                                </InertiaLink>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* History Section */}
-                    <div className="bottom-section mt-6 sm:mt-8">
-                        <div className="flex items-center justify-between mb-4">
-                            <h4 className="title text-lg sm:text-xl font-semibold">
-                                History
-                                {isLoading && <span className="text-sm font-normal ml-2">Loading...</span>}
-                            </h4>
-                            <div className="flex items-center gap-2">
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="text-xs sm:text-sm"
-                                    onClick={handleRefresh}
-                                    disabled={isLoading}
-                                >
-                                    Refresh
-                                </Button>
-                                <Button variant="ghost" size="sm" className="text-xs sm:text-sm">
-                                    See All
-                                </Button>
-                            </div>
-                        </div>
-
-                        {/* Error State */}
-                        {isFetchError.status && (
-                            <div className="p-4 bg-red-50 border border-red-200 rounded-2xl mb-4">
-                                <p className="text-red-800 text-sm">{isFetchError.message}</p>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="mt-2"
-                                    onClick={handleRefresh}
-                                >
-                                    Try Again
-                                </Button>
-                            </div>
-                        )}
-
-                        {/* Loading State */}
-                        {isLoading && <ConversationSkeleton />}
-
-                        {/* Empty State */}
-                        {!isLoading && !isFetchError.status && (!conversationsList || conversationsList.length === 0) && (
-                            <div className="text-center p-8 bg-primary/5 backdrop-blur-3xl rounded-2xl">
-                                <MessageCirclePlus className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                                <p className="text-gray-500">No conversation history yet.</p>
-                                <p className="text-sm text-gray-400 mt-1">Start a new chat to see your history here.</p>
-                            </div>
-                        )}
-                        {/* {console.log(conversationsList)} */}
-                        {/* Conversations List */}
-                        {!isLoading && conversationsList && conversationsList.length > 0 && (
-                            <div className="space-y-3">
-                                {conversationsList.map((conversation: Conversation) => (
-                                    <div
-                                        key={conversation.id}
-                                        className="p-4 bg-primary/5 backdrop-blur-3xl rounded-2xl hover:bg-primary/10 transition-colors group"
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <InertiaLink
-                                                href={`/c/${conversation.id}`}
-                                                className="flex-1"
-                                            >
-                                                <div className="flex items-center gap-3">
-                                                    <div className="rounded-full p-2 bg-primary/10">
-                                                        <Clock className="w-4 h-4" />
-                                                    </div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <h6 className="title text-sm font-medium truncate">
-                                                            {conversation.title || 'Untitled Conversation'}
-                                                        </h6>
-                                                        <p className="text-xs text-muted-foreground mt-1">
-                                                            {conversation.created_at && formatDate(conversation.created_at)}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </InertiaLink>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="opacity-0 group-hover:opacity-100 transition-opacity"
-                                                onClick={() => handleDeleteConversation(conversation.id)}
-                                            >
-                                                <Trash2 className="w-4 h-4 text-red-500" />
-                                            </Button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Footer */}
-                    <div className="footer mt-6 text-center">
-                        <InertiaLink href="/privacy-policy" className="text-sm text-muted-foreground hover:underline">
-                            Privacy Policy
-                        </InertiaLink>
-                    </div>
-                </div>
+                )}
             </div>
-            <style>
-                {`/* Ensure smooth scaling */
-.app-container-seelect-home {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
 
-/* Improve touch targets on mobile */
-@media (max-width: 640px) {
-  .home-app a, .home-app button {
-    min-height: 44px;
-    min-width: 44px;
-  }
-}`}
-            </style>
-        </>
-    )
+            {/* Quick actions */}
+            <div className="grid grid-cols-2 gap-3 mb-8">
+                <Link href="/new">
+                    <div className="flex flex-col items-center gap-3 p-5 rounded-2xl border border-border/40 bg-card/50 hover:bg-card hover:border-border transition-all duration-150 cursor-pointer">
+                        <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                            <MessageCirclePlus className="w-6 h-6 text-primary" />
+                        </div>
+                        <span className="text-sm font-medium">New Chat</span>
+                    </div>
+                </Link>
+
+                <Link href="/voice-chat">
+                    <div className="flex flex-col items-center gap-3 p-5 rounded-2xl border border-border/40 bg-card/50 hover:bg-card hover:border-border transition-all duration-150 cursor-pointer">
+                        <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                            <Mic className="w-6 h-6 text-primary" />
+                        </div>
+                        <span className="text-sm font-medium">Voice Chat</span>
+                    </div>
+                </Link>
+            </div>
+
+            {/* Topics */}
+            <section className="mb-8">
+                <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-sm font-semibold">Topics</h2>
+                    <Button variant="ghost" size="sm" className="text-xs h-7 text-muted-foreground">See all</Button>
+                </div>
+                <div className="grid grid-cols-4 gap-2">
+                    {topics.map(t => <TopicCard key={t.id} name={t.name} icon={t.icon} />)}
+                </div>
+            </section>
+
+            {/* History */}
+            <section>
+                <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-sm font-semibold">History</h2>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-xs h-7 text-muted-foreground"
+                        onClick={() => setTick(t => t + 1)}
+                        disabled={isLoading}
+                    >
+                        <RefreshCw className={`h-3 w-3 mr-1 ${isLoading ? "animate-spin" : ""}`} />
+                        Refresh
+                    </Button>
+                </div>
+
+                {/* Error */}
+                {fetchError && (
+                    <div className="rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-3 mb-3">
+                        <p className="text-sm text-destructive mb-2">Could not load conversations.</p>
+                        <Button variant="outline" size="sm" onClick={() => setTick(t => t + 1)}>Try Again</Button>
+                    </div>
+                )}
+
+                {/* Loading */}
+                {isLoading && <ConversationSkeleton />}
+
+                {/* Empty */}
+                {!isLoading && !fetchError && conversations?.length === 0 && (
+                    <div className="text-center py-10 rounded-2xl border border-dashed border-border/50">
+                        <MessageCirclePlus className="h-8 w-8 mx-auto mb-2 text-muted-foreground/40" />
+                        <p className="text-sm text-muted-foreground">No conversations yet</p>
+                        <p className="text-xs text-muted-foreground/60 mt-1">Start a new chat to begin</p>
+                    </div>
+                )}
+
+                {/* List */}
+                {!isLoading && conversations && conversations.length > 0 && (
+                    <div className="space-y-1.5">
+                        {conversations.map(conv => (
+                            <div
+                                key={conv.id}
+                                className="group flex items-center gap-3 px-3 py-2.5 rounded-xl border border-border/30 hover:border-border bg-card/40 hover:bg-card transition-all duration-150"
+                            >
+                                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                    <Clock className="h-4 w-4 text-primary/70" />
+                                </div>
+
+                                <Link href={`/c/${conv.id}`} className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium truncate leading-tight">
+                                        {conv.title || "Untitled Conversation"}
+                                    </p>
+                                    {conv.created_at && (
+                                        <p className="text-xs text-muted-foreground mt-0.5">
+                                            {formatDate(conv.created_at)}
+                                        </p>
+                                    )}
+                                </Link>
+
+                                <button
+                                    onClick={() => handleDelete(conv.id)}
+                                    className="h-7 w-7 flex-shrink-0 flex items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-all"
+                                    title="Delete"
+                                >
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </section>
+
+            {/* Footer */}
+            <div className="mt-10 text-center">
+                <Link href="/privacy-policy" className="text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors">
+                    Privacy Policy
+                </Link>
+            </div>
+        </div>
+    );
 }

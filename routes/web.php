@@ -4,10 +4,12 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\User;
+use App\Http\Controllers\SpaController;
 use App\Http\Controllers\Meta\MetaAccountController;
 use App\Http\Controllers\Meta\MetaMessageController;
 use App\Http\Controllers\Meta\MetaPreferenceController;
 use App\Http\Controllers\Meta\MetaWebhookController;
+use App\Http\Controllers\Api\SessionAuthController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ConversationShareController;
 use App\Http\Middleware\ImageGenerationRateLimit;
@@ -25,16 +27,11 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
-// Public chat route
-Route::get('/', [ChatController::class, 'index'])->name('home');
-Route::get('/app', [ChatController::class, 'index'])->name('app');
-Route::get('/new', [ChatController::class, 'index'])->name('new');
-Route::get('/privacy-policy', [ChatController::class, 'privacyPolicy'])->name('privacy-policy');
-// Route::get('/c/{id}', [ChatController::class, 'index'])->name('cshow');
-
-Route::middleware('auth')->get('/dashboard', function () {
-    return Inertia::render('new');
-})->name('dashboard');
+Route::get('/', SpaController::class)->name('home');
+Route::get('/app', SpaController::class)->name('app');
+Route::get('/new', SpaController::class)->name('new');
+Route::get('/privacy-policy', SpaController::class)->name('privacy-policy');
+Route::middleware('auth')->get('/dashboard', SpaController::class)->name('dashboard');
 
 // Conversation management routes
 Route::middleware(['web',])->withoutMiddleware(VerifyCsrfToken::class)->prefix('api')->group(function () {
@@ -81,14 +78,14 @@ Route::middleware(['web',])->withoutMiddleware(VerifyCsrfToken::class)->prefix('
 
 // Public chat routes (existing)
 Route::middleware(['web'])->group(function () {
-    Route::get('/c/new', [ChatController::class, 'create'])->name('chat.new');
-    Route::get('/c/{conversation}', [ChatController::class, 'show'])->name('chat.show');
+    Route::get('/c/new', SpaController::class)->name('chat.new');
+    Route::get('/c/{conversation}', SpaController::class)->name('chat.show');
     Route::post('/create-two-step-challagene', [ChatController::class, 'chat'])->name('chat.send')->withoutMiddleware(VerifyCsrfToken::class)->middleware(CheckSubscriptionRateLimit::class);
     Route::post('/c/{messageId}/regenerate', [ChatController::class, 'regenerateMessage'])->name('chat.regenerate')->withoutMiddleware(VerifyCsrfToken::class)->middleware(CheckSubscriptionRateLimit::class);
     Route::post('/user/setting/language', [User::class, 'saveLanguage'])->name('user.setting.language')->withoutMiddleware(VerifyCsrfToken::class);
 
     // Shared Conversation Routes (Public Access)
-    Route::get('/share/{token}', [ConversationShareController::class, 'viewShare'])->name('share.view');
+    Route::get('/share/{token}', SpaController::class)->name('share.view');
     Route::get('/api/share/{token}/data', [ConversationShareController::class, 'getSharedConversationData'])->name('share.data');
 });
 
@@ -103,47 +100,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/api/shares/list', [ConversationShareController::class, 'listUserShares'])->name('api.shares.list');
 
-    // voice conversation routes
-    Route::get('/voice-chat', [ChatController::class, 'voiceChat'])->name('voice.chat');
-    Route::get('/mails', [MailController::class, 'mails'])->name('user.library');
-    Route::get('/emails/accounts/{accountId}/emails', [MailController::class, 'showEmails'])->name('emails.accounts.show');
-    Route::get('/emails/rules', [MailController::class, 'rules'])->name('emails.rules.index');
-
     // Email OAuth routes
     Route::get('/emails/connect/gmail', [MailController::class, 'connectGmail'])->name('emails.connect.gmail');
     Route::get('/emails/callback/gmail', [MailController::class, 'gmailCallback'])->name('emails.callback.gmail');
     Route::get('/emails/connect/outlook', [MailController::class, 'connectOutlook'])->name('emails.connect.outlook');
     Route::get('/emails/callback/outlook', [MailController::class, 'outlookCallback'])->name('emails.callback.outlook');
-
-    // Meta Platform Routes (Facebook, Instagram, WhatsApp)
-    Route::prefix('meta')->name('meta.')->group(function () {
-        // Accounts
-        Route::get('/dashboard', [MetaAccountController::class, 'dashboard'])->name('accounts.dashboard');
-        Route::get('/accounts', [MetaAccountController::class, 'index'])->name('accounts.index');
-
-        Route::post('/accounts/initiate-oauth', [MetaAccountController::class, 'initiateOAuth'])->name('oauth.initiate');
-        Route::get('/oauth/callback', [MetaAccountController::class, 'handleCallback'])->name('oauth.callback');
-        Route::delete('/accounts/{metaAccount}', [MetaAccountController::class, 'disconnect'])->name('accounts.disconnect');
-        Route::post('/accounts/{metaAccount}/status', [MetaAccountController::class, 'updateStatus'])->name('accounts.update-status');
-        Route::post('/accounts/{metaAccount}/test', [MetaAccountController::class, 'testConnection'])->name('accounts.test');
-
-        // Conversations & Messages
-        Route::get('/accounts/{metaAccount}/conversations', [MetaMessageController::class, 'conversations'])->name('conversations.list');
-        Route::get('/accounts/{metaAccount}/conversations/{metaConversation}', [MetaMessageController::class, 'conversation'])->name('conversations.show');
-
-        // Message Operations
-        Route::post('/messages/{metaMessage}/analyze-and-draft', [MetaMessageController::class, 'analyzeAndDraft'])->name('messages.analyze');
-        Route::put('/drafts/{metaMessageDraft}', [MetaMessageController::class, 'updateDraft'])->name('drafts.update');
-        Route::post('/drafts/{metaMessageDraft}/send', [MetaMessageController::class, 'sendDraft'])->name('drafts.send');
-        Route::post('/drafts/{metaMessageDraft}/reject', [MetaMessageController::class, 'rejectDraft'])->name('drafts.reject');
-        Route::post('/conversations/{metaConversation}/send', [MetaMessageController::class, 'send'])->name('messages.send');
-
-        // Preferences
-        Route::get('/accounts/{metaAccount}/preferences', [MetaPreferenceController::class, 'show'])->name('preferences.show');
-        Route::post('/accounts/{metaAccount}/preferences', [MetaPreferenceController::class, 'update'])->name('preferences.update');
-        Route::get('/preferences/global', [MetaPreferenceController::class, 'globalPreferences'])->name('preferences.global');
-        Route::post('/preferences/global', [MetaPreferenceController::class, 'updateGlobalPreferences'])->name('preferences.global.update');
-    });
 });
 
 // routes/web.php
@@ -247,9 +208,9 @@ Route::post('a/feedback/sms', function (Request $request) {
     }
 })->withoutMiddleware(VerifyCsrfToken::class)->name('feedback.sms');
 // Legal pages
-Route::get('/privacy', [PageController::class, 'privacy'])->name('privacy');
-Route::get('/terms', [PageController::class, 'terms'])->name('terms');
-Route::get('/terms-of-service', [PageController::class, 'terms'])->name('terms-of-service');
+Route::get('/privacy', SpaController::class)->name('privacy');
+Route::get('/terms', SpaController::class)->name('terms');
+Route::get('/terms-of-service', SpaController::class)->name('terms-of-service');
 
 // Optional: Redirect from old URLs if needed
 Route::get('/3rd/details/privacy', function () {
@@ -258,6 +219,22 @@ Route::get('/3rd/details/privacy', function () {
 
 Route::get('/3rd/details/service', function () {
     return redirect()->route('terms');
+});
+
+Route::prefix('api/session')->group(function () {
+    Route::get('/user', [SessionAuthController::class, 'session'])->name('session.user');
+    Route::middleware('guest')->group(function () {
+        Route::post('/login', [SessionAuthController::class, 'login'])->name('session.login');
+        Route::post('/register', [SessionAuthController::class, 'register'])->name('session.register');
+        Route::post('/forgot-password', [SessionAuthController::class, 'forgotPassword'])->name('session.password.email');
+        Route::post('/reset-password', [SessionAuthController::class, 'resetPassword'])->name('session.password.reset');
+    });
+    Route::middleware('auth')->group(function () {
+        Route::post('/logout', [SessionAuthController::class, 'logout'])->name('session.logout');
+        Route::post('/confirm-password', [SessionAuthController::class, 'confirmPassword'])->name('session.password.confirm');
+        Route::post('/email/verification-notification', [SessionAuthController::class, 'resendVerification'])->middleware('throttle:6,1')->name('session.verification.send');
+        Route::get('/verify-email/{id}/{hash}', [SessionAuthController::class, 'verifyEmail'])->middleware(['signed', 'throttle:6,1'])->name('session.verification.verify');
+    });
 });
 
 require __DIR__ . '/auth.php';
@@ -274,3 +251,6 @@ require __DIR__ . '/user.php';
 require __DIR__ . '/currency.php';
 require __DIR__ . '/studio.php';
 require __DIR__ . '/docs.php';
+
+Route::get('/{path}', SpaController::class)
+    ->where('path', '^(?!admin(?:/|$)|saas-owner(?:/|$)|staff(?:/|$)|api(?:/|$)|docs(?:/|$)|meta/webhook(?:/|$)|media(?:/|$)|user-g-content(?:/|$)|up(?:/|$)|sanctum(?:/|$)).*');
