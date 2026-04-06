@@ -53,7 +53,8 @@ return [
     ],
 
     'grok' => [
-        'api_key' => env('GROK_API_KEY') ?? "mm"
+        'api_key' => env('GROK_API_KEY') ?? "mm",
+        'verify_ssl' => filter_var(env('GROK_VERIFY_SSL', true), FILTER_VALIDATE_BOOL)
     ],
 
     'deepseek' => [

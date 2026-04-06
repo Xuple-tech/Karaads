@@ -1,5 +1,4 @@
 import { useMutation } from '@tanstack/react-query';
-import { LoaderCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import AuthLayout from '@/spa/components/AuthLayout';
@@ -34,7 +33,7 @@ export function Component() {
                 >
                     {resend.isPending ? (
                         <>
-                            <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                            <span className="mr-2 inline-block h-4 w-4 shrink-0 animate-pulse rounded bg-current/30" />
                             Sending…
                         </>
                     ) : (

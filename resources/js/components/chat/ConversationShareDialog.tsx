@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Copy, Check, X, Loader2 } from 'lucide-react';
+import { Copy, Check, X } from 'lucide-react';
 // import { useToast } from '@/hooks/use-toast';
 import axios from 'axios';
 import { toast } from 'sonner';
@@ -166,8 +166,10 @@ export default function ConversationShareDialog({
                 </DialogHeader>
 
                 {loading && !shareData ? (
-                    <div className="flex items-center justify-center py-8">
-                        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+                    <div className="space-y-3 py-6 animate-pulse">
+                        <div className="h-4 w-32 rounded bg-muted/60 mx-auto" />
+                        <div className="h-9 w-full rounded-lg bg-muted/40" />
+                        <div className="h-4 w-3/4 rounded bg-muted/30 mx-auto" />
                     </div>
                 ) : shareData?.share_token ? (
                     <div className="space-y-4">

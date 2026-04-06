@@ -90,6 +90,10 @@ class PythonDocumentGenerationService
         $configured = (string) config('document_generation.python_binary', 'py');
         $venvPath = (string) config('document_generation.venv_path', '');
 
+        if ($configured !== '' && $configured !== 'py') {
+            return $configured;
+        }
+
         if ($venvPath !== '') {
             $candidate = DIRECTORY_SEPARATOR === '\\'
                 ? $venvPath . DIRECTORY_SEPARATOR . 'Scripts' . DIRECTORY_SEPARATOR . 'python.exe'

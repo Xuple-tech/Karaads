@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { Eye, EyeOff, LoaderCircle } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
@@ -113,7 +113,7 @@ export function Component() {
                 >
                     {mutation.isPending ? (
                         <>
-                            <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                            <span className="mr-2 inline-block h-4 w-4 shrink-0 animate-pulse rounded bg-current/30" />
                             Saving…
                         </>
                     ) : (

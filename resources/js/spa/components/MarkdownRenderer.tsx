@@ -2,11 +2,11 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
-import rehypePrism from 'rehype-prism-plus';
 import { Download, ExternalLink, FileText, Globe, ImageIcon } from 'lucide-react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Card, CardContent } from '@/components/ui/card';
 import 'katex/dist/katex.min.css';
-import 'prismjs/themes/prism-tomorrow.css';
 
 type Segment =
     | { type: 'markdown'; content: string }
@@ -60,26 +60,78 @@ function parseSegments(markdown: string): Segment[] {
 
 function MarkdownBody({ content }: { content: string }) {
     return (
-        <div className="prose prose-sm max-w-none dark:prose-invert prose-headings:font-semibold prose-headings:scroll-mt-24 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-pre:rounded-xl prose-pre:p-0 prose-pre:bg-transparent prose-pre:border-0 prose-code:text-primary prose-code:bg-muted/50 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-[0.85em] prose-code:font-mono prose-code:before:content-none prose-code:after:content-none prose-table:w-full prose-th:text-left prose-blockquote:border-primary/40 prose-blockquote:text-muted-foreground prose-img:rounded-xl prose-hr:border-border/40">
+        <div className="prose prose-sm max-w-none dark:prose-invert prose-headings:font-semibold prose-headings:scroll-mt-24 prose-headings:leading-snug prose-h1:text-xl prose-h2:text-lg prose-h3:text-base prose-p:leading-relaxed prose-p:my-2 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-pre:rounded-xl prose-pre:p-0 prose-pre:bg-transparent prose-pre:border-0 prose-code:text-primary prose-code:bg-muted/50 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-[0.85em] prose-code:font-mono prose-code:before:content-none prose-code:after:content-none prose-hr:border-border/40 prose-img:rounded-xl prose-strong:text-foreground prose-strong:font-semibold">
             <ReactMarkdown
                 remarkPlugins={[remarkGfm, remarkMath]}
-                rehypePlugins={[rehypeKatex, [rehypePrism, { ignoreMissing: true }]]}
+                rehypePlugins={[rehypeKatex]}
                 components={{
                     a: ({ href, children }) => (
                         <a href={href} target="_blank" rel="noreferrer" className="text-primary underline-offset-4 hover:underline">
                             {children}
                         </a>
                     ),
-                    pre: ({ children }) => (
-                        <pre className="rounded-xl border border-border/40 bg-[#1d1f21] text-[13px] overflow-x-auto my-3">
+                    table: ({ children }) => (
+                        <div className="not-prose my-4 overflow-x-auto rounded-xl border border-border/40">
+                            <table className="w-full border-collapse text-sm">{children}</table>
+                        </div>
+                    ),
+                    thead: ({ children }) => <thead className="bg-muted/40">{children}</thead>,
+                    th: ({ children }) => (
+                        <th className="border-b border-border/40 px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                             {children}
-                        </pre>
+                        </th>
+                    ),
+                    td: ({ children }) => (
+                        <td className="border-b border-border/20 px-4 py-2.5 text-sm [tbody_tr:last-child_&]:border-0">
+                            {children}
+                        </td>
+                    ),
+                    tr: ({ children }) => <tr className="transition-colors hover:bg-muted/20">{children}</tr>,
+                    ul: ({ children }) => (
+                        <ul className="not-prose my-3 space-y-1.5 list-none pl-0">{children}</ul>
+                    ),
+                    ol: ({ children }) => (
+                        <ol className="not-prose my-3 space-y-1.5 pl-5 list-decimal [&>li::marker]:text-muted-foreground/60 [&>li::marker]:font-medium">{children}</ol>
+                    ),
+                    li: ({ children, ordered }: any) => (
+                        <li className="flex items-start gap-2.5 text-sm leading-relaxed">
+                            {!ordered && (
+                                <span className="mt-[5px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary/60" />
+                            )}
+                            <span className="flex-1 min-w-0 [&>p:first-child]:mt-0 [&>p:last-child]:mb-0">{children}</span>
+                        </li>
+                    ),
+                    blockquote: ({ children }) => (
+                        <blockquote className="not-prose my-3 flex gap-3 rounded-r-xl border-l-2 border-primary/50 bg-primary/5 px-4 py-3 text-sm text-muted-foreground italic">
+                            <span className="flex-1">{children}</span>
+                        </blockquote>
                     ),
                     code: ({ className, children, ...props }: any) => {
-                        const isBlock = !!className;
-                        if (isBlock) {
-                            return <code className={className} {...props}>{children}</code>;
+                        const language = className?.match(/language-([\w-]+)/)?.[1];
+                        const value = String(children).replace(/\n$/, '');
+
+                        if (language) {
+                            return (
+                                <SyntaxHighlighter
+                                    language={language}
+                                    style={oneDark}
+                                    PreTag="div"
+                                    customStyle={{
+                                        margin: '0.75rem 0',
+                                        borderRadius: '0.75rem',
+                                        border: '1px solid rgba(148, 163, 184, 0.2)',
+                                        padding: '1rem',
+                                        fontSize: '13px',
+                                        overflowX: 'auto',
+                                        background: '#1d1f21',
+                                    }}
+                                    codeTagProps={props}
+                                >
+                                    {value}
+                                </SyntaxHighlighter>
+                            );
                         }
+
                         return (
                             <code className="rounded bg-muted/60 px-1 py-0.5 text-[0.85em] font-mono text-primary" {...props}>
                                 {children}

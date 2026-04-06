@@ -1,10 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
-import { AudioLines, CreditCard, Loader2, Mail, MessageSquare, Plus, Settings, Sparkles } from 'lucide-react';
+import { AudioLines, CreditCard, LogOut, Mail, MoreHorizontal, PenSquare, Settings, SquarePen, Star } from 'lucide-react';
 import { NavLink, Navigate, Outlet, useLocation } from 'react-router-dom';
 
-import AppLogo from '@/components/app-logo';
 import AppLogoIcon from '@/components/app-logo-icon';
 import { Button } from '@/components/ui/button';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
     Select,
     SelectContent,
@@ -18,85 +24,345 @@ import {
     SidebarFooter,
     SidebarHeader,
     SidebarInset,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
     SidebarProvider,
     SidebarTrigger,
 } from '@/components/ui/sidebar';
+import { cn } from '@/lib/utils';
 import { apiRequest } from '@/spa/lib/api';
 import { useSpaLang } from '@/spa/lib/lang';
 import { useSessionQuery } from '@/spa/lib/session';
 
+// ─── helpers ────────────────────────────────────────────────────────────────
+
+function getInitials(name: string): string {
+    return (name ?? '?')
+        .split(' ')
+        .slice(0, 2)
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase();
+}
+
+type Conversation = { id: string; title: string; updated_at?: string };
+
+function groupConversations(conversations: Conversation[]) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const yesterday = new Date(today.getTime() - 864e5);
+    const week = new Date(today.getTime() - 7 * 864e5);
+    const month = new Date(today.getTime() - 30 * 864e5);
+
+    const groups: Record<string, Conversation[]> = {
+        Today: [],
+        Yesterday: [],
+        'Previous 7 days': [],
+        'Previous 30 days': [],
+        Older: [],
+    };
+
+    for (const c of conversations) {
+        const d = c.updated_at ? new Date(c.updated_at) : new Date(0);
+        if (d >= today) groups['Today'].push(c);
+        else if (d >= yesterday) groups['Yesterday'].push(c);
+        else if (d >= week) groups['Previous 7 days'].push(c);
+        else if (d >= month) groups['Previous 30 days'].push(c);
+        else groups['Older'].push(c);
+    }
+
+    return groups;
+}
+
+// ─── loading skeleton ────────────────────────────────────────────────────────
+
 function LoadingState() {
     return (
-        <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
-            <Loader2 className="size-6 animate-spin" />
+        <div className="flex min-h-screen bg-background animate-pulse">
+            <div className="hidden md:flex w-[260px] flex-shrink-0 flex-col gap-3 border-r border-border/20 p-4">
+                <div className="h-8 w-28 rounded-lg bg-muted/70" />
+                <div className="mt-4 space-y-1">
+                    {[72, 60, 80, 65].map((w, i) => (
+                        <div key={i} className="h-8 rounded-lg bg-muted/40" style={{ width: `${w}%` }} />
+                    ))}
+                </div>
+                <div className="mt-6">
+                    <div className="h-3 w-16 rounded-full bg-muted/30 mb-2" />
+                    <div className="space-y-1">
+                        {[90, 75, 85].map((w, i) => (
+                            <div key={i} className="h-7 rounded-md bg-muted/30" style={{ width: `${w}%` }} />
+                        ))}
+                    </div>
+                </div>
+                <div className="mt-auto flex items-center gap-2">
+                    <div className="h-7 w-7 rounded-full bg-muted/50" />
+                    <div className="h-4 w-24 rounded bg-muted/40" />
+                </div>
+            </div>
+            <div className="flex flex-1 flex-col gap-5 p-6">
+                <div className="space-y-3 mt-8">
+                    <div className="h-3.5 w-full rounded-full bg-muted/30" />
+                    <div className="h-3.5 w-5/6 rounded-full bg-muted/30" />
+                    <div className="h-3.5 w-2/3 rounded-full bg-muted/30" />
+                </div>
+            </div>
         </div>
     );
 }
 
+// ─── sidebar nav items ───────────────────────────────────────────────────────
+
 const mainNavItems = [
-    { to: '/new', label: 'New Chat', icon: Plus },
+    { to: '/new', label: 'New Chat', icon: SquarePen },
     { to: '/voice-chat', label: 'Voice', icon: AudioLines },
     { to: '/mails', label: 'Mails', icon: Mail },
-    { to: '/subscription', label: 'Billing', icon: CreditCard },
-    { to: '/user/settings', label: 'Settings', icon: Settings },
+    { to: '/subscription', label: 'Upgrade Plan', icon: Star },
 ];
 
-function SidebarNavLink({
-    to,
-    children,
-    icon: Icon,
-}: {
-    to: string;
-    children: string;
-    icon?: typeof Sparkles;
-}) {
+// ─── sidebar ─────────────────────────────────────────────────────────────────
+
+function SpaSidebar() {
+    const session = useSessionQuery();
+    const conversations = useQuery({
+        queryKey: ['spa', 'conversations'],
+        queryFn: () => apiRequest<{ conversations: Conversation[] }>('/api/chat/conversations'),
+    });
+
+    const groups = groupConversations(conversations.data?.conversations ?? []);
+    const hasConversations = (conversations.data?.conversations?.length ?? 0) > 0;
+
     return (
-        <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip={{ children }}>
+        <Sidebar collapsible="offcanvas" className="border-r border-sidebar-border/30 bg-sidebar">
+            {/* ── header ── */}
+            <SidebarHeader className="px-3 pt-4 pb-3">
+                <div className="flex items-center justify-between">
+                    <NavLink className="flex items-center gap-2 px-1" to="/new">
+                        <AppLogoIcon className="h-7 w-7 p-0" />
+                        <span className="text-[15px] font-semibold text-sidebar-foreground tracking-tight">
+                            Kwati AI
+                        </span>
+                    </NavLink>
+                    <div className="flex items-center gap-0.5">
+                        <NavLink to="/new">
+                            <Button
+                                className="h-8 w-8 rounded-lg text-muted-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent"
+                                size="icon"
+                                title="New chat"
+                                variant="ghost"
+                            >
+                                <PenSquare size={17} />
+                            </Button>
+                        </NavLink>
+                        <SidebarTrigger className="h-8 w-8 rounded-lg text-muted-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent" />
+                    </div>
+                </div>
+            </SidebarHeader>
+
+            {/* ── nav + conversations ── */}
+            <SidebarContent className="px-2 overflow-y-auto custom-scrollbar">
+                {/* Primary nav */}
+                <nav className="mb-1 space-y-0.5">
+                    {mainNavItems.map(({ to, label, icon: Icon }) => (
+                        <NavLink
+                            className={({ isActive }) =>
+                                cn(
+                                    'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors',
+                                    isActive
+                                        ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
+                                        : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'
+                                )
+                            }
+                            key={to}
+                            to={to}
+                        >
+                            <Icon size={16} className="flex-shrink-0" />
+                            {label}
+                        </NavLink>
+                    ))}
+
+                    {/* Settings inline */}
+                    <NavLink
+                        className={({ isActive }) =>
+                            cn(
+                                'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors',
+                                isActive
+                                    ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
+                                    : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'
+                            )
+                        }
+                        to="/user/settings"
+                    >
+                        <Settings size={16} className="flex-shrink-0" />
+                        Settings
+                    </NavLink>
+                </nav>
+
+                {/* Billing shortcut */}
                 <NavLink
-                    className={({ isActive }) => (isActive ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium' : '')}
-                    to={to}
+                    className={({ isActive }) =>
+                        cn(
+                            'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors mt-0.5 mb-3',
+                            isActive
+                                ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
+                                : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'
+                        )
+                    }
+                    to="/subscription"
                 >
-                    {Icon ? <Icon /> : null}
-                    <span>{children}</span>
+                    <CreditCard size={16} className="flex-shrink-0" />
+                    Billing
                 </NavLink>
-            </SidebarMenuButton>
-        </SidebarMenuItem>
+
+                {/* Divider */}
+                <div className="h-px bg-sidebar-border/40 mx-1 mb-3" />
+
+                {/* Conversation history */}
+                {hasConversations ? (
+                    Object.entries(groups).map(([group, convs]) =>
+                        convs.length > 0 ? (
+                            <div key={group} className="mb-4">
+                                <p className="px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground/50 select-none">
+                                    {group}
+                                </p>
+                                <div className="space-y-px mt-0.5">
+                                    {convs.map((conv) => (
+                                        <NavLink
+                                            className={({ isActive }) =>
+                                                cn(
+                                                    'group flex items-center justify-between gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors',
+                                                    isActive
+                                                        ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                                                        : 'text-sidebar-foreground/60 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground'
+                                                )
+                                            }
+                                            key={conv.id}
+                                            to={`/c/${conv.id}`}
+                                        >
+                                            <span className="truncate flex-1">{conv.title || 'Untitled'}</span>
+                                            <MoreHorizontal
+                                                size={14}
+                                                className="flex-shrink-0 opacity-0 group-hover:opacity-60 transition-opacity"
+                                            />
+                                        </NavLink>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : null
+                    )
+                ) : (
+                    <div className="px-3 py-6 text-center">
+                        <p className="text-xs text-muted-foreground/50">No conversations yet</p>
+                    </div>
+                )}
+            </SidebarContent>
+
+            {/* ── footer / user ── */}
+            <SidebarFooter className="p-2 border-t border-sidebar-border/30">
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-sidebar-accent/70 focus-visible:outline-none">
+                            <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/20 ring-1 ring-primary/30">
+                                <span className="text-[11px] font-bold text-primary">
+                                    {getInitials(session.data?.user?.name ?? '')}
+                                </span>
+                            </div>
+                            <div className="min-w-0 flex-1">
+                                <p className="truncate text-sm font-medium text-sidebar-foreground leading-tight">
+                                    {session.data?.user?.name ?? 'Account'}
+                                </p>
+                                <p className="truncate text-[11px] text-muted-foreground/60 mt-0.5">
+                                    {session.data?.user?.email}
+                                </p>
+                            </div>
+                            <MoreHorizontal size={15} className="flex-shrink-0 text-muted-foreground/40" />
+                        </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-52" side="top">
+                        <DropdownMenuItem asChild>
+                            <NavLink className="flex items-center gap-2" to="/user/settings">
+                                <Settings size={14} />
+                                Settings
+                            </NavLink>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                            <NavLink className="flex items-center gap-2" to="/subscription">
+                                <CreditCard size={14} />
+                                Billing & Subscription
+                            </NavLink>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                            <a className="flex items-center gap-2 text-destructive focus:text-destructive" href="/logout">
+                                <LogOut size={14} />
+                                Sign out
+                            </a>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </SidebarFooter>
+        </Sidebar>
     );
 }
+
+// ─── top bar (inside main content) ───────────────────────────────────────────
+
+function SpaTopBar() {
+    const { lang, changeLanguage } = useSpaLang();
+
+    return (
+        <header className="sticky top-0 z-30 flex h-11 shrink-0 items-center gap-2 px-3 bg-background/95 backdrop-blur-md border-b border-border/20">
+            <SidebarTrigger className="h-8 w-8 rounded-lg text-muted-foreground/60 hover:text-foreground hover:bg-accent/50" />
+            <div className="flex-1" />
+            <Select defaultValue={lang} onValueChange={changeLanguage}>
+                <SelectTrigger className="h-7 gap-1 border-0 bg-transparent px-2 text-xs text-muted-foreground hover:text-foreground hover:bg-accent/40 focus:ring-0 w-auto">
+                    <SelectValue placeholder="Lang" />
+                </SelectTrigger>
+                <SelectContent align="end">
+                    <SelectItem value="ENGLISH">English</SelectItem>
+                    <SelectItem value="HAUSA">Hausa</SelectItem>
+                    <SelectItem value="IGBO">Igbo</SelectItem>
+                    <SelectItem value="YORUBA">Yoruba</SelectItem>
+                </SelectContent>
+            </Select>
+        </header>
+    );
+}
+
+// ─── public layout ────────────────────────────────────────────────────────────
 
 export function PublicLayout() {
     const { data } = useSessionQuery();
 
     return (
         <div className="min-h-screen bg-background">
-            <div className="sticky top-0 z-50 shadow-md">
-                <div className="rounded-none border-b border-border/70 bg-background/80 backdrop-blur-2xl">
+            <div className="sticky top-0 z-50">
+                <div className="border-b border-border/40 bg-background/80 backdrop-blur-xl">
                     <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-                        <NavLink className="flex items-center" to={data?.authenticated ? '/app' : '/'}>
-                            <AppLogoIcon />
+                        <NavLink className="flex items-center gap-2" to={data?.authenticated ? '/app' : '/'}>
+                            <AppLogoIcon className="h-8 w-8 p-1" />
                         </NavLink>
                         <div className="flex items-center gap-4 text-sm">
-                            <NavLink className="text-primary hover:underline" to="/privacy">
+                            <NavLink className="text-muted-foreground hover:text-foreground transition-colors" to="/privacy">
                                 Privacy
                             </NavLink>
-                            <NavLink className="text-primary hover:underline" to="/terms">
+                            <NavLink className="text-muted-foreground hover:text-foreground transition-colors" to="/terms">
                                 Terms
                             </NavLink>
                             {data?.authenticated ? (
-                                <NavLink className="text-primary hover:underline" to="/app">
+                                <NavLink
+                                    className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                                    to="/app"
+                                >
                                     Open app
                                 </NavLink>
                             ) : (
                                 <>
-                                    <NavLink className="text-primary hover:underline" to="/login">
+                                    <NavLink className="text-muted-foreground hover:text-foreground transition-colors" to="/login">
                                         Log in
                                     </NavLink>
-                                    <NavLink className="text-primary hover:underline" to="/register">
-                                        Register
+                                    <NavLink
+                                        className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                                        to="/register"
+                                    >
+                                        Get started
                                     </NavLink>
                                 </>
                             )}
@@ -111,141 +377,51 @@ export function PublicLayout() {
     );
 }
 
+// ─── route guards ─────────────────────────────────────────────────────────────
+
 export function ProtectedOnly() {
     const location = useLocation();
     const session = useSessionQuery();
 
-    if (session.isLoading) {
-        return <LoadingState />;
-    }
-
+    if (session.isLoading) return <LoadingState />;
     if (!session.data?.authenticated) {
         return <Navigate replace to={`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`} />;
     }
-
     return <Outlet />;
 }
 
 export function GuestOnly() {
     const session = useSessionQuery();
 
-    if (session.isLoading) {
-        return <LoadingState />;
-    }
-
-    if (session.data?.authenticated) {
-        return <Navigate replace to="/app" />;
-    }
-
+    if (session.isLoading) return <LoadingState />;
+    if (session.data?.authenticated) return <Navigate replace to="/app" />;
     return <Outlet />;
 }
 
-function SpaSidebarHeader() {
-    const { lang, changeLanguage } = useSpaLang();
+// ─── app layout ───────────────────────────────────────────────────────────────
 
-    return (
-        <header className="border-sidebar-border/40 sticky top-0 z-30 flex h-12 shrink-0 items-center gap-2 rounded-t-[inherit] border-b bg-sidebar/95 px-3 backdrop-blur-xl">
-            <div className="flex w-full items-center gap-1">
-                <SidebarTrigger className="-ml-0.5 h-8 w-8 rounded-md text-muted-foreground hover:bg-accent/50 hover:text-foreground" />
-                <div className="mx-0.5 h-3.5 w-px bg-border/60" />
-                <NavLink to="/new">
-                    <Button className="h-8 w-8 text-muted-foreground hover:bg-accent/50 hover:text-foreground" size="icon" title="New chat" variant="ghost">
-                        <Plus size={15} />
-                    </Button>
-                </NavLink>
-                <div className="ms-auto flex items-center">
-                    <Select defaultValue={lang} onValueChange={changeLanguage}>
-                        <SelectTrigger className="h-8 gap-1 border-0 bg-transparent px-2 text-xs text-muted-foreground hover:bg-accent/50 hover:text-foreground focus:ring-0">
-                            <SelectValue placeholder="Lang" />
-                        </SelectTrigger>
-                        <SelectContent align="end">
-                            <SelectItem value="ENGLISH">English</SelectItem>
-                            <SelectItem value="HAUSA">Hausa</SelectItem>
-                            <SelectItem value="IGBO">Igbo</SelectItem>
-                            <SelectItem value="YORUBA">Yoruba</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-            </div>
-        </header>
-    );
-}
-
-function SpaSidebar() {
-    const session = useSessionQuery();
-    const conversations = useQuery({
-        queryKey: ['spa', 'conversations'],
-        queryFn: () => apiRequest<{ conversations: Array<{ id: string; title: string }> }>('/api/chat/conversations'),
-    });
-
-    return (
-        <Sidebar collapsible="offcanvas" variant="inset">
-            <SidebarHeader>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild size="lg">
-                            <NavLink to="/new">
-                                <AppLogo />
-                            </NavLink>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-                <SidebarMenu>
-                    {mainNavItems.map(({ to, label, icon }) => (
-                        <SidebarNavLink icon={icon} key={to} to={to}>
-                            {label}
-                        </SidebarNavLink>
-                    ))}
-                </SidebarMenu>
-            </SidebarHeader>
-
-            <SidebarContent className="custom-scrollbar">
-                <div className="gap-1 px-2 pb-2">
-                    <p className="px-2 py-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">Recent</p>
-                    <div className="space-y-1">
-                        {conversations.data?.conversations?.length ? (
-                            conversations.data.conversations.map((conversation) => (
-                                <SidebarMenu key={conversation.id}>
-                                    <SidebarMenuItem>
-                                        <SidebarMenuButton asChild tooltip={{ children: conversation.title }}>
-                                            <NavLink to={`/c/${conversation.id}`}>
-                                                <MessageSquare />
-                                                <span>{conversation.title}</span>
-                                            </NavLink>
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                </SidebarMenu>
-                            ))
-                        ) : (
-                            <div className="px-2 py-4 text-center">
-                                <p className="text-xs text-muted-foreground">No conversations yet.</p>
-                                <p className="mt-0.5 text-xs text-muted-foreground/60">Start a new chat to begin.</p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </SidebarContent>
-
-            <SidebarFooter className="border-t border-sidebar-border/50 pt-2">
-                <div className="rounded-xl border border-sidebar-border/50 bg-sidebar-accent/40 p-3">
-                    <p className="text-sm font-medium">{session.data?.user?.name}</p>
-                    <p className="truncate text-xs text-muted-foreground">{session.data?.user?.email}</p>
-                </div>
-            </SidebarFooter>
-        </Sidebar>
-    );
-}
+const CHAT_PATHS = ['/app', '/new', '/dashboard', '/c/'];
 
 export function AppLayout() {
+    const { pathname } = useLocation();
+    const isChat = CHAT_PATHS.some((p) => pathname === p || pathname.startsWith(p));
+
     return (
         <SidebarProvider defaultOpen>
             <SpaSidebar />
-            <SidebarInset className="bg-background">
-                <SpaSidebarHeader />
-                <div className="flex flex-1 flex-col gap-6 px-4 py-5 sm:px-6">
-                    <Outlet />
-                </div>
+            <SidebarInset className="bg-background flex h-dvh flex-col overflow-hidden">
+                <SpaTopBar />
+                {isChat ? (
+                    <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+                        <Outlet />
+                    </div>
+                ) : (
+                    <div className="flex flex-1 flex-col overflow-y-auto px-4 py-6 sm:px-6">
+                        <Outlet />
+                    </div>
+                )}
             </SidebarInset>
         </SidebarProvider>
     );
 }
+

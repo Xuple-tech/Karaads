@@ -4,6 +4,15 @@ namespace App\Providers;
 
 use App\Contracts\ChatProvider;
 use App\Services\Chat\GrokChatProvider;
+use App\Services\Grok\AssetWorkflowService;
+use App\Services\Grok\ChatTransportService;
+use App\Services\Grok\LanguageDetector;
+use App\Services\Grok\MessageFormatter;
+use App\Services\Grok\NonStreamingProcessor;
+use App\Services\Grok\RequestTelemetry;
+use App\Services\Grok\StreamingProcessor;
+use App\Services\Grok\ToolExecutor;
+use App\Services\Grok\ToolRegistry;
 use App\Services\GrokApiService;
 use App\Services\OpenAISpeechToTextService;
 use App\Services\OpenAITextToSpeechService;
@@ -22,13 +31,23 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(ChatProvider::class, GrokChatProvider::class);
 
+        $this->app->singleton(LanguageDetector::class);
+        $this->app->singleton(MessageFormatter::class);
+        $this->app->singleton(RequestTelemetry::class);
+        $this->app->singleton(ToolRegistry::class);
+        $this->app->singleton(AssetWorkflowService::class);
+        $this->app->singleton(ToolExecutor::class);
+        $this->app->singleton(StreamingProcessor::class);
+        $this->app->singleton(NonStreamingProcessor::class);
+        $this->app->singleton(ChatTransportService::class);
+
         $this->app->singleton(PodcastGenerationService::class, function ($app) {
-        return new PodcastGenerationService(
-            $app->make(GrokApiService::class),
-            $app->make(OpenAITextToSpeechService::class),
-            $app->make(OpenAISpeechToTextService::class)
-        );
-    });
+            return new PodcastGenerationService(
+                $app->make(GrokApiService::class),
+                $app->make(OpenAITextToSpeechService::class),
+                $app->make(OpenAISpeechToTextService::class)
+            );
+        });
         $this->app->singleton(OpenAISpeechToTextService::class, function ($app) {
             return new OpenAISpeechToTextService();
         });

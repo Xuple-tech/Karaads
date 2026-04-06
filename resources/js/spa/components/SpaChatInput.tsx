@@ -287,14 +287,11 @@ export default function ChatInput({
     // ── Layout classes ────────────────────────────────────────────────────────
 
     const wrapperClass = cn(
-        "fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-t from-background via-background to-transparent pb-4 pt-8",
-        sidebarContext?.open && isAuthenticated && "lg:left-64"
+        "absolute bottom-0 left-0 right-0 z-50 bg-gradient-to-t from-background via-background/95 to-transparent pb-5 pt-10",
+        sidebarContext?.open && isAuthenticated && "lg:left-0"
     )
 
-    const innerClass = cn("container mx-auto px-4", {
-        "max-w-4xl": isAuthenticated && !sidebarContext?.open,
-        "max-w-3xl": !isAuthenticated || (isAuthenticated && sidebarContext?.open),
-    })
+    const innerClass = "mx-auto w-full max-w-2xl px-4"
 
     return (
         <TooltipProvider>
@@ -320,20 +317,20 @@ export default function ChatInput({
 
                         {/* File chips */}
                         {files.length > 0 && (
-                            <div className="mb-2 bg-card/70 border border-border/40 rounded-2xl p-2.5">
-                                <div className="flex items-center justify-between mb-2 px-0.5">
-                                    <span className="text-[11px] font-semibold text-muted-foreground">
+                            <div className="mb-0 border-b border-border/30 bg-card/30 px-3 pt-2.5 pb-2">
+                                <div className="mb-1.5 flex items-center justify-between">
+                                    <span className="text-[11px] font-medium text-muted-foreground/70">
                                         {files.length} / 10 attached
                                     </span>
                                     <button
                                         type="button"
                                         onClick={clearFiles}
-                                        className="text-[11px] text-muted-foreground/70 hover:text-destructive transition-colors"
+                                        className="text-[11px] text-muted-foreground/50 hover:text-destructive transition-colors"
                                     >
                                         Clear all
                                     </button>
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-44 overflow-y-auto custom-scrollbar pr-0.5">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 max-h-36 overflow-y-auto custom-scrollbar pr-0.5">
                                     {files.map((file, i) => (
                                         <FileChip key={i} file={file} onRemove={() => removeFile(i)} />
                                     ))}
@@ -342,13 +339,13 @@ export default function ChatInput({
                         )}
 
                         {/* Input box */}
-                        <div className="bg-card border border-border/60 rounded-2xl shadow-md overflow-hidden focus-within:border-primary/40 focus-within:shadow-primary/5 focus-within:shadow-lg transition-all duration-200">
+                        <div className="rounded-2xl border border-border/50 bg-card/80 shadow-lg backdrop-blur-sm overflow-hidden transition-all duration-150 focus-within:border-primary/35 focus-within:shadow-primary/8 focus-within:shadow-xl">
 
                             <textarea
                                 ref={inputRef}
                                 onChange={autoResize}
-                                placeholder={mode === "text" ? "Ask anything…" : "Describe the image to generate…"}
-                                className="w-full resize-none bg-transparent px-4 pt-3.5 pb-2 text-sm focus:outline-none custom-scrollbar max-h-[160px] overflow-y-auto placeholder:text-muted-foreground/50"
+                                placeholder={mode === "text" ? "Message Kwati…" : "Describe the image to generate…"}
+                                className="w-full resize-none bg-transparent px-4 pt-4 pb-2 text-sm leading-relaxed focus:outline-none custom-scrollbar max-h-[200px] overflow-y-auto placeholder:text-muted-foreground/40"
                                 rows={1}
                                 onKeyDown={handleKeyDown}
                                 autoFocus
@@ -356,7 +353,7 @@ export default function ChatInput({
                             />
 
                             {/* Controls */}
-                            <div className="flex items-center justify-between px-2.5 pb-2 pt-0.5 border-t border-border/30">
+                            <div className="flex items-center justify-between px-3 pb-3 pt-1">
                                 <div className="flex items-center gap-0.5">
 
                                     {/* Attach */}
@@ -366,7 +363,7 @@ export default function ChatInput({
                                                 type="button"
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-8 w-8 relative text-muted-foreground hover:text-foreground"
+                                                className="h-8 w-8 relative rounded-lg text-muted-foreground/60 hover:text-foreground hover:bg-accent/50"
                                                 onClick={() => fileInputRef.current?.click()}
                                             >
                                                 <Paperclip className="h-4 w-4" />
@@ -389,7 +386,7 @@ export default function ChatInput({
                                                         type="button"
                                                         variant="ghost"
                                                         size="icon"
-                                                        className={cn("h-8 w-8 text-muted-foreground hover:text-foreground", mode === "image" && "text-primary")}
+                                                        className={cn("h-8 w-8 rounded-lg text-muted-foreground/60 hover:text-foreground hover:bg-accent/50", mode === "image" && "text-primary bg-primary/10")}
                                                     >
                                                         <ImageIcon className="h-4 w-4" />
                                                     </Button>
@@ -413,7 +410,7 @@ export default function ChatInput({
                                                 size="icon"
                                                 onClick={toggleRecording}
                                                 className={cn(
-                                                    "h-8 w-8 text-muted-foreground hover:text-foreground",
+                                                    "h-8 w-8 rounded-lg text-muted-foreground/60 hover:text-foreground hover:bg-accent/50",
                                                     isRecording && "text-destructive hover:text-destructive bg-destructive/10"
                                                 )}
                                             >
@@ -434,7 +431,7 @@ export default function ChatInput({
                                     )}
                                 </div>
 
-                                {/* Send */}
+                                {/* Send / Stop */}
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <Button
@@ -442,12 +439,14 @@ export default function ChatInput({
                                             size="icon"
                                             disabled={is_processing}
                                             className={cn(
-                                                "h-8 w-8 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm transition-all",
-                                                is_processing && "opacity-75"
+                                                "h-8 w-8 rounded-xl transition-all",
+                                                is_processing
+                                                    ? "bg-foreground/10 text-foreground hover:bg-foreground/15"
+                                                    : "bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm"
                                             )}
                                         >
                                             {is_processing
-                                                ? <Square className="h-3.5 w-3.5" />
+                                                ? <Square className="h-3 w-3" />
                                                 : <SendHorizonal className="h-3.5 w-3.5" />}
                                         </Button>
                                     </TooltipTrigger>

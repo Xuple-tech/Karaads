@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2 } from 'lucide-react';
-
 interface CurrencySelectorProps {
   onCurrencyChange?: (currency: string) => void;
   showAutoDetect?: boolean;
@@ -100,9 +98,9 @@ export default function CurrencySelector({
 
   if (loading) {
     return (
-      <div className="flex items-center gap-2">
-        <Loader2 className="h-4 w-4 animate-spin" />
-        <span>Loading currencies...</span>
+      <div className="flex items-center gap-3 animate-pulse">
+        <div className="h-4 w-16 rounded bg-muted/60" />
+        <div className="h-8 w-28 rounded-lg bg-muted/40" />
       </div>
     );
   }

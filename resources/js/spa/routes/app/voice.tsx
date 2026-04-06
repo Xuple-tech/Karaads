@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AudioLines, Loader2, Mic, Plus, Send, Sparkles, Volume2 } from 'lucide-react';
+import { AudioLines, Mic, Plus, Send, Sparkles, Volume2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -111,7 +111,7 @@ export function Component() {
                             <CardDescription>Conversations optimized for spoken back-and-forth.</CardDescription>
                         </div>
                         <Button disabled={createConversation.isPending} onClick={() => createConversation.mutate()} size="icon" variant="outline">
-                            {createConversation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+                            {createConversation.isPending ? <span className="inline-block h-4 w-4 shrink-0 animate-pulse rounded bg-current/30" /> : <Plus className="h-4 w-4" />}
                         </Button>
                     </div>
                     <div className="rounded-2xl border border-border/60 bg-background/80 p-4">
@@ -215,7 +215,7 @@ export function Component() {
                                 value={text}
                             />
                             <Button disabled={!currentConversationId || !text.trim() || sendMessage.isPending} onClick={() => sendMessage.mutate()}>
-                                {sendMessage.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                                {sendMessage.isPending ? <span className="inline-block h-4 w-4 shrink-0 animate-pulse rounded bg-current/30" /> : <Send className="h-4 w-4" />}
                             </Button>
                         </div>
                     </CardContent>

@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { AlertCircle, Bell, Bot, Loader2, Palette, Save, Shield, User } from 'lucide-react';
+import { AlertCircle, Bell, Bot, Palette, Save, Shield, User } from 'lucide-react';
 import { type FormEvent, useEffect, useState } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -154,7 +154,7 @@ export function Component() {
                                     </div>
                                 </div>
                                 <Button disabled={profileMutation.isPending} type="submit">
-                                    {profileMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                                    {profileMutation.isPending ? <span className="mr-2 inline-block h-4 w-4 shrink-0 animate-pulse rounded bg-current/30" /> : <Save className="mr-2 h-4 w-4" />}
                                     Save account
                                 </Button>
                             </form>
@@ -249,7 +249,7 @@ export function Component() {
                                     </div>
                                 </div>
                                 <Button disabled={passwordMutation.isPending} type="submit">
-                                    {passwordMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                                    {passwordMutation.isPending ? <span className="mr-2 inline-block h-4 w-4 shrink-0 animate-pulse rounded bg-current/30" /> : <Save className="mr-2 h-4 w-4" />}
                                     Update password
                                 </Button>
                             </form>

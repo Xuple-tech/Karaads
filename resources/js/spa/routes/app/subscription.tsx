@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { AlertCircle, CheckCircle2, CreditCard, Gift, Loader2, TrendingUp, Zap } from 'lucide-react';
+import { AlertCircle, CheckCircle2, CreditCard, Gift, TrendingUp, Zap } from 'lucide-react';
 import { useState } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -118,7 +118,7 @@ export function Component() {
                         </div>
                         <div className="flex items-end justify-end">
                             <Button disabled={cancel.isPending} onClick={() => cancel.mutate()} variant="outline">
-                                {cancel.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CreditCard className="mr-2 h-4 w-4" />}
+                                {cancel.isPending ? <span className="mr-2 inline-block h-4 w-4 shrink-0 animate-pulse rounded bg-current/30" /> : <CreditCard className="mr-2 h-4 w-4" />}
                                 Cancel subscription
                             </Button>
                         </div>

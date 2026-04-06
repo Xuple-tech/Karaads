@@ -1,5 +1,5 @@
 import type { Message } from '@/types/chat';
-import { AlertCircle, Loader2, Sparkles } from 'lucide-react';
+import { AlertCircle, Sparkles } from 'lucide-react';
 import { FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -406,97 +406,99 @@ export default function SpaChatInterface({
     const firstName = userName?.split(' ')[0];
 
     return (
-        <div className="flex min-h-screen w-full flex-col bg-background">
-            <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4 pb-40 pt-8">
+        <div className="relative flex w-full flex-1 flex-col overflow-hidden">
 
-                {/* Welcome screen */}
-                {welcome && (
-                    <div className="flex flex-1 flex-col items-center justify-center gap-8 text-center py-16">
-                        <div className="space-y-3">
-                            <div className="mx-auto h-12 w-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-                                <Sparkles className="h-6 w-6 text-primary" />
+            {/* ── Scrollable message area ── */}
+            <div className="flex-1 overflow-y-auto overscroll-contain pb-48 pt-6 custom-scrollbar">
+                <div className="mx-auto w-full max-w-2xl px-4">
+
+                    {/* Welcome */}
+                    {welcome && (
+                        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-10 text-center">
+                            <div className="space-y-4">
+                                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
+                                    <Sparkles className="h-7 w-7 text-primary" />
+                                </div>
+                                <h1 className="text-2xl font-semibold tracking-tight">
+                                    {firstName ? `Good to see you, ${firstName}` : 'How can I help you today?'}
+                                </h1>
+                                <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
+                                    Ask anything — I can write, research, code, analyze, translate, and more.
+                                </p>
                             </div>
-                            <h1 className="text-3xl font-semibold tracking-tight">
-                                {firstName ? `Hello, ${firstName}` : 'How can I help?'}
-                            </h1>
-                            <p className="text-muted-foreground text-sm max-w-sm mx-auto">
-                                Ask me anything — I can write, research, code, analyze, and more.
-                            </p>
-                        </div>
 
-                        <div className="grid grid-cols-2 gap-2 w-full max-w-md">
-                            {WELCOME_PROMPTS.map((prompt) => (
-                                <Button
-                                    key={prompt}
-                                    variant="outline"
-                                    className="h-auto py-3 px-4 text-left text-sm font-normal text-muted-foreground hover:text-foreground rounded-xl border-border/60 hover:border-primary/40 transition-colors whitespace-normal"
-                                    onClick={() => {
-                                        if (inputRef.current) {
-                                            inputRef.current.value = prompt;
-                                            inputRef.current.focus();
-                                        }
-                                    }}
-                                >
-                                    {prompt}
-                                </Button>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {/* Error */}
-                {error && (
-                    <Alert className="mb-4 rounded-xl" variant="destructive">
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                )}
-
-                {/* Messages */}
-                <div className="space-y-6">
-                    {state.messages.map((message) => {
-                        // Pass live activities only to the currently-streaming message
-                        const activities = (message.isStreaming && message.id === state.streamingMessageId)
-                            ? state.activities
-                            : undefined;
-
-                        return (
-                            <ChatMessageRenderer
-                                key={message.id}
-                                message={message}
-                                activities={activities}
-                                onRegenerate={message.role === 'assistant' ? handleRegenerate : undefined}
-                            />
-                        );
-                    })}
-
-                    {/* Loading indicator when waiting for first SSE event */}
-                    {isLoading && !state.streamingMessageId && (
-                        <div className="flex gap-3">
-                            <div className="flex-shrink-0 mt-0.5 h-7 w-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
-                                <Loader2 className="h-3.5 w-3.5 text-primary animate-spin" />
-                            </div>
-                            <div className="flex items-center gap-1 py-1">
-                                <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:-0.3s]" />
-                                <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:-0.15s]" />
-                                <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50 animate-bounce" />
+                            <div className="grid w-full max-w-lg grid-cols-2 gap-2">
+                                {WELCOME_PROMPTS.map((prompt) => (
+                                    <button
+                                        key={prompt}
+                                        type="button"
+                                        className="group rounded-xl border border-border/50 bg-card/50 px-4 py-3 text-left text-sm text-muted-foreground transition-all hover:border-primary/30 hover:bg-accent/40 hover:text-foreground"
+                                        onClick={() => {
+                                            if (inputRef.current) {
+                                                inputRef.current.value = prompt;
+                                                inputRef.current.focus();
+                                                inputRef.current.dispatchEvent(new Event('input', { bubbles: true }));
+                                            }
+                                        }}
+                                    >
+                                        {prompt}
+                                    </button>
+                                ))}
                             </div>
                         </div>
                     )}
-                </div>
 
-                <div ref={bottomRef} />
+                    {/* Error banner */}
+                    {error && (
+                        <Alert className="mb-6 rounded-xl border-destructive/30 bg-destructive/8" variant="destructive">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertDescription>{error}</AlertDescription>
+                        </Alert>
+                    )}
+
+                    {/* Messages */}
+                    <div className="space-y-8">
+                        {state.messages.map((message) => {
+                            const activities =
+                                message.isStreaming && message.id === state.streamingMessageId
+                                    ? state.activities
+                                    : undefined;
+                            return (
+                                <ChatMessageRenderer
+                                    key={message.id}
+                                    message={message}
+                                    activities={activities}
+                                    onRegenerate={message.role === 'assistant' ? handleRegenerate : undefined}
+                                />
+                            );
+                        })}
+
+                        {/* Skeleton while waiting for first SSE token */}
+                        {isLoading && !state.streamingMessageId && (
+                            <div className="flex gap-3 animate-pulse">
+                                <div className="mt-0.5 h-7 w-7 flex-shrink-0 rounded-full bg-muted/40" />
+                                <div className="flex-1 space-y-2 py-1">
+                                    <div className="h-2.5 w-3/4 rounded-full bg-muted/30" />
+                                    <div className="h-2.5 w-1/2 rounded-full bg-muted/30" />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <div ref={bottomRef} className="h-1" />
+                </div>
             </div>
 
             {/* Guest notice */}
             {!isAuthenticated && (
-                <div className="fixed bottom-28 left-0 right-0 z-10 flex justify-center px-4 pointer-events-none">
-                    <div className="rounded-full border border-border/50 bg-background/90 px-4 py-2 text-xs text-muted-foreground backdrop-blur">
-                        Sign in to save chat history and unlock higher limits
+                <div className="pointer-events-none absolute bottom-36 left-0 right-0 z-10 flex justify-center px-4">
+                    <div className="rounded-full border border-border/40 bg-background/90 px-4 py-1.5 text-xs text-muted-foreground backdrop-blur-sm">
+                        Sign in to save history and unlock higher limits
                     </div>
                 </div>
             )}
 
+            {/* Input pinned to bottom */}
             <ChatInput
                 files={files}
                 handleKeyDown={handleKeyDown}

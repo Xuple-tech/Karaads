@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Loader2 } from 'lucide-react';
-
 interface PriceDisplayProps {
   amountInUSD: number;
   userCurrency?: string;
@@ -47,9 +45,8 @@ export default function PriceDisplay({
 
   if (loading) {
     return (
-      <div className={`flex items-center gap-2 ${className}`}>
-        <Loader2 className="h-4 w-4 animate-spin" />
-        <span>Loading price...</span>
+      <div className={`flex items-center gap-2 animate-pulse ${className}`}>
+        <div className="h-4 w-20 rounded bg-muted/60" />
       </div>
     );
   }

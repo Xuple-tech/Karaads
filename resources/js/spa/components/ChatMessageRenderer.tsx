@@ -1,4 +1,4 @@
-import { Bot, Check, Copy, RefreshCcw, Wrench, AlertCircle, Loader2 } from 'lucide-react';
+import { Bot, Check, Copy, RefreshCcw, AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 
 import type { Message } from '@/types/chat';
@@ -18,8 +18,8 @@ function UserMessage({ message }: { message: Message }) {
 
     return (
         <div className="flex justify-end gap-3 group">
-            <div className="flex flex-col items-end gap-1 max-w-[78%]">
-                <div className="rounded-2xl rounded-tr-sm bg-primary px-4 py-2.5 text-sm leading-relaxed text-primary-foreground">
+            <div className="flex flex-col items-end gap-1 max-w-[70%]">
+                <div className="rounded-2xl rounded-tr-md bg-primary/90 px-4 py-2.5 text-sm leading-relaxed text-primary-foreground">
                     {text}
                 </div>
                 {hasAttachments && (
@@ -43,7 +43,7 @@ function ActivityIndicator({ activities }: { activities: StreamActivity[] }) {
     if (activities.length === 0) return null;
 
     return (
-        <div className="mt-3 space-y-1.5">
+        <div className="mt-2 space-y-1">
             {activities.map((activity) => {
                 const isFailed = activity.status === 'failed';
                 const isCompleted = activity.status === 'completed';
@@ -53,20 +53,24 @@ function ActivityIndicator({ activities }: { activities: StreamActivity[] }) {
                     <div
                         key={activity.tool_name}
                         className={cn(
-                            'flex items-center gap-2 rounded-xl border px-3 py-2 text-xs transition-all',
-                            isFailed
-                                ? 'border-destructive/30 bg-destructive/5 text-destructive'
-                                : isCompleted
-                                ? 'border-border/30 bg-muted/30 text-muted-foreground'
-                                : 'border-primary/20 bg-primary/5 text-primary'
+                            'flex items-center gap-2 text-xs',
+                            isFailed ? 'text-destructive' : 'text-muted-foreground/70'
                         )}
                     >
-                        {isRunning && <Loader2 className="h-3 w-3 animate-spin flex-shrink-0" />}
-                        {isCompleted && <Wrench className="h-3 w-3 flex-shrink-0" />}
-                        {isFailed && <AlertCircle className="h-3 w-3 flex-shrink-0" />}
-                        <span className="font-medium capitalize">{activity.tool_name.replace(/_/g, ' ')}</span>
-                        {activity.message && (
-                            <span className="truncate text-muted-foreground">{activity.message}</span>
+                        {isFailed && <AlertCircle className="h-3 w-3 flex-shrink-0 text-destructive" />}
+                        {isCompleted && <Check className="h-3 w-3 flex-shrink-0 text-muted-foreground/50" />}
+                        {isRunning && (
+                            <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary/60 animate-pulse" />
+                        )}
+                        <span className="capitalize">{activity.tool_name.replace(/_/g, ' ')}</span>
+                        {isRunning && (
+                            <div className="flex items-center gap-1 animate-pulse">
+                                <span className="h-1.5 w-8 rounded-full bg-muted-foreground/20" />
+                                <span className="h-1.5 w-5 rounded-full bg-muted-foreground/15" />
+                            </div>
+                        )}
+                        {!isRunning && activity.message && (
+                            <span className="truncate opacity-60">{activity.message}</span>
                         )}
                     </div>
                 );
@@ -75,12 +79,12 @@ function ActivityIndicator({ activities }: { activities: StreamActivity[] }) {
     );
 }
 
-function ThinkingDots() {
+function ThinkingSkeleton() {
     return (
-        <div className="flex items-center gap-1 py-1">
-            <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:-0.3s]" />
-            <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:-0.15s]" />
-            <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50 animate-bounce" />
+        <div className="space-y-2.5 py-1 animate-pulse">
+            <div className="h-2.5 w-3/4 rounded-full bg-muted-foreground/15" />
+            <div className="h-2.5 w-full rounded-full bg-muted-foreground/15" />
+            <div className="h-2.5 w-1/2 rounded-full bg-muted-foreground/15" />
         </div>
     );
 }
@@ -109,9 +113,9 @@ function AssistantMessage({
     return (
         <div className="flex gap-3 group">
             {/* Avatar */}
-            <div className="flex-shrink-0 mt-0.5">
-                <div className="h-7 w-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
-                    <Bot className="h-4 w-4 text-primary" />
+            <div className="mt-1 flex-shrink-0">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
+                    <Bot className="h-3.5 w-3.5 text-primary" />
                 </div>
             </div>
 
@@ -125,7 +129,7 @@ function AssistantMessage({
                             {message.error_message || 'Something went wrong. Please try again.'}
                         </div>
                     ) : isStreaming && isEmpty ? (
-                        <ThinkingDots />
+                        <ThinkingSkeleton />
                     ) : (
                         <MarkdownRenderer markdown={content} />
                     )}
