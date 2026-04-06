@@ -10,23 +10,29 @@ interface AuthLayoutProps {
 export default function AuthLayout({ children, title, description }: PropsWithChildren<AuthLayoutProps>) {
     return (
         <div className="min-h-dvh bg-background flex flex-col items-center justify-center p-4 py-12">
-            <div className="w-full max-w-[400px]">
+            <div className="w-full max-w-[380px]">
                 {/* Logo */}
                 <div className="flex justify-center mb-8">
                     <Link
                         to="/"
-                        className="flex items-center gap-2.5 hover:opacity-75 transition-opacity"
+                        className="flex items-center gap-2.5 hover:opacity-80 transition-opacity"
                     >
-                        <AppLogoIcon />
-                        <span className="text-base font-semibold text-foreground tracking-tight">Kwati AI</span>
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9]">
+                            <svg className="h-4.5 w-4.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <path d="M2 17l10 5 10-5"/>
+                                <path d="M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                        <span className="text-[15px] font-semibold text-foreground tracking-tight">Kwati AI</span>
                     </Link>
                 </div>
 
                 {/* Heading */}
                 {(title || description) && (
-                    <div className="text-center mb-6 space-y-1">
+                    <div className="text-center mb-6 space-y-1.5">
                         {title && (
-                            <h1 className="text-[22px] font-semibold text-foreground tracking-tight">
+                            <h1 className="text-2xl font-semibold text-foreground tracking-tight">
                                 {title}
                             </h1>
                         )}
@@ -36,19 +42,19 @@ export default function AuthLayout({ children, title, description }: PropsWithCh
                     </div>
                 )}
 
-                {/* Form Card */}
-                <div className="bg-card border border-border rounded-xl p-7 shadow-sm">
+                {/* Form — no heavy card, just clean spacing */}
+                <div className="bg-card border border-border/60 rounded-2xl p-7 shadow-sm">
                     {children}
                 </div>
 
                 {/* Footer */}
-                <div className="mt-6 flex items-center justify-center gap-5 text-xs text-muted-foreground">
-                    <Link to="/privacy" className="hover:text-foreground transition-colors">
-                        Privacy policy
+                <div className="mt-6 flex items-center justify-center gap-5 text-xs text-muted-foreground/60">
+                    <Link to="/privacy" className="hover:text-muted-foreground transition-colors">
+                        Privacy
                     </Link>
-                    <span className="text-border">·</span>
-                    <Link to="/terms" className="hover:text-foreground transition-colors">
-                        Terms of use
+                    <span>·</span>
+                    <Link to="/terms" className="hover:text-muted-foreground transition-colors">
+                        Terms
                     </Link>
                 </div>
             </div>

@@ -338,14 +338,14 @@ export default function ChatInput({
                             </div>
                         )}
 
-                        {/* Input box */}
-                        <div className="rounded-2xl border border-border/50 bg-card/80 shadow-lg backdrop-blur-sm overflow-hidden transition-all duration-150 focus-within:border-primary/35 focus-within:shadow-primary/8 focus-within:shadow-xl">
+                        {/* Input box — Claude-style clean rounded input */}
+                        <div className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden transition-colors duration-150 focus-within:border-border/80">
 
                             <textarea
                                 ref={inputRef}
                                 onChange={autoResize}
                                 placeholder={mode === "text" ? "Message Kwati…" : "Describe the image to generate…"}
-                                className="w-full resize-none bg-transparent px-4 pt-4 pb-2 text-sm leading-relaxed focus:outline-none custom-scrollbar max-h-[200px] overflow-y-auto placeholder:text-muted-foreground/40"
+                                className="w-full resize-none bg-transparent px-4 pt-4 pb-2 text-sm leading-relaxed focus:outline-none custom-scrollbar max-h-[200px] overflow-y-auto placeholder:text-muted-foreground/35 text-foreground"
                                 rows={1}
                                 onKeyDown={handleKeyDown}
                                 autoFocus
@@ -363,7 +363,7 @@ export default function ChatInput({
                                                 type="button"
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-8 w-8 relative rounded-lg text-muted-foreground/60 hover:text-foreground hover:bg-accent/50"
+                                                className="h-8 w-8 relative rounded-lg text-muted-foreground/50 hover:text-foreground hover:bg-accent"
                                                 onClick={() => fileInputRef.current?.click()}
                                             >
                                                 <Paperclip className="h-4 w-4" />
@@ -386,7 +386,7 @@ export default function ChatInput({
                                                         type="button"
                                                         variant="ghost"
                                                         size="icon"
-                                                        className={cn("h-8 w-8 rounded-lg text-muted-foreground/60 hover:text-foreground hover:bg-accent/50", mode === "image" && "text-primary bg-primary/10")}
+                                                        className={cn("h-8 w-8 rounded-lg text-muted-foreground/50 hover:text-foreground hover:bg-accent", mode === "image" && "text-primary bg-primary/10")}
                                                     >
                                                         <ImageIcon className="h-4 w-4" />
                                                     </Button>
@@ -410,7 +410,7 @@ export default function ChatInput({
                                                 size="icon"
                                                 onClick={toggleRecording}
                                                 className={cn(
-                                                    "h-8 w-8 rounded-lg text-muted-foreground/60 hover:text-foreground hover:bg-accent/50",
+                                                    "h-8 w-8 rounded-lg text-muted-foreground/50 hover:text-foreground hover:bg-accent",
                                                     isRecording && "text-destructive hover:text-destructive bg-destructive/10"
                                                 )}
                                             >
@@ -441,7 +441,7 @@ export default function ChatInput({
                                             className={cn(
                                                 "h-8 w-8 rounded-xl transition-all",
                                                 is_processing
-                                                    ? "bg-foreground/10 text-foreground hover:bg-foreground/15"
+                                                    ? "bg-muted text-muted-foreground hover:bg-muted/80"
                                                     : "bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm"
                                             )}
                                         >

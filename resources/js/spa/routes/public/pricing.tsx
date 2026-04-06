@@ -1,10 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { CheckCircle2, Sparkles, Zap } from 'lucide-react';
+import { CheckCircle2, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { apiRequest } from '@/spa/lib/api';
 
 type PricingResponse = {
@@ -29,67 +27,92 @@ export function Component() {
     });
 
     return (
-        <section className="mx-auto max-w-7xl px-6 py-16">
-            <div className="mx-auto max-w-3xl text-center">
-                <Badge className="mb-4 rounded-full px-4 py-1.5">
-                    <Sparkles className="mr-2 h-4 w-4" />
-                    Billing
-                </Badge>
-                <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">Simple plans for chat, voice, and the user workspace.</h1>
+        <section className="mx-auto max-w-5xl px-6 py-20">
+            {/* Header */}
+            <div className="mx-auto max-w-2xl text-center mb-14">
+                <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+                    Simple, transparent pricing
+                </h1>
                 <p className="mt-4 text-lg text-muted-foreground">
-                    The SPA now uses the same billing backend, but the public pricing page has been restored to a fuller marketing layout.
+                    Choose the plan that fits your workflow. Upgrade or cancel anytime.
                 </p>
                 <div className="mt-8 flex items-center justify-center gap-3">
-                    <Button asChild size="lg">
-                        <Link to="/register">Create account</Link>
+                    <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90 px-6">
+                        <Link to="/register">Get started free</Link>
                     </Button>
-                    <Button asChild size="lg" variant="outline">
+                    <Button asChild variant="ghost" className="text-muted-foreground hover:text-foreground px-6">
                         <Link to="/login">Sign in</Link>
                     </Button>
                 </div>
             </div>
 
-            <div className="mt-14 grid gap-6 lg:grid-cols-3">
-                {plans.data?.plans?.map((plan) => (
-                    <Card className={`rounded-3xl border-border/70 ${plan.slug === 'pro' ? 'border-primary shadow-lg shadow-primary/10' : ''}`} key={plan.id}>
-                        <CardHeader className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                                {plan.slug === 'pro' ? <Badge>Popular</Badge> : null}
-                            </div>
-                            <CardDescription>{plan.description ?? 'Subscription access for chat and user tools.'}</CardDescription>
+            {/* Plan cards */}
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {plans.data?.plans?.map((plan) => {
+                    const isPro = plan.slug === 'pro';
+                    return (
+                        <div
+                            key={plan.id}
+                            className={`relative flex flex-col rounded-2xl border p-6 gap-5 ${
+                                isPro
+                                    ? 'border-primary bg-primary/5 shadow-lg shadow-primary/10'
+                                    : 'border-border/50 bg-card'
+                            }`}
+                        >
+                            {isPro && (
+                                <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[11px] font-semibold bg-primary text-primary-foreground px-3 py-0.5 rounded-full">
+                                    Most popular
+                                </span>
+                            )}
+
                             <div>
-                                <p className="text-4xl font-bold">${plan.monthly_price ?? '0'}</p>
-                                <p className="text-sm text-muted-foreground">Monthly billing</p>
-                                {plan.yearly_price ? (
-                                    <p className="mt-1 text-sm text-primary">or ${plan.yearly_price} yearly</p>
-                                ) : null}
+                                <p className="text-lg font-semibold text-foreground">{plan.name}</p>
+                                <p className="text-sm text-muted-foreground mt-0.5">
+                                    {plan.description ?? 'Full access to chat and user tools.'}
+                                </p>
                             </div>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="space-y-3 text-sm">
-                                <div className="flex items-center gap-2">
-                                    <Zap className="h-4 w-4 text-primary" />
-                                    <span>{plan.requests_per_day ?? 'Unlimited'} requests per day</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Zap className="h-4 w-4 text-primary" />
-                                    <span>{plan.tokens_per_day ?? 'Unlimited'} tokens per day</span>
-                                </div>
+
+                            <div>
+                                <p className="text-4xl font-bold text-foreground">${plan.monthly_price ?? '0'}</p>
+                                <p className="text-sm text-muted-foreground mt-0.5">per month</p>
+                                {plan.yearly_price && (
+                                    <p className="text-xs text-primary mt-1">or ${plan.yearly_price}/year</p>
+                                )}
+                            </div>
+
+                            <div className="space-y-2 text-sm text-muted-foreground flex-1">
+                                <p className="flex items-center gap-2">
+                                    <Zap className="h-4 w-4 text-primary flex-shrink-0" />
+                                    {plan.requests_per_day ?? 'Unlimited'} requests/day
+                                </p>
+                                <p className="flex items-center gap-2">
+                                    <Zap className="h-4 w-4 text-primary flex-shrink-0" />
+                                    {plan.tokens_per_day ?? 'Unlimited'} tokens/day
+                                </p>
                                 {(plan.features ?? []).slice(0, 4).map((feature) => (
-                                    <div className="flex items-center gap-2" key={feature}>
-                                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                                        <span>{feature}</span>
-                                    </div>
+                                    <p key={feature} className="flex items-center gap-2">
+                                        <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                                        {feature}
+                                    </p>
                                 ))}
                             </div>
-                            <Button asChild className="w-full" variant={plan.slug === 'pro' ? 'default' : 'outline'}>
+
+                            <Button
+                                asChild
+                                className={`w-full ${isPro ? 'bg-primary text-primary-foreground hover:bg-primary/90' : ''}`}
+                                variant={isPro ? 'default' : 'outline'}
+                            >
                                 <Link to="/register">Get started</Link>
                             </Button>
-                        </CardContent>
-                    </Card>
-                ))}
+                        </div>
+                    );
+                })}
             </div>
+
+            {/* Footer note */}
+            <p className="text-center text-xs text-muted-foreground/60 mt-10">
+                All plans include access to the full chat workspace. No hidden fees.
+            </p>
         </section>
     );
 }

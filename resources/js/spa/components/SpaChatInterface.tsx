@@ -1,9 +1,8 @@
-import type { Message } from '@/types/chat';
-import { AlertCircle, Sparkles } from 'lucide-react';
+import type { ChatAttachment, Message } from '@/types/chat';
+import { AlertCircle } from 'lucide-react';
 import { FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
 import ChatInput from '@/spa/components/SpaChatInput';
 import ChatMessageRenderer, { type StreamActivity } from '@/spa/components/ChatMessageRenderer';
 import { apiRequest } from '@/spa/lib/api';
@@ -21,8 +20,8 @@ type ChatAction =
     | { type: 'user.append'; message: Message }
     | { type: 'assistant.create'; message: Message; conversationId?: string | null; replace?: boolean }
     | { type: 'assistant.delta'; messageId: string; content: string }
-    | { type: 'attachment.add'; messageId: string; attachment: any }
-    | { type: 'assistant.complete'; messageId: string; content?: string; attachments?: any[] }
+    | { type: 'attachment.add'; messageId: string; attachment: ChatAttachment }
+    | { type: 'assistant.complete'; messageId: string; content?: string; attachments?: ChatAttachment[] }
     | { type: 'assistant.fail'; messageId: string; error: string }
     | { type: 'activity'; activity: StreamActivity }
     | { type: 'activity.clear' };
@@ -104,6 +103,7 @@ function reducer(state: ChatState, action: ChatAction): ChatState {
     }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function readSse(response: Response, onEvent: (event: string, payload: any) => void) {
     if (!response.body) throw new Error('Missing response body');
 
@@ -163,20 +163,33 @@ export default function SpaChatInterface({
     const [files, setFiles] = useState<File[]>([]);
     const [error, setError] = useState<string | null>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
-    const bottomRef = useRef<HTMLDivElement>(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    const scrollToBottom = (smooth = true) => {
+        const el = scrollRef.current;
+        if (!el) return;
+        el.scrollTo({ top: el.scrollHeight, behavior: smooth ? 'smooth' : 'instant' });
+    };
 
     useEffect(() => {
         dispatch({ type: 'hydrate', conversationId: initialConversationId, messages: initialMessages });
     }, [initialConversationId, initialMessages]);
 
+    // Scroll to bottom when messages change
     useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [state.messages, state.activities.length]);
+        scrollToBottom(false);
+    }, [initialConversationId, initialMessages]);
+
+    useEffect(() => {
+        scrollToBottom(true);
+    }, [state.messages.length, state.activities.length]);
 
     const syncConversation = useCallback(async (conversationId: string) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const response = await apiRequest<{ conversation: { id: string; messages: any[] } }>(
             `/api/chat/conversations/${conversationId}`
         );
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const mappedMessages: Message[] = response.conversation.messages.map((m: any) => ({
             id: m.id,
             conversation_id: m.conversation_id,
@@ -412,27 +425,30 @@ export default function SpaChatInterface({
             <div className="flex-1 overflow-y-auto overscroll-contain pb-48 pt-6 custom-scrollbar">
                 <div className="mx-auto w-full max-w-2xl px-4">
 
-                    {/* Welcome */}
+                    {/* Welcome — Claude-style centered greeting */}
                     {welcome && (
-                        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-10 text-center">
-                            <div className="space-y-4">
-                                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
-                                    <Sparkles className="h-7 w-7 text-primary" />
-                                </div>
-                                <h1 className="text-2xl font-semibold tracking-tight">
-                                    {firstName ? `Good to see you, ${firstName}` : 'How can I help you today?'}
-                                </h1>
-                                <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
-                                    Ask anything — I can write, research, code, analyze, translate, and more.
-                                </p>
+                        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-8 text-center">
+                            {/* Avatar */}
+                            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] shadow-lg">
+                                <svg className="h-9 w-9 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                    <path d="M2 17l10 5 10-5"/>
+                                    <path d="M2 12l10 5 10-5"/>
+                                </svg>
                             </div>
 
-                            <div className="grid w-full max-w-lg grid-cols-2 gap-2">
+                            <div className="space-y-2">
+                                <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+                                    {firstName ? `Good to see you, ${firstName}` : 'How can I help you?'}
+                                </h1>
+                            </div>
+
+                            <div className="grid w-full max-w-xl grid-cols-2 gap-2">
                                 {WELCOME_PROMPTS.map((prompt) => (
                                     <button
                                         key={prompt}
                                         type="button"
-                                        className="group rounded-xl border border-border/50 bg-card/50 px-4 py-3 text-left text-sm text-muted-foreground transition-all hover:border-primary/30 hover:bg-accent/40 hover:text-foreground"
+                                        className="rounded-xl border border-border bg-card px-4 py-3.5 text-left text-sm text-muted-foreground transition-all hover:border-primary/40 hover:bg-accent hover:text-foreground"
                                         onClick={() => {
                                             if (inputRef.current) {
                                                 inputRef.current.value = prompt;
@@ -485,7 +501,7 @@ export default function SpaChatInterface({
                         )}
                     </div>
 
-                    <div ref={bottomRef} className="h-1" />
+                    <div className="h-1" />
                 </div>
             </div>
 

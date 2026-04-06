@@ -1,14 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AudioLines, Mic, Plus, Send, Sparkles, Volume2 } from 'lucide-react';
+import { AudioLines, Mic, Plus, Send, Volume2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
 import { apiRequest } from '@/spa/lib/api';
 
 type VoiceConversationSummary = {
@@ -47,10 +45,7 @@ export function Component() {
     });
 
     const currentConversationId = useMemo(() => {
-        if (conversationId) {
-            return conversationId;
-        }
-
+        if (conversationId) return conversationId;
         return conversations.data?.conversations?.[0]?.id ?? null;
     }, [conversationId, conversations.data?.conversations]);
 
@@ -76,16 +71,10 @@ export function Component() {
 
     const sendMessage = useMutation({
         mutationFn: async () => {
-            if (!currentConversationId || !text.trim()) {
-                return null;
-            }
-
+            if (!currentConversationId || !text.trim()) return null;
             return apiRequest<any>('/api/voice/process-text', {
                 method: 'POST',
-                json: {
-                    conversation_id: currentConversationId,
-                    text,
-                },
+                json: { conversation_id: currentConversationId, text },
             });
         },
         onSuccess: async () => {
@@ -99,127 +88,146 @@ export function Component() {
     const availableVoices = conversation.data?.availableVoices ?? [];
 
     return (
-        <div className="grid gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
-            <Card className="border-border/70 bg-card/70">
-                <CardHeader className="space-y-4">
-                    <div className="flex items-center justify-between gap-3">
-                        <div>
-                            <CardTitle className="flex items-center gap-2">
-                                <AudioLines className="h-5 w-5 text-primary" />
-                                Voice
-                            </CardTitle>
-                            <CardDescription>Conversations optimized for spoken back-and-forth.</CardDescription>
+        <div className="flex h-full gap-4 min-h-0">
+            {/* ── Sidebar ── */}
+            <div className="hidden lg:flex w-64 flex-shrink-0 flex-col rounded-xl border border-border/50 bg-card overflow-hidden">
+                {/* Header */}
+                <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
+                    <div className="flex items-center gap-2">
+                        <AudioLines className="h-4 w-4 text-primary" />
+                        <span className="text-sm font-medium text-foreground">Voice</span>
+                    </div>
+                    <Button
+                        size="icon"
+                        variant="ghost"
+                        disabled={createConversation.isPending}
+                        onClick={() => createConversation.mutate()}
+                        className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                    >
+                        {createConversation.isPending
+                            ? <span className="inline-block h-3.5 w-3.5 animate-pulse rounded bg-current/30" />
+                            : <Plus className="h-3.5 w-3.5" />}
+                    </Button>
+                </div>
+
+                {/* Conversation list */}
+                <ScrollArea className="flex-1 p-2">
+                    <div className="space-y-0.5">
+                        {conversations.data?.conversations?.map((item) => {
+                            const active = item.id === currentConversationId;
+                            return (
+                                <button
+                                    key={item.id}
+                                    type="button"
+                                    onClick={() => navigate(`/c/${item.id}/voice`)}
+                                    className={`w-full rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                                        active
+                                            ? 'bg-primary/10 text-foreground'
+                                            : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+                                    }`}
+                                >
+                                    <p className="font-medium truncate">{item.title || 'Voice Chat'}</p>
+                                    <p className="text-[11px] text-muted-foreground/60 mt-0.5 truncate">
+                                        {item.updated_at ? new Date(item.updated_at).toLocaleDateString() : 'New'}
+                                    </p>
+                                </button>
+                            );
+                        })}
+                        {!conversations.data?.conversations?.length && (
+                            <div className="px-3 py-6 text-center text-xs text-muted-foreground/50">
+                                No voice conversations yet.
+                            </div>
+                        )}
+                    </div>
+                </ScrollArea>
+            </div>
+
+            {/* ── Main area ── */}
+            <div className="flex flex-1 flex-col min-h-0 rounded-xl border border-border/50 bg-card overflow-hidden">
+                {/* Header */}
+                <div className="flex items-center justify-between px-5 py-3 border-b border-border/40 bg-card/80 flex-shrink-0">
+                    <div>
+                        <p className="text-sm font-medium text-foreground">
+                            {conversation.data?.conversation?.title ?? 'Voice Chat'}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Text input active</p>
+                    </div>
+                    {availableVoices.length > 0 && (
+                        <div className="flex items-center gap-1.5">
+                            {availableVoices.slice(0, 3).map((voice) => (
+                                <Badge key={voice.id} variant="secondary" className="text-[11px] gap-1">
+                                    <Volume2 className="h-3 w-3" />
+                                    {voice.name}
+                                </Badge>
+                            ))}
                         </div>
-                        <Button disabled={createConversation.isPending} onClick={() => createConversation.mutate()} size="icon" variant="outline">
-                            {createConversation.isPending ? <span className="inline-block h-4 w-4 shrink-0 animate-pulse rounded bg-current/30" /> : <Plus className="h-4 w-4" />}
+                    )}
+                </div>
+
+                {/* Messages */}
+                <ScrollArea className="flex-1 px-5 py-5">
+                    <div className="mx-auto max-w-2xl space-y-5">
+                        {messages.map((message) => (
+                            <div
+                                key={message.id}
+                                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                            >
+                                <div className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                                    message.role === 'user'
+                                        ? 'bg-[#2f2f2f] text-[#e8e8e4] rounded-tr-sm'
+                                        : 'bg-accent text-foreground rounded-tl-sm'
+                                }`}>
+                                    <p>{message.content}</p>
+                                    {message.created_at && (
+                                        <p className="text-[10px] text-muted-foreground/60 mt-1.5">
+                                            {new Date(message.created_at).toLocaleTimeString()}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+
+                        {!messages.length && (
+                            <div className="flex flex-col items-center justify-center py-16 text-center gap-4">
+                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                                    <Mic className="h-6 w-6 text-primary" />
+                                </div>
+                                <div>
+                                    <p className="text-sm font-medium text-foreground">Start the conversation</p>
+                                    <p className="text-xs text-muted-foreground mt-1">Type below to send a message.</p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </ScrollArea>
+
+                {/* Input */}
+                <div className="flex-shrink-0 border-t border-border/40 p-4">
+                    <div className="mx-auto max-w-2xl flex gap-2">
+                        <Input
+                            value={text}
+                            onChange={(e) => setText(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && !e.shiftKey) {
+                                    e.preventDefault();
+                                    if (!sendMessage.isPending && text.trim()) sendMessage.mutate();
+                                }
+                            }}
+                            placeholder="Send a message…"
+                            className="bg-background border-border/60 h-10 text-sm"
+                        />
+                        <Button
+                            size="icon"
+                            disabled={!currentConversationId || !text.trim() || sendMessage.isPending}
+                            onClick={() => sendMessage.mutate()}
+                            className="h-10 w-10 flex-shrink-0 bg-primary text-primary-foreground hover:bg-primary/90"
+                        >
+                            {sendMessage.isPending
+                                ? <span className="inline-block h-3.5 w-3.5 animate-pulse rounded bg-current/30" />
+                                : <Send className="h-4 w-4" />}
                         </Button>
                     </div>
-                    <div className="rounded-2xl border border-border/60 bg-background/80 p-4">
-                        <div className="mb-2 flex items-center gap-2 text-sm font-medium">
-                            <Sparkles className="h-4 w-4 text-primary" />
-                            Voice runtime
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                            Text send is active now. Audio capture and playback continue to use the Laravel voice endpoints behind this SPA screen.
-                        </p>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <ScrollArea className="h-[32rem] pr-3">
-                        <div className="space-y-3">
-                            {conversations.data?.conversations?.map((item) => {
-                                const active = item.id === currentConversationId;
-
-                                return (
-                                    <button
-                                        className={`w-full rounded-2xl border px-4 py-3 text-left transition ${active ? 'border-primary bg-primary/10' : 'border-border/60 bg-background hover:border-primary/40 hover:bg-accent/40'}`}
-                                        key={item.id}
-                                        onClick={() => navigate(`/c/${item.id}/voice`)}
-                                        type="button"
-                                    >
-                                        <div className="flex items-center justify-between gap-3">
-                                            <p className="font-medium">{item.title || 'Voice Chat'}</p>
-                                            {active ? <Badge>Open</Badge> : null}
-                                        </div>
-                                        <p className="mt-1 text-xs text-muted-foreground">
-                                            {item.updated_at ? new Date(item.updated_at).toLocaleString() : 'New conversation'}
-                                        </p>
-                                    </button>
-                                );
-                            })}
-                            {!conversations.data?.conversations?.length ? (
-                                <div className="rounded-2xl border border-dashed border-border/70 px-4 py-8 text-center text-sm text-muted-foreground">
-                                    No voice conversations yet.
-                                </div>
-                            ) : null}
-                        </div>
-                    </ScrollArea>
-                </CardContent>
-            </Card>
-
-            <div className="space-y-6">
-                <Card className="overflow-hidden border-border/70 bg-card/70">
-                    <CardHeader className="border-b border-border/60 bg-background/70">
-                        <div className="flex flex-wrap items-center justify-between gap-3">
-                            <div>
-                                <CardTitle>{conversation.data?.conversation?.title ?? 'Voice Chat'}</CardTitle>
-                                <CardDescription>Use quick text sends now, then layer audio controls back on top.</CardDescription>
-                            </div>
-                            <div className="flex flex-wrap items-center gap-2">
-                                {availableVoices.slice(0, 3).map((voice) => (
-                                    <Badge key={voice.id} variant="secondary">
-                                        <Volume2 className="mr-1 h-3.5 w-3.5" />
-                                        {voice.name}
-                                    </Badge>
-                                ))}
-                            </div>
-                        </div>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                        <ScrollArea className="h-[28rem] px-6 py-6">
-                            <div className="space-y-4">
-                                {messages.map((message) => (
-                                    <div className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`} key={message.id}>
-                                        <div className={`max-w-[80%] rounded-3xl px-4 py-3 text-sm shadow-sm ${message.role === 'user' ? 'bg-primary text-primary-foreground' : 'border border-border/60 bg-background'}`}>
-                                            <p className="leading-6">{message.content}</p>
-                                            <p className={`mt-2 text-[11px] ${message.role === 'user' ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
-                                                {message.created_at ? new Date(message.created_at).toLocaleTimeString() : ''}
-                                            </p>
-                                        </div>
-                                    </div>
-                                ))}
-                                {!messages.length ? (
-                                    <div className="rounded-3xl border border-dashed border-border/70 px-6 py-12 text-center">
-                                        <Mic className="mx-auto mb-4 h-8 w-8 text-primary" />
-                                        <p className="font-medium">Start the first voice exchange</p>
-                                        <p className="mt-2 text-sm text-muted-foreground">
-                                            This restored SPA view keeps the voice workflow available while the audio controls remain tied to the backend voice endpoints.
-                                        </p>
-                                    </div>
-                                ) : null}
-                            </div>
-                        </ScrollArea>
-                        <Separator />
-                        <div className="flex gap-3 p-4">
-                            <Input
-                                onChange={(event) => setText(event.target.value)}
-                                onKeyDown={(event) => {
-                                    if (event.key === 'Enter' && !event.shiftKey) {
-                                        event.preventDefault();
-                                        if (!sendMessage.isPending && text.trim()) {
-                                            sendMessage.mutate();
-                                        }
-                                    }
-                                }}
-                                placeholder="Send text into the voice conversation..."
-                                value={text}
-                            />
-                            <Button disabled={!currentConversationId || !text.trim() || sendMessage.isPending} onClick={() => sendMessage.mutate()}>
-                                {sendMessage.isPending ? <span className="inline-block h-4 w-4 shrink-0 animate-pulse rounded bg-current/30" /> : <Send className="h-4 w-4" />}
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
+                </div>
             </div>
         </div>
     );

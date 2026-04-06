@@ -1,4 +1,4 @@
-import { Bot, Check, Copy, RefreshCcw, AlertCircle } from 'lucide-react';
+import { Check, Copy, RefreshCcw, AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 
 import type { Message } from '@/types/chat';
@@ -18,8 +18,8 @@ function UserMessage({ message }: { message: Message }) {
 
     return (
         <div className="flex justify-end gap-3 group">
-            <div className="flex flex-col items-end gap-1 max-w-[70%]">
-                <div className="rounded-2xl rounded-tr-md bg-primary/90 px-4 py-2.5 text-sm leading-relaxed text-primary-foreground">
+            <div className="flex flex-col items-end gap-1 max-w-[75%]">
+                <div className="rounded-2xl rounded-tr-sm bg-[#2f2f2f] px-4 py-2.5 text-sm leading-relaxed text-[#e8e8e4]">
                     {text}
                 </div>
                 {hasAttachments && (
@@ -27,7 +27,7 @@ function UserMessage({ message }: { message: Message }) {
                         {message.attachments!.map((att: any) => (
                             <span
                                 key={att.id}
-                                className="inline-flex items-center gap-1 rounded-lg border border-border/50 bg-muted/50 px-2 py-1 text-xs text-muted-foreground"
+                                className="inline-flex items-center gap-1 rounded-lg border border-border/40 bg-muted/40 px-2 py-1 text-xs text-muted-foreground"
                             >
                                 {att.name}
                             </span>
@@ -112,10 +112,14 @@ function AssistantMessage({
 
     return (
         <div className="flex gap-3 group">
-            {/* Avatar */}
-            <div className="mt-1 flex-shrink-0">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
-                    <Bot className="h-3.5 w-3.5 text-primary" />
+            {/* Avatar — Claude-style warm orange circle */}
+            <div className="mt-0.5 flex-shrink-0">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] shadow-sm">
+                    <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
                 </div>
             </div>
 

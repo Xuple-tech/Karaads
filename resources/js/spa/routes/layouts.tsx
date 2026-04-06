@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { AudioLines, CreditCard, LogOut, Mail, MoreHorizontal, PenSquare, Settings, SquarePen, Star } from 'lucide-react';
 import { NavLink, Navigate, Outlet, useLocation } from 'react-router-dom';
 
-import AppLogoIcon from '@/components/app-logo-icon';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -130,12 +129,18 @@ function SpaSidebar() {
     const hasConversations = (conversations.data?.conversations?.length ?? 0) > 0;
 
     return (
-        <Sidebar collapsible="offcanvas" className="border-r border-sidebar-border/30 bg-sidebar">
+        <Sidebar collapsible="offcanvas" className="border-r border-sidebar-border bg-sidebar">
             {/* ── header ── */}
-            <SidebarHeader className="px-3 pt-4 pb-3">
+            <SidebarHeader className="px-3 pt-3 pb-2">
                 <div className="flex items-center justify-between">
-                    <NavLink className="flex items-center gap-2 px-1" to="/new">
-                        <AppLogoIcon className="h-7 w-7 p-0" />
+                    <NavLink className="flex items-center gap-2.5 px-1 py-1 rounded-lg hover:bg-sidebar-accent/50 transition-colors" to="/new">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#d4844a] to-[#b86c3c]">
+                            <svg className="h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <path d="M2 17l10 5 10-5"/>
+                                <path d="M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
                         <span className="text-[15px] font-semibold text-sidebar-foreground tracking-tight">
                             Kwati AI
                         </span>
@@ -143,15 +148,15 @@ function SpaSidebar() {
                     <div className="flex items-center gap-0.5">
                         <NavLink to="/new">
                             <Button
-                                className="h-8 w-8 rounded-lg text-muted-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent"
+                                className="h-8 w-8 rounded-lg text-muted-foreground/50 hover:text-sidebar-foreground hover:bg-sidebar-accent"
                                 size="icon"
                                 title="New chat"
                                 variant="ghost"
                             >
-                                <PenSquare size={17} />
+                                <PenSquare size={16} />
                             </Button>
                         </NavLink>
-                        <SidebarTrigger className="h-8 w-8 rounded-lg text-muted-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent" />
+                        <SidebarTrigger className="h-8 w-8 rounded-lg text-muted-foreground/50 hover:text-sidebar-foreground hover:bg-sidebar-accent" />
                     </div>
                 </div>
             </SidebarHeader>
@@ -159,21 +164,21 @@ function SpaSidebar() {
             {/* ── nav + conversations ── */}
             <SidebarContent className="px-2 overflow-y-auto custom-scrollbar">
                 {/* Primary nav */}
-                <nav className="mb-1 space-y-0.5">
+                <nav className="mb-1 space-y-0.5 pt-1">
                     {mainNavItems.map(({ to, label, icon: Icon }) => (
                         <NavLink
                             className={({ isActive }) =>
                                 cn(
                                     'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors',
                                     isActive
-                                        ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
-                                        : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'
+                                        ? 'bg-sidebar-accent text-sidebar-foreground font-medium'
+                                        : 'text-sidebar-foreground/60 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'
                                 )
                             }
                             key={to}
                             to={to}
                         >
-                            <Icon size={16} className="flex-shrink-0" />
+                            <Icon size={15} className="flex-shrink-0 opacity-70" />
                             {label}
                         </NavLink>
                     ))}
@@ -184,13 +189,13 @@ function SpaSidebar() {
                             cn(
                                 'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors',
                                 isActive
-                                    ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
-                                    : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'
+                                    ? 'bg-sidebar-accent text-sidebar-foreground font-medium'
+                                    : 'text-sidebar-foreground/60 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'
                             )
                         }
                         to="/user/settings"
                     >
-                        <Settings size={16} className="flex-shrink-0" />
+                        <Settings size={15} className="flex-shrink-0 opacity-70" />
                         Settings
                     </NavLink>
                 </nav>
@@ -201,45 +206,45 @@ function SpaSidebar() {
                         cn(
                             'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors mt-0.5 mb-3',
                             isActive
-                                ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
-                                : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'
+                                ? 'bg-sidebar-accent text-sidebar-foreground font-medium'
+                                : 'text-sidebar-foreground/60 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'
                         )
                     }
                     to="/subscription"
                 >
-                    <CreditCard size={16} className="flex-shrink-0" />
+                    <CreditCard size={15} className="flex-shrink-0 opacity-70" />
                     Billing
                 </NavLink>
 
                 {/* Divider */}
-                <div className="h-px bg-sidebar-border/40 mx-1 mb-3" />
+                <div className="h-px bg-sidebar-border mx-1 mb-3" />
 
                 {/* Conversation history */}
                 {hasConversations ? (
                     Object.entries(groups).map(([group, convs]) =>
                         convs.length > 0 ? (
-                            <div key={group} className="mb-4">
-                                <p className="px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground/50 select-none">
+                            <div key={group} className="mb-3">
+                                <p className="px-3 pb-1 pt-0.5 text-[11px] font-medium text-muted-foreground/40 select-none tracking-wide">
                                     {group}
                                 </p>
-                                <div className="space-y-px mt-0.5">
+                                <div className="space-y-px">
                                     {convs.map((conv) => (
                                         <NavLink
                                             className={({ isActive }) =>
                                                 cn(
-                                                    'group flex items-center justify-between gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors',
+                                                    'group flex items-center justify-between gap-2 rounded-lg px-3 py-1.5 text-[13px] transition-colors',
                                                     isActive
-                                                        ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-                                                        : 'text-sidebar-foreground/60 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground'
+                                                        ? 'bg-sidebar-accent text-sidebar-foreground'
+                                                        : 'text-sidebar-foreground/55 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'
                                                 )
                                             }
                                             key={conv.id}
                                             to={`/c/${conv.id}`}
                                         >
-                                            <span className="truncate flex-1">{conv.title || 'Untitled'}</span>
+                                            <span className="truncate flex-1 leading-snug">{conv.title || 'Untitled'}</span>
                                             <MoreHorizontal
-                                                size={14}
-                                                className="flex-shrink-0 opacity-0 group-hover:opacity-60 transition-opacity"
+                                                size={13}
+                                                className="flex-shrink-0 opacity-0 group-hover:opacity-50 transition-opacity"
                                             />
                                         </NavLink>
                                     ))}
@@ -248,31 +253,31 @@ function SpaSidebar() {
                         ) : null
                     )
                 ) : (
-                    <div className="px-3 py-6 text-center">
-                        <p className="text-xs text-muted-foreground/50">No conversations yet</p>
+                    <div className="px-3 py-8 text-center">
+                        <p className="text-xs text-muted-foreground/40">No conversations yet</p>
                     </div>
                 )}
             </SidebarContent>
 
             {/* ── footer / user ── */}
-            <SidebarFooter className="p-2 border-t border-sidebar-border/30">
+            <SidebarFooter className="p-2 border-t border-sidebar-border">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-sidebar-accent/70 focus-visible:outline-none">
-                            <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/20 ring-1 ring-primary/30">
-                                <span className="text-[11px] font-bold text-primary">
+                        <button className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left transition-colors hover:bg-sidebar-accent focus-visible:outline-none">
+                            <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#d4844a]/20 ring-1 ring-[#d4844a]/30">
+                                <span className="text-[11px] font-bold text-[#d4844a]">
                                     {getInitials(session.data?.user?.name ?? '')}
                                 </span>
                             </div>
                             <div className="min-w-0 flex-1">
-                                <p className="truncate text-sm font-medium text-sidebar-foreground leading-tight">
+                                <p className="truncate text-[13px] font-medium text-sidebar-foreground leading-tight">
                                     {session.data?.user?.name ?? 'Account'}
                                 </p>
-                                <p className="truncate text-[11px] text-muted-foreground/60 mt-0.5">
+                                <p className="truncate text-[11px] text-muted-foreground/50 mt-0.5">
                                     {session.data?.user?.email}
                                 </p>
                             </div>
-                            <MoreHorizontal size={15} className="flex-shrink-0 text-muted-foreground/40" />
+                            <MoreHorizontal size={14} className="flex-shrink-0 text-muted-foreground/35" />
                         </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-52" side="top">
@@ -308,8 +313,8 @@ function SpaTopBar() {
     const { lang, changeLanguage } = useSpaLang();
 
     return (
-        <header className="sticky top-0 z-30 flex h-11 shrink-0 items-center gap-2 px-3 bg-background/95 backdrop-blur-md border-b border-border/20">
-            <SidebarTrigger className="h-8 w-8 rounded-lg text-muted-foreground/60 hover:text-foreground hover:bg-accent/50" />
+        <header className="sticky top-0 z-30 flex h-11 shrink-0 items-center gap-2 px-3 bg-background border-b border-border/30">
+            <SidebarTrigger className="h-8 w-8 rounded-lg text-muted-foreground/50 hover:text-foreground hover:bg-accent/60" />
             <div className="flex-1" />
             <Select defaultValue={lang} onValueChange={changeLanguage}>
                 <SelectTrigger className="h-7 gap-1 border-0 bg-transparent px-2 text-xs text-muted-foreground hover:text-foreground hover:bg-accent/40 focus:ring-0 w-auto">
@@ -333,43 +338,55 @@ export function PublicLayout() {
 
     return (
         <div className="min-h-screen bg-background">
-            <div className="sticky top-0 z-50">
-                <div className="border-b border-border/40 bg-background/80 backdrop-blur-xl">
-                    <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-                        <NavLink className="flex items-center gap-2" to={data?.authenticated ? '/app' : '/'}>
-                            <AppLogoIcon className="h-8 w-8 p-1" />
-                        </NavLink>
-                        <div className="flex items-center gap-4 text-sm">
-                            <NavLink className="text-muted-foreground hover:text-foreground transition-colors" to="/privacy">
-                                Privacy
-                            </NavLink>
-                            <NavLink className="text-muted-foreground hover:text-foreground transition-colors" to="/terms">
-                                Terms
-                            </NavLink>
-                            {data?.authenticated ? (
-                                <NavLink
-                                    className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-                                    to="/app"
-                                >
-                                    Open app
-                                </NavLink>
-                            ) : (
-                                <>
-                                    <NavLink className="text-muted-foreground hover:text-foreground transition-colors" to="/login">
-                                        Log in
-                                    </NavLink>
-                                    <NavLink
-                                        className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-                                        to="/register"
-                                    >
-                                        Get started
-                                    </NavLink>
-                                </>
-                            )}
+            {/* Nav */}
+            <header className="sticky top-0 z-50 border-b border-border/30 bg-background/90 backdrop-blur-md">
+                <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
+                    {/* Logo */}
+                    <NavLink className="flex items-center gap-2 hover:opacity-80 transition-opacity" to={data?.authenticated ? '/app' : '/'}>
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9]">
+                            <svg className="h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <path d="M2 17l10 5 10-5"/>
+                                <path d="M2 12l10 5 10-5"/>
+                            </svg>
                         </div>
-                    </div>
+                        <span className="text-sm font-semibold text-foreground">Kwati AI</span>
+                    </NavLink>
+
+                    {/* Links */}
+                    <nav className="flex items-center gap-5 text-sm">
+                        <NavLink className="text-muted-foreground hover:text-foreground transition-colors" to="/pricing">
+                            Pricing
+                        </NavLink>
+                        <NavLink className="text-muted-foreground hover:text-foreground transition-colors" to="/privacy">
+                            Privacy
+                        </NavLink>
+                        <NavLink className="text-muted-foreground hover:text-foreground transition-colors" to="/terms">
+                            Terms
+                        </NavLink>
+                        {data?.authenticated ? (
+                            <NavLink
+                                className="rounded-lg bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
+                                to="/app"
+                            >
+                                Open app
+                            </NavLink>
+                        ) : (
+                            <>
+                                <NavLink className="text-muted-foreground hover:text-foreground transition-colors" to="/login">
+                                    Sign in
+                                </NavLink>
+                                <NavLink
+                                    className="rounded-lg bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
+                                    to="/register"
+                                >
+                                    Get started
+                                </NavLink>
+                            </>
+                        )}
+                    </nav>
                 </div>
-            </div>
+            </header>
             <main>
                 <Outlet />
             </main>
