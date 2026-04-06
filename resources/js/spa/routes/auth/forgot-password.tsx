@@ -2,9 +2,6 @@ import { useMutation } from '@tanstack/react-query';
 import { type FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AuthLayout from '@/spa/components/AuthLayout';
 import { ApiError, apiRequest } from '@/spa/lib/api';
 
@@ -12,6 +9,7 @@ export function Component() {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
+
     const mutation = useMutation({
         mutationFn: () => apiRequest<{ message: string }>('/api/session/forgot-password', { method: 'POST', json: { email } }),
         onSuccess: (data) => {
@@ -30,55 +28,51 @@ export function Component() {
     };
 
     return (
-        <AuthLayout title="Reset your password" description="Enter your email to receive a reset link">
-            <div className="space-y-5">
-                <form className="space-y-4" onSubmit={onSubmit}>
-                    {message && (
-                        <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400">
-                            {message}
-                        </div>
-                    )}
-                    {error && (
-                        <div className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-                            {error}
-                        </div>
-                    )}
-
-                    <div className="space-y-1.5">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            required
-                            autoFocus
-                            autoComplete="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="you@example.com"
-                            className="h-10 rounded-lg text-sm"
-                            disabled={mutation.isPending}
-                        />
+        <AuthLayout title="Reset your password" description="Enter your email and we'll send you a reset link">
+            <div className="space-y-3">
+                {message && (
+                    <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/8 px-4 py-3 text-sm text-emerald-400">
+                        {message}
                     </div>
+                )}
+                {error && (
+                    <div className="rounded-xl border border-destructive/20 bg-destructive/8 px-4 py-3 text-sm text-destructive">
+                        {error}
+                    </div>
+                )}
 
-                    <Button
-                        type="submit"
-                        className="h-10 w-full rounded-lg bg-primary text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                <form className="space-y-3" onSubmit={onSubmit}>
+                    <input
+                        type="email"
+                        required
+                        autoFocus
+                        autoComplete="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Email address"
                         disabled={mutation.isPending}
+                        className="h-11 w-full rounded-xl bg-[#2a2a2a] border border-[#383838] px-4 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-[#8b5cf6] focus:ring-2 focus:ring-[#8b5cf6]/20 transition-all disabled:opacity-50"
+                    />
+
+                    <button
+                        type="submit"
+                        disabled={mutation.isPending}
+                        className="h-11 w-full rounded-xl bg-[#8b5cf6] text-sm font-medium text-white transition-colors hover:bg-[#7c3aed] disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                         {mutation.isPending ? (
-                            <>
-                                <span className="mr-2 inline-block h-4 w-4 shrink-0 animate-pulse rounded bg-current/30" />
+                            <span className="flex items-center justify-center gap-2">
+                                <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
                                 Sending…
-                            </>
+                            </span>
                         ) : (
                             'Send reset link'
                         )}
-                    </Button>
+                    </button>
                 </form>
 
-                <p className="text-center text-sm text-muted-foreground">
-                    <Link className="font-medium text-foreground hover:underline" to="/login">
-                        Back to sign in
+                <p className="text-center text-[13px] text-muted-foreground pt-2">
+                    <Link to="/login" className="text-[#8b5cf6] hover:text-[#7c3aed] font-medium transition-colors">
+                        ← Back to sign in
                     </Link>
                 </p>
             </div>

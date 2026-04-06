@@ -6,7 +6,7 @@ import { Button } from "../ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog"
 import { Textarea } from "../ui/textarea"
-import { X, Save, RotateCcw, Play, MessageSquare, Code, FileText, Download, File } from "lucide-react"
+import { Bot, Lightbulb, X, Save, RotateCcw, Play, MessageSquare, Code, FileText, Download, File } from "lucide-react"
 import toast from "react-hot-toast"
 
 interface CanvasEditorProps {
@@ -78,14 +78,14 @@ export default function CanvasEditor({
 
   const handleExecute = () => {
     toast("For code execution, please use external tools like Replit or your local IDE", {
-      icon: "💡",
+      icon: <Lightbulb className="h-4 w-4 text-yellow-400" />,
       duration: 5000,
     })
   }
 
   const handleAIEdit = () => {
     toast("AI editing feature coming soon! For now, ask in the main chat.", {
-      icon: "🤖",
+      icon: <Bot className="h-4 w-4 text-primary" />,
     })
   }
 

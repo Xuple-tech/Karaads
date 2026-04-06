@@ -62,6 +62,12 @@ export function Component() {
         onError: (e) => setError(e instanceof ApiError ? e.message : 'Failed to cancel subscription.'),
     });
 
+    const portalMutation = useMutation({
+        mutationFn: () => apiRequest<{ portal_url?: string }>('/stripe/billing-portal'),
+        onSuccess: (data) => { if (data.portal_url) window.location.href = data.portal_url; },
+        onError: (e) => setError(e instanceof ApiError ? e.message : 'Failed to open billing portal.'),
+    });
+
     const currentPlanId = mine.data?.plan?.id;
     const currentSubscription = mine.data?.subscription;
 
@@ -106,18 +112,32 @@ export function Component() {
                         <p className="text-sm text-muted-foreground capitalize">
                             Billed {mine.data.subscription?.billing_period ?? 'monthly'}
                         </p>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            disabled={cancel.isPending}
-                            onClick={() => cancel.mutate()}
-                            className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-8 px-3 text-xs gap-1.5"
-                        >
-                            {cancel.isPending
-                                ? <span className="inline-block h-3 w-3 animate-pulse rounded bg-current/30" />
-                                : <CreditCard className="h-3.5 w-3.5" />}
-                            Cancel subscription
-                        </Button>
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                disabled={portalMutation.isPending}
+                                onClick={() => portalMutation.mutate()}
+                                className="text-muted-foreground hover:text-foreground hover:bg-accent h-8 px-3 text-xs gap-1.5"
+                            >
+                                {portalMutation.isPending
+                                    ? <span className="inline-block h-3 w-3 animate-pulse rounded bg-current/30" />
+                                    : <CreditCard className="h-3.5 w-3.5" />}
+                                Manage billing
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                disabled={cancel.isPending}
+                                onClick={() => cancel.mutate()}
+                                className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-8 px-3 text-xs gap-1.5"
+                            >
+                                {cancel.isPending
+                                    ? <span className="inline-block h-3 w-3 animate-pulse rounded bg-current/30" />
+                                    : null}
+                                Cancel subscription
+                            </Button>
+                        </div>
                     </div>
                 </div>
             )}

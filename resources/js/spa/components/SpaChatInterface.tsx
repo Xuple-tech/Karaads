@@ -1,5 +1,5 @@
 import type { ChatAttachment, Message } from '@/types/chat';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, ArrowDown } from 'lucide-react';
 import { FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -162,26 +162,54 @@ export default function SpaChatInterface({
     const [mode, setMode] = useState<'text' | 'image'>('text');
     const [files, setFiles] = useState<File[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [showScrollBtn, setShowScrollBtn] = useState(false);
+    const [userScrolledUp, setUserScrolledUp] = useState(false);
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
+
+    const isNearBottom = () => {
+        const el = scrollRef.current;
+        if (!el) return true;
+        return el.scrollHeight - el.scrollTop - el.clientHeight < 120;
+    };
 
     const scrollToBottom = (smooth = true) => {
         const el = scrollRef.current;
         if (!el) return;
         el.scrollTo({ top: el.scrollHeight, behavior: smooth ? 'smooth' : 'instant' });
+        setShowScrollBtn(false);
+        setUserScrolledUp(false);
     };
+
+    const handleScroll = useCallback(() => {
+        const near = isNearBottom();
+        setShowScrollBtn(!near);
+        if (near) setUserScrolledUp(false);
+        else setUserScrolledUp(true);
+    }, []);
+
+    useEffect(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+        el.addEventListener('scroll', handleScroll, { passive: true });
+        return () => el.removeEventListener('scroll', handleScroll);
+    }, [handleScroll]);
 
     useEffect(() => {
         dispatch({ type: 'hydrate', conversationId: initialConversationId, messages: initialMessages });
     }, [initialConversationId, initialMessages]);
 
-    // Scroll to bottom when messages change
+    // Instant scroll when loading a conversation
     useEffect(() => {
         scrollToBottom(false);
+        setUserScrolledUp(false);
     }, [initialConversationId, initialMessages]);
 
+    // Smart auto-scroll: only follow bottom if user hasn't scrolled up
     useEffect(() => {
-        scrollToBottom(true);
+        if (!userScrolledUp) {
+            scrollToBottom(true);
+        }
     }, [state.messages.length, state.activities.length]);
 
     const syncConversation = useCallback(async (conversationId: string) => {
@@ -422,7 +450,7 @@ export default function SpaChatInterface({
         <div className="relative flex w-full flex-1 flex-col overflow-hidden">
 
             {/* ── Scrollable message area ── */}
-            <div className="flex-1 overflow-y-auto overscroll-contain pb-48 pt-6 custom-scrollbar">
+            <div ref={scrollRef} className="flex-1 overflow-y-auto overscroll-contain pb-48 pt-6 custom-scrollbar">
                 <div className="mx-auto w-full max-w-2xl px-4">
 
                     {/* Welcome — Claude-style centered greeting */}
@@ -504,6 +532,20 @@ export default function SpaChatInterface({
                     <div className="h-1" />
                 </div>
             </div>
+
+            {/* Scroll-to-bottom button */}
+            {showScrollBtn && (
+                <div className="pointer-events-none absolute bottom-36 left-0 right-0 z-20 flex justify-center">
+                    <button
+                        type="button"
+                        onClick={() => scrollToBottom(true)}
+                        className="pointer-events-auto flex items-center gap-1.5 rounded-full border border-border/60 bg-[#2a2a2a] px-3.5 py-2 text-xs font-medium text-muted-foreground shadow-lg backdrop-blur-sm transition-all hover:bg-[#333333] hover:text-foreground hover:border-border active:scale-95"
+                    >
+                        <ArrowDown className="h-3.5 w-3.5" />
+                        Scroll to bottom
+                    </button>
+                </div>
+            )}
 
             {/* Guest notice */}
             {!isAuthenticated && (

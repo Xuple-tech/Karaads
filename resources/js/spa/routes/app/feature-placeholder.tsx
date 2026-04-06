@@ -36,11 +36,6 @@ export function Component() {
                 <p className="text-sm text-muted-foreground max-w-sm mx-auto">{feature.description}</p>
             </div>
 
-            <div className="rounded-xl border border-border/40 bg-card px-4 py-3 text-left w-full max-w-xs">
-                <p className="text-xs text-muted-foreground mb-1">Current path</p>
-                <p className="font-mono text-xs text-foreground">{location.pathname}</p>
-            </div>
-
             <div className="flex items-center gap-2">
                 <Button asChild variant="default" size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
                     <Link to="/new">Back to chat</Link>

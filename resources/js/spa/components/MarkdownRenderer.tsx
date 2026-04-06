@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
-import { Download, ExternalLink, FileText, Globe, ImageIcon } from 'lucide-react';
+import { Check, ChevronDown, Copy, Download, ExternalLink, FileText, Globe, ImageIcon } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Card, CardContent } from '@/components/ui/card';
@@ -58,6 +59,94 @@ function parseSegments(markdown: string): Segment[] {
     return segments;
 }
 
+// ~20 lines × 19.5px line-height + 2×16px padding
+const COLLAPSED_HEIGHT = 20 * 19.5 + 32;
+
+function CodeBlock({ language, value, codeTagProps }: { language: string; value: string; codeTagProps?: any }) {
+    const [copied, setCopied] = useState(false);
+    const [expanded, setExpanded] = useState(false);
+
+    const lineCount = value.split('\n').length;
+    const isLong = lineCount > 20;
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(value).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        });
+    };
+
+    return (
+        <div className="relative my-3 rounded-xl border border-white/10 overflow-hidden">
+            <div className="flex items-center justify-between bg-[#2a2d2e] px-4 py-2">
+                <button
+                    onClick={() => isLong && setExpanded(e => !e)}
+                    className={`flex items-center gap-1.5 text-xs font-mono text-muted-foreground/70 select-none transition-colors ${isLong ? 'hover:text-foreground cursor-pointer' : 'cursor-default'}`}
+                    aria-label={expanded ? 'Collapse code' : 'Expand code'}
+                >
+                    {isLong && (
+                        <ChevronDown
+                            className={`h-3.5 w-3.5 transition-transform duration-200 ${expanded ? '' : '-rotate-90'}`}
+                        />
+                    )}
+                    {language}
+                </button>
+                <button
+                    onClick={handleCopy}
+                    className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground"
+                    aria-label="Copy code"
+                >
+                    {copied ? (
+                        <>
+                            <Check className="h-3.5 w-3.5 text-green-400" />
+                            <span className="text-green-400">Copied</span>
+                        </>
+                    ) : (
+                        <>
+                            <Copy className="h-3.5 w-3.5" />
+                            <span>Copy</span>
+                        </>
+                    )}
+                </button>
+            </div>
+            <div
+                style={isLong && !expanded ? { maxHeight: COLLAPSED_HEIGHT, overflow: 'hidden' } : undefined}
+                className="relative"
+            >
+                <SyntaxHighlighter
+                    language={language}
+                    style={oneDark}
+                    PreTag="div"
+                    customStyle={{
+                        margin: 0,
+                        borderRadius: 0,
+                        border: 'none',
+                        padding: '1rem',
+                        fontSize: '13px',
+                        overflowX: 'auto',
+                        background: '#1d1f21',
+                    }}
+                    codeTagProps={codeTagProps}
+                >
+                    {value}
+                </SyntaxHighlighter>
+                {isLong && !expanded && (
+                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#1d1f21] to-transparent pointer-events-none" />
+                )}
+            </div>
+            {isLong && (
+                <button
+                    onClick={() => setExpanded(e => !e)}
+                    className="w-full bg-[#2a2d2e] py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-[#313435] transition-colors flex items-center justify-center gap-1"
+                >
+                    <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
+                    {expanded ? 'Show less' : `Show all ${lineCount} lines`}
+                </button>
+            )}
+        </div>
+    );
+}
+
 function MarkdownBody({ content }: { content: string }) {
     return (
         <div className="prose prose-sm max-w-none dark:prose-invert prose-headings:font-semibold prose-headings:scroll-mt-24 prose-headings:leading-snug prose-h1:text-xl prose-h2:text-lg prose-h3:text-base prose-p:leading-relaxed prose-p:my-2 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-pre:rounded-xl prose-pre:p-0 prose-pre:bg-transparent prose-pre:border-0 prose-code:text-primary prose-code:bg-muted/50 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-[0.85em] prose-code:font-mono prose-code:before:content-none prose-code:after:content-none prose-hr:border-border/40 prose-img:rounded-xl prose-strong:text-foreground prose-strong:font-semibold">
@@ -111,25 +200,7 @@ function MarkdownBody({ content }: { content: string }) {
                         const value = String(children).replace(/\n$/, '');
 
                         if (language) {
-                            return (
-                                <SyntaxHighlighter
-                                    language={language}
-                                    style={oneDark}
-                                    PreTag="div"
-                                    customStyle={{
-                                        margin: '0.75rem 0',
-                                        borderRadius: '0.75rem',
-                                        border: '1px solid rgba(148, 163, 184, 0.2)',
-                                        padding: '1rem',
-                                        fontSize: '13px',
-                                        overflowX: 'auto',
-                                        background: '#1d1f21',
-                                    }}
-                                    codeTagProps={props}
-                                >
-                                    {value}
-                                </SyntaxHighlighter>
-                            );
+                            return <CodeBlock language={language} value={value} codeTagProps={props} />;
                         }
 
                         return (

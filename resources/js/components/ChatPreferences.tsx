@@ -9,10 +9,30 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { AlertCircle, RefreshCw, Save, Settings2, Wand2 } from 'lucide-react';
+import { AlertCircle, Bot, Brain, Briefcase, GraduationCap, MessageSquare, Palette, RefreshCw, Save, Scale, Settings2, Wand2, Zap } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { cn } from '@/lib/utils';
+
+const MODE_ICONS: Record<string, React.ElementType> = {
+    creative:     Palette,
+    research:     Brain,
+    legal:        Scale,
+    technical:    Settings2,
+    educational:  GraduationCap,
+    casual:       MessageSquare,
+    business:     Briefcase,
+    professional: Briefcase,
+    analyst:      Brain,
+    coder:        Settings2,
+};
+
+function ModeIcon({ name, className }: { name: string; className?: string }) {
+    const key = name.toLowerCase().replace(/\s+/g, '_');
+    const matched = Object.entries(MODE_ICONS).find(([k]) => key.includes(k));
+    const Icon = matched ? matched[1] : Bot;
+    return <Icon className={cn('h-4 w-4', className)} />;
+}
 
 interface ChatPreference {
     tone_level: number;
@@ -247,7 +267,7 @@ export default function ChatPreferences() {
                                         >
                                             <div className="text-left">
                                                 <div className="font-medium flex items-center gap-2">
-                                                    <span>{mode.emoji}</span>
+                                                    <ModeIcon name={mode.name} className="text-muted-foreground" />
                                                     {mode.name}
                                                 </div>
                                                 <div className="text-xs text-muted-foreground line-clamp-1">

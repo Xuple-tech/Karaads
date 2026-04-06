@@ -3,9 +3,6 @@ import { Eye, EyeOff } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AuthLayout from '@/spa/components/AuthLayout';
 import { ApiError, apiRequest } from '@/spa/lib/api';
 
@@ -21,6 +18,7 @@ export function Component() {
         password_confirmation: '',
     });
     const [error, setError] = useState<string | null>(null);
+
     const mutation = useMutation({
         mutationFn: () => apiRequest('/api/session/reset-password', { method: 'POST', json: { ...form, token } }),
         onSuccess: () => navigate('/login'),
@@ -34,92 +32,82 @@ export function Component() {
         mutation.mutate();
     };
 
+    const inputClass = "h-11 w-full rounded-xl bg-[#2a2a2a] border border-[#383838] px-4 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-[#8b5cf6] focus:ring-2 focus:ring-[#8b5cf6]/20 transition-all disabled:opacity-50";
+
     return (
         <AuthLayout title="Set a new password" description="Choose a strong, secure password">
-            <form className="space-y-4" onSubmit={onSubmit}>
+            <form className="space-y-3" onSubmit={onSubmit}>
                 {error && (
-                    <div className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                    <div className="rounded-xl border border-destructive/20 bg-destructive/8 px-4 py-3 text-sm text-destructive">
                         {error}
                     </div>
                 )}
 
-                <div className="space-y-1.5">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                        id="email"
-                        type="email"
-                        autoComplete="email"
-                        value={form.email}
-                        readOnly
-                        onChange={(e) => setForm((c) => ({ ...c, email: e.target.value }))}
-                        placeholder="you@example.com"
-                        className="h-10 rounded-lg text-sm opacity-60"
+                <input
+                    type="email"
+                    autoComplete="email"
+                    value={form.email}
+                    readOnly
+                    onChange={(e) => setForm((c) => ({ ...c, email: e.target.value }))}
+                    placeholder="Email address"
+                    className={`${inputClass} opacity-50 cursor-default`}
+                />
+
+                <div className="relative">
+                    <input
+                        type={showPassword ? 'text' : 'password'}
+                        required
+                        autoFocus
+                        autoComplete="new-password"
+                        value={form.password}
+                        onChange={(e) => setForm((c) => ({ ...c, password: e.target.value }))}
+                        placeholder="New password"
+                        disabled={mutation.isPending}
+                        className={`${inputClass} pr-11`}
                     />
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword((v) => !v)}
+                        className="absolute inset-y-0 right-0 flex items-center px-3.5 text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+                    >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
                 </div>
 
-                <div className="space-y-1.5">
-                    <Label htmlFor="password">New password</Label>
-                    <div className="relative">
-                        <Input
-                            id="password"
-                            type={showPassword ? 'text' : 'password'}
-                            required
-                            autoFocus
-                            autoComplete="new-password"
-                            value={form.password}
-                            onChange={(e) => setForm((c) => ({ ...c, password: e.target.value }))}
-                            placeholder="••••••••"
-                            className="h-10 rounded-lg pr-10 text-sm"
-                            disabled={mutation.isPending}
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowPassword((v) => !v)}
-                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground transition-colors"
-                        >
-                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </button>
-                    </div>
+                <div className="relative">
+                    <input
+                        type={showConfirm ? 'text' : 'password'}
+                        required
+                        autoComplete="new-password"
+                        value={form.password_confirmation}
+                        onChange={(e) => setForm((c) => ({ ...c, password_confirmation: e.target.value }))}
+                        placeholder="Confirm new password"
+                        disabled={mutation.isPending}
+                        className={`${inputClass} pr-11`}
+                    />
+                    <button
+                        type="button"
+                        onClick={() => setShowConfirm((v) => !v)}
+                        className="absolute inset-y-0 right-0 flex items-center px-3.5 text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+                    >
+                        {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
                 </div>
 
-                <div className="space-y-1.5">
-                    <Label htmlFor="password_confirmation">Confirm password</Label>
-                    <div className="relative">
-                        <Input
-                            id="password_confirmation"
-                            type={showConfirm ? 'text' : 'password'}
-                            required
-                            autoComplete="new-password"
-                            value={form.password_confirmation}
-                            onChange={(e) => setForm((c) => ({ ...c, password_confirmation: e.target.value }))}
-                            placeholder="••••••••"
-                            className="h-10 rounded-lg pr-10 text-sm"
-                            disabled={mutation.isPending}
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowConfirm((v) => !v)}
-                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground transition-colors"
-                        >
-                            {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </button>
-                    </div>
-                </div>
-
-                <Button
+                <button
                     type="submit"
-                    className="h-10 w-full rounded-lg bg-primary text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
                     disabled={mutation.isPending}
+                    className="h-11 w-full rounded-xl bg-[#8b5cf6] text-sm font-medium text-white transition-colors hover:bg-[#7c3aed] disabled:opacity-60 disabled:cursor-not-allowed mt-1"
                 >
                     {mutation.isPending ? (
-                        <>
-                            <span className="mr-2 inline-block h-4 w-4 shrink-0 animate-pulse rounded bg-current/30" />
+                        <span className="flex items-center justify-center gap-2">
+                            <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
                             Saving…
-                        </>
+                        </span>
                     ) : (
                         'Reset password'
                     )}
-                </Button>
+                </button>
             </form>
         </AuthLayout>
     );

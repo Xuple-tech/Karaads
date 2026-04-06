@@ -134,7 +134,7 @@ function SpaSidebar() {
             <SidebarHeader className="px-3 pt-3 pb-2">
                 <div className="flex items-center justify-between">
                     <NavLink className="flex items-center gap-2.5 px-1 py-1 rounded-lg hover:bg-sidebar-accent/50 transition-colors" to="/new">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#d4844a] to-[#b86c3c]">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9]">
                             <svg className="h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M12 2L2 7l10 5 10-5-10-5z"/>
                                 <path d="M2 17l10 5 10-5"/>
@@ -264,8 +264,8 @@ function SpaSidebar() {
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <button className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left transition-colors hover:bg-sidebar-accent focus-visible:outline-none">
-                            <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#d4844a]/20 ring-1 ring-[#d4844a]/30">
-                                <span className="text-[11px] font-bold text-[#d4844a]">
+                            <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#8b5cf6]/20 ring-1 ring-[#8b5cf6]/30">
+                                <span className="text-[11px] font-bold text-[#8b5cf6]">
                                     {getInitials(session.data?.user?.name ?? '')}
                                 </span>
                             </div>
@@ -427,7 +427,6 @@ export function AppLayout() {
         <SidebarProvider defaultOpen>
             <SpaSidebar />
             <SidebarInset className="bg-background flex h-dvh flex-col overflow-hidden">
-                <SpaTopBar />
                 {isChat ? (
                     <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
                         <Outlet />

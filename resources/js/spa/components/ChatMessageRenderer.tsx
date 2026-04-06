@@ -1,4 +1,4 @@
-import { Check, Copy, RefreshCcw, AlertCircle } from 'lucide-react';
+import { AlertCircle, Check, Copy, Globe, ImageIcon, Loader2, RefreshCcw, Search, Terminal, Zap } from 'lucide-react';
 import { useState } from 'react';
 
 import type { Message } from '@/types/chat';
@@ -11,6 +11,19 @@ export type StreamActivity = {
     status: 'started' | 'completed' | 'failed';
     message?: string | null;
 };
+
+const TOOL_META: Record<string, { icon: React.ElementType; label: string }> = {
+    web_search:       { icon: Search,   label: 'Web Search' },
+    web_fetch:        { icon: Globe,    label: 'Web Fetch' },
+    generate_image:   { icon: ImageIcon, label: 'Generating Image' },
+    run_code:         { icon: Terminal, label: 'Running Code' },
+    code_execution:   { icon: Terminal, label: 'Running Code' },
+    code_interpreter: { icon: Terminal, label: 'Code Interpreter' },
+};
+
+function getToolMeta(name: string): { icon: React.ElementType; label: string } {
+    return TOOL_META[name] ?? { icon: Zap, label: name.replace(/_/g, ' ') };
+}
 
 function UserMessage({ message }: { message: Message }) {
     const text = message.content_text || message.content || '';
@@ -40,41 +53,73 @@ function UserMessage({ message }: { message: Message }) {
 }
 
 function ActivityIndicator({ activities }: { activities: StreamActivity[] }) {
-    if (activities.length === 0) return null;
+    if (!activities.length) return null;
+
+    const running   = activities.filter(a => a.status === 'started');
+    const completed = activities.filter(a => a.status === 'completed');
+    const failed    = activities.filter(a => a.status === 'failed');
 
     return (
-        <div className="mt-2 space-y-1">
-            {activities.map((activity) => {
-                const isFailed = activity.status === 'failed';
-                const isCompleted = activity.status === 'completed';
-                const isRunning = activity.status === 'started';
-
+        <div className="mt-3 space-y-1.5">
+            {/* Running tools — prominent card */}
+            {running.map((activity) => {
+                const { icon: Icon, label } = getToolMeta(activity.tool_name);
                 return (
                     <div
                         key={activity.tool_name}
-                        className={cn(
-                            'flex items-center gap-2 text-xs',
-                            isFailed ? 'text-destructive' : 'text-muted-foreground/70'
-                        )}
+                        className="flex items-center gap-2.5 rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-xs"
                     >
-                        {isFailed && <AlertCircle className="h-3 w-3 flex-shrink-0 text-destructive" />}
-                        {isCompleted && <Check className="h-3 w-3 flex-shrink-0 text-muted-foreground/50" />}
-                        {isRunning && (
-                            <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary/60 animate-pulse" />
+                        <Loader2 className="h-3.5 w-3.5 flex-shrink-0 animate-spin text-primary/70" />
+                        <Icon className="h-3.5 w-3.5 flex-shrink-0 text-primary/60" />
+                        <span className="font-medium capitalize text-foreground/75">{label}</span>
+                        {activity.message && (
+                            <span className="ml-1 max-w-[260px] truncate text-muted-foreground/55">{activity.message}</span>
                         )}
-                        <span className="capitalize">{activity.tool_name.replace(/_/g, ' ')}</span>
-                        {isRunning && (
-                            <div className="flex items-center gap-1 animate-pulse">
-                                <span className="h-1.5 w-8 rounded-full bg-muted-foreground/20" />
-                                <span className="h-1.5 w-5 rounded-full bg-muted-foreground/15" />
-                            </div>
-                        )}
-                        {!isRunning && activity.message && (
-                            <span className="truncate opacity-60">{activity.message}</span>
+                        <div className="ml-auto flex animate-pulse items-center gap-1">
+                            <span className="h-1.5 w-10 rounded-full bg-muted-foreground/15" />
+                            <span className="h-1.5 w-6 rounded-full bg-muted-foreground/10" />
+                        </div>
+                    </div>
+                );
+            })}
+
+            {/* Failed tools */}
+            {failed.map((activity) => {
+                const { icon: Icon, label } = getToolMeta(activity.tool_name);
+                return (
+                    <div
+                        key={activity.tool_name}
+                        className="flex items-center gap-2.5 rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 text-xs text-destructive"
+                    >
+                        <AlertCircle className="h-3.5 w-3.5 flex-shrink-0" />
+                        <Icon className="h-3.5 w-3.5 flex-shrink-0 opacity-70" />
+                        <span className="font-medium capitalize">{label} failed</span>
+                        {activity.message && (
+                            <span className="ml-1 truncate opacity-60">{activity.message}</span>
                         )}
                     </div>
                 );
             })}
+
+            {/* Completed tools — compact row of pills */}
+            {completed.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                    {completed.map((activity) => {
+                        const { icon: Icon, label } = getToolMeta(activity.tool_name);
+                        return (
+                            <div
+                                key={activity.tool_name}
+                                className="flex items-center gap-1.5 rounded-full border border-white/[0.06] bg-white/[0.03] px-2.5 py-1 text-[11px] text-muted-foreground/45"
+                                title={activity.message ?? undefined}
+                            >
+                                <Check className="h-2.5 w-2.5 flex-shrink-0 text-emerald-500/60" />
+                                <Icon className="h-2.5 w-2.5 flex-shrink-0 opacity-50" />
+                                <span className="capitalize">{label}</span>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
         </div>
     );
 }
@@ -112,14 +157,10 @@ function AssistantMessage({
 
     return (
         <div className="flex gap-3 group">
-            {/* Avatar — Claude-style warm orange circle */}
+            {/* Avatar */}
             <div className="mt-0.5 flex-shrink-0">
                 <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] shadow-sm">
-                    <svg className="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                        <path d="M2 17l10 5 10-5"/>
-                        <path d="M2 12l10 5 10-5"/>
-                    </svg>
+                    <Zap className="h-4 w-4 text-white" />
                 </div>
             </div>
 

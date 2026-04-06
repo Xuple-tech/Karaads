@@ -1,13 +1,13 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Bell, Bot, Palette, Save, Shield, User } from 'lucide-react';
+import { Bot, Palette, Save, Shield, User } from 'lucide-react';
 import { type FormEvent, useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { useAppearance } from '@/hooks/use-appearance';
 import { ApiError, apiRequest } from '@/spa/lib/api';
 import { queryClient } from '@/spa/lib/query-client';
 import { sessionQueryKey, useSessionQuery } from '@/spa/lib/session';
@@ -23,12 +23,10 @@ type TabId = typeof tabs[number]['id'];
 
 export function Component() {
     const session = useSessionQuery();
+    const { appearance, updateAppearance } = useAppearance();
     const [activeTab, setActiveTab] = useState<TabId>('account');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [theme, setTheme] = useState('system');
-    const [notifications, setNotifications] = useState(true);
-    const [emailNotifications, setEmailNotifications] = useState(true);
     const [customPrompt, setCustomPrompt] = useState('');
     const [selectedMode, setSelectedMode] = useState<string>('none');
     const [error, setError] = useState<string | null>(null);
@@ -160,26 +158,6 @@ export function Component() {
                             </div>
                         </div>
 
-                        <div className="border-t border-border/40 pt-6">
-                            <h2 className="text-base font-medium text-foreground mb-4">Notifications</h2>
-                            <div className="space-y-3">
-                                <div className="flex items-center justify-between py-2">
-                                    <div>
-                                        <p className="text-sm font-medium text-foreground">In-app notifications</p>
-                                        <p className="text-xs text-muted-foreground mt-0.5">Receive alerts inside the app.</p>
-                                    </div>
-                                    <Switch checked={notifications} onCheckedChange={setNotifications} />
-                                </div>
-                                <div className="flex items-center justify-between py-2">
-                                    <div>
-                                        <p className="text-sm font-medium text-foreground">Email notifications</p>
-                                        <p className="text-xs text-muted-foreground mt-0.5">Get updates sent to your inbox.</p>
-                                    </div>
-                                    <Switch checked={emailNotifications} onCheckedChange={setEmailNotifications} />
-                                </div>
-                            </div>
-                        </div>
-
                         <div className="flex justify-end">
                             <Button type="submit" disabled={profileMutation.isPending}
                                 className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 text-sm">
@@ -231,15 +209,6 @@ export function Component() {
                         <p className="text-xs text-muted-foreground">This prompt is prepended to every conversation.</p>
                     </div>
 
-                    <div className="rounded-xl border border-border/40 bg-card/50 p-4">
-                        <p className="text-xs font-medium text-muted-foreground mb-2 flex items-center gap-1.5">
-                            <Bell className="h-3.5 w-3.5" /> Current preference snapshot
-                        </p>
-                        <pre className="text-xs text-muted-foreground/70 overflow-auto whitespace-pre-wrap">
-                            {JSON.stringify(preferences.data?.preferences ?? {}, null, 2)}
-                        </pre>
-                    </div>
-
                     <div className="flex gap-2 justify-end pt-2">
                         <Button variant="ghost" disabled={resetPreferences.isPending}
                             onClick={() => resetPreferences.mutate()}
@@ -273,9 +242,9 @@ export function Component() {
                                 <button
                                     key={t}
                                     type="button"
-                                    onClick={() => setTheme(t)}
+                                    onClick={() => updateAppearance(t)}
                                     className={`rounded-xl border px-4 py-3 text-sm font-medium capitalize transition-colors ${
-                                        theme === t
+                                        appearance === t
                                             ? 'border-primary bg-primary/10 text-primary'
                                             : 'border-border/50 bg-card text-muted-foreground hover:border-border hover:text-foreground'
                                     }`}
