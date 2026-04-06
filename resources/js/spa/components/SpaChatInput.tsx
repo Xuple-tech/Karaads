@@ -47,7 +47,7 @@ interface SpeechRecognitionErrorEvent extends Event {
 
 interface ChatInputProps {
     onSend: (e: FormEvent, type: "text" | "image", files?: File[]) => void
-    ref: RefObject<HTMLTextAreaElement>
+    ref: RefObject<HTMLTextAreaElement | null>
     is_processing: boolean
     handleKeyDown: (e: KeyboardEvent) => void
     mode: "text" | "image"

@@ -1983,49 +1983,6 @@ TOOL EXECUTION SUMMARY:
         return null;
     }
 
-
-    /**
-     * Store document info in chat
-     */
-    private function storeDocumentInChat(int $chatId, array $documentInfo): void
-    {
-        try {
-            $chat = \App\Models\Chat::find($chatId);
-            if (!$chat) {
-                Log::debug("Skipping document storage: chat not found", ['chat_id' => $chatId]);
-                return;
-            }
-
-            $chat->conversation->chats()->create([
-                'message' => "I've generated a document for you: {$documentInfo['title']}",
-                'role' => 'assistant',
-                'type' => 'document',
-                'metadata' => [
-                    'document_title' => $documentInfo['title'],
-                    'document_url' => $documentInfo['url'],
-                    'document_filename' => $documentInfo['filename'],
-                    'document_storage_path' => $documentInfo['storage_path'],
-                    'document_type' => $documentInfo['document_type'],
-                    'document_size' => $documentInfo['size'],
-                    'generated_at' => $documentInfo['generated_at'],
-                    'downloadable' => true
-                ]
-            ]);
-
-            Log::info("Stored document in chat", [
-                'chat_id' => $chatId,
-                'title' => $documentInfo['title'],
-                'filename' => $documentInfo['filename']
-            ]);
-        } catch (\Exception $e) {
-            Log::error("Failed to store document in chat", [
-                'chat_id' => $chatId,
-                'error' => $e->getMessage()
-            ]);
-        }
-    }
-
-
     /**
      * Generate Word document using Laravel Str::markdown()
      */
@@ -2084,71 +2041,6 @@ TOOL EXECUTION SUMMARY:
     }
 
     /**
-     * Create Word document from HTML content using PHPWord
-     */
-    private function createWordDocumentFromHtml(string $title, string $htmlContent, string $documentType, array $formatting = []): string
-    {
-        $phpWord = new \PhpOffice\PhpWord\PhpWord();
-
-        // Set document properties
-        $properties = $phpWord->getDocInfo();
-        $properties->setTitle($title);
-        $properties->setLastModifiedBy('User');
-
-        // Set default font
-        $fontSize = $formatting['font_size'] ?? 12;
-        $fontFamily = $formatting['font_family'] ?? 'Calibri';
-
-        $phpWord->setDefaultFontSize($fontSize);
-        $phpWord->setDefaultFontName($fontFamily);
-
-        // Add a section
-        $section = $phpWord->addSection();
-
-        // Add title
-        $section->addTitle($title, 0);
-        $section->addTextBreak(1);
-
-        // Clean HTML and add to document
-        $cleanHtml = $this->cleanHtmlForWord($htmlContent);
-        \PhpOffice\PhpWord\Shared\Html::addHtml($section, $cleanHtml, false, false);
-
-        // Save the document
-        $tempPath = tempnam(sys_get_temp_dir(), 'doc_') . '.docx';
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-        $objWriter->save($tempPath);
-
-        return $tempPath;
-    }
-
-    /**
-     * Clean HTML for Word document compatibility
-     */
-    private function cleanHtmlForWord(string $html): string
-    {
-        // Remove HTML5 elements that PHPWord doesn't support
-        $html = preg_replace('/<header>.*?<\/header>/is', '', $html);
-        $html = preg_replace('/<footer>.*?<\/footer>/is', '', $html);
-        $html = preg_replace('/<nav>.*?<\/nav>/is', '', $html);
-
-        // Replace HTML5 semantic tags with divs
-        $html = str_replace(['<article>', '</article>'], ['<div>', '</div>'], $html);
-        $html = str_replace(['<section>', '</section>'], ['<div>', '</div>'], $html);
-        $html = str_replace(['<aside>', '</aside>'], ['<div>', '</div>'], $html);
-
-        // Remove inline styles that might cause issues
-        $html = preg_replace('/style="[^"]*"/', '', $html);
-
-        // Add basic table styling if tables exist
-        if (strpos($html, '<table>') !== false) {
-            $html = str_replace('<table>', '<table border="1" cellpadding="5" cellspacing="0">', $html);
-        }
-
-        return $html;
-    }
-
-
-    /**
      * Generate PDF document using DomPDF (Laravel way)
      */
     public function generatePdfDocument(array $arguments, ?int $chatId = null): array
@@ -2201,14 +2093,6 @@ TOOL EXECUTION SUMMARY:
             Log::error('Python PDF generation error: ' . $e->getMessage());
             throw new \Exception('Failed to generate PDF: ' . $e->getMessage());
         }
-    }
-
-    /**
-     * Format markdown content for PDF
-     */
-    private function formatMarkdownForPdf(string $markdown): string
-    {
-        return Str::markdown($markdown);
     }
 
     /**
