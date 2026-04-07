@@ -145,7 +145,7 @@ class GrokApiService
         return null; // Allowed
     }
 
-    /**
+    /** 
      * Check if the current user can generate images
      * Returns null if allowed, or a structured limit response if not allowed
      */

@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\ChatPreferenceController;
 use App\Http\Controllers\Api\PersonalizationController;
 use App\Http\Controllers\Admin\PersonalizationAdminController;
 use App\Http\Controllers\Admin\AIModeController;
+use App\Http\Controllers\Admin\SubscriptionPlanController as AdminSubscriptionPlanController;
 
 // Public routes
 Route::post('/auth/login', [AuthController::class, 'login']);
@@ -145,5 +146,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [PersonalizationAdminController::class, 'createTemplate']);
         Route::put('/{id}', [PersonalizationAdminController::class, 'updateTemplate']);
         Route::delete('/{id}', [PersonalizationAdminController::class, 'deleteTemplate']);
+    });
+
+    // Admin routes for Subscription Plan management
+    Route::prefix('admin/subscription-plans')->middleware('admin')->group(function () {
+        Route::get('/', [AdminSubscriptionPlanController::class, 'index']);
+        Route::post('/', [AdminSubscriptionPlanController::class, 'store']);
+        Route::put('/{subscriptionPlan}', [AdminSubscriptionPlanController::class, 'update']);
+        Route::delete('/{subscriptionPlan}', [AdminSubscriptionPlanController::class, 'destroy']);
+        Route::patch('/{subscriptionPlan}/toggle', [AdminSubscriptionPlanController::class, 'deactivate']);
     });
 });

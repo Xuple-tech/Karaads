@@ -22,6 +22,7 @@ class Subscription extends Model
         'expires_at',
         'cancelled_at',
         'payment_method',
+        'billing_period',
         'external_subscription_id',
         'amount_paid',
         'is_trial',

@@ -13,13 +13,17 @@ class SubscriptionPlanController extends Controller
     /**
      * Display a listing of all subscription plans
      */
-    public function index()
+    public function index(Request $request)
     {
         $plans = SubscriptionPlan::orderBy('display_order')->get()->map(function ($plan) {
             return array_merge($plan->toArray(), [
                 'active_subscriptions_count' => $plan->activeSubscriptions()->count(),
             ]);
         });
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'plans' => $plans]);
+        }
 
         return Inertia::render('Admin/Subscriptions/Index', [
             'plans' => $plans,
@@ -66,11 +70,14 @@ class SubscriptionPlanController extends Controller
         try {
             $plan = SubscriptionPlan::create($validated);
 
-            // return response()->json([
-            //     'success' => true,
-            //     'message' => 'Subscription plan created successfully',
-            //     'plan' => $plan,
-            // ]);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Subscription plan created successfully',
+                    'plan' => $plan,
+                ]);
+            }
+
             return to_route('admin.subscriptions.plans.index');
         } catch (\Exception $e) {
             Log::error('Error creating subscription plan: ' . $e->getMessage());
