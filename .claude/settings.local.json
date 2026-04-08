@@ -11,7 +11,8 @@
       "Bash(npm run:*)",
       "Bash(dir \"c:\\\\Users\\\\DukeOfBotLeg\\\\Documents\\\\kwati\\\\kwatiai.com-main\\\\resources\\\\js\\\\pages\\\\Meta\\\\\")",
       "Bash(grep -E \"\\\\.ts$|\\\\.tsx$\")",
-      "Bash(grep -l \"GrokApiService\\\\|generateChat\" /c/Users/DukeOfBotLeg/Documents/kwati/kwatiai.com-main/app/Services/*.php)"
+      "Bash(grep -l \"GrokApiService\\\\|generateChat\" /c/Users/DukeOfBotLeg/Documents/kwati/kwatiai.com-main/app/Services/*.php)",
+      "Bash(grep -l \"conversations\\\\|chats\" /c/Users/DukeOfBotLeg/Documents/kwati/kwatiai.com-main/database/migrations/*.php)"
     ]
   }
 }

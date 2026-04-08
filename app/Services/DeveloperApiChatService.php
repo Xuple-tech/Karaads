@@ -75,7 +75,11 @@ class DeveloperApiChatService
                 ->post(rtrim($baseUrl, '/') . '/chat/completions', $upstreamPayload)
                 ->throw();
         } catch (RequestException $exception) {
-            throw new \RuntimeException('Upstream model request failed.');
+            $upstreamBody = $exception->response?->body() ?? '(no response body)';
+            $upstreamStatus = $exception->response?->status() ?? 0;
+            throw new \RuntimeException("Upstream error {$upstreamStatus}: {$upstreamBody}");
+        } catch (\Illuminate\Http\Client\ConnectionException $exception) {
+            throw new \RuntimeException("Upstream connection failed: " . $exception->getMessage());
         }
 
         $upstreamJson = $response->json();
