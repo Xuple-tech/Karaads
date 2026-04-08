@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
+use App\Services\PlanEntitlementService;
 use App\Services\SubscriptionService;
 use App\Services\StripeService;
 use Illuminate\Http\Request;
@@ -15,11 +16,13 @@ class SubscriptionController extends Controller
 {
     protected $subscriptionService;
     protected $stripeService;
+    protected $entitlements;
 
-    public function __construct(SubscriptionService $subscriptionService, StripeService $stripeService)
+    public function __construct(SubscriptionService $subscriptionService, StripeService $stripeService, PlanEntitlementService $entitlements)
     {
         $this->subscriptionService = $subscriptionService;
         $this->stripeService = $stripeService;
+        $this->entitlements = $entitlements;
     }
 
     /**
@@ -43,7 +46,15 @@ class SubscriptionController extends Controller
      */
     public function getPlans()
     {
-        $plans = SubscriptionPlan::getActivePlans();
+        $plans = SubscriptionPlan::getActivePlans()->load('planFeatures')->map(
+            fn (SubscriptionPlan $plan) => array_merge($plan->toArray(), [
+                'features' => $this->entitlements->getDisplayFeatures($plan),
+                'capabilities' => collect($this->entitlements->getPlanEntitlements($plan)['capabilities'])
+                    ->where('enabled', true)
+                    ->values()
+                    ->all(),
+            ])
+        );
         $userSubscription = null;
 
         if (Auth::check()) {
@@ -74,7 +85,10 @@ class SubscriptionController extends Controller
         return response()->json([
             'success' => true,
             'subscription' => $subscription,
-            'plan' => $plan,
+            'plan' => $plan ? array_merge($plan->toArray(), [
+                'features' => $this->entitlements->getDisplayFeatures($plan->loadMissing('planFeatures')),
+                'entitlements' => $this->entitlements->getPlanEntitlements($plan),
+            ]) : null,
             'usage' => $usage,
         ]);
     }
@@ -313,27 +327,27 @@ class SubscriptionController extends Controller
             'success' => true,
             'daily' => [
                 'requests_used' => $today?->requests_used ?? 0,
-                'requests_limit' => $plan?->requests_per_day,
+                'requests_limit' => $plan ? $this->entitlements->getDailyLimitForUsage($plan, 'requests') : null,
                 'tokens_used' => $today?->tokens_used ?? 0,
-                'tokens_limit' => $plan?->tokens_per_day,
+                'tokens_limit' => $plan ? $this->entitlements->getDailyLimitForUsage($plan, 'tokens') : null,
                 'images_generated' => $today?->images_generated ?? 0,
-                'images_limit' => null,
+                'images_limit' => $plan ? $this->entitlements->getDailyLimitForUsage($plan, 'images') : null,
                 'voice_messages' => $today?->voice_messages ?? 0,
-                'voice_limit' => null,
+                'voice_limit' => $plan ? $this->entitlements->getDailyLimitForUsage($plan, 'voice_messages') : null,
                 'emails_processed' => $today?->emails_processed ?? 0,
-                'emails_limit' => null,
+                'emails_limit' => $plan ? $this->entitlements->getDailyLimitForUsage($plan, 'emails_processed') : null,
             ],
             'monthly' => [
                 'requests_used' => $monthly['requests_used'] ?? 0,
-                'requests_limit' => $plan?->requests_per_month,
+                'requests_limit' => $plan ? $this->entitlements->getMonthlyLimitForUsage($plan, 'requests') : null,
                 'tokens_used' => $monthly['tokens_used'] ?? 0,
-                'tokens_limit' => $plan?->tokens_per_month,
-                'images_generated' => $monthly['total_images'] ?? 0,
-                'images_limit' => null,
-                'voice_messages' => $monthly['total_voice_messages'] ?? 0,
-                'voice_limit' => null,
-                'emails_processed' => $monthly['total_emails'] ?? 0,
-                'emails_limit' => null,
+                'tokens_limit' => $plan ? $this->entitlements->getMonthlyLimitForUsage($plan, 'tokens') : null,
+                'images_generated' => $monthly['images_generated'] ?? 0,
+                'images_limit' => $plan ? $this->entitlements->getMonthlyLimitForUsage($plan, 'images') : null,
+                'voice_messages' => $monthly['voice_messages'] ?? 0,
+                'voice_limit' => $plan ? $this->entitlements->getMonthlyLimitForUsage($plan, 'voice_messages') : null,
+                'emails_processed' => $monthly['emails_processed'] ?? 0,
+                'emails_limit' => $plan ? $this->entitlements->getMonthlyLimitForUsage($plan, 'emails_processed') : null,
             ],
         ]);
     }

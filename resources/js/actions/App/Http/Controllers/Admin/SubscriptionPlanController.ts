@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::index
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:16
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:22
  * @route '/api/admin/subscription-plans'
  */
 const indexf205ac9d5a25e3fd9d2bc6d9391d2688 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ indexf205ac9d5a25e3fd9d2bc6d9391d2688.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::index
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:16
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:22
  * @route '/api/admin/subscription-plans'
  */
 indexf205ac9d5a25e3fd9d2bc6d9391d2688.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ indexf205ac9d5a25e3fd9d2bc6d9391d2688.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::index
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:16
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:22
  * @route '/api/admin/subscription-plans'
  */
 indexf205ac9d5a25e3fd9d2bc6d9391d2688.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ indexf205ac9d5a25e3fd9d2bc6d9391d2688.get = (options?: RouteQueryOptions): Route
 })
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::index
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:16
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:22
  * @route '/api/admin/subscription-plans'
  */
 indexf205ac9d5a25e3fd9d2bc6d9391d2688.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ indexf205ac9d5a25e3fd9d2bc6d9391d2688.head = (options?: RouteQueryOptions): Rout
 
     /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::index
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:16
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:22
  * @route '/admin/subscriptions/plans'
  */
 const index41a4b8c402ff7a8d87b515312d7d0f15 = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -59,7 +59,7 @@ index41a4b8c402ff7a8d87b515312d7d0f15.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::index
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:16
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:22
  * @route '/admin/subscriptions/plans'
  */
 index41a4b8c402ff7a8d87b515312d7d0f15.url = (options?: RouteQueryOptions) => {
@@ -68,7 +68,7 @@ index41a4b8c402ff7a8d87b515312d7d0f15.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::index
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:16
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:22
  * @route '/admin/subscriptions/plans'
  */
 index41a4b8c402ff7a8d87b515312d7d0f15.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -77,7 +77,7 @@ index41a4b8c402ff7a8d87b515312d7d0f15.get = (options?: RouteQueryOptions): Route
 })
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::index
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:16
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:22
  * @route '/admin/subscriptions/plans'
  */
 index41a4b8c402ff7a8d87b515312d7d0f15.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -91,8 +91,286 @@ export const index = {
 }
 
 /**
+* @see \App\Http\Controllers\Admin\SubscriptionPlanController::show
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:85
+ * @route '/api/admin/subscription-plans/{subscriptionPlan}'
+ */
+const showca0afa6447c9ccd90b54f53f68715a66 = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: showca0afa6447c9ccd90b54f53f68715a66.url(args, options),
+    method: 'get',
+})
+
+showca0afa6447c9ccd90b54f53f68715a66.definition = {
+    methods: ["get","head"],
+    url: '/api/admin/subscription-plans/{subscriptionPlan}',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\SubscriptionPlanController::show
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:85
+ * @route '/api/admin/subscription-plans/{subscriptionPlan}'
+ */
+showca0afa6447c9ccd90b54f53f68715a66.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { subscriptionPlan: args }
+    }
+
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { subscriptionPlan: args.id }
+        }
+    
+    if (Array.isArray(args)) {
+        args = {
+                    subscriptionPlan: args[0],
+                }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+                        subscriptionPlan: typeof args.subscriptionPlan === 'object'
+                ? args.subscriptionPlan.id
+                : args.subscriptionPlan,
+                }
+
+    return showca0afa6447c9ccd90b54f53f68715a66.definition.url
+            .replace('{subscriptionPlan}', parsedArgs.subscriptionPlan.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\SubscriptionPlanController::show
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:85
+ * @route '/api/admin/subscription-plans/{subscriptionPlan}'
+ */
+showca0afa6447c9ccd90b54f53f68715a66.get = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: showca0afa6447c9ccd90b54f53f68715a66.url(args, options),
+    method: 'get',
+})
+/**
+* @see \App\Http\Controllers\Admin\SubscriptionPlanController::show
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:85
+ * @route '/api/admin/subscription-plans/{subscriptionPlan}'
+ */
+showca0afa6447c9ccd90b54f53f68715a66.head = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: showca0afa6447c9ccd90b54f53f68715a66.url(args, options),
+    method: 'head',
+})
+
+    /**
+* @see \App\Http\Controllers\Admin\SubscriptionPlanController::show
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:85
+ * @route '/admin/subscriptions/plans/{subscriptionPlan}'
+ */
+const showbe035c925555ce698b1134711ce0054c = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: showbe035c925555ce698b1134711ce0054c.url(args, options),
+    method: 'get',
+})
+
+showbe035c925555ce698b1134711ce0054c.definition = {
+    methods: ["get","head"],
+    url: '/admin/subscriptions/plans/{subscriptionPlan}',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\SubscriptionPlanController::show
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:85
+ * @route '/admin/subscriptions/plans/{subscriptionPlan}'
+ */
+showbe035c925555ce698b1134711ce0054c.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { subscriptionPlan: args }
+    }
+
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { subscriptionPlan: args.id }
+        }
+    
+    if (Array.isArray(args)) {
+        args = {
+                    subscriptionPlan: args[0],
+                }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+                        subscriptionPlan: typeof args.subscriptionPlan === 'object'
+                ? args.subscriptionPlan.id
+                : args.subscriptionPlan,
+                }
+
+    return showbe035c925555ce698b1134711ce0054c.definition.url
+            .replace('{subscriptionPlan}', parsedArgs.subscriptionPlan.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\SubscriptionPlanController::show
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:85
+ * @route '/admin/subscriptions/plans/{subscriptionPlan}'
+ */
+showbe035c925555ce698b1134711ce0054c.get = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: showbe035c925555ce698b1134711ce0054c.url(args, options),
+    method: 'get',
+})
+/**
+* @see \App\Http\Controllers\Admin\SubscriptionPlanController::show
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:85
+ * @route '/admin/subscriptions/plans/{subscriptionPlan}'
+ */
+showbe035c925555ce698b1134711ce0054c.head = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: showbe035c925555ce698b1134711ce0054c.url(args, options),
+    method: 'head',
+})
+
+export const show = {
+    '/api/admin/subscription-plans/{subscriptionPlan}': showca0afa6447c9ccd90b54f53f68715a66,
+    '/admin/subscriptions/plans/{subscriptionPlan}': showbe035c925555ce698b1134711ce0054c,
+}
+
+/**
+* @see \App\Http\Controllers\Admin\SubscriptionPlanController::getStats
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:208
+ * @route '/api/admin/subscription-plans/{subscriptionPlan}/stats'
+ */
+const getStats3039b849cd72cdef56bc32387f9365c1 = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: getStats3039b849cd72cdef56bc32387f9365c1.url(args, options),
+    method: 'get',
+})
+
+getStats3039b849cd72cdef56bc32387f9365c1.definition = {
+    methods: ["get","head"],
+    url: '/api/admin/subscription-plans/{subscriptionPlan}/stats',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\SubscriptionPlanController::getStats
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:208
+ * @route '/api/admin/subscription-plans/{subscriptionPlan}/stats'
+ */
+getStats3039b849cd72cdef56bc32387f9365c1.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { subscriptionPlan: args }
+    }
+
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { subscriptionPlan: args.id }
+        }
+    
+    if (Array.isArray(args)) {
+        args = {
+                    subscriptionPlan: args[0],
+                }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+                        subscriptionPlan: typeof args.subscriptionPlan === 'object'
+                ? args.subscriptionPlan.id
+                : args.subscriptionPlan,
+                }
+
+    return getStats3039b849cd72cdef56bc32387f9365c1.definition.url
+            .replace('{subscriptionPlan}', parsedArgs.subscriptionPlan.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\SubscriptionPlanController::getStats
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:208
+ * @route '/api/admin/subscription-plans/{subscriptionPlan}/stats'
+ */
+getStats3039b849cd72cdef56bc32387f9365c1.get = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: getStats3039b849cd72cdef56bc32387f9365c1.url(args, options),
+    method: 'get',
+})
+/**
+* @see \App\Http\Controllers\Admin\SubscriptionPlanController::getStats
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:208
+ * @route '/api/admin/subscription-plans/{subscriptionPlan}/stats'
+ */
+getStats3039b849cd72cdef56bc32387f9365c1.head = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: getStats3039b849cd72cdef56bc32387f9365c1.url(args, options),
+    method: 'head',
+})
+
+    /**
+* @see \App\Http\Controllers\Admin\SubscriptionPlanController::getStats
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:208
+ * @route '/admin/subscriptions/plans/{subscriptionPlan}/stats'
+ */
+const getStats779d0cb9b765803e0711411ee5f3209a = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: getStats779d0cb9b765803e0711411ee5f3209a.url(args, options),
+    method: 'get',
+})
+
+getStats779d0cb9b765803e0711411ee5f3209a.definition = {
+    methods: ["get","head"],
+    url: '/admin/subscriptions/plans/{subscriptionPlan}/stats',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Admin\SubscriptionPlanController::getStats
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:208
+ * @route '/admin/subscriptions/plans/{subscriptionPlan}/stats'
+ */
+getStats779d0cb9b765803e0711411ee5f3209a.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { subscriptionPlan: args }
+    }
+
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { subscriptionPlan: args.id }
+        }
+    
+    if (Array.isArray(args)) {
+        args = {
+                    subscriptionPlan: args[0],
+                }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+                        subscriptionPlan: typeof args.subscriptionPlan === 'object'
+                ? args.subscriptionPlan.id
+                : args.subscriptionPlan,
+                }
+
+    return getStats779d0cb9b765803e0711411ee5f3209a.definition.url
+            .replace('{subscriptionPlan}', parsedArgs.subscriptionPlan.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Admin\SubscriptionPlanController::getStats
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:208
+ * @route '/admin/subscriptions/plans/{subscriptionPlan}/stats'
+ */
+getStats779d0cb9b765803e0711411ee5f3209a.get = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: getStats779d0cb9b765803e0711411ee5f3209a.url(args, options),
+    method: 'get',
+})
+/**
+* @see \App\Http\Controllers\Admin\SubscriptionPlanController::getStats
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:208
+ * @route '/admin/subscriptions/plans/{subscriptionPlan}/stats'
+ */
+getStats779d0cb9b765803e0711411ee5f3209a.head = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: getStats779d0cb9b765803e0711411ee5f3209a.url(args, options),
+    method: 'head',
+})
+
+export const getStats = {
+    '/api/admin/subscription-plans/{subscriptionPlan}/stats': getStats3039b849cd72cdef56bc32387f9365c1,
+    '/admin/subscriptions/plans/{subscriptionPlan}/stats': getStats779d0cb9b765803e0711411ee5f3209a,
+}
+
+/**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::store
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:46
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:58
  * @route '/api/admin/subscription-plans'
  */
 const storef205ac9d5a25e3fd9d2bc6d9391d2688 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -107,7 +385,7 @@ storef205ac9d5a25e3fd9d2bc6d9391d2688.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::store
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:46
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:58
  * @route '/api/admin/subscription-plans'
  */
 storef205ac9d5a25e3fd9d2bc6d9391d2688.url = (options?: RouteQueryOptions) => {
@@ -116,7 +394,7 @@ storef205ac9d5a25e3fd9d2bc6d9391d2688.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::store
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:46
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:58
  * @route '/api/admin/subscription-plans'
  */
 storef205ac9d5a25e3fd9d2bc6d9391d2688.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -126,7 +404,7 @@ storef205ac9d5a25e3fd9d2bc6d9391d2688.post = (options?: RouteQueryOptions): Rout
 
     /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::store
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:46
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:58
  * @route '/admin/subscriptions/plans'
  */
 const store41a4b8c402ff7a8d87b515312d7d0f15 = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -141,7 +419,7 @@ store41a4b8c402ff7a8d87b515312d7d0f15.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::store
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:46
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:58
  * @route '/admin/subscriptions/plans'
  */
 store41a4b8c402ff7a8d87b515312d7d0f15.url = (options?: RouteQueryOptions) => {
@@ -150,7 +428,7 @@ store41a4b8c402ff7a8d87b515312d7d0f15.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::store
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:46
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:58
  * @route '/admin/subscriptions/plans'
  */
 store41a4b8c402ff7a8d87b515312d7d0f15.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -165,7 +443,7 @@ export const store = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::update
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:105
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:116
  * @route '/api/admin/subscription-plans/{subscriptionPlan}'
  */
 const updateca0afa6447c9ccd90b54f53f68715a66 = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -180,7 +458,7 @@ updateca0afa6447c9ccd90b54f53f68715a66.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::update
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:105
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:116
  * @route '/api/admin/subscription-plans/{subscriptionPlan}'
  */
 updateca0afa6447c9ccd90b54f53f68715a66.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -213,7 +491,7 @@ updateca0afa6447c9ccd90b54f53f68715a66.url = (args: { subscriptionPlan: string |
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::update
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:105
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:116
  * @route '/api/admin/subscription-plans/{subscriptionPlan}'
  */
 updateca0afa6447c9ccd90b54f53f68715a66.put = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -223,7 +501,7 @@ updateca0afa6447c9ccd90b54f53f68715a66.put = (args: { subscriptionPlan: string |
 
     /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::update
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:105
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:116
  * @route '/admin/subscriptions/plans/{subscriptionPlan}'
  */
 const updatebe035c925555ce698b1134711ce0054c = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -238,7 +516,7 @@ updatebe035c925555ce698b1134711ce0054c.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::update
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:105
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:116
  * @route '/admin/subscriptions/plans/{subscriptionPlan}'
  */
 updatebe035c925555ce698b1134711ce0054c.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -271,7 +549,7 @@ updatebe035c925555ce698b1134711ce0054c.url = (args: { subscriptionPlan: string |
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::update
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:105
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:116
  * @route '/admin/subscriptions/plans/{subscriptionPlan}'
  */
 updatebe035c925555ce698b1134711ce0054c.put = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -286,7 +564,7 @@ export const update = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::destroy
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:149
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:143
  * @route '/api/admin/subscription-plans/{subscriptionPlan}'
  */
 const destroyca0afa6447c9ccd90b54f53f68715a66 = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -301,7 +579,7 @@ destroyca0afa6447c9ccd90b54f53f68715a66.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::destroy
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:149
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:143
  * @route '/api/admin/subscription-plans/{subscriptionPlan}'
  */
 destroyca0afa6447c9ccd90b54f53f68715a66.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -334,7 +612,7 @@ destroyca0afa6447c9ccd90b54f53f68715a66.url = (args: { subscriptionPlan: string 
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::destroy
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:149
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:143
  * @route '/api/admin/subscription-plans/{subscriptionPlan}'
  */
 destroyca0afa6447c9ccd90b54f53f68715a66.delete = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -344,7 +622,7 @@ destroyca0afa6447c9ccd90b54f53f68715a66.delete = (args: { subscriptionPlan: stri
 
     /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::destroy
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:149
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:143
  * @route '/admin/subscriptions/plans/{subscriptionPlan}'
  */
 const destroybe035c925555ce698b1134711ce0054c = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -359,7 +637,7 @@ destroybe035c925555ce698b1134711ce0054c.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::destroy
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:149
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:143
  * @route '/admin/subscriptions/plans/{subscriptionPlan}'
  */
 destroybe035c925555ce698b1134711ce0054c.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -392,7 +670,7 @@ destroybe035c925555ce698b1134711ce0054c.url = (args: { subscriptionPlan: string 
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::destroy
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:149
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:143
  * @route '/admin/subscriptions/plans/{subscriptionPlan}'
  */
 destroybe035c925555ce698b1134711ce0054c.delete = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -407,7 +685,7 @@ export const destroy = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::deactivate
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:178
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:175
  * @route '/api/admin/subscription-plans/{subscriptionPlan}/toggle'
  */
 const deactivatef90e0b9f195f532034c7d84ffae2dc5e = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -422,7 +700,7 @@ deactivatef90e0b9f195f532034c7d84ffae2dc5e.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::deactivate
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:178
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:175
  * @route '/api/admin/subscription-plans/{subscriptionPlan}/toggle'
  */
 deactivatef90e0b9f195f532034c7d84ffae2dc5e.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -455,7 +733,7 @@ deactivatef90e0b9f195f532034c7d84ffae2dc5e.url = (args: { subscriptionPlan: stri
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::deactivate
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:178
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:175
  * @route '/api/admin/subscription-plans/{subscriptionPlan}/toggle'
  */
 deactivatef90e0b9f195f532034c7d84ffae2dc5e.patch = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -465,7 +743,7 @@ deactivatef90e0b9f195f532034c7d84ffae2dc5e.patch = (args: { subscriptionPlan: st
 
     /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::deactivate
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:178
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:175
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/deactivate'
  */
 const deactivateabefa895ae3299d6302e765e6dc5eab4 = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -480,7 +758,7 @@ deactivateabefa895ae3299d6302e765e6dc5eab4.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::deactivate
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:178
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:175
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/deactivate'
  */
 deactivateabefa895ae3299d6302e765e6dc5eab4.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -513,7 +791,7 @@ deactivateabefa895ae3299d6302e765e6dc5eab4.url = (args: { subscriptionPlan: stri
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::deactivate
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:178
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:175
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/deactivate'
  */
 deactivateabefa895ae3299d6302e765e6dc5eab4.patch = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -528,7 +806,7 @@ export const deactivate = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::create
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:36
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:48
  * @route '/admin/subscriptions/plans/create'
  */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -543,7 +821,7 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::create
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:36
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:48
  * @route '/admin/subscriptions/plans/create'
  */
 create.url = (options?: RouteQueryOptions) => {
@@ -552,7 +830,7 @@ create.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::create
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:36
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:48
  * @route '/admin/subscriptions/plans/create'
  */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -561,7 +839,7 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::create
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:36
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:48
  * @route '/admin/subscriptions/plans/create'
  */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -571,7 +849,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::edit
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:94
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:104
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/edit'
  */
 export const edit = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -586,7 +864,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::edit
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:94
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:104
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/edit'
  */
 edit.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -619,7 +897,7 @@ edit.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionP
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::edit
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:94
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:104
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/edit'
  */
 edit.get = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -628,80 +906,13 @@ edit.get = (args: { subscriptionPlan: string | { id: string } } | [subscriptionP
 })
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanController::edit
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:94
+ * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:104
  * @route '/admin/subscriptions/plans/{subscriptionPlan}/edit'
  */
 edit.head = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
-
-/**
-* @see \App\Http\Controllers\Admin\SubscriptionPlanController::getStats
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:202
- * @route '/admin/subscriptions/plans/{subscriptionPlan}/stats'
- */
-export const getStats = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: getStats.url(args, options),
-    method: 'get',
-})
-
-getStats.definition = {
-    methods: ["get","head"],
-    url: '/admin/subscriptions/plans/{subscriptionPlan}/stats',
-} satisfies RouteDefinition<["get","head"]>
-
-/**
-* @see \App\Http\Controllers\Admin\SubscriptionPlanController::getStats
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:202
- * @route '/admin/subscriptions/plans/{subscriptionPlan}/stats'
- */
-getStats.url = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
-    if (typeof args === 'string' || typeof args === 'number') {
-        args = { subscriptionPlan: args }
-    }
-
-            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-            args = { subscriptionPlan: args.id }
-        }
-    
-    if (Array.isArray(args)) {
-        args = {
-                    subscriptionPlan: args[0],
-                }
-    }
-
-    args = applyUrlDefaults(args)
-
-    const parsedArgs = {
-                        subscriptionPlan: typeof args.subscriptionPlan === 'object'
-                ? args.subscriptionPlan.id
-                : args.subscriptionPlan,
-                }
-
-    return getStats.definition.url
-            .replace('{subscriptionPlan}', parsedArgs.subscriptionPlan.toString())
-            .replace(/\/+$/, '') + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Admin\SubscriptionPlanController::getStats
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:202
- * @route '/admin/subscriptions/plans/{subscriptionPlan}/stats'
- */
-getStats.get = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: getStats.url(args, options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\Admin\SubscriptionPlanController::getStats
- * @see app/Http/Controllers/Admin/SubscriptionPlanController.php:202
- * @route '/admin/subscriptions/plans/{subscriptionPlan}/stats'
- */
-getStats.head = (args: { subscriptionPlan: string | { id: string } } | [subscriptionPlan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: getStats.url(args, options),
-    method: 'head',
-})
-const SubscriptionPlanController = { index, store, update, destroy, deactivate, create, edit, getStats }
+const SubscriptionPlanController = { index, show, getStats, store, update, destroy, deactivate, create, edit }
 
 export default SubscriptionPlanController

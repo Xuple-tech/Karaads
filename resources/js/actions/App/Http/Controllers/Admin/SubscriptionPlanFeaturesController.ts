@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanFeaturesController::index
- * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:17
+ * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:19
  * @route '/admin/subscriptions/plans/{plan}/features'
  */
 export const index = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanFeaturesController::index
- * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:17
+ * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:19
  * @route '/admin/subscriptions/plans/{plan}/features'
  */
 index.url = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ index.url = (args: { plan: string | { id: string } } | [plan: string | { id: str
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanFeaturesController::index
- * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:17
+ * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:19
  * @route '/admin/subscriptions/plans/{plan}/features'
  */
 index.get = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -58,7 +58,7 @@ index.get = (args: { plan: string | { id: string } } | [plan: string | { id: str
 })
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanFeaturesController::index
- * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:17
+ * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:19
  * @route '/admin/subscriptions/plans/{plan}/features'
  */
 index.head = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -68,7 +68,7 @@ index.head = (args: { plan: string | { id: string } } | [plan: string | { id: st
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanFeaturesController::store
- * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:42
+ * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:46
  * @route '/admin/subscriptions/plans/{plan}/features'
  */
 export const store = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -83,7 +83,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanFeaturesController::store
- * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:42
+ * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:46
  * @route '/admin/subscriptions/plans/{plan}/features'
  */
 store.url = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -116,7 +116,7 @@ store.url = (args: { plan: string | { id: string } } | [plan: string | { id: str
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanFeaturesController::store
- * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:42
+ * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:46
  * @route '/admin/subscriptions/plans/{plan}/features'
  */
 store.post = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -126,10 +126,10 @@ store.post = (args: { plan: string | { id: string } } | [plan: string | { id: st
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanFeaturesController::update
- * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:82
+ * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:85
  * @route '/admin/subscriptions/plans/{plan}/features/{feature}'
  */
-export const update = (args: { plan: string | { id: string }, feature: string | number | { id: string | number } } | [plan: string | { id: string }, feature: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { plan: string | { id: string }, feature: string | { id: string } } | [plan: string | { id: string }, feature: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -141,10 +141,10 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanFeaturesController::update
- * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:82
+ * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:85
  * @route '/admin/subscriptions/plans/{plan}/features/{feature}'
  */
-update.url = (args: { plan: string | { id: string }, feature: string | number | { id: string | number } } | [plan: string | { id: string }, feature: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
+update.url = (args: { plan: string | { id: string }, feature: string | { id: string } } | [plan: string | { id: string }, feature: string | { id: string } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     plan: args[0],
@@ -171,20 +171,20 @@ update.url = (args: { plan: string | { id: string }, feature: string | number | 
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanFeaturesController::update
- * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:82
+ * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:85
  * @route '/admin/subscriptions/plans/{plan}/features/{feature}'
  */
-update.put = (args: { plan: string | { id: string }, feature: string | number | { id: string | number } } | [plan: string | { id: string }, feature: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { plan: string | { id: string }, feature: string | { id: string } } | [plan: string | { id: string }, feature: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanFeaturesController::destroy
- * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:129
+ * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:120
  * @route '/admin/subscriptions/plans/{plan}/features/{feature}'
  */
-export const destroy = (args: { plan: string | { id: string }, feature: string | number | { id: string | number } } | [plan: string | { id: string }, feature: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { plan: string | { id: string }, feature: string | { id: string } } | [plan: string | { id: string }, feature: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -196,10 +196,10 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanFeaturesController::destroy
- * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:129
+ * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:120
  * @route '/admin/subscriptions/plans/{plan}/features/{feature}'
  */
-destroy.url = (args: { plan: string | { id: string }, feature: string | number | { id: string | number } } | [plan: string | { id: string }, feature: string | number | { id: string | number } ], options?: RouteQueryOptions) => {
+destroy.url = (args: { plan: string | { id: string }, feature: string | { id: string } } | [plan: string | { id: string }, feature: string | { id: string } ], options?: RouteQueryOptions) => {
     if (Array.isArray(args)) {
         args = {
                     plan: args[0],
@@ -226,17 +226,17 @@ destroy.url = (args: { plan: string | { id: string }, feature: string | number |
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanFeaturesController::destroy
- * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:129
+ * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:120
  * @route '/admin/subscriptions/plans/{plan}/features/{feature}'
  */
-destroy.delete = (args: { plan: string | { id: string }, feature: string | number | { id: string | number } } | [plan: string | { id: string }, feature: string | number | { id: string | number } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { plan: string | { id: string }, feature: string | { id: string } } | [plan: string | { id: string }, feature: string | { id: string } ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanFeaturesController::bulkToggle
- * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:157
+ * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:147
  * @route '/admin/subscriptions/plans/{plan}/features/bulk-toggle'
  */
 export const bulkToggle = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -251,7 +251,7 @@ bulkToggle.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanFeaturesController::bulkToggle
- * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:157
+ * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:147
  * @route '/admin/subscriptions/plans/{plan}/features/bulk-toggle'
  */
 bulkToggle.url = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -284,7 +284,7 @@ bulkToggle.url = (args: { plan: string | { id: string } } | [plan: string | { id
 
 /**
 * @see \App\Http\Controllers\Admin\SubscriptionPlanFeaturesController::bulkToggle
- * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:157
+ * @see app/Http/Controllers/Admin/SubscriptionPlanFeaturesController.php:147
  * @route '/admin/subscriptions/plans/{plan}/features/bulk-toggle'
  */
 bulkToggle.post = (args: { plan: string | { id: string } } | [plan: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({

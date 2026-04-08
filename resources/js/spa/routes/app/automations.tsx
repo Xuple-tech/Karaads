@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ArrowRight, Facebook, Instagram, Mail, MessageSquare, Plus, Settings2, Smartphone, Zap } from 'lucide-react';
+import { ArrowRight, BookOpen, Facebook, Instagram, Mail, MessageSquare, Plus, Radio, Settings2, Smartphone, Zap } from 'lucide-react';
 import { useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -184,11 +184,7 @@ export function Component() {
                                     bg: 'bg-muted',
                                 };
                                 return (
-                                    <Link
-                                        key={account.id}
-                                        to={`/meta/accounts/${account.id}`}
-                                        className="flex items-center gap-4 rounded-xl border border-border/60 bg-card p-4 transition hover:border-primary/40 hover:bg-primary/5"
-                                    >
+                                    <div key={account.id} className="flex items-center gap-3 rounded-xl border border-border/60 bg-card p-3">
                                         <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${cfg.bg}`}>
                                             <cfg.Icon className={`h-4 w-4 ${cfg.color}`} />
                                         </div>
@@ -196,21 +192,41 @@ export function Component() {
                                             <div className="flex flex-wrap items-center gap-2">
                                                 <p className="font-medium text-foreground">{account.account_name}</p>
                                                 <Badge variant="outline" className="capitalize text-xs">{account.platform}</Badge>
+                                                <Badge
+                                                    variant={account.is_active ? 'default' : 'secondary'}
+                                                    className={account.is_active ? 'bg-emerald-600 text-white hover:bg-emerald-600 text-xs' : 'text-xs'}
+                                                >
+                                                    {account.is_active ? 'Active' : 'Paused'}
+                                                </Badge>
                                             </div>
                                             <p className="mt-0.5 text-xs text-muted-foreground">
-                                                {account.unread_count} unread &middot; {account.conversation_count} conversations &middot; {account.preferences?.enable_auto_reply ? 'Auto-reply on' : 'Manual review'}
+                                                {account.unread_count} unread &middot; {account.conversation_count} conversations
                                             </p>
                                         </div>
-                                        <div className="flex shrink-0 items-center gap-2">
-                                            <Badge
-                                                variant={account.is_active ? 'default' : 'secondary'}
-                                                className={account.is_active ? 'bg-emerald-600 text-white hover:bg-emerald-600' : ''}
+                                        <div className="flex shrink-0 items-center gap-1">
+                                            <Link
+                                                to={`/meta/accounts/${account.id}/broadcast`}
+                                                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                                                title="Broadcast"
                                             >
-                                                {account.is_active ? 'Active' : 'Paused'}
-                                            </Badge>
-                                            <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                                                <Radio className="h-4 w-4" />
+                                            </Link>
+                                            <Link
+                                                to={`/meta/accounts/${account.id}/templates`}
+                                                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                                                title="Templates"
+                                            >
+                                                <BookOpen className="h-4 w-4" />
+                                            </Link>
+                                            <Link
+                                                to={`/meta/accounts/${account.id}`}
+                                                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                                                title="Open workspace"
+                                            >
+                                                <ArrowRight className="h-4 w-4" />
+                                            </Link>
                                         </div>
-                                    </Link>
+                                    </div>
                                 );
                             })
                         ) : (

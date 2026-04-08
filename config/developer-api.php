@@ -2,7 +2,7 @@
 
 return [
     'domain' => env('DEVELOPER_API_DOMAIN', 'api.' . preg_replace('#^www\.#', '', (parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST) ?: 'localhost'))),
-    'base_path' => env('DEVELOPER_API_BASE_PATH', '/v1'),
+    'base_path' => env('DEVELOPER_API_BASE_PATH', '/api/v1'),
     'upstream' => [
         'base_url' => env('DEVELOPER_API_UPSTREAM_BASE_URL', 'https://api.x.ai/v1'),
         'api_key' => env('DEVELOPER_API_UPSTREAM_API_KEY', env('GROK_API_KEY')),

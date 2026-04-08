@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\PlanEntitlementService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -301,17 +302,7 @@ class User extends Authenticatable implements MustVerifyEmail
             return false;
         }
 
-        // Define what each plan can do
-        $permissions = [
-            'web_search' => true, // All plans can search
-            'image_generation' => true, // All plans can generate images
-            'api_access' => $plan->supports_api,
-            'voice_chat' => $plan->supports_voice,
-            'email_automation' => $plan->supports_email_automation,
-            'projects' => $plan->supports_projects,
-        ];
-
-        return $permissions[$action] ?? false;
+        return app(PlanEntitlementService::class)->hasCapability($plan, $action);
     }
 
     /**

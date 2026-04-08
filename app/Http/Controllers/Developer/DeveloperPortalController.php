@@ -7,6 +7,7 @@ use App\Models\ApiModel;
 use App\Models\DeveloperApiKey;
 use App\Services\DeveloperApiBillingService;
 use App\Services\DeveloperApiTokenService;
+use App\Services\PaystackService;
 use App\Services\StripeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ class DeveloperPortalController extends Controller
         private readonly DeveloperApiTokenService $tokenService,
         private readonly DeveloperApiBillingService $billingService,
         private readonly StripeService $stripeService,
+        private readonly PaystackService $paystackService,
     ) {
     }
 
@@ -37,13 +39,9 @@ class DeveloperPortalController extends Controller
         return Inertia::render('User/DeveloperApi/Dashboard', [
             'wallet' => $walletSummary,
             'stats' => $this->billingService->summarizeUsage(clone $usageQuery),
-            'apiBaseUrl' => rtrim((string) config('developer-api.api_base_url', url('')), '/') . '/v1',
+            'apiBaseUrl' => rtrim((string) config('developer-api.api_base_url', url('')), '/') . '/api/v1',
             'keyCount' => $keyCount,
-            'topupConfig' => [
-                'default_amount_usd' => (float) config('developer-api.default_topup_amount_usd'),
-                'min_amount_usd' => (float) config('developer-api.min_topup_amount_usd'),
-                'max_amount_usd' => (float) config('developer-api.max_topup_amount_usd'),
-            ],
+            'topupConfig' => $this->topupConfig(),
         ]);
     }
 
@@ -143,18 +141,14 @@ class DeveloperPortalController extends Controller
                     ] : null,
                 ];
             }),
-            'topupConfig' => [
-                'default_amount_usd' => (float) config('developer-api.default_topup_amount_usd'),
-                'min_amount_usd' => (float) config('developer-api.min_topup_amount_usd'),
-                'max_amount_usd' => (float) config('developer-api.max_topup_amount_usd'),
-            ],
+            'topupConfig' => $this->topupConfig(),
         ]);
     }
 
     public function quickstart(Request $request): Response
     {
         return Inertia::render('User/DeveloperApi/Quickstart', [
-            'apiBaseUrl' => rtrim((string) config('developer-api.api_base_url', url('')), '/') . '/v1',
+            'apiBaseUrl' => rtrim((string) config('developer-api.api_base_url', url('')), '/') . '/api/v1',
             'models' => ApiModel::where('is_active', true)
                 ->where(fn ($q) => $q->whereNull('model_type')->orWhere('model_type', 'text'))
                 ->orderBy('public_id')
@@ -239,23 +233,66 @@ class DeveloperPortalController extends Controller
 
     public function createTopupCheckout(Request $request)
     {
+        $allowedProviders = config('developer-api.topup_providers', ['stripe']);
+
         $validated = $request->validate([
             'amount_usd' => 'required|numeric|min:' . config('developer-api.min_topup_amount_usd') . '|max:' . config('developer-api.max_topup_amount_usd'),
+            'provider'   => ['nullable', 'string', 'in:' . implode(',', $allowedProviders)],
         ]);
 
-        $url = $this->stripeService->createOneTimeCheckoutSession(
-            $request->user(),
-            (float) $validated['amount_usd'],
-            route('developer-api.billing.index', [], true),
-            route('developer-api.billing.index', [], true),
-            [
-                'purpose' => 'developer_wallet_topup',
-                'user_id' => $request->user()->id,
-                'amount_usd' => (string) $validated['amount_usd'],
-            ]
-        );
+        $amountUsd = (float) $validated['amount_usd'];
+        $provider  = $validated['provider'] ?? $allowedProviders[0] ?? 'stripe';
+        $billingUrl = route('developer-api.billing.index', [], true);
+
+        if ($provider === 'paystack') {
+            $url = $this->paystackService->createDeveloperWalletTopupAuthorization(
+                $request->user(),
+                $amountUsd,
+                route('paystack.callback', [], true),
+                $billingUrl,
+            );
+        } else {
+            $url = $this->stripeService->createOneTimeCheckoutSession(
+                $request->user(),
+                $amountUsd,
+                $billingUrl,
+                $billingUrl,
+                [
+                    'purpose' => 'developer_wallet_topup',
+                    'user_id' => $request->user()->id,
+                    'amount_usd' => (string) $amountUsd,
+                ]
+            );
+        }
 
         return Inertia::location($url);
+    }
+
+    private function topupConfig(): array
+    {
+        $providers = config('developer-api.topup_providers', ['stripe']);
+        $available  = [];
+
+        foreach ($providers as $p) {
+            if ($p === 'paystack' && $this->paystackService->isConfigured()) {
+                $available[] = [
+                    'id'       => 'paystack',
+                    'label'    => 'Paystack',
+                    'currency' => $this->paystackService->getCheckoutCurrency(),
+                    'rate'     => $this->paystackService->getUsdExchangeRate(),
+                ];
+            } elseif ($p === 'stripe') {
+                $available[] = ['id' => 'stripe', 'label' => 'Stripe', 'currency' => 'USD', 'rate' => 1.0];
+            }
+        }
+
+        return [
+            'default_amount_usd'  => (float) config('developer-api.default_topup_amount_usd'),
+            'min_amount_usd'      => (float) config('developer-api.min_topup_amount_usd'),
+            'max_amount_usd'      => (float) config('developer-api.max_topup_amount_usd'),
+            'default_provider'    => config('developer-api.default_topup_provider', $providers[0] ?? 'stripe'),
+            'available_providers' => $available,
+        ];
     }
 
     private function filters(Request $request): array

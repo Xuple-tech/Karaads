@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\PlanEntitlementService;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -155,11 +156,7 @@ class UsageQuota extends Model
             return null;
         }
 
-        $limit = match ($type) {
-            'requests' => $this->plan->requests_per_day,
-            'tokens' => $this->plan->tokens_per_day,
-            default => null,
-        };
+        $limit = app(PlanEntitlementService::class)->getDailyLimitForUsage($this->plan, $type);
 
         if (!$limit) {
             return null;

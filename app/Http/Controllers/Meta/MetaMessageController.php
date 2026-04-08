@@ -54,6 +54,8 @@ class MetaMessageController extends Controller
                     'last_message' => substr($conv->last_message, 0, 150),
                     'last_message_at' => $conv->last_message_at,
                     'unread_count' => $conv->unread_count,
+                    'crm_status' => $conv->crm_status ?? 'new',
+                    'tags' => $conv->tags ?? [],
                     'has_pending_draft' => MetaMessageDraft::where('meta_conversation_id', $conv->id)
                         ->where('status', 'draft')
                         ->exists(),
@@ -132,6 +134,9 @@ class MetaMessageController extends Controller
                 'participant_name' => $conversation->participant_name,
                 'participant_id' => $conversation->participant_id,
                 'last_message_at' => $conversation->last_message_at,
+                'crm_status' => $conversation->crm_status ?? 'new',
+                'tags' => $conversation->tags ?? [],
+                'notes' => $conversation->notes,
             ],
             'messages' => $messages,
             'drafts' => $drafts,
@@ -392,6 +397,32 @@ class MetaMessageController extends Controller
             'success' => true,
             'message' => $this->formatMessage($sentMessage),
             'draft' => $this->formatDraft($draft),
+        ]);
+    }
+
+    /**
+     * Update CRM fields on a conversation
+     */
+    public function updateCrm(MetaAccount $account, MetaConversation $conversation, Request $request)
+    {
+        $this->authorize('update', $account);
+
+        if ($conversation->meta_account_id !== $account->id) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'crm_status' => 'sometimes|in:new,lead,customer,vip,closed',
+            'tags'       => 'sometimes|array',
+            'tags.*'     => 'string|max:30',
+            'notes'      => 'sometimes|nullable|string|max:2000',
+        ]);
+
+        $conversation->update($validated);
+
+        return response()->json([
+            'success'      => true,
+            'conversation' => $conversation->only(['id', 'crm_status', 'tags', 'notes']),
         ]);
     }
 

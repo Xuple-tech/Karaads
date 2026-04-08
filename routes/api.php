@@ -16,6 +16,8 @@ use App\Http\Controllers\Api\PersonalizationController;
 use App\Http\Controllers\Meta\MetaAccountController;
 use App\Http\Controllers\Meta\MetaMessageController;
 use App\Http\Controllers\Meta\MetaPreferenceController;
+use App\Http\Controllers\Meta\MetaReplyTemplateController;
+use App\Http\Controllers\Meta\MetaBroadcastController;
 use App\Http\Controllers\Admin\PersonalizationAdminController;
 use App\Http\Controllers\Admin\AIModeController;
 use App\Http\Controllers\Admin\SubscriptionPlanController as AdminSubscriptionPlanController;
@@ -111,6 +113,22 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/drafts/{draft}/send', [MetaMessageController::class, 'sendDraft']);
         Route::post('/drafts/{draft}/reject', [MetaMessageController::class, 'rejectDraft']);
         Route::post('/conversations/{conversation}/send', [MetaMessageController::class, 'send']);
+
+        // CRM
+        Route::patch('/accounts/{account}/conversations/{conversation}/crm', [MetaMessageController::class, 'updateCrm']);
+
+        // Quick Reply Templates
+        Route::get('/accounts/{account}/templates', [MetaReplyTemplateController::class, 'index']);
+        Route::post('/accounts/{account}/templates', [MetaReplyTemplateController::class, 'store']);
+        Route::put('/accounts/{account}/templates/{template}', [MetaReplyTemplateController::class, 'update']);
+        Route::delete('/accounts/{account}/templates/{template}', [MetaReplyTemplateController::class, 'destroy']);
+        Route::post('/templates/{template}/use', [MetaReplyTemplateController::class, 'incrementUsage']);
+
+        // Broadcasts
+        Route::get('/accounts/{account}/broadcasts', [MetaBroadcastController::class, 'index']);
+        Route::post('/accounts/{account}/broadcasts', [MetaBroadcastController::class, 'store']);
+        Route::get('/accounts/{account}/broadcasts/{broadcast}', [MetaBroadcastController::class, 'show']);
+        Route::post('/accounts/{account}/broadcasts/{broadcast}/send', [MetaBroadcastController::class, 'send']);
     });
 
     // Image Generation
@@ -175,6 +193,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Admin routes for Subscription Plan management
     Route::prefix('admin/subscription-plans')->middleware('admin')->group(function () {
         Route::get('/', [AdminSubscriptionPlanController::class, 'index']);
+        Route::get('/{subscriptionPlan}', [AdminSubscriptionPlanController::class, 'show']);
+        Route::get('/{subscriptionPlan}/stats', [AdminSubscriptionPlanController::class, 'getStats']);
         Route::post('/', [AdminSubscriptionPlanController::class, 'store']);
         Route::put('/{subscriptionPlan}', [AdminSubscriptionPlanController::class, 'update']);
         Route::delete('/{subscriptionPlan}', [AdminSubscriptionPlanController::class, 'destroy']);

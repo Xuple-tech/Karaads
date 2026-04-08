@@ -11,6 +11,7 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin/subscriptions
     Route::get('/plans/create', [SubscriptionPlanController::class, 'create'])->name('admin.subscriptions.plans.create');
     Route::post('/plans', [SubscriptionPlanController::class, 'store'])->name('admin.subscriptions.plans.store');
     Route::get('/plans/{subscriptionPlan}/edit', [SubscriptionPlanController::class, 'edit'])->name('admin.subscriptions.plans.edit');
+    Route::get('/plans/{subscriptionPlan}', [SubscriptionPlanController::class, 'show'])->name('admin.subscriptions.plans.show');
     Route::put('/plans/{subscriptionPlan}', [SubscriptionPlanController::class, 'update'])->name('admin.subscriptions.plans.update');
     Route::delete('/plans/{subscriptionPlan}', [SubscriptionPlanController::class, 'destroy'])->name('admin.subscriptions.plans.destroy');
     Route::patch('/plans/{subscriptionPlan}/deactivate', [SubscriptionPlanController::class, 'deactivate'])->name('admin.subscriptions.plans.deactivate');

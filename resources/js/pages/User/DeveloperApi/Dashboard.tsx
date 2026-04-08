@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { router, usePage } from '@inertiajs/react';
 import DeveloperPortalLayout from '@/layouts/developer-portal-layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
-import { useState } from 'react';
 import {
     Key,
     Activity,
@@ -18,6 +17,7 @@ import {
     AlertCircle,
     ArrowRight,
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
 
 interface WalletSummary {
@@ -36,6 +36,13 @@ interface UsageStats {
     cost_usd: number;
 }
 
+interface PaymentProvider {
+    id: string;
+    label: string;
+    currency: string;
+    rate: number;
+}
+
 interface PageProps {
     wallet: WalletSummary | null;
     stats: UsageStats | null;
@@ -45,6 +52,8 @@ interface PageProps {
         default_amount_usd: number;
         min_amount_usd: number;
         max_amount_usd: number;
+        default_provider: string;
+        available_providers: PaymentProvider[];
     };
 }
 
@@ -59,17 +68,27 @@ export default function DeveloperApiDashboard({ wallet, stats, apiBaseUrl, keyCo
     const w = wallet ?? { balance_usd: 0, lifetime_credited_usd: 0, lifetime_debited_usd: 0 };
     const s = stats ?? { requests: 0, success_requests: 0, error_requests: 0, total_tokens: 0, input_tokens: 0, output_tokens: 0, cost_usd: 0 };
 
+    const providers = topupConfig.available_providers ?? [];
     const [topupAmount, setTopupAmount] = useState(String(topupConfig.default_amount_usd));
+    const [provider, setProvider] = useState<PaymentProvider | undefined>(undefined);
     const [topupLoading, setTopupLoading] = useState(false);
 
+    const localAmount = provider?.id === 'paystack'
+        ? (parseFloat(topupAmount) || 0) * provider.rate
+        : null;
+
     function handleTopup() {
+        if (!provider) {
+            toast.error('Please select a payment method.');
+            return;
+        }
         const amount = parseFloat(topupAmount);
         if (isNaN(amount) || amount < topupConfig.min_amount_usd || amount > topupConfig.max_amount_usd) {
             toast.error(`Amount must be between $${topupConfig.min_amount_usd} and $${topupConfig.max_amount_usd}`);
             return;
         }
         setTopupLoading(true);
-        router.post('/developer-api/top-up', { amount_usd: amount }, {
+        router.post('/developer-api/top-up', { amount_usd: amount, provider: provider.id }, {
             onError: (e) => { toast.error(Object.values(e)[0] as string); setTopupLoading(false); },
             onSuccess: () => setTopupLoading(false),
         });
@@ -138,7 +157,33 @@ export default function DeveloperApiDashboard({ wallet, stats, apiBaseUrl, keyCo
                                 <div>Total credited: ${w.lifetime_credited_usd.toFixed(2)}</div>
                                 <div>Total spent: ${w.lifetime_debited_usd.toFixed(4)}</div>
                             </div>
-                            <div className="flex items-center gap-2">
+
+                            {/* Payment method selector */}
+                            <div className="space-y-1.5">
+                                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Payment method</p>
+                                <div className="flex flex-wrap gap-2">
+                                    {providers.map((p) => (
+                                        <button
+                                            key={p.id}
+                                            type="button"
+                                            onClick={() => setProvider(p)}
+                                            className={cn(
+                                                'px-2.5 py-1 rounded-md border text-xs font-medium transition-colors',
+                                                provider?.id === p.id
+                                                    ? 'border-primary bg-primary/10 text-primary'
+                                                    : 'border-border text-muted-foreground hover:border-primary/50 hover:text-foreground'
+                                            )}
+                                        >
+                                            {p.label}
+                                            {p.currency !== 'USD' && (
+                                                <span className="ml-1 opacity-60">{p.currency}</span>
+                                            )}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="flex flex-wrap items-center gap-2">
                                 <Input
                                     type="number"
                                     value={topupAmount}
@@ -146,11 +191,20 @@ export default function DeveloperApiDashboard({ wallet, stats, apiBaseUrl, keyCo
                                     min={topupConfig.min_amount_usd}
                                     max={topupConfig.max_amount_usd}
                                     step={1}
-                                    className="w-28"
+                                    className="w-24"
                                 />
-                                <Button onClick={handleTopup} disabled={topupLoading} size="sm">
+                                {localAmount !== null && localAmount > 0 && provider && (
+                                    <span className="text-xs text-muted-foreground">
+                                        ≈ {provider.currency} {localAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    </span>
+                                )}
+                                <Button onClick={handleTopup} disabled={topupLoading || !provider} size="sm">
                                     <CreditCard className="w-3 h-3 mr-1" />
-                                    {topupLoading ? 'Redirecting…' : 'Top up'}
+                                    {topupLoading
+                                        ? 'Redirecting…'
+                                        : provider
+                                            ? `Pay with ${provider.label}`
+                                            : 'Top up'}
                                 </Button>
                             </div>
                         </CardContent>

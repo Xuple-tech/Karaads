@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
+use App\Services\PlanEntitlementService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Log;
 
@@ -23,19 +24,24 @@ class CreateTrialSubscription
                     'description' => '7-day free trial for chat access',
                     'monthly_price' => 0,
                     'yearly_price' => 0,
-                    'requests_per_day' => null,
-                    'requests_per_month' => null,
-                    'tokens_per_day' => null,
-                    'tokens_per_month' => null,
-                    'images_per_day' => null,
-                    'images_per_month' => null,
-                    'supports_api' => false,
-                    'supports_voice' => false,
-                    'supports_email_automation' => false,
-                    'supports_projects' => false,
-                    'priority_support' => false,
                     'is_active' => true,
                     'display_order' => 0,
+                ]);
+
+                app(PlanEntitlementService::class)->syncPlanEntitlements($freePlan, [
+                    'web_search' => true,
+                    'image_generation' => true,
+                    'api_access' => false,
+                    'voice_chat' => false,
+                    'email_automation' => false,
+                    'projects' => false,
+                    'priority_support' => false,
+                ], [
+                    'requests' => ['daily' => null, 'monthly' => null, 'total' => null],
+                    'tokens' => ['daily' => null, 'monthly' => null, 'total' => null],
+                    'images' => ['daily' => null, 'monthly' => null, 'total' => null],
+                    'voice_messages' => ['daily' => null, 'monthly' => null, 'total' => null],
+                    'emails_processed' => ['daily' => null, 'monthly' => null, 'total' => null],
                 ]);
             }
 

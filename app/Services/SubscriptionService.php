@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Log;
 
 class SubscriptionService
 {
+    public function __construct(
+        private readonly PlanEntitlementService $entitlements
+    ) {
+    }
+
     /**
      * Get user's current subscription (or free tier if none)
      */
@@ -49,12 +54,15 @@ class SubscriptionService
         $quota = UsageQuota::getOrCreateTodayQuota($user->id, $plan->id);
 
         // Check daily request limit
-        if ($plan->requests_per_day && $quota->requests_used >= $plan->requests_per_day) {
+        $dailyLimit = $this->entitlements->getDailyLimitForUsage($plan, 'requests');
+        $monthlyLimit = $this->entitlements->getMonthlyLimitForUsage($plan, 'requests');
+
+        if ($dailyLimit && $quota->requests_used >= $dailyLimit) {
             RateLimitViolation::logViolation(
                 $user->id,
                 $plan->id,
                 'requests_per_day',
-                $plan->requests_per_day,
+                $dailyLimit,
                 $quota->requests_used + 1,
                 'Exceeded daily request limit'
             );
@@ -62,7 +70,7 @@ class SubscriptionService
             return [
                 'allowed' => false,
                 'reason' => 'Daily request limit exceeded',
-                'limit' => $plan->requests_per_day,
+                'limit' => $dailyLimit,
                 'used' => $quota->requests_used,
                 'plan_id' => $plan->id,
                 'plan_name' => $plan->name,
@@ -71,14 +79,14 @@ class SubscriptionService
         }
 
         // Check monthly request limit
-        if ($plan->requests_per_month) {
+        if ($monthlyLimit) {
             $monthlyUsage = UsageQuota::getAggregatedMonthlyUsage($user->id);
-            if ($monthlyUsage['requests_used'] >= $plan->requests_per_month) {
+            if ($monthlyUsage['requests_used'] >= $monthlyLimit) {
                 RateLimitViolation::logViolation(
                     $user->id,
                     $plan->id,
                     'requests_per_month',
-                    $plan->requests_per_month,
+                    $monthlyLimit,
                     $monthlyUsage['requests_used'] + 1,
                     'Exceeded monthly request limit'
                 );
@@ -86,7 +94,7 @@ class SubscriptionService
                 return [
                     'allowed' => false,
                     'reason' => 'Monthly request limit exceeded',
-                    'limit' => $plan->requests_per_month,
+                    'limit' => $monthlyLimit,
                     'used' => $monthlyUsage['requests_used'],
                     'plan_id' => $plan->id,
                     'plan_name' => $plan->name,
@@ -118,7 +126,10 @@ class SubscriptionService
         }
 
         // Unlimited image plans can always proceed
-        if (!$plan->images_per_day && !$plan->images_per_month) {
+        $dailyLimit = $this->entitlements->getDailyLimitForUsage($plan, 'images');
+        $monthlyLimit = $this->entitlements->getMonthlyLimitForUsage($plan, 'images');
+
+        if (!$dailyLimit && !$monthlyLimit) {
             return [
                 'allowed' => true,
                 'plan_name' => $plan->name,
@@ -129,20 +140,20 @@ class SubscriptionService
         $quota = UsageQuota::getOrCreateTodayQuota($user->id, $plan->id);
 
         // Check daily image limit
-        if ($plan->images_per_day && ($quota->images_generated + $count) > $plan->images_per_day) {
+        if ($dailyLimit && ($quota->images_generated + $count) > $dailyLimit) {
             RateLimitViolation::logViolation(
                 $user->id,
                 $plan->id,
                 'images_per_day',
-                $plan->images_per_day,
+                $dailyLimit,
                 $quota->images_generated + $count,
-                "Attempted to generate {$count} images, limit is {$plan->images_per_day}"
+                "Attempted to generate {$count} images, limit is {$dailyLimit}"
             );
 
             return [
                 'allowed' => false,
                 'reason' => 'Daily image limit exceeded',
-                'limit' => $plan->images_per_day,
+                'limit' => $dailyLimit,
                 'used' => $quota->images_generated,
                 'needed' => $count,
                 'plan_id' => $plan->id,
@@ -153,23 +164,23 @@ class SubscriptionService
         }
 
         // Check monthly image limit
-        if ($plan->images_per_month) {
+        if ($monthlyLimit) {
             $monthlyUsage = UsageQuota::getAggregatedMonthlyUsage($user->id);
-            if (($monthlyUsage['total_images'] + $count) > $plan->images_per_month) {
+            if (($monthlyUsage['images_generated'] + $count) > $monthlyLimit) {
                 RateLimitViolation::logViolation(
                     $user->id,
                     $plan->id,
                     'images_per_month',
-                    $plan->images_per_month,
-                    $monthlyUsage['total_images'] + $count,
-                    "Attempted to generate {$count} images, monthly limit is {$plan->images_per_month}"
+                    $monthlyLimit,
+                    $monthlyUsage['images_generated'] + $count,
+                    "Attempted to generate {$count} images, monthly limit is {$monthlyLimit}"
                 );
 
                 return [
                     'allowed' => false,
                     'reason' => 'Monthly image limit exceeded',
-                    'limit' => $plan->images_per_month,
-                    'used' => $monthlyUsage['total_images'],
+                    'limit' => $monthlyLimit,
+                    'used' => $monthlyUsage['images_generated'],
                     'needed' => $count,
                     'plan_id' => $plan->id,
                     'plan_name' => $plan->name,
@@ -202,7 +213,10 @@ class SubscriptionService
         }
 
         // Unlimited token plans can always proceed
-        if (!$plan->tokens_per_day && !$plan->tokens_per_month) {
+        $dailyLimit = $this->entitlements->getDailyLimitForUsage($plan, 'tokens');
+        $monthlyLimit = $this->entitlements->getMonthlyLimitForUsage($plan, 'tokens');
+
+        if (!$dailyLimit && !$monthlyLimit) {
             return [
                 'allowed' => true,
             ];
@@ -211,25 +225,50 @@ class SubscriptionService
         $quota = UsageQuota::getOrCreateTodayQuota($user->id, $plan->id);
 
         // Check daily token limit
-        if ($plan->tokens_per_day && ($quota->tokens_used + $tokensNeeded) > $plan->tokens_per_day) {
+        if ($dailyLimit && ($quota->tokens_used + $tokensNeeded) > $dailyLimit) {
             RateLimitViolation::logViolation(
                 $user->id,
                 $plan->id,
                 'tokens_per_day',
-                $plan->tokens_per_day,
+                $dailyLimit,
                 $quota->tokens_used + $tokensNeeded,
-                "Attempted to use {$tokensNeeded} tokens, limit is {$plan->tokens_per_day}"
+                "Attempted to use {$tokensNeeded} tokens, limit is {$dailyLimit}"
             );
 
             return [
                 'allowed' => false,
                 'reason' => 'Daily token limit exceeded',
-                'limit' => $plan->tokens_per_day,
+                'limit' => $dailyLimit,
                 'used' => $quota->tokens_used,
                 'needed' => $tokensNeeded,
                 'plan_id' => $plan->id,
                 'plan_name' => $plan->name,
             ];
+        }
+
+        if ($monthlyLimit) {
+            $monthlyUsage = UsageQuota::getAggregatedMonthlyUsage($user->id);
+
+            if (($monthlyUsage['tokens_used'] + $tokensNeeded) > $monthlyLimit) {
+                RateLimitViolation::logViolation(
+                    $user->id,
+                    $plan->id,
+                    'tokens_per_month',
+                    $monthlyLimit,
+                    $monthlyUsage['tokens_used'] + $tokensNeeded,
+                    "Attempted to use {$tokensNeeded} tokens, monthly limit is {$monthlyLimit}"
+                );
+
+                return [
+                    'allowed' => false,
+                    'reason' => 'Monthly token limit exceeded',
+                    'limit' => $monthlyLimit,
+                    'used' => $monthlyUsage['tokens_used'],
+                    'needed' => $tokensNeeded,
+                    'plan_id' => $plan->id,
+                    'plan_name' => $plan->name,
+                ];
+            }
         }
 
         return [
@@ -338,16 +377,16 @@ class SubscriptionService
                 'emails' => $monthlyUsage['total_emails'],
             ],
             'limits' => $plan ? [
-                'requests_per_day' => $plan->requests_per_day,
-                'requests_per_month' => $plan->requests_per_month,
-                'tokens_per_day' => $plan->tokens_per_day,
-                'tokens_per_month' => $plan->tokens_per_month,
-                'images_per_day' => $plan->images_per_day,
-                'images_per_month' => $plan->images_per_month,
+                'requests_per_day' => $this->entitlements->getDailyLimitForUsage($plan, 'requests'),
+                'requests_per_month' => $this->entitlements->getMonthlyLimitForUsage($plan, 'requests'),
+                'tokens_per_day' => $this->entitlements->getDailyLimitForUsage($plan, 'tokens'),
+                'tokens_per_month' => $this->entitlements->getMonthlyLimitForUsage($plan, 'tokens'),
+                'images_per_day' => $this->entitlements->getDailyLimitForUsage($plan, 'images'),
+                'images_per_month' => $this->entitlements->getMonthlyLimitForUsage($plan, 'images'),
             ] : null,
             'progress' => [
-                'daily_requests' => $today ? $this->calculateProgress($today->requests_used, $plan->requests_per_day) : 0,
-                'daily_tokens' => $today ? $this->calculateProgress($today->tokens_used, $plan->tokens_per_day) : 0,
+                'daily_requests' => $today ? $this->calculateProgress($today->requests_used, $this->entitlements->getDailyLimitForUsage($plan, 'requests')) : 0,
+                'daily_tokens' => $today ? $this->calculateProgress($today->tokens_used, $this->entitlements->getDailyLimitForUsage($plan, 'tokens')) : 0,
             ],
         ];
     }
@@ -467,7 +506,12 @@ class SubscriptionService
      */
     public function getAvailablePlans(): array
     {
-        return SubscriptionPlan::getActivePlans()->toArray();
+        return SubscriptionPlan::getActivePlans()
+            ->load('planFeatures')
+            ->map(fn (SubscriptionPlan $plan) => array_merge($plan->toArray(), [
+                'features' => $this->entitlements->getDisplayFeatures($plan),
+            ]))
+            ->toArray();
     }
 
     /**
@@ -487,7 +531,7 @@ class SubscriptionService
             return; // Plans already exist
         }
 
-        SubscriptionPlan::create([
+        $freePlan = SubscriptionPlan::create([
             'name' => 'Free',
             'slug' => 'free',
             'description' => 'Get started with Kwati AI for free',
@@ -513,8 +557,23 @@ class SubscriptionService
             'is_active' => true,
             'display_order' => 1,
         ]);
+        $this->entitlements->syncPlanEntitlements($freePlan, [
+            'web_search' => true,
+            'image_generation' => true,
+            'api_access' => false,
+            'voice_chat' => false,
+            'email_automation' => false,
+            'projects' => false,
+            'priority_support' => false,
+        ], [
+            'requests' => ['daily' => 50, 'monthly' => 500, 'total' => null],
+            'tokens' => ['daily' => 10000, 'monthly' => 100000, 'total' => null],
+            'images' => ['daily' => 1, 'monthly' => 10, 'total' => null],
+            'voice_messages' => ['daily' => null, 'monthly' => null, 'total' => null],
+            'emails_processed' => ['daily' => null, 'monthly' => null, 'total' => null],
+        ]);
 
-        SubscriptionPlan::create([
+        $paidPlan = SubscriptionPlan::create([
             'name' => 'Paid',
             'slug' => 'paid',
             'description' => 'Enhanced features for power users',
@@ -541,8 +600,23 @@ class SubscriptionService
             'is_active' => true,
             'display_order' => 2,
         ]);
+        $this->entitlements->syncPlanEntitlements($paidPlan, [
+            'web_search' => true,
+            'image_generation' => true,
+            'api_access' => true,
+            'voice_chat' => true,
+            'email_automation' => false,
+            'projects' => true,
+            'priority_support' => false,
+        ], [
+            'requests' => ['daily' => 500, 'monthly' => 10000, 'total' => null],
+            'tokens' => ['daily' => 100000, 'monthly' => 1000000, 'total' => null],
+            'images' => ['daily' => 50, 'monthly' => 500, 'total' => null],
+            'voice_messages' => ['daily' => null, 'monthly' => null, 'total' => null],
+            'emails_processed' => ['daily' => null, 'monthly' => null, 'total' => null],
+        ]);
 
-        SubscriptionPlan::create([
+        $premiumPlan = SubscriptionPlan::create([
             'name' => 'Premium',
             'slug' => 'premium',
             'description' => 'Professional features with priority support',
@@ -572,8 +646,23 @@ class SubscriptionService
             'is_active' => true,
             'display_order' => 3,
         ]);
+        $this->entitlements->syncPlanEntitlements($premiumPlan, [
+            'web_search' => true,
+            'image_generation' => true,
+            'api_access' => true,
+            'voice_chat' => true,
+            'email_automation' => true,
+            'projects' => true,
+            'priority_support' => true,
+        ], [
+            'requests' => ['daily' => 2000, 'monthly' => 50000, 'total' => null],
+            'tokens' => ['daily' => 500000, 'monthly' => 5000000, 'total' => null],
+            'images' => ['daily' => 200, 'monthly' => 2000, 'total' => null],
+            'voice_messages' => ['daily' => null, 'monthly' => null, 'total' => null],
+            'emails_processed' => ['daily' => null, 'monthly' => null, 'total' => null],
+        ]);
 
-        SubscriptionPlan::create([
+        $goldPlan = SubscriptionPlan::create([
             'name' => 'Gold',
             'slug' => 'gold',
             'description' => 'Unlimited access with dedicated support',
@@ -605,6 +694,21 @@ class SubscriptionService
             'priority_support' => true,
             'is_active' => true,
             'display_order' => 4,
+        ]);
+        $this->entitlements->syncPlanEntitlements($goldPlan, [
+            'web_search' => true,
+            'image_generation' => true,
+            'api_access' => true,
+            'voice_chat' => true,
+            'email_automation' => true,
+            'projects' => true,
+            'priority_support' => true,
+        ], [
+            'requests' => ['daily' => null, 'monthly' => null, 'total' => null],
+            'tokens' => ['daily' => null, 'monthly' => null, 'total' => null],
+            'images' => ['daily' => null, 'monthly' => null, 'total' => null],
+            'voice_messages' => ['daily' => null, 'monthly' => null, 'total' => null],
+            'emails_processed' => ['daily' => null, 'monthly' => null, 'total' => null],
         ]);
 
         Log::info('Default subscription plans created');

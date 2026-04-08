@@ -20,12 +20,16 @@ class MetaConversation extends Model
         'last_message_at',
         'is_archived',
         'metadata',
+        'crm_status',
+        'tags',
+        'notes',
     ];
 
     protected $casts = [
         'is_archived' => 'boolean',
         'metadata' => 'array',
         'last_message_at' => 'datetime',
+        'tags' => 'array',
     ];
 
     public function metaAccount(): BelongsTo

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\DeveloperApiBillingService;
 use App\Services\PaystackService;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,6 +14,7 @@ class PaystackWebhookController extends Controller
 {
     public function __construct(
         private readonly PaystackService $paystackService,
+        private readonly DeveloperApiBillingService $billingService,
     ) {
     }
 
@@ -20,7 +23,7 @@ class PaystackWebhookController extends Controller
         $reference = (string) ($request->query('reference') ?: $request->query('trxref'));
 
         if ($reference === '') {
-            return redirect()->route('billing.index');
+            return redirect()->route('developer-api.billing.index');
         }
 
         try {
@@ -32,7 +35,7 @@ class PaystackWebhookController extends Controller
             ]);
         }
 
-        return redirect()->route('billing.index');
+        return redirect()->route('developer-api.billing.index');
     }
 
     public function webhook(Request $request): JsonResponse
@@ -74,7 +77,7 @@ class PaystackWebhookController extends Controller
             return;
         }
 
-        $userId = $metadata['user_id'] ?? null;
+        $userId    = $metadata['user_id'] ?? null;
         $reference = $transaction['reference'] ?? null;
 
         if (! $userId || ! $reference) {
@@ -91,7 +94,32 @@ class PaystackWebhookController extends Controller
         }
 
         if ($amountUsd <= 0) {
+            Log::warning('Paystack top-up: could not determine USD amount', [
+                'reference' => $reference,
+                'metadata'  => $metadata,
+            ]);
             return;
         }
+
+        $user = User::find($userId);
+        if (! $user) {
+            Log::warning('Paystack top-up: user not found', ['user_id' => $userId, 'reference' => $reference]);
+            return;
+        }
+
+        $this->billingService->creditWallet(
+            $user,
+            $amountUsd,
+            'topup',
+            'Paystack top-up $' . number_format($amountUsd, 2),
+            ['paystack_reference' => $reference, 'metadata' => $metadata],
+            $reference,
+        );
+
+        Log::info('Developer wallet credited via Paystack', [
+            'user_id'    => $userId,
+            'amount_usd' => $amountUsd,
+            'reference'  => $reference,
+        ]);
     }
 }

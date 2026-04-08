@@ -25,7 +25,7 @@ class DeveloperApiDocsController extends Controller
 
         return Inertia::render('Docs/Api', [
             'models' => $models,
-            'apiBaseUrl' => rtrim((string) config('developer-api.api_base_url', url('')), '/') . '/v1',
+            'apiBaseUrl' => rtrim((string) config('developer-api.api_base_url', url('')), '/') . '/api/v1',
             'appName' => config('app.name', 'Kwati AI'),
         ]);
     }

@@ -44,14 +44,25 @@ interface Paginated<T> {
     links: { url: string | null; label: string; active: boolean }[];
 }
 
+interface PaymentProvider {
+    id: string;
+    label: string;
+    currency: string;
+    rate: number;
+}
+
+interface TopupConfig {
+    default_amount_usd: number;
+    min_amount_usd: number;
+    max_amount_usd: number;
+    default_provider: string;
+    available_providers: PaymentProvider[];
+}
+
 interface PageProps {
     wallet: WalletSummary | null;
     ledger: Paginated<LedgerEntry>;
-    topupConfig: {
-        default_amount_usd: number;
-        min_amount_usd: number;
-        max_amount_usd: number;
-    };
+    topupConfig: TopupConfig;
 }
 
 function formatUsd(val: number) {
@@ -69,17 +80,29 @@ export default function DeveloperApiBilling({ wallet, ledger, topupConfig }: Pag
     const flash = props.flash ?? {};
 
     const w = wallet ?? { balance_usd: 0, lifetime_credited_usd: 0, lifetime_debited_usd: 0 };
+
+    const providers = topupConfig.available_providers ?? [];
+
     const [topupAmount, setTopupAmount] = useState(String(topupConfig.default_amount_usd));
+    const [provider, setProvider] = useState<PaymentProvider | undefined>(undefined);
     const [loading, setLoading] = useState(false);
+
+    const localAmount = provider && provider.id === 'paystack'
+        ? (parseFloat(topupAmount) || 0) * provider.rate
+        : null;
 
     function handleTopup() {
         const amount = parseFloat(topupAmount);
+        if (!provider) {
+            toast.error('Please select a payment method.');
+            return;
+        }
         if (isNaN(amount) || amount < topupConfig.min_amount_usd || amount > topupConfig.max_amount_usd) {
             toast.error(`Amount must be between $${topupConfig.min_amount_usd} and $${topupConfig.max_amount_usd}`);
             return;
         }
         setLoading(true);
-        router.post('/developer-api/top-up', { amount_usd: amount }, {
+        router.post('/developer-api/top-up', { amount_usd: amount, provider: provider.id }, {
             onError: (e) => { toast.error(Object.values(e)[0] as string); setLoading(false); },
             onSuccess: () => setLoading(false),
         });
@@ -153,11 +176,38 @@ export default function DeveloperApiBilling({ wallet, ledger, topupConfig }: Pag
                             <CreditCard className="w-4 h-4" /> Add Funds
                         </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                        <p className="text-sm text-muted-foreground mb-3">
-                            Top up your wallet via Stripe. Minimum ${topupConfig.min_amount_usd}, maximum ${topupConfig.max_amount_usd}.
+                    <CardContent className="space-y-4">
+                        <p className="text-sm text-muted-foreground">
+                            Top up your wallet. Minimum ${topupConfig.min_amount_usd}, maximum ${topupConfig.max_amount_usd}.
                         </p>
-                        <div className="flex items-center gap-3">
+
+                        {/* Provider selector — always shown, user must pick */}
+                        <div className="space-y-1.5">
+                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Payment method</p>
+                            <div className="flex flex-wrap gap-2">
+                                {providers.map((p) => (
+                                    <button
+                                        key={p.id}
+                                        type="button"
+                                        onClick={() => setProvider(p)}
+                                        className={cn(
+                                            'px-3 py-1.5 rounded-md border text-sm font-medium transition-colors',
+                                            provider?.id === p.id
+                                                ? 'border-primary bg-primary/10 text-primary'
+                                                : 'border-border text-muted-foreground hover:border-primary/50 hover:text-foreground'
+                                        )}
+                                    >
+                                        {p.label}
+                                        {p.currency !== 'USD' && (
+                                            <span className="ml-1.5 text-xs opacity-60">{p.currency}</span>
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Amount + CTA */}
+                        <div className="flex flex-wrap items-center gap-3">
                             <div className="flex items-center gap-1.5">
                                 <span className="text-sm font-medium">$</span>
                                 <Input
@@ -170,9 +220,21 @@ export default function DeveloperApiBilling({ wallet, ledger, topupConfig }: Pag
                                     className="w-28"
                                 />
                             </div>
-                            <Button onClick={handleTopup} disabled={loading}>
+
+                            {localAmount !== null && localAmount > 0 && provider && (
+                                <span className="text-sm text-muted-foreground">
+                                    ≈ {provider.currency} {localAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    <span className="text-xs opacity-60 ml-1">@ {provider.rate.toLocaleString()} {provider.currency}/USD</span>
+                                </span>
+                            )}
+
+                            <Button onClick={handleTopup} disabled={loading || !provider} className="ml-auto sm:ml-0">
                                 <CreditCard className="w-4 h-4 mr-1.5" />
-                                {loading ? 'Redirecting to Stripe…' : 'Add Funds'}
+                                {loading
+                                    ? 'Redirecting…'
+                                    : provider
+                                        ? `Pay with ${provider.label}`
+                                        : 'Select a payment method'}
                             </Button>
                         </div>
                     </CardContent>
