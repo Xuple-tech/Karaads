@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\StripeWebhookController::handleWebhook
- * @see app/Http/Controllers/StripeWebhookController.php:23
+ * @see app/Http/Controllers/StripeWebhookController.php:25
  * @route '/stripe/webhook'
  */
 export const handleWebhook = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ handleWebhook.definition = {
 
 /**
 * @see \App\Http\Controllers\StripeWebhookController::handleWebhook
- * @see app/Http/Controllers/StripeWebhookController.php:23
+ * @see app/Http/Controllers/StripeWebhookController.php:25
  * @route '/stripe/webhook'
  */
 handleWebhook.url = (options?: RouteQueryOptions) => {
@@ -25,13 +25,9 @@ handleWebhook.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\StripeWebhookController::handleWebhook
- * @see app/Http/Controllers/StripeWebhookController.php:23
+ * @see app/Http/Controllers/StripeWebhookController.php:25
  * @route '/stripe/webhook'
  */
 handleWebhook.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: handleWebhook.url(options),
-    method: 'post',
-})
-const StripeWebhookController = { handleWebhook }
-
-export default StripeWebhookController
+    method: 

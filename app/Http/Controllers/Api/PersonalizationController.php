@@ -210,7 +210,7 @@ class PersonalizationController extends Controller
     public function getAiModes(Request $request)
     {
         try {
-            $modes = AIMode::active()->get(['id', 'name', 'description', 'emoji']);
+            $modes = AIMode::forChat()->get(['id', 'name', 'description', 'emoji']);
 
             return response()->json([
                 'success' => true,

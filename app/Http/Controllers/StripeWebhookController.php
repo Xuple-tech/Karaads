@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Services\DeveloperApiBillingService;
 use App\Services\StripeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -43,6 +45,7 @@ class StripeWebhookController extends Controller
                 'customer.subscription.created' => $this->handleSubscriptionCreated($event),
                 'invoice.payment_succeeded' => $this->handlePaymentSucceeded($event),
                 'invoice.payment_failed' => $this->handlePaymentFailed($event),
+                'checkout.session.completed' => $this->handleCheckoutCompleted($event),
                 default => Log::info('Unhandled Stripe event: ' . $event['type']),
             };
 
@@ -92,7 +95,6 @@ class StripeWebhookController extends Controller
         Log::info('Processing invoice.payment_succeeded event');
         $invoice = $event['data']['object'];
 
-        // Note: The subscription sync should handle the payment status
         if (isset($invoice['subscription'])) {
             Log::info('Payment succeeded for subscription: ' . $invoice['subscription']);
         }
@@ -106,9 +108,49 @@ class StripeWebhookController extends Controller
         Log::info('Processing invoice.payment_failed event');
         $invoice = $event['data']['object'];
 
-        // Note: Update subscription to pending_payment status
         if (isset($invoice['subscription'])) {
             Log::warning('Payment failed for subscription: ' . $invoice['subscription']);
         }
+    }
+
+    /**
+     * Handle checkout.session.completed — developer wallet top-up
+     */
+    protected function handleCheckoutCompleted(array $event): void
+    {
+        $session = $event['data']['object'];
+        $metadata = $session['metadata'] ?? [];
+
+        if (($metadata['purpose'] ?? null) !== 'developer_wallet_topup') {
+            return;
+        }
+
+        $userId = $metadata['user_id'] ?? null;
+        $amountUsd = isset($metadata['amount_usd']) ? (float) $metadata['amount_usd'] : null;
+        $sessionId = $session['id'] ?? null;
+
+        if (!$userId || !$amountUsd || !$sessionId) {
+            Log::warning('developer_wallet_topup webhook missing required metadata', $metadata);
+            return;
+        }
+
+        $user = User::find($userId);
+        if (!$user) {
+            Log::warning('developer_wallet_topup: user not found', ['user_id' => $userId]);
+            return;
+        }
+
+        /** @var DeveloperApiBillingService $billingService */
+        $billingService = app(DeveloperApiBillingService::class);
+        $billingService->creditWallet(
+            $user,
+            $amountUsd,
+            'topup',
+            'Stripe top-up $' . number_format($amountUsd, 2),
+            ['stripe_session_id' => $sessionId],
+            $sessionId
+        );
+
+        Log::info('Developer wallet credited', ['user_id' => $userId, 'amount_usd' => $amountUsd]);
     }
 }

@@ -18,11 +18,13 @@ class AIMode extends Model
         'description',
         'emoji',
         'is_active',
+        'is_automation_template',
         'display_order',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_automation_template' => 'boolean',
         'display_order' => 'integer',
     ];
 
@@ -35,11 +37,30 @@ class AIMode extends Model
     }
 
     /**
-     * Get active modes scope
+     * All active modes (chat + automation templates)
      */
     public function scopeActive($query)
     {
         return $query->where('is_active', true)->orderBy('display_order');
+    }
+
+    /**
+     * Only modes that appear in general chat (not WhatsApp bot templates)
+     */
+    public function scopeForChat($query)
+    {
+        return $query->where('is_active', true)
+                     ->where('is_automation_template', false)
+                     ->orderBy('display_order');
+    }
+
+    /**
+     * Only automation/WhatsApp bot templates
+     */
+    public function scopeForAutomation($query)
+    {
+        return $query->where('is_active', true)
+                     ->orderBy('display_order');
     }
 
     /**

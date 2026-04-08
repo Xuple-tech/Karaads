@@ -23,6 +23,11 @@ type RequestOptions = RequestInit & {
     json?: unknown;
 };
 
+function getXsrfToken(): string {
+    const match = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : '';
+}
+
 export async function apiRequest<T>(url: string, options: RequestOptions = {}): Promise<T> {
     const headers = new Headers(options.headers ?? {});
     headers.set('Accept', 'application/json');
@@ -30,6 +35,12 @@ export async function apiRequest<T>(url: string, options: RequestOptions = {}): 
 
     if (token) {
         headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    // Always include CSRF token for session-based Sanctum auth
+    const xsrf = getXsrfToken();
+    if (xsrf) {
+        headers.set('X-XSRF-TOKEN', xsrf);
     }
 
     if (options.json !== undefined) {

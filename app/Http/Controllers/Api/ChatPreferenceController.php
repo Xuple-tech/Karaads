@@ -100,7 +100,7 @@ class ChatPreferenceController extends Controller
     public function getAvailableModes()
     {
         try {
-            $modes = AIMode::active()->get();
+            $modes = AIMode::forChat()->get();
 
             return response()->json([
                 'success' => true,

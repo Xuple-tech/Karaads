@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Head, Link, usePage } from '@inertiajs/react';
+import React, { useState } from 'react';
+import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { MessageCircle, Search, ArrowRight, Clock, User } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { MessageCircle, Search, ArrowLeft, Clock, ChevronRight } from 'lucide-react';
 
 interface Conversation {
     id: number;
@@ -31,144 +29,141 @@ interface Props {
     conversations: Conversation[];
 }
 
+function formatTime(dateString: string) {
+    const date = new Date(dateString);
+    const diffMs = Date.now() - date.getTime();
+    const mins = Math.floor(diffMs / 60000);
+    const hours = Math.floor(diffMs / 3600000);
+    const days = Math.floor(diffMs / 86400000);
+    if (mins < 1) return 'Just now';
+    if (mins < 60) return `${mins}m ago`;
+    if (hours < 24) return `${hours}h ago`;
+    if (days < 7) return `${days}d ago`;
+    return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+}
+
+const AVATAR_COLORS = [
+    'from-violet-500 to-purple-600',
+    'from-blue-500 to-cyan-600',
+    'from-green-500 to-emerald-600',
+    'from-orange-500 to-amber-600',
+    'from-pink-500 to-rose-600',
+];
+
+function avatarGradient(name: string) {
+    const idx = name.charCodeAt(0) % AVATAR_COLORS.length;
+    return AVATAR_COLORS[idx];
+}
+
 export default function Conversations({ metaAccount, conversations = [] }: Props) {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [query, setQuery] = useState('');
 
-    const filteredConversations = conversations.filter(conv =>
-        conv.participant_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        conv.last_message.toLowerCase().includes(searchQuery.toLowerCase())
+    const filtered = conversations.filter(c =>
+        c.participant_name.toLowerCase().includes(query.toLowerCase()) ||
+        c.last_message.toLowerCase().includes(query.toLowerCase())
     );
-
-    const formatTime = (dateString: string) => {
-        const date = new Date(dateString);
-        const now = new Date();
-        const diffMs = now.getTime() - date.getTime();
-        const diffMins = Math.floor(diffMs / 60000);
-        const diffHours = Math.floor(diffMs / 3600000);
-        const diffDays = Math.floor(diffMs / 86400000);
-
-        if (diffMins < 1) return 'Just now';
-        if (diffMins < 60) return `${diffMins}m ago`;
-        if (diffHours < 24) return `${diffHours}h ago`;
-        if (diffDays < 7) return `${diffDays}d ago`;
-
-        return date.toLocaleDateString();
-    };
-
-    const truncateMessage = (message: string, length = 100) => {
-        return message.length > length ? message.substring(0, length) + '...' : message;
-    };
 
     return (
         <AppLayout breadcrumbs={[
-            { label: 'Meta Automation', href: '/meta/dashboard' },
+            { label: 'Automations', href: '/meta/dashboard' },
             { label: 'Accounts', href: '/meta/accounts' },
             { label: metaAccount.account_name },
         ]}>
-            <Head title={`Conversations - ${metaAccount.account_name}`} />
+            <Head title={`${metaAccount.account_name} — Conversations`} />
 
             <div className="space-y-6">
                 {/* Header */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between">
                     <div>
                         <h1 className="text-3xl font-bold tracking-tight">Conversations</h1>
-                        <p className="text-muted-foreground mt-2">{metaAccount.account_name} • {filteredConversations.length} conversations</p>
+                        <p className="mt-1.5 text-muted-foreground">
+                            {metaAccount.account_name}
+                            {conversations.length > 0 && (
+                                <span className="ml-2 text-muted-foreground/60">· {conversations.length} total</span>
+                            )}
+                        </p>
                     </div>
-                    <Button asChild variant="outline">
+                    <Button asChild variant="ghost" size="sm">
                         <Link href="/meta/accounts">
-                            ← Back to Accounts
+                            <ArrowLeft className="mr-1.5 h-4 w-4" />
+                            Accounts
                         </Link>
                     </Button>
                 </div>
 
-                {/* Search Bar */}
+                {/* Search */}
                 <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                     <Input
-                        placeholder="Search conversations..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-10"
+                        placeholder="Search conversations…"
+                        value={query}
+                        onChange={e => setQuery(e.target.value)}
+                        className="pl-9"
                     />
                 </div>
 
-                {/* Conversations List */}
-                <div className="space-y-2">
-                    {filteredConversations.length === 0 ? (
-                        <Card className="border-dashed">
-                            <CardContent className="pt-6 text-center">
-                                <MessageCircle className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
-                                <p className="text-muted-foreground">
-                                    {conversations.length === 0 ? 'No conversations yet' : 'No matching conversations found'}
-                                </p>
-                            </CardContent>
-                        </Card>
-                    ) : (
-                        filteredConversations.map((conversation) => (
+                {/* List */}
+                {filtered.length === 0 ? (
+                    <Card className="border-dashed">
+                        <CardContent className="flex flex-col items-center py-12 text-center">
+                            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-muted">
+                                <MessageCircle className="h-7 w-7 text-muted-foreground" />
+                            </div>
+                            <p className="font-medium">
+                                {conversations.length === 0 ? 'No conversations yet' : 'No results found'}
+                            </p>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                {conversations.length === 0
+                                    ? 'Messages from this account will appear here'
+                                    : 'Try a different search term'}
+                            </p>
+                        </CardContent>
+                    </Card>
+                ) : (
+                    <div className="space-y-1">
+                        {filtered.map(conv => (
                             <Link
-                                key={conversation.id}
-                                href={`/meta/accounts/${metaAccount.id}/conversations/${conversation.id}`}
+                                key={conv.id}
+                                href={`/meta/accounts/${metaAccount.id}/conversations/${conv.id}`}
                                 className="block"
                             >
-                                <Card className="hover:shadow-md transition-shadow hover:bg-accent cursor-pointer">
-                                    <CardContent className="pt-4 pb-4">
-                                        <div className="flex items-center gap-4">
-                                            {/* Avatar */}
-                                            <div className="flex-shrink-0">
-                                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
-                                                    {conversation.participant_name.charAt(0).toUpperCase()}
-                                                </div>
-                                            </div>
+                                <div className="group flex items-center gap-4 rounded-xl border bg-card px-4 py-3 transition-colors hover:bg-accent">
+                                    {/* Avatar */}
+                                    <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${avatarGradient(conv.participant_name)} text-white text-sm font-bold`}>
+                                        {conv.participant_name.charAt(0).toUpperCase()}
+                                    </div>
 
-                                            {/* Content */}
-                                            <div className="flex-1 min-w-0">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <h3 className="font-semibold truncate">{conversation.participant_name}</h3>
-                                                    {conversation.unread_count > 0 && (
-                                                        <Badge variant="default" className="ml-auto">
-                                                            {conversation.unread_count} new
-                                                        </Badge>
-                                                    )}
-                                                </div>
-                                                <p className="text-sm text-muted-foreground truncate">
-                                                    {truncateMessage(conversation.last_message)}
-                                                </p>
-                                                <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-                                                    <span className="flex items-center gap-1">
-                                                        <Clock className="h-3 w-3" />
-                                                        {formatTime(conversation.last_message_at)}
-                                                    </span>
-                                                    <span className="flex items-center gap-1">
-                                                        <MessageCircle className="h-3 w-3" />
-                                                        {conversation.message_count} messages
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            {/* Arrow */}
-                                            <div className="flex-shrink-0">
-                                                <ArrowRight className="h-5 w-5 text-muted-foreground" />
-                                            </div>
+                                    {/* Body */}
+                                    <div className="min-w-0 flex-1">
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-semibold truncate">{conv.participant_name}</span>
+                                            {conv.unread_count > 0 && (
+                                                <Badge className="ml-1 text-xs px-1.5 py-0 h-5 shrink-0">
+                                                    {conv.unread_count}
+                                                </Badge>
+                                            )}
                                         </div>
-                                    </CardContent>
-                                </Card>
-                            </Link>
-                        ))
-                    )}
-                </div>
+                                        <p className="mt-0.5 text-sm text-muted-foreground truncate">
+                                            {conv.last_message}
+                                        </p>
+                                        <div className="mt-1 flex items-center gap-3 text-xs text-muted-foreground/70">
+                                            <span className="flex items-center gap-1">
+                                                <Clock className="h-3 w-3" />
+                                                {formatTime(conv.last_message_at)}
+                                            </span>
+                                            <span className="flex items-center gap-1">
+                                                <MessageCircle className="h-3 w-3" />
+                                                {conv.message_count}
+                                            </span>
+                                        </div>
+                                    </div>
 
-                {/* Info Card */}
-                <Card className="bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800">
-                    <CardHeader>
-                        <CardTitle className="text-blue-900 dark:text-blue-100">💡 AI Analysis in Progress</CardTitle>
-                    </CardHeader>
-                    <CardContent className="text-sm text-blue-800 dark:text-blue-200">
-                        <p>
-                            Each message in these conversations is being analyzed by our AI agent. Draft replies are automatically generated based on your configured preferences and will appear when you view the conversation.
-                        </p>
-                    </CardContent>
-                </Card>
+                                    <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/40 group-hover:text-muted-foreground transition-colors" />
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                )}
             </div>
         </AppLayout>
     );

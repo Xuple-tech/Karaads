@@ -9,6 +9,7 @@ import AdminDashboardController from './AdminDashboardController'
 import GrokApiController from './GrokApiController'
 import PromptController from './PromptController'
 import PersonalizationController from './PersonalizationController'
+import DeveloperApiController from './DeveloperApiController'
 import SubscriptionPlanFeaturesController from './SubscriptionPlanFeaturesController'
 const Admin = {
     AIModeController: Object.assign(AIModeController, AIModeController),
@@ -22,6 +23,7 @@ AdminDashboardController: Object.assign(AdminDashboardController, AdminDashboard
 GrokApiController: Object.assign(GrokApiController, GrokApiController),
 PromptController: Object.assign(PromptController, PromptController),
 PersonalizationController: Object.assign(PersonalizationController, PersonalizationController),
+DeveloperApiController: Object.assign(DeveloperApiController, DeveloperApiController),
 SubscriptionPlanFeaturesController: Object.assign(SubscriptionPlanFeaturesController, SubscriptionPlanFeaturesController),
 }
 

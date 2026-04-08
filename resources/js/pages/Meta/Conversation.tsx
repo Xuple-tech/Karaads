@@ -1,14 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Send, ThumbsUp, ThumbsDown, Edit2, Copy, Loader } from 'lucide-react';
+import { Send, ThumbsDown, Pencil, Loader2, ArrowLeft, Bot, CheckCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 interface Message {
@@ -26,10 +22,8 @@ interface Draft {
     sentiment: string;
     sentiment_emoji: string;
     category: string;
-    category_icon: string;
     confidence_score: number;
     status: string;
-    ai_analysis: string;
 }
 
 interface MetaAccount {
@@ -51,279 +45,244 @@ interface Props {
     drafts: Record<number, Draft>;
 }
 
-const sentimentEmojis: Record<string, string> = {
-    positive: '😊',
-    negative: '😠',
-    neutral: '😐',
+const sentimentConfig: Record<string, { emoji: string; color: string }> = {
+    positive: { emoji: '😊', color: 'text-green-500' },
+    negative: { emoji: '😠', color: 'text-red-500' },
+    neutral: { emoji: '😐', color: 'text-muted-foreground' },
 };
 
-export default function Conversation({
-    metaAccount,
-    metaConversation,
-    messages = [],
-    drafts = {},
-}: Props) {
-    const [selectedDraftId, setSelectedDraftId] = useState<number | null>(null);
+function formatTime(ts: string) {
+    return new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+export default function Conversation({ metaAccount, metaConversation, messages = [], drafts = {} }: Props) {
     const [editingDraftId, setEditingDraftId] = useState<number | null>(null);
     const [editedText, setEditedText] = useState('');
     const [sendingId, setSendingId] = useState<number | null>(null);
     const [rejectingId, setRejectingId] = useState<number | null>(null);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const bottomRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    const handleSendDraft = async (draftId: number) => {
+    const csrfToken = () =>
+        document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+    const handleSend = async (draftId: number) => {
         setSendingId(draftId);
         try {
-            const response = await fetch(`/meta/drafts/${draftId}/send`, {
+            const res = await fetch(`/meta/drafts/${draftId}/send`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                },
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken() },
             });
-
-            if (response.ok) {
-                toast.success('Message sent successfully!');
-                window.location.reload();
-            } else {
-                toast.error('Failed to send message');
-            }
-        } catch (error) {
-            toast.error('Error sending message');
-        } finally {
-            setSendingId(null);
-        }
+            if (res.ok) { toast.success('Message sent'); window.location.reload(); }
+            else toast.error('Failed to send');
+        } catch { toast.error('Error sending'); }
+        finally { setSendingId(null); }
     };
 
-    const handleRejectDraft = async (draftId: number) => {
+    const handleReject = async (draftId: number) => {
         setRejectingId(draftId);
         try {
-            const response = await fetch(`/meta/drafts/${draftId}/reject`, {
+            const res = await fetch(`/meta/drafts/${draftId}/reject`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                },
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken() },
             });
-
-            if (response.ok) {
-                toast.success('Draft rejected');
-                window.location.reload();
-            } else {
-                toast.error('Failed to reject draft');
-            }
-        } catch (error) {
-            toast.error('Error rejecting draft');
-        } finally {
-            setRejectingId(null);
-        }
+            if (res.ok) { toast.success('Draft discarded'); window.location.reload(); }
+            else toast.error('Failed to reject');
+        } catch { toast.error('Error rejecting'); }
+        finally { setRejectingId(null); }
     };
 
-    const handleUpdateDraft = async (draftId: number) => {
+    const handleUpdate = async (draftId: number) => {
         try {
-            const response = await fetch(`/meta/drafts/${draftId}`, {
+            const res = await fetch(`/meta/drafts/${draftId}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                },
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken() },
                 body: JSON.stringify({ draft_reply: editedText }),
             });
-
-            if (response.ok) {
-                toast.success('Draft updated');
-                setEditingDraftId(null);
-                window.location.reload();
-            } else {
-                toast.error('Failed to update draft');
-            }
-        } catch (error) {
-            toast.error('Error updating draft');
-        }
+            if (res.ok) { toast.success('Draft updated'); setEditingDraftId(null); window.location.reload(); }
+            else toast.error('Failed to update draft');
+        } catch { toast.error('Error updating draft'); }
     };
 
-    const getDraft = (messageId: number) => {
-        return Object.values(drafts).find(d => d.message_id === messageId);
-    };
+    const getDraft = (msgId: number) => Object.values(drafts).find(d => d.message_id === msgId);
 
     return (
         <AppLayout breadcrumbs={[
-            { label: 'Meta Automation', href: '/meta/dashboard' },
+            { label: 'Automations', href: '/meta/dashboard' },
             { label: 'Accounts', href: '/meta/accounts' },
             { label: metaAccount.account_name, href: `/meta/accounts/${metaAccount.id}/conversations` },
             { label: metaConversation.participant_name },
         ]}>
-            <Head title={`Chat with ${metaConversation.participant_name}`} />
+            <Head title={`${metaConversation.participant_name} — Chat`} />
 
-            <div className="space-y-4 flex flex-col h-[calc(100vh-200px)]">
+            <div className="flex flex-col" style={{ height: 'calc(100vh - 130px)' }}>
                 {/* Header */}
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-2xl font-bold tracking-tight">{metaConversation.participant_name}</h1>
-                        <p className="text-sm text-muted-foreground">{metaAccount.account_name}</p>
+                <div className="flex items-center justify-between pb-4 shrink-0">
+                    <div className="flex items-center gap-3">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-purple-600 text-white text-sm font-bold shrink-0">
+                            {metaConversation.participant_name.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <h1 className="font-semibold leading-tight">{metaConversation.participant_name}</h1>
+                            <p className="text-xs text-muted-foreground">{metaAccount.account_name}</p>
+                        </div>
                     </div>
-                    <Button asChild variant="outline" size="sm">
+                    <Button asChild variant="ghost" size="sm">
                         <Link href={`/meta/accounts/${metaAccount.id}/conversations`}>
-                            ← Back to Conversations
+                            <ArrowLeft className="mr-1.5 h-4 w-4" />
+                            Back
                         </Link>
                     </Button>
                 </div>
 
                 {/* Messages */}
-                <Card className="flex-1 overflow-hidden flex flex-col">
-                    <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
-                        {messages.length === 0 ? (
-                            <div className="text-center text-muted-foreground py-8">
-                                No messages yet
-                            </div>
-                        ) : (
-                            <>
-                                {messages.map((message) => {
-                                    const draft = getDraft(message.id);
-                                    return (
-                                        <div key={message.id} className="space-y-2">
-                                            {/* Message Bubble */}
+                <div className="flex-1 overflow-y-auto rounded-xl border bg-card p-4 space-y-4 min-h-0">
+                    {messages.length === 0 ? (
+                        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                            No messages yet
+                        </div>
+                    ) : (
+                        <>
+                            {messages.map(msg => {
+                                const draft = getDraft(msg.id);
+                                const sentiment = sentimentConfig[draft?.sentiment ?? 'neutral'] ?? sentimentConfig.neutral;
+
+                                return (
+                                    <div key={msg.id} className="space-y-2">
+                                        {/* Bubble */}
+                                        <div className={`flex ${msg.is_incoming ? 'justify-start' : 'justify-end'}`}>
                                             <div
-                                                className={`flex ${message.is_incoming ? 'justify-start' : 'justify-end'}`}
+                                                className={`relative max-w-xs rounded-2xl px-4 py-2.5 text-sm lg:max-w-md ${
+                                                    msg.is_incoming
+                                                        ? 'rounded-tl-sm bg-muted text-foreground'
+                                                        : 'rounded-tr-sm bg-primary text-primary-foreground'
+                                                }`}
                                             >
-                                                <div
-                                                    className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                                                        message.is_incoming
-                                                            ? 'bg-muted text-muted-foreground'
-                                                            : 'bg-blue-600 text-white'
-                                                    }`}
-                                                >
-                                                    <p className="text-sm">{message.content}</p>
-                                                    <p className="text-xs mt-1 opacity-70">
-                                                        {new Date(message.timestamp).toLocaleTimeString()}
-                                                    </p>
+                                                <p className="leading-relaxed">{msg.content}</p>
+                                                <p className={`mt-1 text-[10px] ${msg.is_incoming ? 'text-muted-foreground' : 'text-primary-foreground/70'}`}>
+                                                    {formatTime(msg.timestamp)}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Draft card — only for incoming messages */}
+                                        {msg.is_incoming && draft && (
+                                            <div className="flex justify-start pl-2">
+                                                <div className="w-full max-w-xs rounded-xl border border-border bg-card shadow-sm lg:max-w-md">
+                                                    {/* Draft header */}
+                                                    <div className="flex items-center justify-between px-3 pt-3 pb-2">
+                                                        <div className="flex items-center gap-1.5">
+                                                            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10">
+                                                                <Bot className="h-3 w-3 text-primary" />
+                                                            </div>
+                                                            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">AI Draft</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-1.5">
+                                                            <span className="text-base leading-none">{sentiment.emoji}</span>
+                                                            <Badge variant="outline" className="text-[10px] py-0 h-4 capitalize">
+                                                                {draft.category}
+                                                            </Badge>
+                                                            <span className={`text-[10px] font-medium ${draft.confidence_score >= 70 ? 'text-green-500' : 'text-amber-500'}`}>
+                                                                {draft.confidence_score.toFixed(0)}%
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Draft body */}
+                                                    <div className="px-3 pb-3">
+                                                        {editingDraftId === draft.id ? (
+                                                            <Textarea
+                                                                value={editedText}
+                                                                onChange={e => setEditedText(e.target.value)}
+                                                                rows={3}
+                                                                className="text-sm resize-none"
+                                                                autoFocus
+                                                            />
+                                                        ) : (
+                                                            <p className="text-sm text-foreground leading-relaxed">{draft.draft_reply}</p>
+                                                        )}
+
+                                                        {/* Actions */}
+                                                        <div className="mt-3 flex gap-2">
+                                                            {editingDraftId === draft.id ? (
+                                                                <>
+                                                                    <Button
+                                                                        size="sm"
+                                                                        variant="ghost"
+                                                                        className="h-7 text-xs flex-1"
+                                                                        onClick={() => setEditingDraftId(null)}
+                                                                    >
+                                                                        Cancel
+                                                                    </Button>
+                                                                    <Button
+                                                                        size="sm"
+                                                                        className="h-7 text-xs flex-1"
+                                                                        onClick={() => handleUpdate(draft.id)}
+                                                                    >
+                                                                        <CheckCheck className="mr-1 h-3 w-3" />
+                                                                        Save
+                                                                    </Button>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <Button
+                                                                        size="sm"
+                                                                        variant="outline"
+                                                                        className="h-7 text-xs"
+                                                                        onClick={() => {
+                                                                            setEditingDraftId(draft.id);
+                                                                            setEditedText(draft.draft_reply);
+                                                                        }}
+                                                                    >
+                                                                        <Pencil className="mr-1 h-3 w-3" />
+                                                                        Edit
+                                                                    </Button>
+                                                                    <Button
+                                                                        size="sm"
+                                                                        className="h-7 text-xs flex-1 bg-green-600 hover:bg-green-700 text-white"
+                                                                        onClick={() => handleSend(draft.id)}
+                                                                        disabled={sendingId === draft.id}
+                                                                    >
+                                                                        {sendingId === draft.id
+                                                                            ? <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                                                                            : <Send className="mr-1 h-3 w-3" />
+                                                                        }
+                                                                        Send
+                                                                    </Button>
+                                                                    <Button
+                                                                        size="sm"
+                                                                        variant="ghost"
+                                                                        className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                                                                        onClick={() => handleReject(draft.id)}
+                                                                        disabled={rejectingId === draft.id}
+                                                                    >
+                                                                        {rejectingId === draft.id
+                                                                            ? <Loader2 className="h-3 w-3 animate-spin" />
+                                                                            : <ThumbsDown className="h-3 w-3" />
+                                                                        }
+                                                                    </Button>
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                            <div ref={bottomRef} />
+                        </>
+                    )}
+                </div>
 
-                                            {/* AI Draft (only for incoming messages) */}
-                                            {message.is_incoming && draft && (
-                                                <div className="flex justify-start">
-                                                    <Card className="bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800 max-w-xs lg:max-w-md">
-                                                        <CardHeader className="pb-2 pt-3 px-3">
-                                                            <div className="flex items-center justify-between gap-2">
-                                                                <div>
-                                                                    <CardTitle className="text-xs font-semibold text-green-900 dark:text-green-100">
-                                                                        🤖 AI Draft Reply
-                                                                    </CardTitle>
-                                                                </div>
-                                                                <div className="flex items-center gap-1">
-                                                                    <span className="text-2xl">{draft.sentiment_emoji}</span>
-                                                                    <Badge variant="secondary" className="text-xs capitalize">
-                                                                        {draft.sentiment}
-                                                                    </Badge>
-                                                                </div>
-                                                            </div>
-                                                        </CardHeader>
-                                                        <CardContent className="px-3 pb-3 space-y-3">
-                                                            {/* Draft Text */}
-                                                            {editingDraftId === draft.id ? (
-                                                                <Textarea
-                                                                    value={editedText}
-                                                                    onChange={(e) => setEditedText(e.target.value)}
-                                                                    rows={3}
-                                                                    className="text-sm"
-                                                                />
-                                                            ) : (
-                                                                <p className="text-sm text-green-900 dark:text-green-100">
-                                                                    {draft.draft_reply}
-                                                                </p>
-                                                            )}
-
-                                                            {/* Analysis Info */}
-                                                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                                                <span className="capitalize">{draft.category}</span>
-                                                                <span>•</span>
-                                                                <span>{draft.confidence_score.toFixed(0)}% confident</span>
-                                                            </div>
-
-                                                            {/* Action Buttons */}
-                                                            <div className="flex gap-2 pt-2 flex-wrap">
-                                                                {editingDraftId === draft.id ? (
-                                                                    <>
-                                                                        <Button
-                                                                            size="sm"
-                                                                            variant="outline"
-                                                                            className="flex-1 h-8 text-xs"
-                                                                            onClick={() => setEditingDraftId(null)}
-                                                                        >
-                                                                            Cancel
-                                                                        </Button>
-                                                                        <Button
-                                                                            size="sm"
-                                                                            className="flex-1 h-8 text-xs"
-                                                                            onClick={() => handleUpdateDraft(draft.id)}
-                                                                        >
-                                                                            Save
-                                                                        </Button>
-                                                                    </>
-                                                                ) : (
-                                                                    <>
-                                                                        <Button
-                                                                            size="sm"
-                                                                            variant="outline"
-                                                                            className="flex-1 h-8 text-xs"
-                                                                            onClick={() => {
-                                                                                setEditingDraftId(draft.id);
-                                                                                setEditedText(draft.draft_reply);
-                                                                            }}
-                                                                        >
-                                                                            <Edit2 className="h-3 w-3 mr-1" />
-                                                                            Edit
-                                                                        </Button>
-                                                                        <Button
-                                                                            size="sm"
-                                                                            className="flex-1 h-8 text-xs bg-green-600 hover:bg-green-700"
-                                                                            onClick={() => handleSendDraft(draft.id)}
-                                                                            disabled={sendingId === draft.id}
-                                                                        >
-                                                                            {sendingId === draft.id ? (
-                                                                                <Loader className="h-3 w-3 mr-1 animate-spin" />
-                                                                            ) : (
-                                                                                <Send className="h-3 w-3 mr-1" />
-                                                                            )}
-                                                                            Send
-                                                                        </Button>
-                                                                        <Button
-                                                                            size="sm"
-                                                                            variant="destructive"
-                                                                            className="h-8"
-                                                                            onClick={() => handleRejectDraft(draft.id)}
-                                                                            disabled={rejectingId === draft.id}
-                                                                        >
-                                                                            <ThumbsDown className="h-3 w-3" />
-                                                                        </Button>
-                                                                    </>
-                                                                )}
-                                                            </div>
-                                                        </CardContent>
-                                                    </Card>
-                                                </div>
-                                            )}
-                                        </div>
-                                    );
-                                })}
-                                <div ref={messagesEndRef} />
-                            </>
-                        )}
-                    </CardContent>
-                </Card>
-
-                {/* Info */}
-                <Card className="bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800">
-                    <CardContent className="pt-3 pb-3">
-                        <p className="text-xs text-blue-800 dark:text-blue-200">
-                            💡 <strong>AI Agent at Work:</strong> Each incoming message is analyzed automatically and a draft reply is generated instantly based on your automation preferences. Review, edit, and send with one click, or reject to write your own response.
-                        </p>
-                    </CardContent>
-                </Card>
+                {/* Footer tip */}
+                <p className="mt-3 shrink-0 text-center text-xs text-muted-foreground/60">
+                    AI drafts are generated automatically · Edit before sending or send as-is
+                </p>
             </div>
         </AppLayout>
     );

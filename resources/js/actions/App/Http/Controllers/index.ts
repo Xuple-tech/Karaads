@@ -15,8 +15,11 @@ import StripeWebhookController from './StripeWebhookController'
 import StripePaymentController from './StripePaymentController'
 import PaystackWebhookController from './PaystackWebhookController'
 import VoiceConversationController from './VoiceConversationController'
+import Developer from './Developer'
 import CurrencyController from './CurrencyController'
 import PodcastController from './PodcastController'
+import DeveloperApiDocsController from './DeveloperApiDocsController'
+import DeveloperApi from './DeveloperApi'
 const Controllers = {
     Api: Object.assign(Api, Api),
 Admin: Object.assign(Admin, Admin),
@@ -35,8 +38,11 @@ StripeWebhookController: Object.assign(StripeWebhookController, StripeWebhookCon
 StripePaymentController: Object.assign(StripePaymentController, StripePaymentController),
 PaystackWebhookController: Object.assign(PaystackWebhookController, PaystackWebhookController),
 VoiceConversationController: Object.assign(VoiceConversationController, VoiceConversationController),
+Developer: Object.assign(Developer, Developer),
 CurrencyController: Object.assign(CurrencyController, CurrencyController),
 PodcastController: Object.assign(PodcastController, PodcastController),
+DeveloperApiDocsController: Object.assign(DeveloperApiDocsController, DeveloperApiDocsController),
+DeveloperApi: Object.assign(DeveloperApi, DeveloperApi),
 }
 
 export default Controllers

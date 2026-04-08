@@ -372,4 +372,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return (int) now()->diffInDays($subscription->trial_ends_at, false);
     }
 
+    public function developerApiKeys(): HasMany
+    {
+        return $this->hasMany(DeveloperApiKey::class);
+    }
+
+    public function developerWallet(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(DeveloperWallet::class);
+    }
+
 }

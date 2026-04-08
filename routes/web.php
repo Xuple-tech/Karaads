@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Developer\DeveloperPortalAuthController;
+use App\Http\Controllers\Developer\DeveloperPortalController;
+use App\Http\Middleware\AuthenticateDeveloperPortal;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\User;
@@ -200,5 +203,23 @@ require __DIR__ . '/currency.php';
 require __DIR__ . '/studio.php';
 require __DIR__ . '/docs.php';
 
+// Developer API portal at /developer-api (separate from SPA, own login)
+Route::middleware('web')->prefix('developer-api')->name('developer-api.')->group(function () {
+    // Public auth routes — redirect to portal if already logged in
+    Route::get('/login', [DeveloperPortalAuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [DeveloperPortalAuthController::class, 'login'])->name('login.store');
+
+    // Protected portal routes — redirect to /developer-api/login if unauthenticated
+    Route::middleware(AuthenticateDeveloperPortal::class)->group(function () {
+        Route::post('/logout', [DeveloperPortalAuthController::class, 'logout'])->name('logout');
+        Route::get('/', [DeveloperPortalController::class, 'index'])->name('index');
+        Route::post('/keys', [DeveloperPortalController::class, 'storeKey'])->name('keys.store');
+        Route::put('/keys/{developerApiKey}', [DeveloperPortalController::class, 'updateKey'])->name('keys.update');
+        Route::post('/keys/{developerApiKey}/revoke', [DeveloperPortalController::class, 'revokeKey'])->name('keys.revoke');
+        Route::post('/keys/{developerApiKey}/regenerate', [DeveloperPortalController::class, 'regenerateKey'])->name('keys.regenerate');
+        Route::post('/top-up', [DeveloperPortalController::class, 'createTopupCheckout'])->name('topup');
+    });
+});
+
 Route::get('/{path}', SpaController::class)
-    ->where('path', '^(?!admin(?:/|$)|saas-owner(?:/|$)|staff(?:/|$)|api(?:/|$)|docs(?:/|$)|doc-builder(?:/|$)|meta/webhook(?:/|$)|media(?:/|$)|user-g-content(?:/|$)|up(?:/|$)|sanctum(?:/|$)).*');
+    ->where('path', '^(?!admin(?:/|$)|saas-owner(?:/|$)|staff(?:/|$)|api(?:/|$)|docs(?:/|$)|doc-builder(?:/|$)|developer-api(?:/|$)|meta/webhook(?:/|$)|media(?:/|$)|user-g-content(?:/|$)|up(?:/|$)|sanctum(?:/|$)).*');

@@ -92,6 +92,9 @@ export default function PersonalizationSettings() {
     fetchAllData();
   }, []);
 
+  const csrfToken = () =>
+    document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
   const fetchAllData = async () => {
     try {
       setLoading(true);
@@ -133,6 +136,7 @@ export default function PersonalizationSettings() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken(),
         },
         body: JSON.stringify(formData),
       });
@@ -159,6 +163,9 @@ export default function PersonalizationSettings() {
       setSaving(true);
       const response = await fetch('/api/settings/personalization/reset', {
         method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': csrfToken(),
+        },
       });
 
       if (!response.ok) {

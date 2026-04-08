@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\GrokApiController;
 use App\Http\Controllers\Admin\PromptController;
 use App\Http\Controllers\Admin\AIModeController;
 use App\Http\Controllers\Admin\PersonalizationController;
+use App\Http\Controllers\Admin\DeveloperApiController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\AdminOrStaffMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -100,6 +101,17 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->name('admin.')->gr
         Route::put('/{template}', [PersonalizationController::class, 'updateTemplate'])->name('update');
         Route::delete('/{template}', [PersonalizationController::class, 'destroyTemplate'])->name('destroy');
         Route::get('/statistics', [PersonalizationController::class, 'statistics'])->name('statistics');
+    });
+
+    // Developer API Management
+    Route::prefix('developer-api')->name('developer-api.')->group(function () {
+        Route::get('/', [DeveloperApiController::class, 'index'])->name('index');
+        Route::post('/models', [DeveloperApiController::class, 'storeModel'])->name('models.store');
+        Route::put('/models/{apiModel}', [DeveloperApiController::class, 'updateModel'])->name('models.update');
+        Route::post('/models/{apiModel}/toggle', [DeveloperApiController::class, 'toggleModel'])->name('models.toggle');
+        Route::post('/keys/{developerApiKey}/toggle', [DeveloperApiController::class, 'toggleKey'])->name('keys.toggle');
+        Route::post('/keys/{developerApiKey}/regenerate', [DeveloperApiController::class, 'regenerateKey'])->name('keys.regenerate');
+        Route::post('/wallets/{user}/adjust', [DeveloperApiController::class, 'adjustWallet'])->name('wallets.adjust');
     });
 });
 

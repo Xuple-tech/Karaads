@@ -291,6 +291,4 @@ bulkToggle.post = (args: { plan: string | { id: string } } | [plan: string | { i
     url: bulkToggle.url(args, options),
     method: 'post',
 })
-const SubscriptionPlanFeaturesController = { index, store, update, destroy, bulkToggle }
-
-export default SubscriptionPlanFeaturesController
+const Subscriptio
