@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ImageGeneration extends Model
 {
-    use HasFactory,HasUuids;
+    use HasFactory;
 
-    protected $keyType = 'string';
+    protected $keyType = 'int';
+    public $incrementing = true;
     protected $fillable = [
         'user_id',
         'ip_address',
@@ -25,6 +25,8 @@ class ImageGeneration extends Model
         'size',
         'quality',
         'style',
+        'background',
+        'output_format',
         'operation',
         'chat_id',
         'status',

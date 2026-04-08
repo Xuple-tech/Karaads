@@ -20,6 +20,12 @@ class Conversation extends Model
         'ai_generated_title',
         'title_generated_at',
         'type',
+        'mode',
+        'language',
+        'voice_settings',
+        'document_content',
+        'document_type',
+        'doc_model',
     ];
 
     protected $casts = [

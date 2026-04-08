@@ -20,6 +20,7 @@ Route::get('/app', SpaController::class)->name('app');
 Route::get('/new', SpaController::class)->name('new');
 Route::get('/privacy-policy', SpaController::class)->name('privacy-policy');
 Route::get('/dashboard', SpaController::class)->name('dashboard');
+Route::get('/doc-builder', SpaController::class)->name('doc-builder');
 
 Route::middleware(['web'])->withoutMiddleware(VerifyCsrfToken::class)->prefix('api')->group(function () {
     // Email API routes

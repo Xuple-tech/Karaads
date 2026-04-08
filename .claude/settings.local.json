@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -E \"\\\\.\\(ts|tsx|js\\)$\")"
+      "Bash(grep -E \"\\\\.\\(ts|tsx|js\\)$\")",
+      "Bash(grep -E \"\\\\.php$\")",
+      "Bash(xargs grep:*)",
+      "Bash(npx tsc:*)",
+      "Bash(php artisan:*)"
     ]
   }
 }

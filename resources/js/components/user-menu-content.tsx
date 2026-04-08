@@ -17,6 +17,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
     const handleLogout = () => {
         cleanup();
         router.flushAll();
+        router.post(logout().url);
     };
 
     // Check if user is on free plan
@@ -62,10 +63,10 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-                <Link className="block w-full" method="get" href={logout().url} as="button" onClick={handleLogout}>
+                <button className="flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none" onClick={handleLogout}>
                     <LogOut className="mr-2" />
                     Log out
-                </Link>
+                </button>
             </DropdownMenuItem>
         </>
     );

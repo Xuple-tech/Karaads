@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\PersonalizationController;
 use App\Http\Controllers\Admin\PersonalizationAdminController;
 use App\Http\Controllers\Admin\AIModeController;
 use App\Http\Controllers\Admin\SubscriptionPlanController as AdminSubscriptionPlanController;
+use App\Http\Controllers\DocBuilder\DocBuilderController;
 
 // Public routes
 Route::post('/auth/login', [AuthController::class, 'login']);
@@ -120,6 +121,17 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/personalization/templates', [PersonalizationController::class, 'getTemplates']);
         Route::get('/personalization/ai-modes', [PersonalizationController::class, 'getAiModes']);
         Route::get('/personalization/descriptions', [PersonalizationController::class, 'getDescriptions']);
+    });
+
+    // Doc Builder
+    Route::prefix('doc-builder')->group(function () {
+        Route::get('/config', [DocBuilderController::class, 'config'])->name('doc-builder.config');
+        Route::post('/stream', [DocBuilderController::class, 'stream'])->name('doc-builder.stream');
+        Route::post('/export', [DocBuilderController::class, 'export'])->name('doc-builder.export');
+        Route::get('/sessions', [DocBuilderController::class, 'index'])->name('doc-builder.sessions.index');
+        Route::get('/sessions/{id}', [DocBuilderController::class, 'show'])->name('doc-builder.sessions.show');
+        Route::patch('/sessions/{id}', [DocBuilderController::class, 'update'])->name('doc-builder.sessions.update');
+        Route::delete('/sessions/{id}', [DocBuilderController::class, 'destroy'])->name('doc-builder.sessions.destroy');
     });
 
     // Admin routes for AI Mode management
