@@ -20,7 +20,7 @@ class AssetWorkflowService
     ) {
     }
 
-    public function handleImageGeneration(array $arguments, ?int $chatId = null): array
+    public function handleImageGeneration(array $arguments, string|int|null $chatId = null): array
     {
         try {
             $prompt = $arguments['user_prompt'];
@@ -36,7 +36,7 @@ class AssetWorkflowService
                 'chat_id' => $chatId,
             ]);
 
-            $limitCheck = $this->checkImageLimits($numberOfImages);
+            $limitCheck = $this->checkImageLimits($numberOfImages, chatId: $chatId);
             if ($limitCheck !== null) {
                 throw new \Exception($limitCheck['message'] ?? 'Image generation limit exceeded');
             }
@@ -96,7 +96,7 @@ class AssetWorkflowService
         }
     }
 
-    public function handleImageEdit(array $arguments, ?int $chatId = null): array
+    public function handleImageEdit(array $arguments, string|int|null $chatId = null): array
     {
         try {
             $editPrompt = $arguments['edit_prompt'];
@@ -108,7 +108,7 @@ class AssetWorkflowService
                 'chat_id' => $chatId,
             ]);
 
-            $limitCheck = $this->checkImageLimits(1);
+            $limitCheck = $this->checkImageLimits(1, chatId: $chatId);
             if ($limitCheck !== null) {
                 throw new \Exception($limitCheck['message'] ?? 'Image editing limit exceeded');
             }
@@ -234,9 +234,9 @@ class AssetWorkflowService
         );
     }
 
-    public function checkImageLimits(int $count = 1, ?User $user = null): ?array
+    public function checkImageLimits(int $count = 1, ?User $user = null, string|int|null $chatId = null): ?array
     {
-        $userToCheck = $user ?? Auth::user();
+        $userToCheck = $this->resolveExecutionUser($user, $chatId);
 
         if (!$userToCheck) {
             return LimitResponseService::unauthenticated();
@@ -255,19 +255,19 @@ class AssetWorkflowService
         return null;
     }
 
-    public function generateWordDocument(array $arguments, ?int $chatId = null): array
+    public function generateWordDocument(array $arguments, string|int|null $chatId = null): array
     {
         return $this->generateDocument($arguments, $chatId, 'docx', 'DOCX', 'word_document');
     }
 
-    public function generatePdfDocument(array $arguments, ?int $chatId = null): array
+    public function generatePdfDocument(array $arguments, string|int|null $chatId = null): array
     {
         return $this->generateDocument($arguments, $chatId, 'pdf', 'PDF', 'pdf_document');
     }
 
-    public function checkDocumentLimits(?User $user = null): ?array
+    public function checkDocumentLimits(?User $user = null, string|int|null $chatId = null): ?array
     {
-        $userToCheck = $user ?? Auth::user();
+        $userToCheck = $this->resolveExecutionUser($user, $chatId);
 
         if (!$userToCheck) {
             return LimitResponseService::unauthenticated();
@@ -288,7 +288,7 @@ class AssetWorkflowService
 
     private function generateDocument(
         array $arguments,
-        ?int $chatId,
+        string|int|null $chatId,
         string $format,
         string $label,
         string $type
@@ -305,7 +305,7 @@ class AssetWorkflowService
                 'chat_id' => $chatId,
             ]);
 
-            $limitCheck = $this->checkDocumentLimits();
+            $limitCheck = $this->checkDocumentLimits(chatId: $chatId);
             if ($limitCheck !== null) {
                 throw new \Exception($limitCheck['message'] ?? 'Document generation limit exceeded');
             }
@@ -347,7 +347,7 @@ class AssetWorkflowService
         }
     }
 
-    private function storeEditedImagesInChat(?int $chatId, array $images, string $prompt, string $operation): void
+    private function storeEditedImagesInChat(string|int|null $chatId, array $images, string $prompt, string $operation): void
     {
         if (!$chatId || empty($images)) {
             return;
@@ -388,5 +388,27 @@ class AssetWorkflowService
                 'error' => $e->getMessage(),
             ]);
         }
+    }
+
+    private function resolveExecutionUser(?User $user = null, string|int|null $chatId = null): ?User
+    {
+        if ($user instanceof User) {
+            return $user;
+        }
+
+        $authenticatedUser = Auth::user();
+        if ($authenticatedUser instanceof User) {
+            return $authenticatedUser;
+        }
+
+        if ($chatId === null) {
+            return null;
+        }
+
+        $chat = Chat::query()
+            ->with('conversation.user')
+            ->find($chatId);
+
+        return $chat?->conversation?->user;
     }
 }

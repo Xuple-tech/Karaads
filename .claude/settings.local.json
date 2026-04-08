@@ -5,7 +5,8 @@
       "Bash(grep -E \"\\\\.php$\")",
       "Bash(xargs grep:*)",
       "Bash(npx tsc:*)",
-      "Bash(php artisan:*)"
+      "Bash(php artisan:*)",
+      "Bash(grep -E \"\\\\.\\(php|tsx?\\)$\")"
     ]
   }
 }

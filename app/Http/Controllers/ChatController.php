@@ -260,7 +260,7 @@ class ChatController extends Controller
         $conversationId = $request->input('conversation_id');
         $enableTools = $request->input('enable_tools', true);
         $canvasMode = $request->input('canvas_mode', false);
-        $model = $request->input('model', 'grok-4-fast-reasoning');
+        $model = $request->input('model', 'grok-4-fast-non-reasoning');
         $files = $request->input('files', []);
 
         try {

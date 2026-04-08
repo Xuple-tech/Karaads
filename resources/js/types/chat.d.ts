@@ -5,6 +5,7 @@ export interface ChatAttachment {
     mime_type?: string | null;
     size?: number | null;
     url?: string | null;
+    path?: string | null;
 }
 
 export interface ChatToolRun {

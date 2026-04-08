@@ -55,6 +55,11 @@ class ChatTransportService
             Log::info('Starting Grok API streaming request with tools: ' . (!empty($tools) ? 'enabled' : 'disabled'));
             Log::debug('Request Payload (sanitized): ' . json_encode($this->requestTelemetry->sanitizePayloadForLogging($payload)));
 
+            // Reasoning models (e.g. grok-4-fast-reasoning, grok-4) can think silently
+            // for several minutes before streaming any output — use a generous timeout.
+            $isReasoningModel = str_contains($model, 'reasoning') || $model === 'grok-4';
+            $streamTimeout = $isReasoningModel ? 600 : 180;
+
             $response = $client->post($apiEndpoint, [
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -63,8 +68,8 @@ class ChatTransportService
                 ],
                 'json' => $payload,
                 'stream' => true,
-                'timeout' => 60,
-                'read_timeout' => 60,
+                'timeout' => $streamTimeout,
+                'read_timeout' => $streamTimeout,
                 'verify' => config('services.grok.verify_ssl', true),
             ]);
 

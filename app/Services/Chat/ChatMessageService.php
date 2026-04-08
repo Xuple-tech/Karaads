@@ -35,7 +35,7 @@ class ChatMessageService
             'role' => 'assistant',
             'status' => 'streaming',
             'provider' => 'grok',
-            'model' => $payload['model'] ?? 'grok-4-fast-reasoning',
+            'model' => $payload['model'] ?? 'grok-4-fast-non-reasoning',
             'type' => ($payload['type'] ?? 'text') === 'image' ? 'image' : 'text',
             'content_markdown' => '',
             'content_text' => '',
@@ -129,7 +129,7 @@ class ChatMessageService
             $this->buildProviderMessages($conversation),
             [],
             [
-                'model' => $payload['model'] ?? 'grok-4-fast-reasoning',
+                'model' => $payload['model'] ?? 'grok-4-fast-non-reasoning',
                 'files' => $payload['files'] ?? [],
                 'message_id' => $assistantMessage->id,
                 'user_name' => $conversation->user?->name,

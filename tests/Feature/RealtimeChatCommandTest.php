@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Jobs\ProcessChatMessageRealtime;
-use App\Jobs\ProcessDocBuilderRealtime;
 use App\Models\ChatMessage;
 use App\Models\Conversation;
 use App\Models\User;
@@ -84,34 +83,5 @@ class RealtimeChatCommandTest extends TestCase
             ]);
 
         Bus::assertDispatched(ProcessChatMessageRealtime::class);
-    }
-
-    public function test_doc_builder_command_returns_accepted_and_dispatches_job(): void
-    {
-        Bus::fake();
-
-        $user = User::factory()->create();
-        Sanctum::actingAs($user);
-
-        $response = $this->postJson('/api/doc-builder/messages', [
-            'message' => 'Draft a technical design document',
-            'title' => 'System Design',
-            'document_type' => 'technical',
-            'model' => 'grok-4-fast-reasoning',
-        ]);
-
-        $response->assertAccepted()
-            ->assertJsonStructure([
-                'success',
-                'conversation_id',
-                'user_message_id',
-                'assistant_message_id',
-            ]);
-
-        $conversation = Conversation::query()->findOrFail($response->json('conversation_id'));
-        $this->assertSame('doc_builder', $conversation->mode);
-        $this->assertSame('technical', $conversation->document_type);
-
-        Bus::assertDispatched(ProcessDocBuilderRealtime::class);
     }
 }

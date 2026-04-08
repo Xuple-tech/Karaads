@@ -76,8 +76,8 @@ class GrokApiService
             throw new \Exception('Grok API key is not configured');
         }
         $this->client = new Client([
-            'timeout' => 60,
-            'connect_timeout' => 10,
+            'timeout' => 0,
+            'connect_timeout' => 30,
             'verify' => config('services.grok.verify_ssl', true),
         ]);
         $this->defaultLanguage = $this->getUserLanguage();

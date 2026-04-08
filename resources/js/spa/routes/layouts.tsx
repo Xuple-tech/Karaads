@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { AudioLines, CreditCard, FileText, LogOut, Mail, MoreHorizontal, PenSquare, Settings, SquarePen, Star } from 'lucide-react';
+import { AudioLines, CreditCard, LogOut, Mail, MoreHorizontal, PenSquare, Settings, SquarePen, Star } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { NavLink, Navigate, Outlet, useLocation } from 'react-router-dom';
 
@@ -114,7 +114,6 @@ function LoadingState() {
 
 const mainNavItems = [
     { to: '/new', label: 'New Chat', icon: SquarePen },
-    { to: '/doc-builder', label: 'Doc Builder', icon: FileText },
     { to: '/voice-chat', label: 'Voice', icon: AudioLines },
     { to: '/mails', label: 'Mails', icon: Mail },
     { to: '/subscription', label: 'Upgrade Plan', icon: Star },
@@ -122,18 +121,12 @@ const mainNavItems = [
 
 // ─── sidebar ─────────────────────────────────────────────────────────────────
 
-type DocSession = { id: string; title: string; document_type: string; updated_at: string };
-
 function SpaSidebar() {
     const session = useSessionQuery();
     const [isLoggingOut, setIsLoggingOut] = useState(false);
     const conversations = useQuery({
         queryKey: ['spa', 'conversations'],
         queryFn: () => apiRequest<{ conversations: Conversation[] }>('/api/chat/conversations'),
-    });
-    const docSessions = useQuery({
-        queryKey: ['spa', 'doc-builder-sessions'],
-        queryFn: () => apiRequest<{ sessions: DocSession[] }>('/api/doc-builder/sessions'),
     });
     const userId = session.data?.user?.id;
 
@@ -145,14 +138,12 @@ function SpaSidebar() {
         return subscribeToPrivateChannel(`user.${userId}`, (eventName) => {
             if (eventName === 'conversation.updated') {
                 void conversations.refetch();
-                void docSessions.refetch();
             }
         });
-    }, [conversations, docSessions, userId]);
+    }, [conversations, userId]);
 
     const groups = groupConversations(conversations.data?.conversations ?? []);
     const hasConversations = (conversations.data?.conversations?.length ?? 0) > 0;
-    const hasDocs = (docSessions.data?.sessions?.length ?? 0) > 0;
 
     return (
         <Sidebar collapsible="offcanvas" className="border-r border-sidebar-border bg-sidebar">
@@ -281,38 +272,6 @@ function SpaSidebar() {
                 ) : (
                     <div className="px-3 py-8 text-center">
                         <p className="text-xs text-muted-foreground/40">No conversations yet</p>
-                    </div>
-                )}
-
-                {/* Doc Builder sessions */}
-                {hasDocs && (
-                    <div className="mt-4">
-                        <div className="h-px bg-sidebar-border mx-1 mb-3" />
-                        <div className="mb-3">
-                            <p className="px-3 pb-1 pt-0.5 text-[11px] font-medium text-muted-foreground/40 select-none tracking-wide flex items-center gap-1.5">
-                                <FileText size={10} />
-                                Documents
-                            </p>
-                            <div className="space-y-px">
-                                {docSessions.data?.sessions.map(doc => (
-                                    <NavLink
-                                        key={doc.id}
-                                        to={`/doc-builder/${doc.id}`}
-                                        className={({ isActive }) =>
-                                            cn(
-                                                'group flex items-center justify-between gap-2 rounded-lg px-3 py-1.5 text-[13px] transition-colors',
-                                                isActive
-                                                    ? 'bg-sidebar-accent text-sidebar-foreground'
-                                                    : 'text-sidebar-foreground/55 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'
-                                            )
-                                        }
-                                    >
-                                        <span className="truncate flex-1 leading-snug">{doc.title || 'Untitled Document'}</span>
-                                        <MoreHorizontal size={13} className="flex-shrink-0 opacity-0 group-hover:opacity-50 transition-opacity" />
-                                    </NavLink>
-                                ))}
-                            </div>
-                        </div>
                     </div>
                 )}
             </SidebarContent>
@@ -483,7 +442,7 @@ export function GuestOnly() {
 
 // ─── app layout ───────────────────────────────────────────────────────────────
 
-const CHAT_PATHS = ['/app', '/new', '/dashboard', '/c/', '/doc-builder'];
+const CHAT_PATHS = ['/app', '/new', '/dashboard', '/c/'];
 
 export function AppLayout() {
     const { pathname } = useLocation();

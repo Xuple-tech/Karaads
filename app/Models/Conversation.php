@@ -23,9 +23,6 @@ class Conversation extends Model
         'mode',
         'language',
         'voice_settings',
-        'document_content',
-        'document_type',
-        'doc_model',
     ];
 
     protected $casts = [

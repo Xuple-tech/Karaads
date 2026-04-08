@@ -170,7 +170,7 @@ class ProcessMetaWebhookMessage implements ShouldQueue
 
             $response = $grokService->generateChat(
                 prompt: $prompt,
-                model: 'grok-4-fast-reasoning',
+                model: 'grok-4-fast-non-reasoning',
                 history: $history,
             );
 

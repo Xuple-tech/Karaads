@@ -38,8 +38,6 @@ export const router = createBrowserRouter([
             {
                 element: <AppLayout />,
                 children: [
-                    { path: '/doc-builder', lazy: () => import('@/spa/routes/app/doc-builder') },
-                    { path: '/doc-builder/:sessionId', lazy: () => import('@/spa/routes/app/doc-builder') },
                     { path: '/app', lazy: () => import('@/spa/routes/app/chat-home') },
                     { path: '/new', lazy: () => import('@/spa/routes/app/chat-home') },
                     { path: '/dashboard', lazy: () => import('@/spa/routes/app/chat-home') },

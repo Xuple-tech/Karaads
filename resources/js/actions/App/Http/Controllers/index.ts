@@ -1,5 +1,4 @@
 import Api from './Api'
-import DocBuilder from './DocBuilder'
 import Admin from './Admin'
 import SpaController from './SpaController'
 import MailController from './MailController'
@@ -20,7 +19,6 @@ import CurrencyController from './CurrencyController'
 import PodcastController from './PodcastController'
 const Controllers = {
     Api: Object.assign(Api, Api),
-DocBuilder: Object.assign(DocBuilder, DocBuilder),
 Admin: Object.assign(Admin, Admin),
 SpaController: Object.assign(SpaController, SpaController),
 MailController: Object.assign(MailController, MailController),

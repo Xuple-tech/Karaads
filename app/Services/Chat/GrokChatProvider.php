@@ -77,7 +77,7 @@ class GrokChatProvider implements ChatProvider
                     $onEvent('message.completed', []);
                 }
             },
-            $options['model'] ?? 'grok-4-fast-reasoning',
+            $options['model'] ?? 'grok-4-fast-non-reasoning',
             $history,
             $tools,
             $options['format'] ?? null,
@@ -97,7 +97,7 @@ class GrokChatProvider implements ChatProvider
 
         $content = $this->grok->generateChat(
             $latestUserPrompt,
-            $options['model'] ?? 'grok-4-fast-reasoning',
+            $options['model'] ?? 'grok-4-fast-non-reasoning',
             $history,
             $tools,
             $options['format'] ?? null,
