@@ -13,6 +13,9 @@ use App\Http\Controllers\Api\ImageGenerationController;
 use App\Http\Controllers\Api\SettingsController;
 use App\Http\Controllers\Api\ChatPreferenceController;
 use App\Http\Controllers\Api\PersonalizationController;
+use App\Http\Controllers\Meta\MetaAccountController;
+use App\Http\Controllers\Meta\MetaMessageController;
+use App\Http\Controllers\Meta\MetaPreferenceController;
 use App\Http\Controllers\Admin\PersonalizationAdminController;
 use App\Http\Controllers\Admin\AIModeController;
 use App\Http\Controllers\Admin\SubscriptionPlanController as AdminSubscriptionPlanController;
@@ -91,6 +94,23 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/send', [EmailController::class, 'sendEmail']);
         Route::put('/emails/{id}/read', [EmailController::class, 'markAsRead']);
         Route::post('/accounts/{accountId}/sync', [EmailController::class, 'syncEmails']);
+    });
+
+    Route::prefix('meta')->group(function () {
+        Route::get('/dashboard', [MetaAccountController::class, 'dashboard']);
+        Route::get('/accounts', [MetaAccountController::class, 'index']);
+        Route::post('/accounts/initiate-oauth', [MetaAccountController::class, 'initiateOAuth']);
+        Route::delete('/accounts/{account}', [MetaAccountController::class, 'disconnect']);
+        Route::patch('/accounts/{account}/status', [MetaAccountController::class, 'updateStatus']);
+        Route::get('/accounts/{account}/preferences', [MetaPreferenceController::class, 'show']);
+        Route::put('/accounts/{account}/preferences', [MetaPreferenceController::class, 'update']);
+        Route::get('/accounts/{account}/conversations', [MetaMessageController::class, 'conversations']);
+        Route::get('/accounts/{account}/conversations/{conversation}', [MetaMessageController::class, 'conversation']);
+        Route::post('/messages/{message}/analyze', [MetaMessageController::class, 'analyzeAndDraft']);
+        Route::put('/drafts/{draft}', [MetaMessageController::class, 'updateDraft']);
+        Route::post('/drafts/{draft}/send', [MetaMessageController::class, 'sendDraft']);
+        Route::post('/drafts/{draft}/reject', [MetaMessageController::class, 'rejectDraft']);
+        Route::post('/conversations/{conversation}/send', [MetaMessageController::class, 'send']);
     });
 
     // Image Generation

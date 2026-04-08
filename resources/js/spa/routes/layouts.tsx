@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { AudioLines, CreditCard, LogOut, Mail, PenSquare, Settings, SquarePen, Star, Trash2, MoreHorizontal } from 'lucide-react';
+import { AudioLines, CreditCard, LogOut, PenSquare, RadioTower, Settings, SquarePen, Star, Trash2, MoreHorizontal } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { NavLink, Navigate, Outlet, matchPath, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -127,7 +127,7 @@ function LoadingState() {
 const mainNavItems = [
     { to: '/new', label: 'New Chat', icon: SquarePen },
     { to: '/voice-chat', label: 'Voice', icon: AudioLines },
-    { to: '/mails', label: 'Mails', icon: Mail },
+    { to: '/automations', label: 'Automations', icon: RadioTower },
     { to: '/subscription', label: 'Upgrade Plan', icon: Star },
 ];
 
@@ -184,13 +184,7 @@ function SpaSidebar() {
             <SidebarHeader className="px-3 pt-3 pb-2">
                 <div className="flex items-center justify-between">
                     <NavLink className="flex items-center gap-2.5 px-1 py-1 rounded-lg hover:bg-sidebar-accent/50 transition-colors" to="/new">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9]">
-                            <svg className="h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                                <path d="M2 17l10 5 10-5"/>
-                                <path d="M2 12l10 5 10-5"/>
-                            </svg>
-                        </div>
+                        <img src="/icon.png" alt="Kwati AI logo" className="logo icon h-6 2-6" />
                         <span className="text-[15px] font-semibold text-sidebar-foreground tracking-tight">
                             Kwati AI
                         </span>

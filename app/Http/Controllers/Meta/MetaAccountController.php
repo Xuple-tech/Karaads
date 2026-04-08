@@ -37,12 +37,18 @@ class MetaAccountController extends Controller
         $canAccessMeta = $currentPlan && $currentPlan->tier !== 'free';
 
         if (!$canAccessMeta) {
-            return Inertia::render('Meta/Dashboard', [
+            $payload = [
                 'accounts' => [],
                 'stats' => [],
                 'canAccessMeta' => false,
                 'subscriptionTier' => $currentPlan?->tier ?? 'free',
-            ]);
+            ];
+
+            if (request()->expectsJson()) {
+                return response()->json($payload);
+            }
+
+            return Inertia::render('Meta/Dashboard', $payload);
         }
 
         $accounts = MetaAccount::where('user_id', $user->id)
@@ -93,12 +99,18 @@ class MetaAccountController extends Controller
                 ->count(),
         ];
 
-        return Inertia::render('Meta/Dashboard', [
+        $payload = [
             'accounts' => $accounts,
             'stats' => $stats,
             'canAccessMeta' => true,
             'subscriptionTier' => $currentPlan->tier,
-        ]);
+        ];
+
+        if (request()->expectsJson()) {
+            return response()->json($payload);
+        }
+
+        return Inertia::render('Meta/Dashboard', $payload);
     }
 
     /**
@@ -135,10 +147,16 @@ class MetaAccountController extends Controller
 
         $currentPlan = $user->getCurrentPlan();
 
-        return Inertia::render('Meta/Accounts', [
+        $payload = [
             'accounts' => $accounts,
             'canAccessMeta' => $currentPlan && $currentPlan->tier !== 'free',
-        ]);
+        ];
+
+        if (request()->expectsJson()) {
+            return response()->json($payload);
+        }
+
+        return Inertia::render('Meta/Accounts', $payload);
     }
 
     /**
@@ -156,11 +174,10 @@ class MetaAccountController extends Controller
         // Store the platform in session so we know which platform user is authenticating with
         session(['meta_oauth_platform' => $validated['platform']]);
 
-        if (request()->expectsJson()) {
+        if ($request->expectsJson()) {
             return response()->json(['oauth_url' => $authUrl]);
         }
 
-         return response()->json(['oauth_url' => $authUrl]);
         return redirect($authUrl);
     }
 
@@ -177,12 +194,12 @@ class MetaAccountController extends Controller
 
         if ($error) {
             Log::error('Meta OAuth callback error', ['error' => $error]);
-            return redirect()->route('meta.accounts.index')->with('error', 'OAuth error: ' . $error);
+            return redirect('/meta?status=error&message=' . urlencode('OAuth error: ' . $error));
         }
 
         if (!$code) {
             Log::error('Meta OAuth callback missing code');
-            return redirect()->route('meta.accounts.index')->with('error', 'No authorization code received');
+            return redirect('/meta?status=error&message=' . urlencode('No authorization code received'));
         }
 
         try {
@@ -191,7 +208,7 @@ class MetaAccountController extends Controller
 
             if (!$tokenData || !isset($tokenData['access_token'])) {
                 Log::error('Meta OAuth token exchange failed', ['response' => $tokenData]);
-                return redirect()->route('meta.accounts.index')->with('error', 'Failed to obtain access token');
+                return redirect('/meta?status=error&message=' . urlencode('Failed to obtain access token'));
             }
 
             // Determine platform and fetch account details
@@ -205,7 +222,7 @@ class MetaAccountController extends Controller
                     'platform' => $platform,
                     'token_has_data' => !empty($tokenData)
                 ]);
-                return redirect()->route('meta.accounts.index')->with('error', 'Failed to fetch account details for ' . $platform);
+                return redirect('/meta?status=error&message=' . urlencode('Failed to fetch account details for ' . $platform));
             }
 
             $createdAccounts = [];
@@ -260,8 +277,9 @@ class MetaAccountController extends Controller
                 ]
             );
 
-            return redirect()->route('meta.accounts.index')->with('success',
-                count($createdAccounts) . ' ' . $platform . ' account(s) connected successfully!');
+            return redirect('/meta?status=success&message=' . urlencode(
+                count($createdAccounts) . ' ' . $platform . ' account(s) connected successfully!'
+            ));
 
         } catch (\Exception $e) {
             Log::error('Meta OAuth callback exception', [
@@ -269,8 +287,9 @@ class MetaAccountController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
 
-            return redirect()->route('meta.accounts.index')->with('error',
-                'Failed to connect account: ' . $e->getMessage());
+            return redirect('/meta?status=error&message=' . urlencode(
+                'Failed to connect account: ' . $e->getMessage()
+            ));
         }
     }
 
@@ -344,7 +363,14 @@ class MetaAccountController extends Controller
                 ]
             );
 
-            return redirect()->route('meta.accounts.index')->with('success', 'Account disconnected successfully');
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Account disconnected successfully',
+                ]);
+            }
+
+            return redirect('/meta?status=success&message=' . urlencode('Account disconnected successfully'));
 
         } catch (\Exception $e) {
             Log::error('Failed to disconnect Meta account', [
@@ -352,7 +378,14 @@ class MetaAccountController extends Controller
                 'error' => $e->getMessage()
             ]);
 
-            return redirect()->route('meta.accounts.index')->with('error', 'Failed to disconnect account');
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to disconnect account',
+                ], 500);
+            }
+
+            return redirect('/meta?status=error&message=' . urlencode('Failed to disconnect account'));
         }
     }
 

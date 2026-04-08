@@ -536,7 +536,7 @@ class MetaApiService
             $this->logActivity(
                 $account->user_id,
                 $account->id,
-                'message_sent',
+                'send',
                 "Message sent to conversation {$conversationId}",
                 [
                     'conversation_id' => $conversationId,
@@ -556,7 +556,7 @@ class MetaApiService
             $this->logActivity(
                 $account->user_id,
                 $account->id,
-                'message_send_failed',
+                'error',
                 "Failed to send message to conversation {$conversationId}",
                 null,
                 $e->getMessage()
@@ -821,17 +821,17 @@ class MetaApiService
     /**
      * Log automation activity
      */
-    public function logActivity(int $userId, int $accountId, string $action, string $description, ?array $data = null, ?string $errorMessage = null): void
+    public function logActivity(string $userId, string $accountId, string $action, string $description, ?array $data = null, ?string $errorMessage = null): void
     {
+        $allowedActions = ['analyze', 'draft', 'approve', 'send', 'reject', 'sync', 'error'];
+
         MetaAutomationLog::create([
             'user_id' => $userId,
             'meta_account_id' => $accountId,
-            'action' => $action,
+            'action' => in_array($action, $allowedActions, true) ? $action : 'sync',
             'description' => $description,
             'data' => $data,
             'error_message' => $errorMessage,
-            'ip_address' => request()->ip(),
-            'user_agent' => request()->userAgent(),
         ]);
     }
 

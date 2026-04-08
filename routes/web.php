@@ -5,6 +5,7 @@ use App\Http\Controllers\Developer\DeveloperPortalController;
 use App\Http\Middleware\AuthenticateDeveloperPortal;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\Meta\MetaAccountController;
 use App\Http\Controllers\User;
 use App\Http\Controllers\SpaController;
 use App\Http\Controllers\Meta\MetaWebhookController;
@@ -90,6 +91,10 @@ Route::post('/meta/webhook/receive/{token}', [MetaWebhookController::class, 'han
     ->name('meta.webhook.receive')
     ->withoutMiddleware(VerifyCsrfToken::class)
     ->middleware(['throttle:1000,1']);
+
+Route::middleware('auth')->group(function () {
+    Route::get('/meta/oauth/callback', [MetaAccountController::class, 'handleCallback'])->name('meta.oauth.callback');
+});
 
 Route::get('test_ip_address', function () {
     $ip = request()->ip();
@@ -208,6 +213,8 @@ Route::middleware('web')->prefix('developer-api')->name('developer-api.')->group
     // Public auth routes — redirect to portal if already logged in
     Route::get('/login', [DeveloperPortalAuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [DeveloperPortalAuthController::class, 'login'])->name('login.store');
+    Route::get('/register', [DeveloperPortalAuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [DeveloperPortalAuthController::class, 'register'])->name('register.store');
 
     // Protected portal routes — redirect to /developer-api/login if unauthenticated
     Route::middleware(AuthenticateDeveloperPortal::class)->group(function () {

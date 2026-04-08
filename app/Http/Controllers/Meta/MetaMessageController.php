@@ -22,7 +22,6 @@ class MetaMessageController extends Controller
 
     public function __construct(MetaApiService $metaService, MetaMessageAnalyzerService $analyzerService)
     {
-        $this->middleware('auth');
         $this->metaService = $metaService;
         $this->analyzerService = $analyzerService;
     }
@@ -62,14 +61,20 @@ class MetaMessageController extends Controller
                 ];
             });
 
-        return Inertia::render('Meta/Conversations', [
+        $payload = [
             'account' => [
                 'id' => $account->id,
                 'platform' => $account->platform,
                 'account_name' => $account->account_name,
             ],
             'conversations' => $conversations,
-        ]);
+        ];
+
+        if ($request->expectsJson()) {
+            return response()->json($payload);
+        }
+
+        return Inertia::render('Meta/Conversations', $payload);
     }
 
     /**
@@ -121,7 +126,7 @@ class MetaMessageController extends Controller
         // Mark as read
         $conversation->update(['unread_count' => 0]);
 
-        return Inertia::render('Meta/Conversation', [
+        $payload = [
             'account' => [
                 'id' => $account->id,
                 'platform' => $account->platform,
@@ -135,7 +140,13 @@ class MetaMessageController extends Controller
             ],
             'messages' => $messages,
             'drafts' => $drafts,
-        ]);
+        ];
+
+        if ($request->expectsJson()) {
+            return response()->json($payload);
+        }
+
+        return Inertia::render('Meta/Conversation', $payload);
     }
 
     /**
@@ -163,32 +174,13 @@ class MetaMessageController extends Controller
                 return response()->json(['draft' => $this->formatDraft($existingDraft)]);
             }
 
-            $preferences = $account->preferences;
+            $preferences = $account->preferences()->with('aiMode')->first();
+            $analysis = $this->analyzerService->analyzeMessage($message, $account);
+            $draft = $this->analyzerService->draftReply($message, $account);
 
-            // Analyze message
-            $analysis = $this->analyzerService->analyzeMessage($message->content);
-
-            // Generate reply using AI
-            $reply = $this->analyzerService->generateReply(
-                $message->content,
-                $analysis,
-                $preferences?->custom_instructions,
-                $preferences?->reply_tone ?? 'professional'
-            );
-
-            // Create draft
-            $draft = MetaMessageDraft::create([
-                'meta_message_id' => $message->id,
-                'meta_conversation_id' => $conversation->id,
-                'original_message' => $message->content,
-                'draft_reply' => $reply['text'],
-                'ai_analysis' => $reply['analysis'] ?? null,
-                'sentiment' => $analysis['sentiment'],
-                'category' => $analysis['category'],
-                'confidence_score' => $analysis['confidence_score'] ?? 0,
-                'auto_approved' => $preferences?->enable_auto_reply && !$preferences->require_approval_before_send,
-                'status' => $preferences?->enable_auto_reply && !$preferences->require_approval_before_send ? 'approved' : 'draft',
-            ]);
+            if (! $draft) {
+                return response()->json(['error' => 'Failed to generate draft'], 500);
+            }
 
             // Log activity
             MetaAutomationLog::create([
@@ -205,7 +197,7 @@ class MetaMessageController extends Controller
             ]);
 
             // Auto-send if configured
-            if ($draft->status === 'approved' && $preferences->enable_auto_reply) {
+            if ($draft->status === 'approved' && $preferences?->enable_auto_reply) {
                 $this->sendDraftInternal($draft, $account, $conversation);
             }
 

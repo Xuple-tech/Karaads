@@ -4,238 +4,250 @@ namespace App\Http\Controllers\Meta;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessMetaWebhookMessage;
-use App\Models\MetaMessage;
-use App\Models\MetaConversation;
 use App\Models\MetaAccount;
+use App\Models\MetaConversation;
+use App\Models\MetaMessage;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
 class MetaWebhookController extends Controller
 {
-    /**
-     * Verify webhook subscription from Meta
-     * GET /meta/webhook/receive/{token}
-     */
     public function verify(Request $request, string $token)
     {
-        Log::info('Meta webhook verification request', [
-            'challenge' => $request->query('hub_challenge'),
-            'verify_token' => $request->query('hub_verify_token'),
+        Log::info('Meta webhook verification requested', [
+            'token' => $token,
+            'mode' => $request->query('hub_mode'),
         ]);
 
-        // Verify the token matches
         if ($request->query('hub_verify_token') !== config('services.meta.webhook_verify_token')) {
             Log::warning('Invalid Meta webhook verify token');
+
             return response('Forbidden', Response::HTTP_FORBIDDEN);
         }
 
-        // Return the challenge to complete verification
         return response($request->query('hub_challenge'));
     }
 
-    /**
-     * Receive incoming messages and events from Meta
-     * POST /meta/webhook/receive/{token}
-     */
     public function handle(Request $request, string $token)
     {
         try {
-            $payload = $request->json()->all();
+            $payload = $request->all();
 
-            Log::info('Meta webhook received', [
+            Log::info('Meta webhook payload received', [
+                'token' => $token,
                 'object' => $payload['object'] ?? null,
                 'entry_count' => count($payload['entry'] ?? []),
             ]);
 
-            // Validate object type
-            if (($payload['object'] ?? null) !== 'page' && ($payload['object'] ?? null) !== 'instagram') {
+            if (! in_array($payload['object'] ?? null, ['page', 'instagram', 'whatsapp_business_account'], true)) {
                 return response()->json(['status' => 'ignored'], Response::HTTP_OK);
             }
 
-            // Process each entry (batch of events)
             foreach ($payload['entry'] ?? [] as $entry) {
-                $this->processEntry($entry);
+                $this->processEntry($payload['object'], $entry);
             }
 
-            // Acknowledge receipt to Meta immediately
             return response()->json(['status' => 'ok'], Response::HTTP_OK);
-
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('Meta webhook error', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
+
             return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * Process a single entry from webhook payload
-     */
-    protected function processEntry(array $entry): void
+    protected function processEntry(string $objectType, array $entry): void
     {
-        $pageId = $entry['id'] ?? null;
-        $messaging = $entry['messaging'] ?? [];
-        $changes = $entry['changes'] ?? [];
+        $entryId = $entry['id'] ?? null;
 
-        // Find the Meta Account for this page
-        $account = MetaAccount::where('platform_account_id', $pageId)->first();
-        if (!$account) {
-            Log::warning('Received webhook for unknown account', ['pageId' => $pageId]);
+        $account = MetaAccount::query()
+            ->where('account_id', $entryId)
+            ->orWhere('page_id', $entryId)
+            ->first();
+
+        if (! $account) {
+            Log::warning('Received Meta webhook for unknown account', [
+                'entry_id' => $entryId,
+                'object_type' => $objectType,
+            ]);
+
             return;
         }
 
-        // Handle direct messages (Facebook Messenger, Instagram DMs)
-        foreach ($messaging as $message) {
-            $this->processMessage($account, $message);
+        if ($objectType === 'whatsapp_business_account') {
+            foreach ($entry['changes'] ?? [] as $change) {
+                $value = $change['value'] ?? [];
+
+                foreach ($value['messages'] ?? [] as $message) {
+                    $this->processWhatsAppMessage($account, $value, $message);
+                }
+            }
+
+            return;
         }
 
-        // Handle feed events (comments, posts, etc.) - for future expansion
-        foreach ($changes as $change) {
-            $this->processChange($account, $change);
+        foreach ($entry['messaging'] ?? [] as $message) {
+            $this->processMessengerMessage($account, $message);
         }
     }
 
-    /**
-     * Process incoming message and dispatch auto-reply job
-     */
-    protected function processMessage(MetaAccount $account, array $messageData): void
+    protected function processMessengerMessage(MetaAccount $account, array $messageData): void
     {
         $senderId = $messageData['sender']['id'] ?? null;
         $recipientId = $messageData['recipient']['id'] ?? null;
         $message = $messageData['message'] ?? null;
-        $timestamp = $messageData['timestamp'] ?? now()->timestamp;
+        $timestamp = $messageData['timestamp'] ?? now()->timestamp * 1000;
 
-        if (!$senderId || !$message) {
-            Log::warning('Invalid message data in webhook', ['data' => $messageData]);
+        if (! $senderId || ! $recipientId || ! $message) {
+            Log::warning('Invalid Messenger webhook payload', ['data' => $messageData]);
+
             return;
         }
 
-        // Determine conversation ID (sender + recipient)
         $conversationId = $this->generateConversationId($senderId, $recipientId);
+        $content = $this->extractMessageContent($message);
+        $receivedAt = now()->setTimestamp((int) floor($timestamp / 1000));
 
-        // Get or create conversation
         $conversation = MetaConversation::firstOrCreate(
             [
-                'account_id' => $account->id,
+                'meta_account_id' => $account->id,
                 'conversation_id' => $conversationId,
             ],
             [
-                'platform' => $account->platform,
-                'sender_id' => $senderId,
-                'recipient_id' => $recipientId,
-                'status' => 'active',
+                'participant_id' => $senderId,
+                'participant_name' => $messageData['sender']['name'] ?? null,
+                'last_message' => $content,
+                'last_message_at' => $receivedAt,
             ]
         );
 
-        // Create message record
+        $conversation->update([
+            'participant_id' => $senderId,
+            'participant_name' => $messageData['sender']['name'] ?? $conversation->participant_name,
+            'last_message' => $content,
+            'last_message_at' => $receivedAt,
+            'unread_count' => $conversation->unread_count + 1,
+        ]);
+
         $messageRecord = MetaMessage::create([
-            'conversation_id' => $conversation->id,
-            'account_id' => $account->id,
-            'message_id' => $message['mid'] ?? bin2hex(random_bytes(16)),
+            'meta_account_id' => $account->id,
+            'conversation_id' => $conversation->conversation_id,
+            'message_id' => $message['mid'] ?? uniqid('meta_', true),
+            'direction' => 'incoming',
             'sender_id' => $senderId,
-            'content' => $this->extractMessageContent($message),
-            'message_type' => $this->getMessageType($message),
-            'attachments' => json_encode($message['attachments'] ?? []),
-            'received_at' => now()->setTimestamp($timestamp),
-            'processed' => false,
+            'sender_name' => $messageData['sender']['name'] ?? null,
+            'content' => $content,
+            'media_attachments' => $message['attachments'] ?? [],
+            'status' => 'received',
+            'received_at' => $receivedAt,
         ]);
 
-        Log::info('Meta message stored', [
-            'message_id' => $messageRecord->id,
-            'from' => $senderId,
-            'conversation_id' => $conversation->id,
-        ]);
-
-        // Dispatch job to analyze and auto-reply
         ProcessMetaWebhookMessage::dispatch($messageRecord, $account, $conversation);
     }
 
-    /**
-     * Process feed changes (comments, reactions, etc.)
-     */
-    protected function processChange(MetaAccount $account, array $change): void
+    protected function processWhatsAppMessage(MetaAccount $account, array $value, array $message): void
     {
-        $field = $change['field'] ?? null;
-        $value = $change['value'] ?? null;
+        $from = $message['from'] ?? null;
+        $messageId = $message['id'] ?? null;
 
-        Log::info('Meta feed change', [
-            'account_id' => $account->id,
-            'field' => $field,
-            'value' => $value,
+        if (! $from || ! $messageId) {
+            Log::warning('Invalid WhatsApp webhook payload', ['message' => $message]);
+
+            return;
+        }
+
+        $contact = collect($value['contacts'] ?? [])->firstWhere('wa_id', $from);
+        $receivedAt = isset($message['timestamp']) ? now()->setTimestamp((int) $message['timestamp']) : now();
+        $content = $this->extractWhatsAppContent($message);
+
+        $conversation = MetaConversation::firstOrCreate(
+            [
+                'meta_account_id' => $account->id,
+                'conversation_id' => $from,
+            ],
+            [
+                'participant_id' => $from,
+                'participant_name' => $contact['profile']['name'] ?? $from,
+                'last_message' => $content,
+                'last_message_at' => $receivedAt,
+            ]
+        );
+
+        $conversation->update([
+            'participant_id' => $from,
+            'participant_name' => $contact['profile']['name'] ?? $conversation->participant_name,
+            'last_message' => $content,
+            'last_message_at' => $receivedAt,
+            'unread_count' => $conversation->unread_count + 1,
         ]);
 
-        // Handle specific feed events if needed
-        // e.g., page_conversations, messaging_template_status_update, etc.
+        $messageRecord = MetaMessage::create([
+            'meta_account_id' => $account->id,
+            'conversation_id' => $conversation->conversation_id,
+            'message_id' => $messageId,
+            'direction' => 'incoming',
+            'sender_id' => $from,
+            'sender_name' => $contact['profile']['name'] ?? null,
+            'content' => $content,
+            'media_attachments' => $this->extractWhatsAppAttachments($message),
+            'status' => 'received',
+            'received_at' => $receivedAt,
+        ]);
+
+        ProcessMetaWebhookMessage::dispatch($messageRecord, $account, $conversation);
     }
 
-    /**
-     * Extract text content from message object
-     */
     protected function extractMessageContent(array $message): string
     {
-        // Text message
         if (isset($message['text'])) {
             return $message['text'];
         }
 
-        // Image with caption
-        if (isset($message['image'])) {
-            return '[Image] ' . ($message['image']['url'] ?? 'Received');
-        }
-
-        // Video with caption
-        if (isset($message['video'])) {
-            return '[Video] Received';
-        }
-
-        // File attachment
-        if (isset($message['file'])) {
-            return '[File] ' . ($message['file']['name'] ?? 'Received');
-        }
-
-        // Quick reply
         if (isset($message['quick_reply'])) {
             return 'Quick Reply: ' . ($message['quick_reply']['payload'] ?? '');
         }
 
-        // Fallback
-        return '[Message type: ' . implode(',', array_keys($message)) . ']';
+        if (isset($message['attachments'])) {
+            $types = collect($message['attachments'])->pluck('type')->filter()->implode(', ');
+
+            return $types ? "[Attachment] {$types}" : '[Attachment] Received';
+        }
+
+        return '[Unsupported message type]';
     }
 
-    /**
-     * Determine message type
-     */
-    protected function getMessageType(array $message): string
+    protected function extractWhatsAppContent(array $message): string
     {
-        if (isset($message['text'])) {
-            return 'text';
-        }
-        if (isset($message['image'])) {
-            return 'image';
-        }
-        if (isset($message['video'])) {
-            return 'video';
-        }
-        if (isset($message['file'])) {
-            return 'file';
-        }
-        if (isset($message['sticker'])) {
-            return 'sticker';
-        }
-        if (isset($message['quick_reply'])) {
-            return 'quick_reply';
-        }
-
-        return 'unknown';
+        return match ($message['type'] ?? 'unknown') {
+            'text' => $message['text']['body'] ?? '',
+            'button' => $message['button']['text'] ?? '[Button reply]',
+            'interactive' => $message['interactive']['button_reply']['title']
+                ?? $message['interactive']['list_reply']['title']
+                ?? '[Interactive reply]',
+            'image' => '[Image] ' . ($message['image']['caption'] ?? 'Received'),
+            'document' => '[Document] ' . ($message['document']['filename'] ?? 'Received'),
+            'audio' => '[Audio] Received',
+            'video' => '[Video] ' . ($message['video']['caption'] ?? 'Received'),
+            default => '[WhatsApp ' . ($message['type'] ?? 'message') . ']',
+        };
     }
 
-    /**
-     * Generate consistent conversation ID from sender and recipient
-     */
+    protected function extractWhatsAppAttachments(array $message): array
+    {
+        return match ($message['type'] ?? 'unknown') {
+            'image' => [$message['image'] ?? []],
+            'document' => [$message['document'] ?? []],
+            'audio' => [$message['audio'] ?? []],
+            'video' => [$message['video'] ?? []],
+            default => [],
+        };
+    }
+
     protected function generateConversationId(string $senderId, string $recipientId): string
     {
-        return hash('sha256', min($senderId, $recipientId) . '|' . max($senderId, $recipientId));
+        return implode(':', collect([$senderId, $recipientId])->sort()->values()->all());
     }
 }

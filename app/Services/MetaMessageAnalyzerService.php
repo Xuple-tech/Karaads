@@ -2,45 +2,25 @@
 
 namespace App\Services;
 
-use App\Models\MetaMessage;
-use App\Models\MetaConversation;
-use App\Models\MetaMessageDraft;
-use App\Models\MetaAutomationPreference;
 use App\Models\MetaAccount;
+use App\Models\MetaAutomationPreference;
+use App\Models\MetaConversation;
+use App\Models\MetaMessage;
+use App\Models\MetaMessageDraft;
 use Illuminate\Support\Facades\Log;
 
 class MetaMessageAnalyzerService
 {
-    private GrokApiService $grokService;
+    public function __construct(private GrokApiService $grokService) {}
 
-    public function __construct(GrokApiService $grokService)
-    {
-        $this->grokService = $grokService;
-    }
-
-    /**
-     * Analyze incoming message and extract sentiment, category
-     */
     public function analyzeMessage(MetaMessage $message, MetaAccount $account): array
     {
         try {
-            $analysisPrompt = $this->buildAnalysisPrompt($message->content);
-
-            // Call GROK API for analysis
-            $analysis = $this->grokService->chat([
-                'messages' => [
-                    [
-                        'role' => 'system',
-                        'content' => 'You are an expert message analyzer. Analyze the given message and provide JSON response with sentiment (positive/negative/neutral), category (question/complaint/feedback/order/other), and confidence_score (0-100).',
-                    ],
-                    [
-                        'role' => 'user',
-                        'content' => $analysisPrompt,
-                    ],
-                ],
-                'response_format' => 'json_object',
-                'temperature' => 0.3,
-            ]);
+            $analysis = $this->grokService->generateChat(
+                prompt: $this->buildAnalysisPrompt($message->content),
+                model: 'grok-4-fast-non-reasoning',
+                format: ['type' => 'json_object'],
+            );
 
             $result = json_decode($analysis, true);
 
@@ -51,8 +31,9 @@ class MetaMessageAnalyzerService
                 'raw_analysis' => $analysis,
             ];
         } catch (\Throwable $e) {
-            Log::error('Message analysis failed', [
+            Log::error('Meta message analysis failed', [
                 'message_id' => $message->id,
+                'account_id' => $account->id,
                 'error' => $e->getMessage(),
             ]);
 
@@ -65,44 +46,22 @@ class MetaMessageAnalyzerService
         }
     }
 
-    /**
-     * Draft an AI response to a message
-     */
     public function draftReply(MetaMessage $message, MetaAccount $account): ?MetaMessageDraft
     {
         try {
             $preference = $this->getPreference($account);
-
-            // First analyze the message
             $analysis = $this->analyzeMessage($message, $account);
-
-            // Build the draft prompt
-            $draftPrompt = $this->buildDraftPrompt(
-                $message->content,
-                $analysis,
-                $preference
-            );
-
-            // Get conversation context
             $context = $this->getConversationContext($message);
+            $prompt = $this->buildDraftPrompt($message->content, $analysis, $preference);
+            $systemPrompt = $this->buildSystemPrompt($preference, $context);
 
-            // Call GROK API to draft response
-            $response = $this->grokService->chat([
-                'messages' => [
-                    [
-                        'role' => 'system',
-                        'content' => $this->buildSystemPrompt($preference, $context),
-                    ],
-                    [
-                        'role' => 'user',
-                        'content' => $draftPrompt,
-                    ],
-                ],
-                'temperature' => 0.7,
-                'max_tokens' => 500,
-            ]);
+            $response = trim($this->grokService->generateChat(
+                prompt: $prompt,
+                model: 'grok-4-fast-non-reasoning',
+                history: [],
+                customSystemPrompt: $systemPrompt,
+            ));
 
-            // Create draft record
             $conversation = MetaConversation::where('conversation_id', $message->conversation_id)
                 ->where('meta_account_id', $account->id)
                 ->firstOrCreate(
@@ -113,7 +72,7 @@ class MetaMessageAnalyzerService
                     ]
                 );
 
-            $draft = MetaMessageDraft::create([
+            return MetaMessageDraft::create([
                 'meta_message_id' => $message->id,
                 'meta_conversation_id' => $conversation->id,
                 'original_message' => $message->content,
@@ -123,19 +82,12 @@ class MetaMessageAnalyzerService
                 'category' => $analysis['category'],
                 'confidence_score' => $analysis['confidence_score'],
                 'status' => $preference->require_approval_before_send ? 'draft' : 'approved',
-                'auto_approved' => !$preference->require_approval_before_send,
+                'auto_approved' => ! $preference->require_approval_before_send,
             ]);
-
-            Log::info('Message draft created', [
-                'draft_id' => $draft->id,
-                'message_id' => $message->id,
-                'status' => $draft->status,
-            ]);
-
-            return $draft;
         } catch (\Throwable $e) {
-            Log::error('Draft generation failed', [
+            Log::error('Meta draft generation failed', [
                 'message_id' => $message->id,
+                'account_id' => $account->id,
                 'error' => $e->getMessage(),
             ]);
 
@@ -143,12 +95,9 @@ class MetaMessageAnalyzerService
         }
     }
 
-    /**
-     * Get or create automation preference for account
-     */
     private function getPreference(MetaAccount $account): MetaAutomationPreference
     {
-        return MetaAutomationPreference::firstOrCreate(
+        $preference = MetaAutomationPreference::firstOrCreate(
             ['user_id' => $account->user_id, 'meta_account_id' => $account->id],
             [
                 'enable_auto_reply' => false,
@@ -157,46 +106,61 @@ class MetaMessageAnalyzerService
                 'reply_tone' => 'professional',
             ]
         );
+
+        return $preference->loadMissing('aiMode');
     }
 
-    /**
-     * Build analysis prompt
-     */
     private function buildAnalysisPrompt(string $message): string
     {
-        return "Analyze this message and respond with JSON containing: sentiment (positive/negative/neutral), category (question/complaint/feedback/order/other), and confidence_score (0-100):\n\n{$message}";
+        return <<<PROMPT
+Analyze the customer message below and return only JSON with these keys:
+- sentiment: positive, negative, or neutral
+- category: question, complaint, feedback, order, or other
+- confidence_score: number from 0 to 100
+
+Message:
+{$message}
+PROMPT;
     }
 
-    /**
-     * Build draft prompt
-     */
     private function buildDraftPrompt(string $message, array $analysis, MetaAutomationPreference $preference): string
     {
         $tone = strtolower($preference->reply_tone);
 
-        return "Draft a {$tone} response to this message. Sentiment: {$analysis['sentiment']}, Category: {$analysis['category']}. Message: {$message}";
+        return <<<PROMPT
+Draft a {$tone} response to this customer message.
+
+Detected sentiment: {$analysis['sentiment']}
+Detected category: {$analysis['category']}
+Confidence score: {$analysis['confidence_score']}
+
+Customer message:
+{$message}
+
+Keep the response concise, useful, and ready to send on WhatsApp.
+PROMPT;
     }
 
-    /**
-     * Build system prompt with instructions
-     */
     private function buildSystemPrompt(MetaAutomationPreference $preference, string $context): string
     {
-        $basePrompt = "You are a helpful customer service AI assistant.";
+        $basePrompt = '';
 
-        if ($preference->custom_instructions) {
-            $basePrompt .= "\n\nCustom Instructions: " . $preference->custom_instructions;
+        if ($preference->aiMode?->system_prompt) {
+            $basePrompt = trim($preference->aiMode->system_prompt) . "\n\n";
         }
 
-        $basePrompt .= "\n\nResponse Tone: " . ucfirst($preference->reply_tone);
-        $basePrompt .= "\n\nPrevious Context:\n" . $context;
+        if ($preference->custom_instructions) {
+            $basePrompt .= 'Additional business instructions: ' . trim($preference->custom_instructions) . "\n\n";
+        } elseif (! $preference->aiMode) {
+            $basePrompt = "You are a helpful business assistant responding to customer messages. Keep responses brief and professional.\n\n";
+        }
 
-        return $basePrompt;
+        $basePrompt .= 'Response tone: ' . ucfirst($preference->reply_tone) . "\n\n";
+        $basePrompt .= $context;
+
+        return trim($basePrompt);
     }
 
-    /**
-     * Get conversation context from previous messages
-     */
     private function getConversationContext(MetaMessage $message): string
     {
         $previousMessages = MetaMessage::where('conversation_id', $message->conversation_id)
@@ -206,41 +170,13 @@ class MetaMessageAnalyzerService
             ->get()
             ->reverse();
 
-        $context = "Recent conversation:\n";
+        $lines = ["Recent conversation:"];
 
-        foreach ($previousMessages as $msg) {
-            $role = $msg->isIncoming() ? "Customer" : "You";
-            $context .= "{$role}: {$msg->content}\n";
+        foreach ($previousMessages as $previousMessage) {
+            $role = $previousMessage->isIncoming() ? 'Customer' : 'Business';
+            $lines[] = "{$role}: {$previousMessage->content}";
         }
 
-        return $context;
-    }
-
-    /**
-     * Get sentiment emoji for display
-     */
-    public function getSentimentEmoji(string $sentiment): string
-    {
-        return match ($sentiment) {
-            'positive' => '😊',
-            'negative' => '😞',
-            'neutral' => '😐',
-            default => '❓',
-        };
-    }
-
-    /**
-     * Get category icon
-     */
-    public function getCategoryIcon(string $category): string
-    {
-        return match ($category) {
-            'question' => '❓',
-            'complaint' => '😠',
-            'feedback' => '💬',
-            'order' => '📦',
-            'other' => '📌',
-            default => '📝',
-        };
+        return implode("\n", $lines);
     }
 }

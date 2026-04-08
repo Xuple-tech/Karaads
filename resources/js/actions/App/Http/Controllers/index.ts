@@ -1,11 +1,11 @@
 import Api from './Api'
+import Meta from './Meta'
 import Admin from './Admin'
 import SpaController from './SpaController'
 import MailController from './MailController'
 import User from './User'
 import ConversationShareController from './ConversationShareController'
 import ImageController from './ImageController'
-import Meta from './Meta'
 import Auth from './Auth'
 import SaasOwner from './SaasOwner'
 import Staff from './Staff'
@@ -22,13 +22,13 @@ import DeveloperApiDocsController from './DeveloperApiDocsController'
 import DeveloperApi from './DeveloperApi'
 const Controllers = {
     Api: Object.assign(Api, Api),
+Meta: Object.assign(Meta, Meta),
 Admin: Object.assign(Admin, Admin),
 SpaController: Object.assign(SpaController, SpaController),
 MailController: Object.assign(MailController, MailController),
 User: Object.assign(User, User),
 ConversationShareController: Object.assign(ConversationShareController, ConversationShareController),
 ImageController: Object.assign(ImageController, ImageController),
-Meta: Object.assign(Meta, Meta),
 Auth: Object.assign(Auth, Auth),
 SaasOwner: Object.assign(SaasOwner, SaasOwner),
 Staff: Object.assign(Staff, Staff),

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, router, usePage } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
+import { type SharedData } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -39,6 +39,8 @@ import {
     Terminal,
     TrendingUp,
     CreditCard,
+    LogOut,
+    User,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
@@ -171,7 +173,7 @@ function WalletCard({ wallet, topupConfig }: { wallet: WalletSummary; topupConfi
         }
         setLoading(true);
         router.post(
-            route('developer-api.topup'),
+            '/developer-api/top-up',
             { amount_usd: amount },
             {
                 onError: (e) => { toast.error(Object.values(e)[0] as string); setLoading(false); },
@@ -260,7 +262,7 @@ function CreateKeyDialog({ open, onClose, models, newPlaintextKey }: CreateKeyDi
         if (!name.trim()) { toast.error('Key name is required'); return; }
         setLoading(true);
         router.post(
-            route('developer-api.keys.store'),
+            '/developer-api/keys',
             {
                 name,
                 notes: notes || null,
@@ -362,7 +364,7 @@ function ApiKeysTab({ apiKeys, models, newPlaintextKey }: { apiKeys: Paginated<A
 
     function handleRevoke() {
         if (!revokeId) return;
-        router.post(route('developer-api.keys.revoke', revokeId), {}, {
+        router.post(`/developer-api/keys/${revokeId}/revoke`, {}, {
             onSuccess: () => { setRevokeId(null); toast.success('Key revoked.'); },
             onError: () => toast.error('Failed to revoke key.'),
         });
@@ -370,7 +372,7 @@ function ApiKeysTab({ apiKeys, models, newPlaintextKey }: { apiKeys: Paginated<A
 
     function handleRegenerate(id: string) {
         if (!confirm('Regenerate this key? The current key will stop working immediately.')) return;
-        router.post(route('developer-api.keys.regenerate', id), {}, {
+        router.post(`/developer-api/keys/${id}/regenerate`, {}, {
             onError: () => toast.error('Failed to regenerate key.'),
         });
     }
@@ -704,13 +706,38 @@ export default function DeveloperApiIndex({
     apiBaseUrl,
     topupConfig,
 }: PageProps) {
-    const { props } = usePage<{ flash?: { success?: string; error?: string; developer_plaintext_key?: string } }>();
+    const { props } = usePage<SharedData & { flash?: { success?: string; error?: string; developer_plaintext_key?: string } }>();
     const flash = props.flash ?? {};
     const newPlaintextKey = flash.developer_plaintext_key ?? null;
+    const auth = props.auth;
+
+    function logout() {
+        router.post('/developer-api/logout');
+    }
 
     return (
-        <AppLayout breadcrumbs={[{ title: 'Developer API', href: route('developer-api.index') }]}>
-            <Head title="Developer API" />
+        <div className="min-h-dvh bg-background">
+            <Head title="Developer API Console" />
+
+            {/* Standalone portal header — no SPA sidebar */}
+            <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
+                <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <Terminal className="w-5 h-5 text-primary" />
+                        <span className="font-semibold text-sm tracking-tight">Kwati API Console</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                            <User className="w-4 h-4" />
+                            <span>{auth?.user?.email}</span>
+                        </div>
+                        <Button variant="ghost" size="sm" onClick={logout} className="gap-1.5">
+                            <LogOut className="w-4 h-4" />
+                            Sign out
+                        </Button>
+                    </div>
+                </div>
+            </header>
 
             <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
                 <div className="flex items-center justify-between">
@@ -776,7 +803,7 @@ export default function DeveloperApiIndex({
                     </TabsContent>
                 </Tabs>
             </div>
-        </AppLayout>
+        </div>
     );
 }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Meta;
 
 use App\Http\Controllers\Controller;
+use App\Models\AIMode;
 use App\Models\MetaAccount;
 use App\Models\MetaAutomationPreference;
 use Illuminate\Http\Request;
@@ -30,11 +31,14 @@ class MetaPreferenceController extends Controller
                 'enable_message_analysis' => true,
                 'require_approval_before_send' => true,
                 'reply_tone' => 'professional',
+                'ai_mode_id' => null,
                 'auto_reply_delay_seconds' => 0,
             ]
         );
 
-        return Inertia::render('Meta/Preferences', [
+        $preference->load('aiMode');
+
+        $payload = [
             'metaAccount' => [
                 'id' => $account->id,
                 'account_name' => $account->account_name,
@@ -46,12 +50,32 @@ class MetaPreferenceController extends Controller
                 'enable_message_analysis' => $preference->enable_message_analysis,
                 'require_approval_before_send' => $preference->require_approval_before_send,
                 'reply_tone' => $preference->reply_tone,
+                'ai_mode_id' => $preference->ai_mode_id,
+                'ai_mode' => $preference->aiMode ? [
+                    'id' => $preference->aiMode->id,
+                    'name' => $preference->aiMode->name,
+                    'description' => $preference->aiMode->description,
+                    'emoji' => $preference->aiMode->emoji,
+                ] : null,
                 'custom_instructions' => $preference->custom_instructions,
                 'auto_reply_delay_seconds' => $preference->auto_reply_delay_seconds,
                 'enabled_platforms' => $preference->enabled_platforms ?? [],
             ],
             'availableTones' => ['professional', 'friendly', 'casual', 'formal'],
-        ]);
+            'availableAiModes' => AIMode::forAutomation()
+                ->get(['id', 'name', 'description', 'emoji'])
+                ->toArray(),
+        ];
+
+        if ($account->isWhatsAppBusinessAccount()) {
+            $payload['metaAccount']['phone_number'] = $account->platform_data['display_phone_number'] ?? null;
+        }
+
+        if (request()->expectsJson()) {
+            return response()->json($payload);
+        }
+
+        return Inertia::render('Meta/Preferences', $payload);
     }
 
     /**
@@ -66,6 +90,7 @@ class MetaPreferenceController extends Controller
             'enable_message_analysis' => 'boolean',
             'require_approval_before_send' => 'boolean',
             'reply_tone' => 'in:professional,friendly,casual,formal',
+            'ai_mode_id' => 'nullable|exists:ai_modes,id',
             'custom_instructions' => 'nullable|string|max:2000',
             'auto_reply_delay_seconds' => 'integer|min:0|max:3600',
         ]);
@@ -84,6 +109,7 @@ class MetaPreferenceController extends Controller
                 'enable_message_analysis' => $preference->enable_message_analysis,
                 'require_approval_before_send' => $preference->require_approval_before_send,
                 'reply_tone' => $preference->reply_tone,
+                'ai_mode_id' => $preference->ai_mode_id,
                 'custom_instructions' => $preference->custom_instructions,
                 'auto_reply_delay_seconds' => $preference->auto_reply_delay_seconds,
             ],

@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Meta\MetaWebhookController::verify
- * @see app/Http/Controllers/Meta/MetaWebhookController.php:20
+ * @see app/Http/Controllers/Meta/MetaWebhookController.php:16
  * @route '/meta/webhook/receive/{token}'
  */
 export const verify = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ verify.definition = {
 
 /**
 * @see \App\Http\Controllers\Meta\MetaWebhookController::verify
- * @see app/Http/Controllers/Meta/MetaWebhookController.php:20
+ * @see app/Http/Controllers/Meta/MetaWebhookController.php:16
  * @route '/meta/webhook/receive/{token}'
  */
 verify.url = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -44,7 +44,7 @@ verify.url = (args: { token: string | number } | [token: string | number ] | str
 
 /**
 * @see \App\Http\Controllers\Meta\MetaWebhookController::verify
- * @see app/Http/Controllers/Meta/MetaWebhookController.php:20
+ * @see app/Http/Controllers/Meta/MetaWebhookController.php:16
  * @route '/meta/webhook/receive/{token}'
  */
 verify.get = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -53,7 +53,7 @@ verify.get = (args: { token: string | number } | [token: string | number ] | str
 })
 /**
 * @see \App\Http\Controllers\Meta\MetaWebhookController::verify
- * @see app/Http/Controllers/Meta/MetaWebhookController.php:20
+ * @see app/Http/Controllers/Meta/MetaWebhookController.php:16
  * @route '/meta/webhook/receive/{token}'
  */
 verify.head = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -63,7 +63,7 @@ verify.head = (args: { token: string | number } | [token: string | number ] | st
 
 /**
 * @see \App\Http\Controllers\Meta\MetaWebhookController::handle
- * @see app/Http/Controllers/Meta/MetaWebhookController.php:41
+ * @see app/Http/Controllers/Meta/MetaWebhookController.php:32
  * @route '/meta/webhook/receive/{token}'
  */
 export const handle = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -78,7 +78,7 @@ handle.definition = {
 
 /**
 * @see \App\Http\Controllers\Meta\MetaWebhookController::handle
- * @see app/Http/Controllers/Meta/MetaWebhookController.php:41
+ * @see app/Http/Controllers/Meta/MetaWebhookController.php:32
  * @route '/meta/webhook/receive/{token}'
  */
 handle.url = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ handle.url = (args: { token: string | number } | [token: string | number ] | str
 
 /**
 * @see \App\Http\Controllers\Meta\MetaWebhookController::handle
- * @see app/Http/Controllers/Meta/MetaWebhookController.php:41
+ * @see app/Http/Controllers/Meta/MetaWebhookController.php:32
  * @route '/meta/webhook/receive/{token}'
  */
 handle.post = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({

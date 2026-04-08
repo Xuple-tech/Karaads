@@ -3,33 +3,30 @@ import { Head, useForm } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
 import InputError from '@/components/input-error';
 import { Eye, EyeOff, LoaderCircle, Terminal } from 'lucide-react';
 
-interface LoginProps {
-    status?: string;
-}
-
-export default function DeveloperApiLogin({ status }: LoginProps) {
+export default function DeveloperApiRegister() {
     const [showPassword, setShowPassword] = useState(false);
+    const [showConfirm, setShowConfirm] = useState(false);
 
     const { data, setData, post, processing, errors, reset } = useForm({
+        name: '',
         email: '',
         password: '',
-        remember: false as boolean,
+        password_confirmation: '',
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post('/developer-api/login', {
-            onFinish: () => reset('password'),
+        post('/developer-api/register', {
+            onFinish: () => reset('password', 'password_confirmation'),
         });
     };
 
     return (
         <>
-            <Head title="Developer Console — Sign in" />
+            <Head title="Developer Console — Create account" />
 
             <div className="min-h-dvh bg-zinc-950 flex flex-col items-center justify-center p-4">
                 {/* Logo / Brand */}
@@ -41,19 +38,34 @@ export default function DeveloperApiLogin({ status }: LoginProps) {
                         Kwati Developer Console
                     </h1>
                     <p className="text-sm text-zinc-400 mt-1">
-                        Sign in to manage your API keys and usage
+                        Create an account to get API access
                     </p>
                 </div>
 
                 {/* Card */}
                 <div className="w-full max-w-sm bg-zinc-900 border border-zinc-800 rounded-xl p-7 shadow-xl">
-                    {status && (
-                        <div className="mb-5 rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400">
-                            {status}
-                        </div>
-                    )}
-
                     <form className="space-y-4" onSubmit={submit}>
+                        {/* Name */}
+                        <div className="space-y-1.5">
+                            <Label htmlFor="name" className="text-sm font-medium text-zinc-300">
+                                Full name
+                            </Label>
+                            <Input
+                                id="name"
+                                type="text"
+                                required
+                                autoFocus
+                                autoComplete="name"
+                                value={data.name}
+                                onChange={(e) => setData('name', e.target.value)}
+                                placeholder="Jane Smith"
+                                className="h-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-primary"
+                                disabled={processing}
+                            />
+                            <InputError message={errors.name} className="text-xs" />
+                        </div>
+
+                        {/* Email */}
                         <div className="space-y-1.5">
                             <Label htmlFor="email" className="text-sm font-medium text-zinc-300">
                                 Email
@@ -62,7 +74,6 @@ export default function DeveloperApiLogin({ status }: LoginProps) {
                                 id="email"
                                 type="email"
                                 required
-                                autoFocus
                                 autoComplete="email"
                                 value={data.email}
                                 onChange={(e) => setData('email', e.target.value)}
@@ -73,6 +84,7 @@ export default function DeveloperApiLogin({ status }: LoginProps) {
                             <InputError message={errors.email} className="text-xs" />
                         </div>
 
+                        {/* Password */}
                         <div className="space-y-1.5">
                             <Label htmlFor="password" className="text-sm font-medium text-zinc-300">
                                 Password
@@ -82,7 +94,7 @@ export default function DeveloperApiLogin({ status }: LoginProps) {
                                     id="password"
                                     type={showPassword ? 'text' : 'password'}
                                     required
-                                    autoComplete="current-password"
+                                    autoComplete="new-password"
                                     value={data.password}
                                     onChange={(e) => setData('password', e.target.value)}
                                     placeholder="••••••••"
@@ -101,31 +113,42 @@ export default function DeveloperApiLogin({ status }: LoginProps) {
                             <InputError message={errors.password} className="text-xs" />
                         </div>
 
-                        <div className="flex items-center justify-between pt-0.5">
-                            <label className="flex items-center gap-2 cursor-pointer">
-                                <Checkbox
-                                    id="remember"
-                                    checked={data.remember}
-                                    onCheckedChange={(checked) => setData('remember', !!checked)}
-                                    className="border-zinc-600 data-[state=checked]:bg-primary"
+                        {/* Confirm Password */}
+                        <div className="space-y-1.5">
+                            <Label htmlFor="password_confirmation" className="text-sm font-medium text-zinc-300">
+                                Confirm password
+                            </Label>
+                            <div className="relative">
+                                <Input
+                                    id="password_confirmation"
+                                    type={showConfirm ? 'text' : 'password'}
+                                    required
+                                    autoComplete="new-password"
+                                    value={data.password_confirmation}
+                                    onChange={(e) => setData('password_confirmation', e.target.value)}
+                                    placeholder="••••••••"
+                                    className="h-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-primary pr-10"
+                                    disabled={processing}
                                 />
-                                <span className="text-xs text-zinc-400">Remember me</span>
-                            </label>
-                            <a
-                                href="/forgot-password"
-                                className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
-                            >
-                                Forgot password?
-                            </a>
+                                <button
+                                    type="button"
+                                    tabIndex={-1}
+                                    className="absolute inset-y-0 right-3 flex items-center text-zinc-500 hover:text-zinc-300"
+                                    onClick={() => setShowConfirm(!showConfirm)}
+                                >
+                                    {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </button>
+                            </div>
+                            <InputError message={errors.password_confirmation} className="text-xs" />
                         </div>
 
                         <Button
                             type="submit"
-                            className="w-full h-10"
+                            className="w-full h-10 mt-1"
                             disabled={processing}
                         >
                             {processing && <LoaderCircle className="w-4 h-4 mr-2 animate-spin" />}
-                            Sign in
+                            Create account
                         </Button>
                     </form>
                 </div>
@@ -133,9 +156,9 @@ export default function DeveloperApiLogin({ status }: LoginProps) {
                 {/* Footer */}
                 <div className="mt-6 text-xs text-zinc-600 text-center space-y-2">
                     <p>
-                        Don't have an account?{' '}
-                        <a href="/developer-api/register" className="text-zinc-400 hover:text-white transition-colors">
-                            Create one free
+                        Already have an account?{' '}
+                        <a href="/developer-api/login" className="text-zinc-400 hover:text-white transition-colors">
+                            Sign in
                         </a>
                     </p>
                     <p>

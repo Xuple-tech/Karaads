@@ -30,4 +30,8 @@ handleWebhook.url = (options?: RouteQueryOptions) => {
  */
 handleWebhook.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: handleWebhook.url(options),
-    method: 
+    method: 'post',
+})
+const StripeWebhookController = { handleWebhook }
+
+export default StripeWebhookController

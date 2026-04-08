@@ -7,8 +7,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MetaAutomationPreference extends Model
 {
-     use \Illuminate\Database\Eloquent\Concerns\HasUlids;
+    use \Illuminate\Database\Eloquent\Concerns\HasUlids;
+
     protected $keyType = 'string';
+
     protected $fillable = [
         'user_id',
         'meta_account_id',
@@ -17,6 +19,7 @@ class MetaAutomationPreference extends Model
         'require_approval_before_send',
         'auto_archive_after_reply',
         'reply_tone',
+        'ai_mode_id',
         'custom_instructions',
         'ai_prompt_template',
         'auto_reply_delay_seconds',
@@ -29,6 +32,7 @@ class MetaAutomationPreference extends Model
         'enable_message_analysis' => 'boolean',
         'require_approval_before_send' => 'boolean',
         'auto_archive_after_reply' => 'boolean',
+        'ai_mode_id' => 'integer',
         'enabled_platforms' => 'array',
         'is_global_preference' => 'boolean',
     ];
@@ -41,6 +45,11 @@ class MetaAutomationPreference extends Model
     public function metaAccount(): BelongsTo
     {
         return $this->belongsTo(MetaAccount::class);
+    }
+
+    public function aiMode(): BelongsTo
+    {
+        return $this->belongsTo(AIMode::class);
     }
 
     public function getAiPromptTemplate(): string
