@@ -13,14 +13,19 @@ Route::get('/api/subscription/plans', [SubscriptionController::class, 'getPlans'
 // Subscription checkout success route
 Route::get('/subscription/success', [SubscriptionController::class, 'handleCheckoutSuccess'])->name('subscription.success');
 
-// Authenticated subscription routes
+// Authenticated SPA pages
 Route::middleware('auth')->group(function () {
     Route::get('/subscription', SpaController::class)->name('subscription.index');
     Route::get('/billing', SpaController::class)->name('billing.index');
+});
+
+// Authenticated subscription API routes
+Route::middleware('auth:sanctum')->group(function () {
     Route::get('/api/subscription/my-subscription', [SubscriptionController::class, 'getMySubscription'])->name('subscription.mine');
+    Route::get('/api/subscription/billing-portal', [SubscriptionController::class, 'billingPortal'])->name('subscription.billing-portal');
     Route::post('/api/subscription/upgrade', [SubscriptionController::class, 'upgrade'])->name('subscription.upgrade')->withoutMiddleware(VerifyCsrfToken::class);
-    Route::post('/api/subscription/downgrade', [SubscriptionController::class, 'downgrade'])->name('subscription.downgrade');
-    Route::post('/api/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
-    Route::post('/api/subscription/start-trial', [SubscriptionController::class, 'startTrial'])->name('subscription.trial.start');
+    Route::post('/api/subscription/downgrade', [SubscriptionController::class, 'downgrade'])->name('subscription.downgrade')->withoutMiddleware(VerifyCsrfToken::class);
+    Route::post('/api/subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel')->withoutMiddleware(VerifyCsrfToken::class);
+    Route::post('/api/subscription/start-trial', [SubscriptionController::class, 'startTrial'])->name('subscription.trial.start')->withoutMiddleware(VerifyCsrfToken::class);
     Route::get('/api/subscription/usage-stats', [SubscriptionController::class, 'getUsageStats'])->name('subscription.usage');
 });

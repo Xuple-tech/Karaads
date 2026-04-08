@@ -7,6 +7,18 @@ export interface ChatAttachment {
     url?: string | null;
 }
 
+export interface ChatToolRun {
+    id: string;
+    tool_name: string;
+    status: 'started' | 'completed' | 'failed';
+    summary?: string | null;
+    arguments?: Record<string, unknown> | null;
+    result?: Record<string, unknown> | null;
+    error_message?: string | null;
+    created_at?: string;
+    updated_at?: string;
+}
+
 export interface Message {
     id: string;
     conversation_id?: string;
@@ -20,6 +32,7 @@ export interface Message {
     created_at?: string;
     type?: 'text' | 'image' | 'mixed' | 'file';
     attachments?: ChatAttachment[];
+    tool_runs?: ChatToolRun[];
     isStreaming?: boolean;
     error_message?: string | null;
 }

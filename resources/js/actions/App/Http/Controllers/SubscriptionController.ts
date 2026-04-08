@@ -129,6 +129,49 @@ getMySubscription.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
 })
 
 /**
+* @see \App\Http\Controllers\SubscriptionController::billingPortal
+ * @see app/Http/Controllers/SubscriptionController.php:341
+ * @route '/api/subscription/billing-portal'
+ */
+export const billingPortal = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: billingPortal.url(options),
+    method: 'get',
+})
+
+billingPortal.definition = {
+    methods: ["get","head"],
+    url: '/api/subscription/billing-portal',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\SubscriptionController::billingPortal
+ * @see app/Http/Controllers/SubscriptionController.php:341
+ * @route '/api/subscription/billing-portal'
+ */
+billingPortal.url = (options?: RouteQueryOptions) => {
+    return billingPortal.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\SubscriptionController::billingPortal
+ * @see app/Http/Controllers/SubscriptionController.php:341
+ * @route '/api/subscription/billing-portal'
+ */
+billingPortal.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: billingPortal.url(options),
+    method: 'get',
+})
+/**
+* @see \App\Http\Controllers\SubscriptionController::billingPortal
+ * @see app/Http/Controllers/SubscriptionController.php:341
+ * @route '/api/subscription/billing-portal'
+ */
+billingPortal.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: billingPortal.url(options),
+    method: 'head',
+})
+
+/**
 * @see \App\Http\Controllers\SubscriptionController::upgrade
  * @see app/Http/Controllers/SubscriptionController.php:85
  * @route '/api/subscription/upgrade'
@@ -306,6 +349,6 @@ getUsageStats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
     url: getUsageStats.url(options),
     method: 'head',
 })
-const SubscriptionController = { getPlans, handleCheckoutSuccess, getMySubscription, upgrade, downgrade, cancel, startTrial, getUsageStats }
+const SubscriptionController = { getPlans, handleCheckoutSuccess, getMySubscription, billingPortal, upgrade, downgrade, cancel, startTrial, getUsageStats }
 
 export default SubscriptionController

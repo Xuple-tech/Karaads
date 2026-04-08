@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { clearAuthToken, getAuthToken } from '@/spa/lib/auth-token';
-import { apiRequest } from '@/spa/lib/api';
+import { revalidateSession } from '@/spa/lib/auth-runtime';
+import { getAuthToken } from '@/spa/lib/auth-token';
 
 export type SessionUser = {
     id: string;
@@ -31,20 +31,7 @@ export function useSessionQuery() {
                 } satisfies SessionResponse;
             }
 
-            try {
-                return await apiRequest<SessionResponse>('/api/session/user');
-            } catch (error: any) {
-                if (error?.status === 401) {
-                    clearAuthToken();
-                    return {
-                        success: true,
-                        authenticated: false,
-                        user: null,
-                    } satisfies SessionResponse;
-                }
-
-                throw error;
-            }
+            return revalidateSession({ redirectOnFailure: false });
         },
         staleTime: 10_000,
     });

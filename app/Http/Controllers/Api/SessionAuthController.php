@@ -10,6 +10,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Str;
@@ -18,6 +19,8 @@ use Illuminate\Validation\ValidationException;
 
 class SessionAuthController extends Controller
 {
+    private const SPA_TOKEN_NAMES = ['spa', 'spa:v1'];
+
     public function session(Request $request): JsonResponse
     {
         $user = $this->resolveTokenUser($request);
@@ -45,8 +48,8 @@ class SessionAuthController extends Controller
 
         \Illuminate\Support\Facades\RateLimiter::clear($request->throttleKey());
 
-        $user->tokens()->where('name', 'spa')->delete();
-        $token = $user->createToken('spa')->plainTextToken;
+        $user->tokens()->whereIn('name', self::SPA_TOKEN_NAMES)->delete();
+        $token = $user->createToken('spa:v1')->plainTextToken;
 
         return response()->json([
             'success' => true,
@@ -71,7 +74,8 @@ class SessionAuthController extends Controller
         ]);
 
         event(new Registered($user));
-        $token = $user->createToken('spa')->plainTextToken;
+        $user->tokens()->whereIn('name', self::SPA_TOKEN_NAMES)->delete();
+        $token = $user->createToken('spa:v1')->plainTextToken;
 
         return response()->json([
             'success' => true,
@@ -182,18 +186,30 @@ class SessionAuthController extends Controller
         $token = $request->bearerToken();
 
         if (! $token) {
+            Log::info('SPA auth check failed: missing bearer token', [
+                'path' => $request->path(),
+                'ip' => $request->ip(),
+            ]);
             return null;
         }
 
         $accessToken = PersonalAccessToken::findToken($token);
 
         if (! $accessToken) {
+            Log::warning('SPA auth check failed: invalid bearer token', [
+                'path' => $request->path(),
+                'ip' => $request->ip(),
+            ]);
             return null;
         }
 
         $tokenable = $accessToken->tokenable;
 
         if (! $tokenable instanceof User) {
+            Log::warning('SPA auth check failed: token does not belong to a user', [
+                'path' => $request->path(),
+                'ip' => $request->ip(),
+            ]);
             return null;
         }
 

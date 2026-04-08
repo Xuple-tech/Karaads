@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { AudioLines, CreditCard, FileText, LogOut, Mail, MoreHorizontal, PenSquare, Settings, SquarePen, Star } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink, Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { apiRequest } from '@/spa/lib/api';
+import { logoutSpa, useAuthRuntimeState } from '@/spa/lib/auth-runtime';
 import { useSpaLang } from '@/spa/lib/lang';
 import { subscribeToPrivateChannel } from '@/spa/lib/realtime';
 import { useSessionQuery } from '@/spa/lib/session';
@@ -125,6 +126,7 @@ type DocSession = { id: string; title: string; document_type: string; updated_at
 
 function SpaSidebar() {
     const session = useSessionQuery();
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
     const conversations = useQuery({
         queryKey: ['spa', 'conversations'],
         queryFn: () => apiRequest<{ conversations: Conversation[] }>('/api/chat/conversations'),
@@ -350,11 +352,17 @@ function SpaSidebar() {
                             </NavLink>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild>
-                            <a className="flex items-center gap-2 text-destructive focus:text-destructive" href="/logout">
+                        <DropdownMenuItem
+                            className="flex items-center gap-2 text-destructive focus:text-destructive"
+                            disabled={isLoggingOut}
+                            onSelect={async (event) => {
+                                event.preventDefault();
+                                setIsLoggingOut(true);
+                                await logoutSpa();
+                            }}
+                        >
                                 <LogOut size={14} />
-                                Sign out
-                            </a>
+                                {isLoggingOut ? 'Signing out...' : 'Sign out'}
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -455,8 +463,9 @@ export function PublicLayout() {
 export function ProtectedOnly() {
     const location = useLocation();
     const session = useSessionQuery();
+    const auth = useAuthRuntimeState();
 
-    if (session.isLoading) return <LoadingState />;
+    if (session.isLoading || auth.status === 'revalidating' || auth.status === 'unknown') return <LoadingState />;
     if (!session.data?.authenticated) {
         return <Navigate replace to={`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`} />;
     }
@@ -465,8 +474,9 @@ export function ProtectedOnly() {
 
 export function GuestOnly() {
     const session = useSessionQuery();
+    const auth = useAuthRuntimeState();
 
-    if (session.isLoading) return <LoadingState />;
+    if (session.isLoading || auth.status === 'revalidating' || auth.status === 'unknown') return <LoadingState />;
     if (session.data?.authenticated) return <Navigate replace to="/app" />;
     return <Outlet />;
 }
@@ -483,6 +493,7 @@ export function AppLayout() {
         <SidebarProvider defaultOpen>
             <SpaSidebar />
             <SidebarInset className="bg-background flex h-dvh flex-col overflow-hidden">
+                <SpaTopBar />
                 {isChat ? (
                     <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
                         <Outlet />

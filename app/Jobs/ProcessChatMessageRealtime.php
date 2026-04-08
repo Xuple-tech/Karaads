@@ -8,10 +8,17 @@ use App\Services\Chat\ChatMessageService;
 use App\Services\Realtime\RealtimePublisher;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Throwable;
 
 class ProcessChatMessageRealtime implements ShouldQueue
 {
     use Queueable;
+
+    public int $tries = 2;
+
+    public int $timeout = 180;
+
+    public bool $failOnTimeout = true;
 
     public function __construct(
         public readonly string $assistantMessageId,
@@ -47,5 +54,38 @@ class ProcessChatMessageRealtime implements ShouldQueue
             'conversation_id' => $conversation->id,
             'message' => $conversations->serializeMessage($assistantMessage->fresh(['attachments', 'toolRuns', 'sources'])),
         ]);
+    }
+
+    public function failed(Throwable $exception): void
+    {
+        $assistantMessage = ChatMessage::query()
+            ->with('conversation')
+            ->find($this->assistantMessageId);
+
+        if (! $assistantMessage || ! $assistantMessage->conversation) {
+            return;
+        }
+
+        $assistantMessage->updateQuietly([
+            'status' => 'failed',
+            'error_message' => 'Message processing failed before completion.',
+        ]);
+
+        $publisher = app(RealtimePublisher::class);
+        $conversation = $assistantMessage->conversation;
+
+        $publisher->toConversation($conversation->id, [
+            'event' => 'message.failed',
+            'conversation_id' => $conversation->id,
+            'message_id' => $assistantMessage->id,
+            'error' => 'Message processing failed before completion.',
+        ]);
+
+        $publisher->conversationUpdated(
+            $conversation->fresh(),
+            $assistantMessage->fresh()?->content_text ?: $assistantMessage->fresh()?->content_markdown
+        );
+
+        report($exception);
     }
 }

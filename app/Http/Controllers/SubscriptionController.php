@@ -338,6 +338,36 @@ class SubscriptionController extends Controller
         ]);
     }
 
+    public function billingPortal(Request $request)
+    {
+        $user = $request->user();
+
+        if (! $user) {
+            Log::warning('SPA billing portal access denied: unauthenticated request', [
+                'path' => $request->path(),
+                'ip' => $request->ip(),
+            ]);
+
+            return response()->json(['success' => false, 'error' => 'Unauthorized'], 401);
+        }
+
+        try {
+            return response()->json([
+                'success' => true,
+                'portal_url' => $this->stripeService->createBillingPortalSession($user),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to create SPA billing portal session: ' . $e->getMessage(), [
+                'user_id' => $user->id,
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to access billing portal',
+            ], 500);
+        }
+    }
+
     /**
      * Show billing management page
      */

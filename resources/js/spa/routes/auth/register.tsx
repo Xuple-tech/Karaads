@@ -6,7 +6,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import GoogleLogo from '@/components/google-logo';
 import AuthLayout from '@/spa/components/AuthLayout';
 import { ApiError, apiRequest } from '@/spa/lib/api';
-import { setAuthToken } from '@/spa/lib/auth-token';
+import { setAuthenticatedToken } from '@/spa/lib/auth-runtime';
 import { queryClient } from '@/spa/lib/query-client';
 import { sessionQueryKey } from '@/spa/lib/session';
 
@@ -20,11 +20,11 @@ export function Component() {
     const [error, setError] = useState<string | null>(null);
 
     const register = useMutation({
-        mutationFn: () => apiRequest<{ token: string }>('/api/session/register', { method: 'POST', json: form }),
+        mutationFn: () => apiRequest<{ token: string; redirect_to?: string }>('/api/session/register', { method: 'POST', json: form }),
         onSuccess: async (data) => {
-            setAuthToken(data.token);
+            setAuthenticatedToken(data.token);
             await queryClient.invalidateQueries({ queryKey: sessionQueryKey });
-            navigate('/app');
+            navigate(data.redirect_to || redirect);
         },
         onError: (mutationError) => {
             setError(mutationError instanceof ApiError ? mutationError.message : 'Unable to create account.');

@@ -87,6 +87,10 @@ class ChatConversationService
 
     public function serializeMessage(ChatMessage $message): array
     {
+        $toolRuns = $message->toolRuns
+            ->sortBy(fn ($toolRun) => $toolRun->created_at?->getTimestamp() ?? 0)
+            ->values();
+
         return [
             'id' => $message->id,
             'conversation_id' => $message->conversation_id,
@@ -105,6 +109,17 @@ class ChatConversationService
                 'mime_type' => $attachment->mime_type,
                 'size' => $attachment->size,
                 'url' => $attachment->url,
+            ])->values(),
+            'tool_runs' => $toolRuns->map(fn ($toolRun) => [
+                'id' => $toolRun->id,
+                'tool_name' => $toolRun->tool_name,
+                'status' => $toolRun->status,
+                'summary' => $toolRun->summary,
+                'arguments' => $toolRun->arguments,
+                'result' => $toolRun->result,
+                'error_message' => $toolRun->error_message,
+                'created_at' => $toolRun->created_at?->toIso8601String(),
+                'updated_at' => $toolRun->updated_at?->toIso8601String(),
             ])->values(),
         ];
     }

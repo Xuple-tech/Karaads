@@ -153,16 +153,18 @@ class ChatMessageService
                         'arguments' => $data['arguments'] ?? null,
                     ]);
                     $data['tool_run_id'] = $toolRun->id;
+                    $data['tool_run'] = $this->serializeToolRun($toolRun);
                 }
 
                 if ($eventName === 'tool.completed') {
-                    $toolRun = ChatToolRun::create([
-                        'chat_message_id' => $assistantMessage->id,
-                        'tool_name' => $data['tool_name'],
+                    $toolRun = $this->resolveToolRun($assistantMessage, (string) ($data['tool_name'] ?? 'tool'));
+                    $toolRun->update([
                         'status' => 'completed',
-                        'summary' => $data['summary'] ?? null,
+                        'summary' => $data['summary'] ?? $toolRun->summary,
                         'result' => $data['result'] ?? null,
+                        'error_message' => null,
                     ]);
+                    $toolRun = $toolRun->fresh();
 
                     foreach (($data['references'] ?? []) as $index => $reference) {
                         ChatMessageSource::create([
@@ -212,15 +214,20 @@ class ChatMessageService
                             ],
                         ]);
                     }
+
+                    $data['tool_run_id'] = $toolRun->id;
+                    $data['tool_run'] = $this->serializeToolRun($toolRun);
                 }
 
                 if ($eventName === 'tool.failed') {
-                    ChatToolRun::create([
-                        'chat_message_id' => $assistantMessage->id,
-                        'tool_name' => $data['tool_name'],
+                    $toolRun = $this->resolveToolRun($assistantMessage, (string) ($data['tool_name'] ?? 'tool'));
+                    $toolRun->update([
                         'status' => 'failed',
                         'error_message' => $data['error'] ?? 'Tool execution failed',
                     ]);
+                    $toolRun = $toolRun->fresh();
+                    $data['tool_run_id'] = $toolRun->id;
+                    $data['tool_run'] = $this->serializeToolRun($toolRun);
                 }
 
                 if ($eventName === 'message.failed') {
@@ -245,6 +252,41 @@ class ChatMessageService
         );
 
         return $assistantMessage->fresh(['attachments', 'toolRuns', 'sources']);
+    }
+
+    private function resolveToolRun(ChatMessage $assistantMessage, string $toolName): ChatToolRun
+    {
+        $pendingRun = ChatToolRun::query()
+            ->where('chat_message_id', $assistantMessage->id)
+            ->where('tool_name', $toolName)
+            ->where('status', 'started')
+            ->latest('created_at')
+            ->first();
+
+        if ($pendingRun) {
+            return $pendingRun;
+        }
+
+        return ChatToolRun::create([
+            'chat_message_id' => $assistantMessage->id,
+            'tool_name' => $toolName,
+            'status' => 'started',
+        ]);
+    }
+
+    private function serializeToolRun(ChatToolRun $toolRun): array
+    {
+        return [
+            'id' => $toolRun->id,
+            'tool_name' => $toolRun->tool_name,
+            'status' => $toolRun->status,
+            'summary' => $toolRun->summary,
+            'arguments' => $toolRun->arguments,
+            'result' => $toolRun->result,
+            'error_message' => $toolRun->error_message,
+            'created_at' => $toolRun->created_at?->toIso8601String(),
+            'updated_at' => $toolRun->updated_at?->toIso8601String(),
+        ];
     }
 
     private function resolveConversation(User $user, ?string $conversationId, ?string $prompt): Conversation

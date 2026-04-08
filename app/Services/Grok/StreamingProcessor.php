@@ -219,8 +219,6 @@ class StreamingProcessor
             'model' => $model,
             'messages' => $messages,
             'stream' => true,
-            'tools' => $tools,
-            'tool_choice' => 'auto',
         ];
 
         try {
@@ -232,6 +230,7 @@ class StreamingProcessor
                 'json' => $payload,
                 'stream' => true,
                 'timeout' => 60,
+                'read_timeout' => 60,
             ]);
 
             $this->process(

@@ -63,7 +63,7 @@ export function Component() {
     });
 
     const portalMutation = useMutation({
-        mutationFn: () => apiRequest<{ portal_url?: string }>('/stripe/billing-portal'),
+        mutationFn: () => apiRequest<{ portal_url?: string }>('/api/subscription/billing-portal'),
         onSuccess: (data) => { if (data.portal_url) window.location.href = data.portal_url; },
         onError: (e) => setError(e instanceof ApiError ? e.message : 'Failed to open billing portal.'),
     });

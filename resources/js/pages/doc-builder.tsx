@@ -27,7 +27,9 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import type { ChatAttachment, ChatToolRun } from '@/types/chat';
 import { getAuthToken } from '@/spa/lib/auth-token';
+import ToolTimeline from '@/spa/components/ToolTimeline';
 import { subscribeToPrivateChannel, type RealtimePayload } from '@/spa/lib/realtime';
 import { useSessionQuery } from '@/spa/lib/session';
 
@@ -36,6 +38,9 @@ type DocMessage = {
     role: 'user' | 'assistant';
     content: string;
     isStreaming?: boolean;
+    status?: string;
+    attachments?: ChatAttachment[];
+    tool_runs?: ChatToolRun[];
 };
 
 type ExportResult = {
@@ -82,15 +87,38 @@ function DocMessageBubble({ message }: { message: DocMessage }) {
     return (
         <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
             <div
-                className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${
+                className={`max-w-[88%] rounded-3xl px-4 py-3 text-sm shadow-sm ${
                     isUser
-                        ? 'bg-foreground text-background'
-                        : 'border border-border/60 bg-card text-foreground'
+                        ? 'bg-[#f4efe7] text-[#1f160f]'
+                        : 'border border-border/60 bg-[#171717] text-foreground'
                 }`}
             >
                 <ReactMarkdown rehypePlugins={[rehypePrism]} remarkPlugins={[remarkGfm]}>
                     {message.content || (message.isStreaming ? '...' : '')}
                 </ReactMarkdown>
+                {!isUser && (message.attachments?.length ?? 0) > 0 && (
+                    <div className="mt-4 grid gap-2">
+                        {message.attachments!.map((attachment) => (
+                            <a
+                                key={attachment.id}
+                                href={attachment.url ?? '#'}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="flex items-center justify-between rounded-2xl border border-border/60 bg-black/20 px-3 py-2.5 transition-colors hover:bg-black/30"
+                            >
+                                <div className="min-w-0">
+                                    <p className="truncate text-sm font-medium text-foreground">{attachment.name}</p>
+                                    <p className="text-xs text-muted-foreground">
+                                        {attachment.mime_type ?? 'File'}
+                                        {attachment.size ? ` • ${(attachment.size / 1024).toFixed(1)} KB` : ''}
+                                    </p>
+                                </div>
+                                <Download className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                            </a>
+                        ))}
+                    </div>
+                )}
+                {!isUser && <ToolTimeline toolRuns={message.tool_runs ?? []} isStreaming={Boolean(message.isStreaming)} />}
             </div>
         </div>
     );
@@ -108,6 +136,7 @@ export default function DocBuilderPage() {
     const [input, setInput] = useState('');
     const [isStreaming, setIsStreaming] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [isDelayed, setIsDelayed] = useState(false);
     const [showScrollBtn, setShowScrollBtn] = useState(false);
     const [userScrolledUp, setUserScrolledUp] = useState(false);
 
@@ -118,11 +147,13 @@ export default function DocBuilderPage() {
 
     const [conversationId, setConversationId] = useState<string | null>(sessionId ?? null);
     const [isLoadingSession, setIsLoadingSession] = useState(Boolean(sessionId));
+    const [isSyncingSession, setIsSyncingSession] = useState(false);
     const [panelOpen, setPanelOpen] = useState(false);
     const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('preview');
     const [isExporting, setIsExporting] = useState(false);
     const [exportError, setExportError] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
+    const [latestGeneratedFile, setLatestGeneratedFile] = useState<ChatAttachment | null>(null);
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -164,15 +195,28 @@ export default function DocBuilderPage() {
         }
     }, [messages.length, userScrolledUp, scrollToBottom]);
 
-    const loadSession = useCallback(async (targetSessionId: string) => {
-        setIsLoadingSession(true);
+    const loadSession = useCallback(async (targetSessionId: string, options?: { background?: boolean }) => {
+        if (options?.background) {
+            setIsSyncingSession(true);
+        } else {
+            setIsLoadingSession(true);
+        }
+
+        let timeout: number | null = null;
 
         try {
+            const controller = new AbortController();
+            timeout = window.setTimeout(() => controller.abort(), options?.background ? 6000 : 12000);
+
             const response = await fetch(`/api/doc-builder/sessions/${targetSessionId}`, {
-                headers: { ...authHeaders() },
+                headers: { Accept: 'application/json', ...authHeaders() },
+                signal: controller.signal,
             });
 
             if (!response.ok) {
+                if (!options?.background) {
+                    setError(`Could not load document (${response.status}).`);
+                }
                 return;
             }
 
@@ -183,28 +227,57 @@ export default function DocBuilderPage() {
             setModel(session.doc_model ?? 'grok-4');
             setDocumentContent(session.document_content ?? '');
             setPanelOpen(Boolean(session.document_content));
-            setMessages(
-                (session.messages ?? []).map((message: { id: string; role: 'user' | 'assistant'; content: string }) => ({
+            const nextMessages = (session.messages ?? []).map((message: { id: string; role: 'user' | 'assistant'; content: string; status?: string; attachments?: ChatAttachment[]; tool_runs?: ChatToolRun[] }) => ({
                     id: message.id,
                     role: message.role,
                     content: message.content,
-                })),
-            );
+                    status: message.status,
+                    attachments: message.attachments ?? [],
+                    tool_runs: message.tool_runs ?? [],
+                    isStreaming: message.status === 'streaming',
+                }));
+            setMessages(nextMessages);
+            const latestAttachment = [...nextMessages]
+                .reverse()
+                .find((message: DocMessage) => (message.attachments?.length ?? 0) > 0)
+                ?.attachments?.[0] ?? null;
+            setLatestGeneratedFile(latestAttachment);
+            const hasStreamingMessage = nextMessages.some((message: DocMessage) => message.status === 'streaming');
+            setIsStreaming(hasStreamingMessage);
+            if (!hasStreamingMessage) {
+                setIsDelayed(false);
+            }
+        } catch (loadError) {
+            if (!options?.background) {
+                setError(loadError instanceof Error ? loadError.message : 'Could not load document.');
+            }
         } finally {
+            if (timeout !== null) {
+                window.clearTimeout(timeout);
+            }
             setIsLoadingSession(false);
+            setIsSyncingSession(false);
         }
     }, []);
 
     useEffect(() => {
-        if (!sessionId) return;
+        if (!sessionId) {
+            setIsLoadingSession(false);
+            return;
+        }
+
         void loadSession(sessionId);
     }, [loadSession, sessionId]);
 
     const handleRealtimeEvent = useCallback((eventName: string, payload: RealtimePayload) => {
         const messageId = typeof payload.message_id === 'string' ? payload.message_id : null;
 
+        if (eventName !== 'conversation.updated') {
+            setIsDelayed(false);
+        }
+
         if (eventName === 'message.created' && payload.message && typeof payload.message === 'object') {
-            const message = payload.message as { id: string; role: 'user' | 'assistant'; content_markdown?: string };
+            const message = payload.message as { id: string; role: 'user' | 'assistant'; content_markdown?: string; attachments?: ChatAttachment[]; tool_runs?: ChatToolRun[] };
             setMessages(prev => [
                 ...prev.filter(item => item.id !== message.id),
                 {
@@ -212,6 +285,9 @@ export default function DocBuilderPage() {
                     role: message.role,
                     content: message.content_markdown ?? '',
                     isStreaming: true,
+                    status: 'streaming',
+                    attachments: message.attachments ?? [],
+                    tool_runs: message.tool_runs ?? [],
                 },
             ]);
         }
@@ -220,6 +296,37 @@ export default function DocBuilderPage() {
             setMessages(prev => prev.map(message =>
                 message.id === messageId
                     ? { ...message, content: `${message.content}${String(payload.content ?? '')}`, isStreaming: true }
+                    : message,
+            ));
+        }
+
+        if ((eventName === 'tool.started' || eventName === 'tool.completed' || eventName === 'tool.failed') && messageId) {
+            if (payload.tool_run && typeof payload.tool_run === 'object') {
+                const toolRun = payload.tool_run as ChatToolRun;
+                setMessages(prev => prev.map(message =>
+                    message.id === messageId
+                        ? {
+                              ...message,
+                              tool_runs: [
+                                  ...(message.tool_runs ?? []).filter(item => item.id !== toolRun.id),
+                                  toolRun,
+                              ].sort((left, right) => {
+                                  const leftTime = left.created_at ? new Date(left.created_at).getTime() : 0;
+                                  const rightTime = right.created_at ? new Date(right.created_at).getTime() : 0;
+                                  return leftTime - rightTime;
+                              }),
+                          }
+                        : message,
+                ));
+            }
+        }
+
+        if (eventName === 'attachment.created' && messageId && payload.attachment && typeof payload.attachment === 'object') {
+            const attachment = payload.attachment as ChatAttachment;
+            setLatestGeneratedFile(attachment);
+            setMessages(prev => prev.map(message =>
+                message.id === messageId
+                    ? { ...message, attachments: [...(message.attachments ?? []), attachment] }
                     : message,
             ));
         }
@@ -240,6 +347,7 @@ export default function DocBuilderPage() {
                           ...message,
                           content: typeof payload.content === 'string' ? payload.content : message.content,
                           isStreaming: false,
+                          status: 'completed',
                       }
                     : message,
             ));
@@ -250,7 +358,7 @@ export default function DocBuilderPage() {
             const errorMessage = String(payload.error ?? 'Generation failed.');
             setMessages(prev => prev.map(message =>
                 message.id === messageId
-                    ? { ...message, isStreaming: false, content: message.content || `Error: ${errorMessage}` }
+                    ? { ...message, isStreaming: false, content: message.content || `Error: ${errorMessage}`, status: 'failed' }
                     : message,
             ));
             setError(errorMessage);
@@ -259,6 +367,19 @@ export default function DocBuilderPage() {
 
         if (eventName === 'document.saved' && typeof payload.document_content === 'string') {
             setDocumentContent(payload.document_content);
+            if (payload.generated_file && typeof payload.generated_file === 'object') {
+                const generatedFile = payload.generated_file as Record<string, unknown>;
+                if (typeof generatedFile.url === 'string' && typeof generatedFile.filename === 'string') {
+                    setLatestGeneratedFile({
+                        id: String(generatedFile.path ?? generatedFile.filename),
+                        kind: 'file',
+                        name: generatedFile.filename,
+                        mime_type: typeof generatedFile.mime_type === 'string' ? generatedFile.mime_type : null,
+                        size: typeof generatedFile.size === 'number' ? generatedFile.size : null,
+                        url: generatedFile.url,
+                    });
+                }
+            }
             void queryClient.invalidateQueries({ queryKey: ['spa', 'doc-builder-sessions'] });
         }
     }, [documentContent, queryClient]);
@@ -273,12 +394,34 @@ export default function DocBuilderPage() {
             handleRealtimeEvent,
             {
                 onSubscribed: () => {
-                    void loadSession(conversationId);
+                    void loadSession(conversationId, { background: true });
                 },
-                onError: () => setError('Realtime connection failed. Refresh to resync this document.'),
+                onError: () => {
+                    setIsDelayed(true);
+                    setError('Realtime connection failed. Refresh to resync this document.');
+                },
             },
         );
     }, [conversationId, handleRealtimeEvent, loadSession]);
+
+    useEffect(() => {
+        if (!isStreaming || !conversationId) {
+            setIsDelayed(false);
+            return;
+        }
+
+        const delayedTimer = window.setTimeout(() => {
+            setIsDelayed(true);
+        }, 8000);
+        const syncInterval = window.setInterval(() => {
+            void loadSession(conversationId, { background: true });
+        }, 5000);
+
+        return () => {
+            window.clearTimeout(delayedTimer);
+            window.clearInterval(syncInterval);
+        };
+    }, [conversationId, isStreaming, loadSession]);
 
     useEffect(() => {
         if (!userId) {
@@ -298,6 +441,7 @@ export default function DocBuilderPage() {
 
         setInput('');
         setError(null);
+        setIsDelayed(false);
         setExportError(null);
         setIsStreaming(true);
         if (inputRef.current) {
@@ -309,7 +453,7 @@ export default function DocBuilderPage() {
         setMessages(prev => [
             ...prev,
             { id: localUserId, role: 'user', content: prompt },
-            { id: localAssistantId, role: 'assistant', content: '', isStreaming: true },
+            { id: localAssistantId, role: 'assistant', content: '', isStreaming: true, attachments: [], tool_runs: [] },
         ]);
 
         try {
@@ -411,6 +555,7 @@ export default function DocBuilderPage() {
         setPanelOpen(false);
         setError(null);
         setExportError(null);
+        setLatestGeneratedFile(null);
         setIsStreaming(false);
         navigate('/doc-builder', { replace: true });
     }, [navigate]);
@@ -435,13 +580,20 @@ export default function DocBuilderPage() {
     const isWelcome = messages.length === 0;
 
     return (
-        <div className="relative flex h-full overflow-hidden">
+        <div className="relative flex h-full overflow-hidden bg-[#111111]">
             <div
                 className="relative flex flex-col overflow-hidden transition-all duration-300"
-                style={{ width: panelOpen ? '42%' : '100%' }}
+                style={{ width: panelOpen ? '38%' : '100%' }}
             >
                 <div ref={scrollRef} className="flex-1 overflow-y-auto overscroll-contain pb-48 pt-6 custom-scrollbar">
                     <div className="mx-auto w-full max-w-2xl px-4">
+                        {isSyncingSession && (
+                            <div className="mb-4 flex items-center gap-2 text-xs text-muted-foreground">
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                Syncing document…
+                            </div>
+                        )}
+
                         {isWelcome && (
                             <div className="flex min-h-[60vh] flex-col items-center justify-center gap-8 text-center">
                                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] shadow-lg">
@@ -472,6 +624,34 @@ export default function DocBuilderPage() {
                         {error && (
                             <div className="mb-6 rounded-xl border border-destructive/30 bg-destructive/8 px-4 py-3 text-sm text-destructive">
                                 {error}
+                            </div>
+                        )}
+
+                        {isDelayed && !error && (
+                            <div className="mb-6 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+                                Response is taking longer than expected. Queue processing or realtime delivery may be delayed.
+                            </div>
+                        )}
+
+                        {latestGeneratedFile && (
+                            <div className="mb-6 rounded-3xl border border-emerald-500/20 bg-emerald-500/8 p-4">
+                                <div className="flex items-center justify-between gap-4">
+                                    <div className="min-w-0">
+                                        <p className="text-sm font-semibold text-foreground">Document file ready</p>
+                                        <p className="truncate text-xs text-muted-foreground">
+                                            {latestGeneratedFile.name}
+                                        </p>
+                                    </div>
+                                    <a
+                                        href={latestGeneratedFile.url ?? '#'}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="inline-flex items-center gap-2 rounded-xl bg-foreground px-3 py-2 text-xs font-medium text-background transition-opacity hover:opacity-85"
+                                    >
+                                        <Download className="h-3.5 w-3.5" />
+                                        Open file
+                                    </a>
+                                </div>
                             </div>
                         )}
 
@@ -514,7 +694,7 @@ export default function DocBuilderPage() {
 
                 <div className="absolute bottom-0 left-0 right-0 z-10">
                     <div className="mx-auto w-full max-w-2xl px-4 pb-5">
-                        <div className="rounded-2xl border border-border/60 bg-[#1c1c1c] shadow-lg">
+                        <div className="rounded-[28px] border border-border/60 bg-[#171717] shadow-[0_12px_40px_rgba(0,0,0,0.35)]">
                             <div className="flex items-end gap-3 px-4 py-3">
                                 <textarea
                                     ref={inputRef}
@@ -606,16 +786,19 @@ export default function DocBuilderPage() {
             </div>
 
             {panelOpen && (
-                <div className="flex min-w-0 flex-1 flex-col border-l border-border/50 bg-background">
-                    <div className="flex items-center justify-between border-b border-border/50 px-4 py-3">
+                <div className="flex min-w-0 flex-1 flex-col border-l border-border/50 bg-[#0f0f10]">
+                    <div className="flex items-center justify-between border-b border-border/50 px-5 py-4">
                         <div className="min-w-0">
                             <input
                                 value={documentTitle}
                                 onBlur={handleTitleBlur}
                                 onChange={(event) => setDocumentTitle(event.target.value)}
-                                className="w-full bg-transparent text-sm font-semibold text-foreground outline-none"
+                                className="w-full bg-transparent text-base font-semibold text-foreground outline-none"
                             />
-                            <p className="text-xs text-muted-foreground">{DOCUMENT_TYPES[documentType]}</p>
+                            <p className="text-xs text-muted-foreground">
+                                {DOCUMENT_TYPES[documentType]} document
+                                {latestGeneratedFile ? ' • file ready' : ''}
+                            </p>
                         </div>
 
                         <div className="flex items-center gap-2">
@@ -647,7 +830,7 @@ export default function DocBuilderPage() {
                         </div>
                     )}
 
-                    <div className="flex items-center gap-2 border-b border-border/50 px-4 py-2">
+                    <div className="flex items-center gap-2 border-b border-border/50 px-5 py-3">
                         <Button
                             size="sm"
                             variant={activeTab === 'preview' ? 'default' : 'ghost'}
@@ -666,12 +849,14 @@ export default function DocBuilderPage() {
 
                     <div className="min-h-0 flex-1 overflow-hidden">
                         {activeTab === 'preview' ? (
-                            <div className="h-full overflow-y-auto px-6 py-5">
-                                <article className="prose prose-invert max-w-none">
-                                    <ReactMarkdown rehypePlugins={[rehypePrism]} remarkPlugins={[remarkGfm]}>
-                                        {documentContent || '# Start writing\n\nYour document preview will appear here.'}
-                                    </ReactMarkdown>
-                                </article>
+                            <div className="h-full overflow-y-auto bg-[radial-gradient(circle_at_top,_rgba(244,239,231,0.08),_transparent_45%)] px-8 py-8">
+                                <div className="mx-auto max-w-4xl rounded-[32px] border border-black/5 bg-[#f7f3eb] p-10 text-[#1b140f] shadow-[0_24px_80px_rgba(0,0,0,0.28)]">
+                                    <article className="prose max-w-none prose-headings:text-[#201711] prose-p:text-[#3b3028] prose-strong:text-[#201711] prose-li:text-[#3b3028] prose-code:text-[#5b2f1f] prose-pre:bg-[#151515]">
+                                        <ReactMarkdown rehypePlugins={[rehypePrism]} remarkPlugins={[remarkGfm]}>
+                                            {documentContent || '# Start writing\n\nYour document preview will appear here.'}
+                                        </ReactMarkdown>
+                                    </article>
+                                </div>
                             </div>
                         ) : (
                             <Editor

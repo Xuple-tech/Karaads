@@ -6,7 +6,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import GoogleLogo from '@/components/google-logo';
 import AuthLayout from '@/spa/components/AuthLayout';
 import { ApiError, apiRequest } from '@/spa/lib/api';
-import { setAuthToken } from '@/spa/lib/auth-token';
+import { setAuthenticatedToken } from '@/spa/lib/auth-runtime';
 import { queryClient } from '@/spa/lib/query-client';
 import { sessionQueryKey } from '@/spa/lib/session';
 
@@ -27,7 +27,7 @@ export function Component() {
                 json: { email, password, remember },
             }),
         onSuccess: async (data) => {
-            setAuthToken(data.token);
+            setAuthenticatedToken(data.token);
             await queryClient.invalidateQueries({ queryKey: sessionQueryKey });
             navigate(data.redirect_to || redirect);
         },

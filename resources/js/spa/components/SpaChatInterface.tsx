@@ -1,11 +1,11 @@
-import type { ChatAttachment, Message } from '@/types/chat';
+import type { ChatAttachment, ChatToolRun, Message } from '@/types/chat';
 import { AlertCircle, ArrowDown } from 'lucide-react';
 import { FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import ChatInput from '@/spa/components/SpaChatInput';
-import ChatMessageRenderer, { type StreamActivity } from '@/spa/components/ChatMessageRenderer';
+import ChatMessageRenderer from '@/spa/components/ChatMessageRenderer';
 import { apiRequest } from '@/spa/lib/api';
 import { authHeaders } from '@/spa/lib/auth-token';
 import { subscribeToPrivateChannel, type RealtimePayload } from '@/spa/lib/realtime';
@@ -14,7 +14,6 @@ import { useSessionQuery } from '@/spa/lib/session';
 type ChatState = {
     messages: Message[];
     conversationId: string | null;
-    activities: StreamActivity[];
     streamingMessageId: string | null;
 };
 
@@ -24,15 +23,14 @@ type ChatAction =
     | { type: 'assistant.create'; message: Message; conversationId?: string | null; replace?: boolean }
     | { type: 'assistant.delta'; messageId: string; content: string }
     | { type: 'attachment.add'; messageId: string; attachment: ChatAttachment }
+    | { type: 'tool.sync'; messageId: string; toolRun: ChatToolRun }
     | { type: 'assistant.complete'; messageId: string; content?: string; attachments?: ChatAttachment[] }
-    | { type: 'assistant.fail'; messageId: string; error: string }
-    | { type: 'activity'; activity: StreamActivity }
-    | { type: 'activity.clear' };
+    | { type: 'assistant.fail'; messageId: string; error: string };
 
 function reducer(state: ChatState, action: ChatAction): ChatState {
     switch (action.type) {
         case 'hydrate':
-            return { ...state, conversationId: action.conversationId, messages: action.messages, activities: [], streamingMessageId: null };
+            return { ...state, conversationId: action.conversationId, messages: action.messages, streamingMessageId: null };
         case 'user.append':
             return { ...state, messages: [...state.messages, action.message] };
         case 'assistant.create': {
@@ -62,6 +60,30 @@ function reducer(state: ChatState, action: ChatAction): ChatState {
                         : m
                 ),
             };
+        case 'tool.sync':
+            return {
+                ...state,
+                messages: state.messages.map((message) => {
+                    if (message.id !== action.messageId) {
+                        return message;
+                    }
+
+                    const nextToolRuns = [
+                        ...(message.tool_runs ?? []).filter((toolRun) => toolRun.id !== action.toolRun.id),
+                        action.toolRun,
+                    ].sort((left, right) => {
+                        const leftTime = left.created_at ? new Date(left.created_at).getTime() : 0;
+                        const rightTime = right.created_at ? new Date(right.created_at).getTime() : 0;
+
+                        return leftTime - rightTime;
+                    });
+
+                    return {
+                        ...message,
+                        tool_runs: nextToolRuns,
+                    };
+                }),
+            };
         case 'assistant.complete':
             return {
                 ...state,
@@ -89,16 +111,6 @@ function reducer(state: ChatState, action: ChatAction): ChatState {
                 ),
                 streamingMessageId: null,
             };
-        case 'activity':
-            return {
-                ...state,
-                activities: [
-                    ...state.activities.filter((a) => a.tool_name !== action.activity.tool_name),
-                    action.activity,
-                ],
-            };
-        case 'activity.clear':
-            return { ...state, activities: [] };
         default:
             return state;
     }
@@ -127,13 +139,13 @@ export default function SpaChatInterface({
     const [state, dispatch] = useReducer(reducer, {
         messages: initialMessages,
         conversationId: initialConversationId,
-        activities: [],
         streamingMessageId: null,
     });
     const [isLoading, setIsLoading] = useState(false);
     const [mode, setMode] = useState<'text' | 'image'>('text');
     const [files, setFiles] = useState<File[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [isDelayed, setIsDelayed] = useState(false);
     const [showScrollBtn, setShowScrollBtn] = useState(false);
     const [userScrolledUp, setUserScrolledUp] = useState(false);
     const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -182,7 +194,7 @@ export default function SpaChatInterface({
         if (!userScrolledUp) {
             scrollToBottom(true);
         }
-    }, [state.messages.length, state.activities.length]);
+    }, [state.messages.length]);
 
     const syncConversation = useCallback(async (conversationId: string) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -203,9 +215,16 @@ export default function SpaChatInterface({
             content_text: m.content_text,
             created_at: m.created_at,
             attachments: m.attachments ?? [],
+            tool_runs: m.tool_runs ?? [],
         }));
 
         dispatch({ type: 'hydrate', conversationId, messages: mappedMessages });
+
+        const hasStreamingMessage = mappedMessages.some((message) => message.status === 'streaming');
+        if (!hasStreamingMessage) {
+            setIsLoading(false);
+            setIsDelayed(false);
+        }
     }, []);
 
     const handleRealtimeEvent = useCallback(async (eventName: string, payload: RealtimePayload) => {
@@ -213,6 +232,10 @@ export default function SpaChatInterface({
         const conversationId = typeof payload.conversation_id === 'string'
             ? payload.conversation_id
             : state.conversationId;
+
+        if (eventName !== 'conversation.updated') {
+            setIsDelayed(false);
+        }
 
         if (eventName === 'message.created' && payload.message && typeof payload.message === 'object') {
             const message = payload.message as Message;
@@ -230,6 +253,7 @@ export default function SpaChatInterface({
                     content_markdown: message.content_markdown ?? '',
                     content_text: message.content_text ?? '',
                     attachments: message.attachments ?? [],
+                    tool_runs: message.tool_runs ?? [],
                     isStreaming: true,
                 },
                 conversationId,
@@ -241,16 +265,10 @@ export default function SpaChatInterface({
             dispatch({ type: 'assistant.delta', messageId, content: String(payload.content ?? '') });
         }
 
-        if (eventName === 'tool.started') {
-            dispatch({ type: 'activity', activity: { tool_name: String(payload.tool_name ?? 'tool'), status: 'started', message: payload.message as string | undefined } });
-        }
-
-        if (eventName === 'tool.completed') {
-            dispatch({ type: 'activity', activity: { tool_name: String(payload.tool_name ?? 'tool'), status: 'completed', message: payload.summary as string | undefined } });
-        }
-
-        if (eventName === 'tool.failed') {
-            dispatch({ type: 'activity', activity: { tool_name: String(payload.tool_name ?? 'tool'), status: 'failed', message: payload.error as string | undefined } });
+        if ((eventName === 'tool.started' || eventName === 'tool.completed' || eventName === 'tool.failed') && messageId) {
+            if (payload.tool_run && typeof payload.tool_run === 'object') {
+                dispatch({ type: 'tool.sync', messageId, toolRun: payload.tool_run as ChatToolRun });
+            }
         }
 
         if (eventName === 'attachment.created' && messageId && payload.attachment && typeof payload.attachment === 'object') {
@@ -263,14 +281,12 @@ export default function SpaChatInterface({
                 messageId,
                 content: typeof payload.content === 'string' ? payload.content : undefined,
             });
-            dispatch({ type: 'activity.clear' });
             setIsLoading(false);
         }
 
         if (eventName === 'message.failed' && messageId) {
             const error = String(payload.error ?? 'Request failed');
             dispatch({ type: 'assistant.fail', messageId, error });
-            dispatch({ type: 'activity.clear' });
             setError(error);
             setIsLoading(false);
         }
@@ -299,11 +315,32 @@ export default function SpaChatInterface({
                     void syncConversation(state.conversationId!);
                 },
                 onError: () => {
+                    setIsDelayed(true);
                     setError('Realtime connection failed. Refresh to resync this chat.');
                 },
             },
         );
     }, [handleRealtimeEvent, state.conversationId, syncConversation]);
+
+    useEffect(() => {
+        if (!isLoading || !state.conversationId) {
+            setIsDelayed(false);
+            return;
+        }
+
+        const conversationId = state.conversationId;
+        const delayedTimer = window.setTimeout(() => {
+            setIsDelayed(true);
+        }, 8000);
+        const syncInterval = window.setInterval(() => {
+            void syncConversation(conversationId);
+        }, 5000);
+
+        return () => {
+            window.clearTimeout(delayedTimer);
+            window.clearInterval(syncInterval);
+        };
+    }, [isLoading, state.conversationId, syncConversation]);
 
     useEffect(() => {
         const userId = session.data?.user?.id;
@@ -320,8 +357,8 @@ export default function SpaChatInterface({
 
     const sendMessage = useCallback(async (prompt: string, type: 'text' | 'image', attachedFiles?: File[]) => {
         setError(null);
+        setIsDelayed(false);
         setIsLoading(true);
-        dispatch({ type: 'activity.clear' });
 
         dispatch({
             type: 'user.append',
@@ -391,6 +428,7 @@ export default function SpaChatInterface({
                     content: '',
                     content_markdown: '',
                     attachments: [],
+                    tool_runs: payload.assistant_message.tool_runs ?? [],
                     isStreaming: true,
                 },
                 conversationId,
@@ -415,8 +453,8 @@ export default function SpaChatInterface({
 
     const handleRegenerate = useCallback(async (messageId: string) => {
         setError(null);
+        setIsDelayed(false);
         setIsLoading(true);
-        dispatch({ type: 'activity.clear' });
 
         const response = await fetch(`/api/chat/messages/${messageId}/regenerate`, {
             method: 'POST',
@@ -441,6 +479,7 @@ export default function SpaChatInterface({
                 content: '',
                 content_markdown: '',
                 attachments: [],
+                tool_runs: payload.assistant_message.tool_runs ?? [],
                 isStreaming: true,
             },
             replace: true,
@@ -511,18 +550,22 @@ export default function SpaChatInterface({
                         </Alert>
                     )}
 
+                    {isDelayed && !error && (
+                        <Alert className="mb-6 rounded-xl border-amber-500/30 bg-amber-500/10 text-amber-100">
+                            <AlertCircle className="h-4 w-4 text-amber-300" />
+                            <AlertDescription>
+                                Response is taking longer than expected. Queue processing or realtime delivery may be delayed.
+                            </AlertDescription>
+                        </Alert>
+                    )}
+
                     {/* Messages */}
                     <div className="space-y-8">
                         {state.messages.map((message) => {
-                            const activities =
-                                message.isStreaming && message.id === state.streamingMessageId
-                                    ? state.activities
-                                    : undefined;
                             return (
                                 <ChatMessageRenderer
                                     key={message.id}
                                     message={message}
-                                    activities={activities}
                                     onRegenerate={message.role === 'assistant' ? handleRegenerate : undefined}
                                 />
                             );

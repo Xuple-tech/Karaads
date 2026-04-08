@@ -1,4 +1,5 @@
-import { clearAuthToken, getAuthToken } from '@/spa/lib/auth-token';
+import { handleUnauthorizedResponse } from '@/spa/lib/auth-runtime';
+import { getAuthToken } from '@/spa/lib/auth-token';
 
 export type ApiErrorShape = {
     message: string;
@@ -45,7 +46,7 @@ export async function apiRequest<T>(url: string, options: RequestOptions = {}): 
     const payload = contentType.includes('application/json') ? await response.json() : null;
 
     if (response.status === 401) {
-        clearAuthToken();
+        await handleUnauthorizedResponse();
     }
 
     if (!response.ok) {

@@ -3,7 +3,9 @@
 namespace App\Services\DocBuilder;
 
 use App\Models\ChatMessage;
+use App\Models\ChatMessageAttachment;
 use App\Models\Conversation;
+use App\Services\PythonDocumentGenerationService;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 
@@ -26,6 +28,11 @@ class DocBuilderRealtimeService
         'general', 'report', 'proposal', 'letter', 'essay',
         'resume', 'business', 'academic', 'code', 'technical',
     ];
+
+    public function __construct(
+        private readonly PythonDocumentGenerationService $documentGenerationService,
+    ) {
+    }
 
     public function queueMessage(string $userId, array $payload): array
     {
@@ -158,13 +165,47 @@ class DocBuilderRealtimeService
             ]);
 
             if ($docBuffer !== '') {
+                $generatedFile = $this->generateDownloadableDocument($conversation, $docBuffer);
+
                 $emit('document.completed', [
                     'message_id' => $assistantMessage->id,
                     'document_content' => $docBuffer,
                 ]);
+
+                if ($generatedFile) {
+                    $attachment = ChatMessageAttachment::create([
+                        'chat_message_id' => $assistantMessage->id,
+                        'kind' => 'file',
+                        'name' => $generatedFile['filename'] ?? 'Generated document',
+                        'mime_type' => $generatedFile['mime_type'] ?? null,
+                        'size' => $generatedFile['size'] ?? null,
+                        'url' => $generatedFile['url'] ?? null,
+                        'path' => $generatedFile['path'] ?? null,
+                        'payload' => [
+                            'title' => $generatedFile['title'] ?? null,
+                            'format' => $generatedFile['format'] ?? null,
+                            'document_type' => $generatedFile['document_type'] ?? null,
+                            'generated_at' => $generatedFile['generated_at'] ?? null,
+                        ],
+                    ]);
+
+                    $emit('attachment.created', [
+                        'message_id' => $assistantMessage->id,
+                        'attachment' => [
+                            'id' => $attachment->id,
+                            'kind' => 'file',
+                            'name' => $attachment->name,
+                            'mime_type' => $attachment->mime_type,
+                            'size' => $attachment->size,
+                            'url' => $attachment->url,
+                        ],
+                    ]);
+                }
+
                 $emit('document.saved', [
                     'message_id' => $assistantMessage->id,
                     'document_content' => $docBuffer,
+                    'generated_file' => $generatedFile,
                 ]);
             }
         } catch (\Throwable $e) {
@@ -189,6 +230,29 @@ class DocBuilderRealtimeService
             'conversation' => $conversation->fresh(),
             'assistant_message' => $assistantMessage->fresh(),
         ];
+    }
+
+    private function generateDownloadableDocument(Conversation $conversation, string $content): ?array
+    {
+        try {
+            return $this->documentGenerationService->generateDocument(
+                title: $conversation->title ?: 'Untitled Document',
+                contentMarkdown: $content,
+                format: 'docx',
+                documentType: $conversation->document_type ?? 'general',
+                options: [
+                    'include_page_numbers' => true,
+                    'include_header' => true,
+                ],
+            );
+        } catch (\Throwable $exception) {
+            Log::warning('DocBuilder automatic export failed', [
+                'conversation_id' => $conversation->id,
+                'error' => $exception->getMessage(),
+            ]);
+
+            return null;
+        }
     }
 
     private function resolveConversation(string $userId, array $payload): Conversation

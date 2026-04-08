@@ -74,6 +74,7 @@ class DocBuilderController extends Controller
                 'content_text' => $assistantMessage->content_text,
                 'created_at' => $assistantMessage->created_at?->toIso8601String(),
                 'attachments' => [],
+                'tool_runs' => [],
             ],
         ]);
         $this->publisher->conversationUpdated($prepared['conversation'], $prepared['user_message']->content_text);
@@ -242,13 +243,37 @@ class DocBuilderController extends Controller
             ->firstOrFail();
 
         $messages = ChatMessage::where('conversation_id', $session->id)
-            ->select(['id', 'role', 'content_markdown', 'created_at'])
+            ->with(['toolRuns', 'attachments'])
+            ->select(['id', 'role', 'content_markdown', 'status', 'created_at'])
             ->orderBy('created_at')
             ->get()
             ->map(fn ($m) => [
                 'id'      => $m->id,
                 'role'    => $m->role,
+                'status'  => $m->status,
                 'content' => $m->content_markdown ?? '',
+                'attachments' => $m->attachments->map(fn ($attachment) => [
+                    'id' => $attachment->id,
+                    'kind' => $attachment->kind,
+                    'name' => $attachment->name,
+                    'mime_type' => $attachment->mime_type,
+                    'size' => $attachment->size,
+                    'url' => $attachment->url,
+                ])->values(),
+                'tool_runs' => $m->toolRuns
+                    ->sortBy(fn ($toolRun) => $toolRun->created_at?->getTimestamp() ?? 0)
+                    ->values()
+                    ->map(fn ($toolRun) => [
+                        'id' => $toolRun->id,
+                        'tool_name' => $toolRun->tool_name,
+                        'status' => $toolRun->status,
+                        'summary' => $toolRun->summary,
+                        'arguments' => $toolRun->arguments,
+                        'result' => $toolRun->result,
+                        'error_message' => $toolRun->error_message,
+                        'created_at' => $toolRun->created_at?->toIso8601String(),
+                        'updated_at' => $toolRun->updated_at?->toIso8601String(),
+                    ])->values(),
             ]);
 
         return response()->json([
