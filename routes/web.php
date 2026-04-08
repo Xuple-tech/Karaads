@@ -214,7 +214,11 @@ Route::middleware('web')->prefix('developer-api')->name('developer-api.')->group
     // Protected portal routes — redirect to /developer-api/login if unauthenticated
     Route::middleware(AuthenticateDeveloperPortal::class)->group(function () {
         Route::post('/logout', [DeveloperPortalAuthController::class, 'logout'])->name('logout');
-        Route::get('/', [DeveloperPortalController::class, 'index'])->name('index');
+        Route::get('/', [DeveloperPortalController::class, 'dashboard'])->name('index');
+        Route::get('/keys', [DeveloperPortalController::class, 'keys'])->name('keys.index');
+        Route::get('/usage', [DeveloperPortalController::class, 'usage'])->name('usage.index');
+        Route::get('/billing', [DeveloperPortalController::class, 'billing'])->name('billing.index');
+        Route::get('/quickstart', [DeveloperPortalController::class, 'quickstart'])->name('quickstart');
         Route::post('/keys', [DeveloperPortalController::class, 'storeKey'])->name('keys.store');
         Route::put('/keys/{developerApiKey}', [DeveloperPortalController::class, 'updateKey'])->name('keys.update');
         Route::post('/keys/{developerApiKey}/revoke', [DeveloperPortalController::class, 'revokeKey'])->name('keys.revoke');

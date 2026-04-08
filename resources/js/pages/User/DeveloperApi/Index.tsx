@@ -54,12 +54,13 @@ interface WalletSummary {
 }
 
 interface UsageStats {
-    total_requests: number;
-    successful_requests: number;
-    failed_requests: number;
+    requests: number;
+    success_requests: number;
+    error_requests: number;
     total_tokens: number;
-    total_cost_usd: number;
-    avg_tokens_per_request: number;
+    input_tokens: number;
+    output_tokens: number;
+    cost_usd: number;
 }
 
 interface ApiKey {
@@ -218,18 +219,19 @@ function WalletCard({ wallet, topupConfig }: { wallet: WalletSummary | null | un
 
 function StatsRow({ stats }: { stats: UsageStats | null | undefined }) {
     const s: UsageStats = stats ?? {
-        total_requests: 0,
-        successful_requests: 0,
-        failed_requests: 0,
+        requests: 0,
+        success_requests: 0,
+        error_requests: 0,
         total_tokens: 0,
-        total_cost_usd: 0,
-        avg_tokens_per_request: 0,
+        input_tokens: 0,
+        output_tokens: 0,
+        cost_usd: 0,
     };
     const items = [
-        { label: 'Total Requests', value: s.total_requests.toLocaleString() },
-        { label: 'Success Rate', value: s.total_requests > 0 ? `${((s.successful_requests / s.total_requests) * 100).toFixed(1)}%` : '—' },
-        { label: 'Total Tokens', value: s.total_tokens.toLocaleString() },
-        { label: 'Total Spend', value: formatUsd(s.total_cost_usd) },
+        { label: 'Total Requests', value: (s.requests ?? 0).toLocaleString() },
+        { label: 'Success Rate', value: s.requests > 0 ? `${((s.success_requests / s.requests) * 100).toFixed(1)}%` : '—' },
+        { label: 'Total Tokens', value: (s.total_tokens ?? 0).toLocaleString() },
+        { label: 'Total Spend', value: formatUsd(s.cost_usd ?? 0) },
     ];
     return (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

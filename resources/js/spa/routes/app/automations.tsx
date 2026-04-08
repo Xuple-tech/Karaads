@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ArrowRight, Mail, MessageSquareText, RadioTower, RefreshCw, Settings2, Sparkles, Wallet } from 'lucide-react';
+import { ArrowRight, Facebook, Instagram, Mail, MessageSquare, Plus, Settings2, Smartphone, Zap } from 'lucide-react';
 import { useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { ApiError, apiRequest } from '@/spa/lib/api';
 import { queryClient } from '@/spa/lib/query-client';
 
@@ -44,10 +44,16 @@ type EmailAccountsResponse = {
     accounts: Array<{ id: number; email: string; provider: string; is_active: boolean }>;
 };
 
-const platformCards = [
-    { platform: 'whatsapp', label: 'Connect WhatsApp', helper: 'Deploy a WhatsApp bot to your business number.' },
-    { platform: 'facebook', label: 'Connect Facebook', helper: 'Manage Messenger automation from the same workspace.' },
-    { platform: 'instagram', label: 'Connect Instagram', helper: 'Handle Instagram DM automation with the same AI stack.' },
+const platformConfig = {
+    whatsapp: { label: 'WhatsApp', Icon: Smartphone, color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-950/30' },
+    facebook: { label: 'Facebook', Icon: Facebook, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-950/30' },
+    instagram: { label: 'Instagram', Icon: Instagram, color: 'text-pink-600', bg: 'bg-pink-50 dark:bg-pink-950/30' },
+} as const;
+
+const connectOptions = [
+    { platform: 'whatsapp', label: 'WhatsApp Business', description: 'Launch AI replies on your business number' },
+    { platform: 'facebook', label: 'Facebook Messenger', description: 'Automate Messenger enquiries' },
+    { platform: 'instagram', label: 'Instagram DMs', description: 'Handle product and enquiry messages' },
 ] as const;
 
 export function Component() {
@@ -73,7 +79,7 @@ export function Component() {
             window.location.href = oauth_url;
         },
         onError: (error) => {
-            toast.error(error instanceof ApiError ? error.message : 'Failed to start Meta connection.');
+            toast.error(error instanceof ApiError ? error.message : 'Failed to start connection.');
         },
     });
 
@@ -81,15 +87,10 @@ export function Component() {
         const status = searchParams.get('status');
         const message = searchParams.get('message');
 
-        if (!status || !message) {
-            return;
-        }
+        if (!status || !message) return;
 
-        if (status === 'success') {
-            toast.success(message);
-        } else {
-            toast.error(message);
-        }
+        if (status === 'success') toast.success(message);
+        else toast.error(message);
 
         searchParams.delete('status');
         searchParams.delete('message');
@@ -97,157 +98,215 @@ export function Component() {
         void queryClient.invalidateQueries({ queryKey: ['spa', 'meta', 'dashboard'] });
     }, [searchParams, setSearchParams]);
 
+    const hasAccounts = (meta.data?.accounts.length ?? 0) > 0;
+
     return (
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
-            <section className="rounded-3xl border border-border/50 bg-gradient-to-br from-primary/10 via-background to-emerald-500/10 p-6 sm:p-8">
-                <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-                    <div className="max-w-2xl space-y-3">
-                        <Badge variant="secondary" className="w-fit gap-1 rounded-full px-3 py-1">
-                            <Sparkles className="h-3.5 w-3.5" />
-                            Automation Hub
-                        </Badge>
-                        <div className="space-y-2">
-                            <h1 className="text-3xl font-semibold tracking-tight text-foreground">Automations</h1>
-                            <p className="max-w-xl text-sm text-muted-foreground sm:text-base">
-                                Run WhatsApp, Instagram, Facebook, and email workflows from one SPA workspace. Meta is live here now; email visibility stays in the same hub.
-                            </p>
+        <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 pb-8">
+
+            {/* Page header */}
+            <div className="flex flex-col gap-1 pt-2 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <div className="flex items-center gap-2">
+                        <Zap className="h-5 w-5 text-primary" />
+                        <h1 className="text-xl font-semibold tracking-tight text-foreground">Automations</h1>
+                    </div>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                        Manage customer channels, AI bot settings, and reply workflows in one place.
+                    </p>
+                </div>
+                <Badge variant="outline" className="w-fit capitalize self-start sm:self-auto">
+                    {meta.data?.subscriptionTier ?? 'standard'} plan
+                </Badge>
+            </div>
+
+            {/* Stats row */}
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <StatCard label="Channels" value={meta.data?.stats.total_accounts ?? 0} loading={meta.isLoading} />
+                <StatCard label="Conversations" value={meta.data?.stats.total_conversations ?? 0} loading={meta.isLoading} />
+                <StatCard label="Auto-replies" value={meta.data?.stats.auto_replies_sent ?? 0} loading={meta.isLoading} />
+                <StatCard label="Email accounts" value={emails.data?.accounts.length ?? 0} loading={emails.isLoading} />
+            </div>
+
+            {/* Main content */}
+            <div className="grid gap-6 xl:grid-cols-[1.4fr_0.6fr]">
+
+                {/* Messaging channels */}
+                <div className="flex flex-col gap-4">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h2 className="font-medium text-foreground">Messaging Channels</h2>
+                            <p className="text-sm text-muted-foreground">Connect a channel to start automated conversations.</p>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                        <StatCard label="Meta Accounts" value={meta.data?.stats.total_accounts ?? 0} icon={RadioTower} />
-                        <StatCard label="Conversations" value={meta.data?.stats.total_conversations ?? 0} icon={MessageSquareText} />
-                        <StatCard label="Auto Replies" value={meta.data?.stats.auto_replies_sent ?? 0} icon={RefreshCw} />
-                        <StatCard label="Email Accounts" value={emails.data?.accounts.length ?? 0} icon={Mail} />
-                    </div>
-                </div>
-            </section>
-
-            <section className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-                <Card className="border-border/60">
-                    <CardHeader>
-                        <CardTitle>Meta Channels</CardTitle>
-                        <CardDescription>Connect a business channel and configure its AI persona, approvals, and conversations.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="grid gap-3 md:grid-cols-3">
-                            {platformCards.map((item) => (
+                    {/* Connect new channel buttons */}
+                    <div className="grid gap-2 sm:grid-cols-3">
+                        {connectOptions.map((item) => {
+                            const cfg = platformConfig[item.platform];
+                            return (
                                 <button
                                     key={item.platform}
                                     type="button"
                                     onClick={() => connectMutation.mutate(item.platform)}
-                                    className="rounded-2xl border border-border/60 bg-card p-4 text-left transition hover:border-primary/40 hover:bg-primary/5"
+                                    disabled={connectMutation.isPending}
+                                    className="group flex items-start gap-3 rounded-xl border border-border/60 bg-card p-4 text-left transition hover:border-primary/40 hover:bg-primary/5 disabled:opacity-60"
                                 >
-                                    <p className="text-sm font-medium text-foreground">{item.label}</p>
-                                    <p className="mt-1 text-sm text-muted-foreground">{item.helper}</p>
+                                    <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${cfg.bg}`}>
+                                        <cfg.Icon className={`h-4 w-4 ${cfg.color}`} />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-foreground">{item.label}</p>
+                                        <p className="mt-0.5 text-xs text-muted-foreground">{item.description}</p>
+                                    </div>
                                 </button>
-                            ))}
-                        </div>
+                            );
+                        })}
+                    </div>
 
-                        <div className="space-y-3">
-                            {meta.data?.accounts.length ? (
-                                meta.data.accounts.map((account) => (
+                    {/* Connected accounts list */}
+                    <div className="flex flex-col gap-2">
+                        {meta.isLoading ? (
+                            Array.from({ length: 2 }).map((_, i) => (
+                                <div key={i} className="flex items-center gap-4 rounded-xl border border-border/60 bg-card p-4">
+                                    <Skeleton className="h-9 w-9 rounded-lg" />
+                                    <div className="flex-1 space-y-2">
+                                        <Skeleton className="h-4 w-40" />
+                                        <Skeleton className="h-3 w-56" />
+                                    </div>
+                                    <Skeleton className="h-5 w-16 rounded-full" />
+                                </div>
+                            ))
+                        ) : hasAccounts ? (
+                            meta.data!.accounts.map((account) => {
+                                const cfg = platformConfig[account.platform as keyof typeof platformConfig] ?? {
+                                    Icon: MessageSquare,
+                                    color: 'text-muted-foreground',
+                                    bg: 'bg-muted',
+                                };
+                                return (
                                     <Link
                                         key={account.id}
                                         to={`/meta/accounts/${account.id}`}
-                                        className="flex flex-col gap-3 rounded-2xl border border-border/60 bg-card p-4 transition hover:border-primary/40 hover:bg-primary/5 md:flex-row md:items-center md:justify-between"
+                                        className="flex items-center gap-4 rounded-xl border border-border/60 bg-card p-4 transition hover:border-primary/40 hover:bg-primary/5"
                                     >
-                                        <div className="space-y-1">
-                                            <div className="flex items-center gap-2">
+                                        <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${cfg.bg}`}>
+                                            <cfg.Icon className={`h-4 w-4 ${cfg.color}`} />
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                            <div className="flex flex-wrap items-center gap-2">
                                                 <p className="font-medium text-foreground">{account.account_name}</p>
-                                                <Badge variant={account.is_active ? 'default' : 'secondary'}>
-                                                    {account.is_active ? 'Active' : 'Paused'}
-                                                </Badge>
-                                                <Badge variant="outline" className="capitalize">{account.platform}</Badge>
+                                                <Badge variant="outline" className="capitalize text-xs">{account.platform}</Badge>
                                             </div>
-                                            <p className="text-sm text-muted-foreground">{account.account_email || 'Business account connected'}</p>
-                                            <p className="text-xs text-muted-foreground">
-                                                {account.preferences?.enable_auto_reply ? 'Auto-reply on' : 'Manual approval'} · {account.unread_count} unread · {account.conversation_count} conversations
+                                            <p className="mt-0.5 text-xs text-muted-foreground">
+                                                {account.unread_count} unread &middot; {account.conversation_count} conversations &middot; {account.preferences?.enable_auto_reply ? 'Auto-reply on' : 'Manual review'}
                                             </p>
                                         </div>
-                                        <div className="flex items-center gap-2 text-sm text-primary">
-                                            Open workspace
-                                            <ArrowRight className="h-4 w-4" />
+                                        <div className="flex shrink-0 items-center gap-2">
+                                            <Badge
+                                                variant={account.is_active ? 'default' : 'secondary'}
+                                                className={account.is_active ? 'bg-emerald-600 text-white hover:bg-emerald-600' : ''}
+                                            >
+                                                {account.is_active ? 'Active' : 'Paused'}
+                                            </Badge>
+                                            <ArrowRight className="h-4 w-4 text-muted-foreground" />
                                         </div>
                                     </Link>
-                                ))
-                            ) : (
-                                <div className="rounded-2xl border border-dashed border-border/60 p-6 text-sm text-muted-foreground">
-                                    No Meta accounts connected yet. Start with WhatsApp if you want the AI bot builder first.
+                                );
+                            })
+                        ) : (
+                            <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-border/60 py-10 text-center">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+                                    <Plus className="h-5 w-5 text-muted-foreground" />
                                 </div>
+                                <p className="text-sm font-medium text-foreground">No channels connected</p>
+                                <p className="max-w-xs text-xs text-muted-foreground">
+                                    Connect WhatsApp, Facebook, or Instagram above to start deploying your AI bot.
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Right column */}
+                <div className="flex flex-col gap-4">
+
+                    {/* Email accounts */}
+                    <div className="rounded-xl border border-border/60 bg-card">
+                        <div className="border-b border-border/60 px-4 py-3">
+                            <h2 className="text-sm font-medium text-foreground">Email Accounts</h2>
+                            <p className="text-xs text-muted-foreground mt-0.5">Connected inboxes for automation</p>
+                        </div>
+                        <div className="p-3">
+                            {emails.isLoading ? (
+                                <div className="space-y-2 p-1">
+                                    {Array.from({ length: 2 }).map((_, i) => (
+                                        <div key={i} className="flex items-center justify-between gap-3 rounded-lg p-2">
+                                            <div className="space-y-1">
+                                                <Skeleton className="h-4 w-36" />
+                                                <Skeleton className="h-3 w-20" />
+                                            </div>
+                                            <Skeleton className="h-5 w-14 rounded-full" />
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : emails.data?.accounts.length ? (
+                                <div className="space-y-1">
+                                    {emails.data.accounts.slice(0, 5).map((account) => (
+                                        <div key={account.id} className="flex items-center justify-between gap-3 rounded-lg px-2 py-2.5">
+                                            <div className="min-w-0">
+                                                <p className="truncate text-sm font-medium text-foreground">{account.email}</p>
+                                                <p className="text-xs capitalize text-muted-foreground">{account.provider}</p>
+                                            </div>
+                                            <Badge
+                                                variant={account.is_active ? 'default' : 'secondary'}
+                                                className={account.is_active ? 'shrink-0 bg-emerald-600 text-white hover:bg-emerald-600' : 'shrink-0'}
+                                            >
+                                                {account.is_active ? 'Active' : 'Off'}
+                                            </Badge>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="p-2 text-xs text-muted-foreground">No email accounts connected.</p>
                             )}
                         </div>
-                    </CardContent>
-                </Card>
+                    </div>
 
-                <div className="space-y-6">
-                    <Card className="border-border/60">
-                        <CardHeader>
-                            <CardTitle>Email Automation</CardTitle>
-                            <CardDescription>Email is still part of the automation hub even though the Meta workspace is the active build-out.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                            <div className="rounded-2xl border border-border/60 bg-card p-4">
-                                <div className="flex items-center justify-between gap-4">
-                                    <div>
-                                        <p className="font-medium text-foreground">Connected inboxes</p>
-                                        <p className="text-sm text-muted-foreground">
-                                            {emails.data?.accounts.length ?? 0} email account(s) available for automation.
-                                        </p>
-                                    </div>
-                                    <Wallet className="h-5 w-5 text-muted-foreground" />
-                                </div>
-                            </div>
-
-                            {(emails.data?.accounts ?? []).slice(0, 4).map((account) => (
-                                <div key={account.id} className="rounded-2xl border border-border/60 p-4">
-                                    <p className="font-medium text-foreground">{account.email}</p>
-                                    <p className="text-sm capitalize text-muted-foreground">{account.provider}</p>
-                                </div>
-                            ))}
-
-                            {!emails.data?.accounts.length && (
-                                <div className="rounded-2xl border border-dashed border-border/60 p-4 text-sm text-muted-foreground">
-                                    No email accounts connected yet.
-                                </div>
-                            )}
-                        </CardContent>
-                    </Card>
-
-                    <Card className="border-border/60">
-                        <CardHeader>
-                            <CardTitle>Quick Links</CardTitle>
-                            <CardDescription>Jump straight into the high-value Meta setup flow.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="grid gap-3">
-                            <Button asChild variant="outline" className="justify-between">
-                                <Link to="/meta/dashboard">
-                                    Meta dashboard
-                                    <ArrowRight className="h-4 w-4" />
-                                </Link>
-                            </Button>
-                            <Button asChild variant="outline" className="justify-between">
+                    {/* Quick links */}
+                    <div className="rounded-xl border border-border/60 bg-card">
+                        <div className="border-b border-border/60 px-4 py-3">
+                            <h2 className="text-sm font-medium text-foreground">Quick Access</h2>
+                        </div>
+                        <div className="flex flex-col gap-1 p-3">
+                            <Button asChild variant="ghost" className="h-auto justify-between px-3 py-2.5 text-left">
                                 <Link to="/user/settings">
-                                    App settings
-                                    <Settings2 className="h-4 w-4" />
+                                    <span className="text-sm text-foreground">Application settings</span>
+                                    <Settings2 className="h-4 w-4 text-muted-foreground" />
                                 </Link>
                             </Button>
-                        </CardContent>
-                    </Card>
+                            <Button asChild variant="ghost" className="h-auto justify-between px-3 py-2.5 text-left">
+                                <Link to="/mails">
+                                    <span className="text-sm text-foreground">Email inbox</span>
+                                    <Mail className="h-4 w-4 text-muted-foreground" />
+                                </Link>
+                            </Button>
+                        </div>
+                    </div>
                 </div>
-            </section>
+            </div>
         </div>
     );
 }
 
-function StatCard({ label, value, icon: Icon }: { label: string; value: number; icon: typeof RadioTower }) {
+function StatCard({ label, value, loading = false }: { label: string; value: number; loading?: boolean }) {
     return (
-        <div className="rounded-2xl border border-border/50 bg-background/80 p-4 backdrop-blur">
-            <div className="flex items-center justify-between gap-3">
-                <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
-                <Icon className="h-4 w-4 text-muted-foreground" />
-            </div>
-            <p className="mt-3 text-2xl font-semibold text-foreground">{value}</p>
+        <div className="rounded-xl border border-border/60 bg-card px-4 py-3">
+            <p className="text-xs text-muted-foreground">{label}</p>
+            {loading ? (
+                <Skeleton className="mt-2 h-7 w-12" />
+            ) : (
+                <p className="mt-1 text-2xl font-semibold text-foreground">{value}</p>
+            )}
         </div>
     );
 }

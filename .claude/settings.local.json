@@ -8,7 +8,8 @@
       "Bash(php artisan:*)",
       "Bash(grep -E \"\\\\.\\(php|tsx?\\)$\")",
       "Bash(grep -E \"\\\\.\\(tsx|ts\\)$\")",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(dir \"c:\\\\Users\\\\DukeOfBotLeg\\\\Documents\\\\kwati\\\\kwatiai.com-main\\\\resources\\\\js\\\\pages\\\\Meta\\\\\")"
     ]
   }
 }

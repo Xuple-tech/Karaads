@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { AudioLines, Mail, SquarePen, Zap } from 'lucide-react';
+import { AudioLines, BotMessageSquare, Mail, SquarePen, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import AppLogo from './app-logo';
 import ConversationLink from './chat/conversionLink';
@@ -26,7 +26,11 @@ const mainNavItems: NavItem[] = [
         href: '/mails',
         icon: Mail,
     },
-
+    {
+        title: 'Automations',
+        href: '/meta/dashboard',
+        icon: BotMessageSquare,
+    },
 ];
 
 const footerNavItems: NavItem[] = [

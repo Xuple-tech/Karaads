@@ -22,33 +22,41 @@ class DeveloperPortalController extends Controller
     ) {
     }
 
-    public function index(Request $request): Response
+    public function index(Request $request): \Illuminate\Http\RedirectResponse
+    {
+        return redirect()->route('developer-api.index');
+    }
+
+    public function dashboard(Request $request): Response
     {
         $user = $request->user();
-        $filters = $this->filters($request);
         $walletSummary = $this->billingService->getWalletSummary($user);
-        $usageQuery = $this->billingService->buildUsageQuery($filters, $user);
-        $ledgerQuery = $this->billingService->buildLedgerQuery($filters, $user);
+        $usageQuery = $this->billingService->buildUsageQuery([], $user);
+        $keyCount = $user->developerApiKeys()->where('is_active', true)->count();
+
+        return Inertia::render('User/DeveloperApi/Dashboard', [
+            'wallet' => $walletSummary,
+            'stats' => $this->billingService->summarizeUsage(clone $usageQuery),
+            'apiBaseUrl' => rtrim((string) config('developer-api.api_base_url', url('')), '/') . '/v1',
+            'keyCount' => $keyCount,
+            'topupConfig' => [
+                'default_amount_usd' => (float) config('developer-api.default_topup_amount_usd'),
+                'min_amount_usd' => (float) config('developer-api.min_topup_amount_usd'),
+                'max_amount_usd' => (float) config('developer-api.max_topup_amount_usd'),
+            ],
+        ]);
+    }
+
+    public function keys(Request $request): Response
+    {
+        $user = $request->user();
         $keyQuery = $user->developerApiKeys()
             ->withCount('usageRecords')
             ->withSum('usageRecords', 'cost_usd')
             ->latest();
 
-        if (($filters['key_status'] ?? null) === 'active') {
-            $keyQuery->where('is_active', true);
-        } elseif (($filters['key_status'] ?? null) === 'revoked') {
-            $keyQuery->where('is_active', false);
-        }
-
-        return Inertia::render('User/DeveloperApi/Index', [
-            'wallet' => $walletSummary,
-            'stats' => $this->billingService->summarizeUsage(clone $usageQuery),
-            'breakdowns' => [
-                ...$this->billingService->getUsageBreakdowns(clone $usageQuery),
-                'ledger' => $this->billingService->getLedgerBreakdown(clone $ledgerQuery),
-                'trend' => $this->billingService->getUsageTrend(clone $usageQuery, (int) ($filters['days'] ?? 30)),
-            ],
-            'apiKeys' => $keyQuery->paginate(10)->withQueryString()->through(fn (DeveloperApiKey $apiKey) => [
+        return Inertia::render('User/DeveloperApi/Keys', [
+            'apiKeys' => $keyQuery->paginate(15)->withQueryString()->through(fn (DeveloperApiKey $apiKey) => [
                 'id' => $apiKey->id,
                 'name' => $apiKey->name,
                 'key_prefix' => $apiKey->key_prefix,
@@ -61,7 +69,27 @@ class DeveloperPortalController extends Controller
                 'usage_requests_count' => (int) $apiKey->usage_records_count,
                 'usage_spend_usd' => round((float) ($apiKey->usage_records_sum_cost_usd ?? 0), 6),
             ]),
-            'usage' => $usageQuery->latest()->paginate(15)->withQueryString()->through(function ($record) {
+            'models' => ApiModel::where('is_active', true)
+                ->where(fn ($q) => $q->whereNull('model_type')->orWhere('model_type', 'text'))
+                ->orderBy('public_id')
+                ->get()
+                ->map(fn ($m) => [
+                    'id' => $m->id,
+                    'public_id' => $m->public_id,
+                    'name' => $m->name,
+                ]),
+        ]);
+    }
+
+    public function usage(Request $request): Response
+    {
+        $user = $request->user();
+        $filters = $this->filters($request);
+        $usageQuery = $this->billingService->buildUsageQuery($filters, $user);
+
+        return Inertia::render('User/DeveloperApi/Usage', [
+            'stats' => $this->billingService->summarizeUsage(clone $usageQuery),
+            'usage' => $usageQuery->latest()->paginate(25)->withQueryString()->through(function ($record) {
                 return [
                     'id' => $record->id,
                     'request_id' => $record->request_id,
@@ -85,7 +113,20 @@ class DeveloperPortalController extends Controller
                     ] : null,
                 ];
             }),
-            'ledger' => $ledgerQuery->latest()->paginate(15)->withQueryString()->through(function ($entry) {
+            'filters' => $filters,
+        ]);
+    }
+
+    public function billing(Request $request): Response
+    {
+        $user = $request->user();
+        $filters = $this->filters($request);
+        $ledgerQuery = $this->billingService->buildLedgerQuery($filters, $user);
+        $walletSummary = $this->billingService->getWalletSummary($user);
+
+        return Inertia::render('User/DeveloperApi/Billing', [
+            'wallet' => $walletSummary,
+            'ledger' => $ledgerQuery->latest()->paginate(25)->withQueryString()->through(function ($entry) {
                 return [
                     'id' => $entry->id,
                     'type' => $entry->type,
@@ -102,6 +143,18 @@ class DeveloperPortalController extends Controller
                     ] : null,
                 ];
             }),
+            'topupConfig' => [
+                'default_amount_usd' => (float) config('developer-api.default_topup_amount_usd'),
+                'min_amount_usd' => (float) config('developer-api.min_topup_amount_usd'),
+                'max_amount_usd' => (float) config('developer-api.max_topup_amount_usd'),
+            ],
+        ]);
+    }
+
+    public function quickstart(Request $request): Response
+    {
+        return Inertia::render('User/DeveloperApi/Quickstart', [
+            'apiBaseUrl' => rtrim((string) config('developer-api.api_base_url', url('')), '/') . '/v1',
             'models' => ApiModel::where('is_active', true)
                 ->where(fn ($q) => $q->whereNull('model_type')->orWhere('model_type', 'text'))
                 ->orderBy('public_id')
@@ -115,13 +168,6 @@ class DeveloperPortalController extends Controller
                     'supports_streaming' => $m->supports_streaming,
                     'supports_tools' => $m->supports_tools,
                 ]),
-            'apiBaseUrl' => rtrim((string) config('developer-api.api_base_url', url('')), '/') . '/v1',
-            'topupConfig' => [
-                'default_amount_usd' => (float) config('developer-api.default_topup_amount_usd'),
-                'min_amount_usd' => (float) config('developer-api.min_topup_amount_usd'),
-                'max_amount_usd' => (float) config('developer-api.max_topup_amount_usd'),
-            ],
-            'filters' => $filters,
         ]);
     }
 
@@ -200,8 +246,8 @@ class DeveloperPortalController extends Controller
         $url = $this->stripeService->createOneTimeCheckoutSession(
             $request->user(),
             (float) $validated['amount_usd'],
-            route('user.developer-api.index', [], true),
-            route('user.developer-api.index', [], true),
+            route('developer-api.billing.index', [], true),
+            route('developer-api.billing.index', [], true),
             [
                 'purpose' => 'developer_wallet_topup',
                 'user_id' => $request->user()->id,
