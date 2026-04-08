@@ -1,8 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
-import { AudioLines, CreditCard, LogOut, Mail, MoreHorizontal, PenSquare, Settings, SquarePen, Star } from 'lucide-react';
+import { AudioLines, CreditCard, LogOut, Mail, PenSquare, Settings, SquarePen, Star, Trash2, MoreHorizontal } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { NavLink, Navigate, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Navigate, Outlet, matchPath, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -28,6 +39,7 @@ import {
     SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
+import ConversationActions from '@/spa/components/ConversationActions';
 import { apiRequest } from '@/spa/lib/api';
 import { logoutSpa, useAuthRuntimeState } from '@/spa/lib/auth-runtime';
 import { useSpaLang } from '@/spa/lib/lang';
@@ -123,7 +135,11 @@ const mainNavItems = [
 
 function SpaSidebar() {
     const session = useSessionQuery();
+    const navigate = useNavigate();
+    const location = useLocation();
     const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const [clearOpen, setClearOpen] = useState(false);
+    const [isClearing, setIsClearing] = useState(false);
     const conversations = useQuery({
         queryKey: ['spa', 'conversations'],
         queryFn: () => apiRequest<{ conversations: Conversation[] }>('/api/chat/conversations'),
@@ -144,6 +160,23 @@ function SpaSidebar() {
 
     const groups = groupConversations(conversations.data?.conversations ?? []);
     const hasConversations = (conversations.data?.conversations?.length ?? 0) > 0;
+
+    const clearHistory = async () => {
+        setIsClearing(true);
+        try {
+            await apiRequest('/api/chat/conversations', {
+                method: 'DELETE',
+            });
+            await conversations.refetch();
+            setClearOpen(false);
+            navigate('/new');
+            toast.success('Conversation history cleared');
+        } catch {
+            toast.error('Failed to clear conversation history');
+        } finally {
+            setIsClearing(false);
+        }
+    };
 
     return (
         <Sidebar collapsible="offcanvas" className="border-r border-sidebar-border bg-sidebar">
@@ -238,37 +271,54 @@ function SpaSidebar() {
 
                 {/* Conversation history */}
                 {hasConversations ? (
-                    Object.entries(groups).map(([group, convs]) =>
-                        convs.length > 0 ? (
-                            <div key={group} className="mb-3">
-                                <p className="px-3 pb-1 pt-0.5 text-[11px] font-medium text-muted-foreground/40 select-none tracking-wide">
-                                    {group}
-                                </p>
-                                <div className="space-y-px">
-                                    {convs.map((conv) => (
-                                        <NavLink
-                                            className={({ isActive }) =>
-                                                cn(
-                                                    'group flex items-center justify-between gap-2 rounded-lg px-3 py-1.5 text-[13px] transition-colors',
-                                                    isActive
+                    <>
+                        <div className="mb-3 flex items-center justify-between px-3">
+                            <p className="text-[11px] font-medium text-muted-foreground/40 select-none tracking-wide">History</p>
+                            <button
+                                type="button"
+                                className="rounded-md p-1 text-muted-foreground/50 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                                title="Clear history"
+                                onClick={() => setClearOpen(true)}
+                            >
+                                <Trash2 size={13} />
+                            </button>
+                        </div>
+
+                        {Object.entries(groups).map(([group, convs]) =>
+                            convs.length > 0 ? (
+                                <div key={group} className="mb-3">
+                                    <p className="px-3 pb-1 pt-0.5 text-[11px] font-medium text-muted-foreground/40 select-none tracking-wide">
+                                        {group}
+                                    </p>
+                                    <div className="space-y-px">
+                                        {convs.map((conv) => (
+                                            <div
+                                                key={conv.id}
+                                                className={cn(
+                                                    'group flex items-center gap-2 rounded-lg px-2 py-1 text-[13px] transition-colors',
+                                                    location.pathname === `/c/${conv.id}`
                                                         ? 'bg-sidebar-accent text-sidebar-foreground'
                                                         : 'text-sidebar-foreground/55 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'
-                                                )
-                                            }
-                                            key={conv.id}
-                                            to={`/c/${conv.id}`}
-                                        >
-                                            <span className="truncate flex-1 leading-snug">{conv.title || 'Untitled'}</span>
-                                            <MoreHorizontal
-                                                size={13}
-                                                className="flex-shrink-0 opacity-0 group-hover:opacity-50 transition-opacity"
-                                            />
-                                        </NavLink>
-                                    ))}
+                                                )}
+                                            >
+                                                <NavLink className="min-w-0 flex-1 truncate px-1 py-1.5 leading-snug" to={`/c/${conv.id}`}>
+                                                    {conv.title || 'Untitled'}
+                                                </NavLink>
+                                                <div className="opacity-0 transition-opacity group-hover:opacity-100">
+                                                    <ConversationActions
+                                                        conversationId={conv.id}
+                                                        conversationTitle={conv.title || 'Untitled'}
+                                                        onChanged={() => void conversations.refetch()}
+                                                        onDeleted={() => void conversations.refetch()}
+                                                    />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
-                        ) : null
-                    )
+                            ) : null
+                        )}
+                    </>
                 ) : (
                     <div className="px-3 py-8 text-center">
                         <p className="text-xs text-muted-foreground/40">No conversations yet</p>
@@ -326,6 +376,26 @@ function SpaSidebar() {
                     </DropdownMenuContent>
                 </DropdownMenu>
             </SidebarFooter>
+
+            <AlertDialog open={clearOpen} onOpenChange={setClearOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Clear all conversation history?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This permanently deletes all saved chat conversations for this account.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            onClick={() => void clearHistory()}
+                        >
+                            {isClearing ? 'Clearing...' : 'Clear history'}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </Sidebar>
     );
 }
@@ -333,12 +403,36 @@ function SpaSidebar() {
 // ─── top bar (inside main content) ───────────────────────────────────────────
 
 function SpaTopBar() {
+    const location = useLocation();
     const { lang, changeLanguage } = useSpaLang();
+    const activeConversationMatch = matchPath('/c/:conversationId', location.pathname);
+    const activeConversationId = activeConversationMatch?.params.conversationId;
+    const conversation = useQuery({
+        queryKey: ['spa', 'conversation', activeConversationId],
+        queryFn: () => apiRequest<{ conversation: { id: string; title: string } }>(`/api/chat/conversations/${activeConversationId}`),
+        enabled: Boolean(activeConversationId),
+    });
 
     return (
         <header className="sticky top-0 z-30 flex h-11 shrink-0 items-center gap-2 px-3 bg-background border-b border-border/30">
             <SidebarTrigger className="h-8 w-8 rounded-lg text-muted-foreground/50 hover:text-foreground hover:bg-accent/60" />
-            <div className="flex-1" />
+            {activeConversationId ? (
+                <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-foreground">
+                        {conversation.data?.conversation.title || 'New chat'}
+                    </p>
+                </div>
+            ) : (
+                <div className="flex-1" />
+            )}
+            {activeConversationId && conversation.data?.conversation ? (
+                <ConversationActions
+                    trigger="button"
+                    conversationId={activeConversationId}
+                    conversationTitle={conversation.data.conversation.title || 'New chat'}
+                    onChanged={() => void conversation.refetch()}
+                />
+            ) : null}
             <Select defaultValue={lang} onValueChange={changeLanguage}>
                 <SelectTrigger className="h-7 gap-1 border-0 bg-transparent px-2 text-xs text-muted-foreground hover:text-foreground hover:bg-accent/40 focus:ring-0 w-auto">
                     <SelectValue placeholder="Lang" />

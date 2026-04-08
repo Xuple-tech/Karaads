@@ -43,6 +43,10 @@ export interface Conversation {
     title: string;
     created_at: string;
     updated_at: string;
+    ai_generated_title?: boolean;
+    title_generated_at?: string | null;
+    last_message?: string | null;
+    messages_count?: number;
 }
 
 export interface ChatProps {

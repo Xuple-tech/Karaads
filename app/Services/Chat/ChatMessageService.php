@@ -10,6 +10,7 @@ use App\Models\ChatToolRun;
 use App\Models\Conversation;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -135,7 +136,7 @@ class ChatMessageService
                 'user_name' => $conversation->user?->name,
                 'auto_tools' => true,
             ],
-            function (string $eventName, array $data) use ($assistantMessage, &$body, $emit): void {
+            function (string $eventName, array $data) use ($assistantMessage, $conversation, &$body, $emit): void {
                 if ($eventName === 'message.delta') {
                     $body .= (string) ($data['content'] ?? '');
                     $assistantMessage->updateQuietly([
@@ -245,6 +246,11 @@ class ChatMessageService
                         'content_markdown' => $finalMarkdown,
                         'content_text' => $this->composer->toPlainText($finalMarkdown),
                     ]);
+
+                    $this->maybeAutoGenerateConversationTitle(
+                        $conversation->fresh(),
+                        $assistantMessage->fresh(['replyTo'])
+                    );
                 }
 
                 $emit($eventName, array_merge($data, ['message_id' => $assistantMessage->id]));
@@ -298,7 +304,7 @@ class ChatMessageService
             return $conversation;
         }
 
-        return $this->conversationService->create($user, Str::limit((string) $prompt, 60, ''));
+        return $this->conversationService->create($user);
     }
 
     private function createUserMessage(Conversation $conversation, array $payload): ChatMessage
@@ -455,5 +461,54 @@ class ChatMessageService
         }
 
         return 'file';
+    }
+
+    private function maybeAutoGenerateConversationTitle(Conversation $conversation, ChatMessage $assistantMessage): void
+    {
+        if (! $this->shouldAutoGenerateConversationTitle($conversation)) {
+            return;
+        }
+
+        $assistantCount = ChatMessage::query()
+            ->where('conversation_id', $conversation->id)
+            ->where('role', 'assistant')
+            ->count();
+
+        if ($assistantCount !== 1) {
+            return;
+        }
+
+        try {
+            $title = trim($this->provider->generateTitle($this->buildConversationTitlePrompt($assistantMessage)));
+
+            if ($title === '') {
+                return;
+            }
+
+            $conversation->update([
+                'title' => Str::limit($title, 255, ''),
+                'ai_generated_title' => true,
+                'title_generated_at' => now(),
+            ]);
+        } catch (\Throwable $throwable) {
+            Log::warning('Conversation title generation failed', [
+                'conversation_id' => $conversation->id,
+                'message_id' => $assistantMessage->id,
+                'error' => $throwable->getMessage(),
+            ]);
+        }
+    }
+
+    private function shouldAutoGenerateConversationTitle(Conversation $conversation): bool
+    {
+        return ChatConversationService::isDefaultTitle($conversation->title) || (bool) $conversation->ai_generated_title;
+    }
+
+    private function buildConversationTitlePrompt(ChatMessage $assistantMessage): string
+    {
+        $userPrompt = trim((string) ($assistantMessage->replyTo?->content_text ?? $assistantMessage->replyTo?->content_markdown ?? ''));
+        $assistantReply = trim((string) ($assistantMessage->content_text ?? $assistantMessage->content_markdown ?? ''));
+
+        return trim("User: {$userPrompt}\nAssistant: {$assistantReply}");
     }
 }

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Chat;
+use App\Models\ChatMessage;
 use App\Models\ChatFile;
 use App\Models\Conversation;
 use App\Models\User;
@@ -115,5 +116,81 @@ class ChatApiTest extends TestCase
 
         $this->get('/api/spa/conversations')->assertNotFound();
         $this->post('/create-two-step-challagene')->assertStatus(405);
+    }
+
+    public function test_authenticated_user_can_clear_only_their_conversation_history(): void
+    {
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
+
+        Conversation::create(['user_id' => $user->id, 'title' => 'One', 'context' => []]);
+        Conversation::create(['user_id' => $user->id, 'title' => 'Two', 'context' => []]);
+        Conversation::create(['user_id' => $otherUser->id, 'title' => 'Other', 'context' => []]);
+
+        Sanctum::actingAs($user);
+
+        $this->deleteJson('/api/chat/conversations')
+            ->assertOk()
+            ->assertJsonPath('deleted_count', 2);
+
+        $this->assertSame(0, Conversation::query()->where('user_id', $user->id)->count());
+        $this->assertSame(1, Conversation::query()->where('user_id', $otherUser->id)->count());
+    }
+
+    public function test_authenticated_user_can_export_a_conversation_as_markdown(): void
+    {
+        $user = User::factory()->create();
+        $conversation = Conversation::create([
+            'user_id' => $user->id,
+            'title' => 'Launch Plan',
+            'context' => [],
+        ]);
+
+        ChatMessage::query()->create([
+            'conversation_id' => $conversation->id,
+            'role' => 'user',
+            'status' => 'completed',
+            'type' => 'text',
+            'content_markdown' => 'Outline the launch plan.',
+            'content_text' => 'Outline the launch plan.',
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $response = $this->get("/api/chat/conversations/{$conversation->id}/export?format=md");
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'text/markdown; charset=UTF-8');
+        $this->assertStringContainsString('attachment; filename="launch-plan.md"', (string) $response->headers->get('content-disposition'));
+        $this->assertStringContainsString('# Launch Plan', $response->getContent());
+        $this->assertStringContainsString('Outline the launch plan.', $response->getContent());
+    }
+
+    public function test_authenticated_user_can_export_a_conversation_as_json(): void
+    {
+        $user = User::factory()->create();
+        $conversation = Conversation::create([
+            'user_id' => $user->id,
+            'title' => 'Quarterly Review',
+            'context' => [],
+        ]);
+
+        ChatMessage::query()->create([
+            'conversation_id' => $conversation->id,
+            'role' => 'assistant',
+            'status' => 'completed',
+            'type' => 'text',
+            'content_markdown' => 'Summary ready.',
+            'content_text' => 'Summary ready.',
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $response = $this->get("/api/chat/conversations/{$conversation->id}/export?format=json");
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'application/json; charset=UTF-8');
+        $response->assertJsonPath('title', 'Quarterly Review');
+        $response->assertJsonPath('messages.0.content_text', 'Summary ready.');
     }
 }

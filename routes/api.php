@@ -44,7 +44,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('chat')->group(function () {
         Route::get('/conversations', [ChatConversationController::class, 'index'])->name('chat.api.conversations.index');
         Route::post('/conversations', [ChatConversationController::class, 'store'])->name('chat.api.conversations.store');
+        Route::delete('/conversations', [ChatConversationController::class, 'destroyAll'])->name('chat.api.conversations.destroy-all');
         Route::get('/conversations/{conversation}', [ChatConversationController::class, 'show'])->name('chat.api.conversations.show');
+        Route::get('/conversations/{conversation}/export', [ChatConversationController::class, 'export'])->name('chat.api.conversations.export');
         Route::patch('/conversations/{conversation}', [ChatConversationController::class, 'update'])->name('chat.api.conversations.update');
         Route::delete('/conversations/{conversation}', [ChatConversationController::class, 'destroy'])->name('chat.api.conversations.destroy');
         Route::post('/messages', [ChatMessageController::class, 'store'])->name('chat.api.messages.store');

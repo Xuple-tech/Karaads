@@ -113,7 +113,7 @@ class GrokChatProvider implements ChatProvider
 
     public function generateTitle(string $prompt): string
     {
-        return Str::limit(trim($prompt), 60, '');
+        return $this->grok->generateTitle($prompt);
     }
 
     private function latestUserPrompt(array $messages): string

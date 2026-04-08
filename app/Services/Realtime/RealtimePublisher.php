@@ -38,6 +38,8 @@ class RealtimePublisher
             'conversation' => [
                 'id' => $conversation->id,
                 'title' => $conversation->title ?: 'New chat',
+                'ai_generated_title' => $conversation->ai_generated_title,
+                'title_generated_at' => $conversation->title_generated_at?->toIso8601String(),
                 'created_at' => $conversation->created_at?->toIso8601String(),
                 'updated_at' => $conversation->updated_at?->toIso8601String(),
                 'last_message' => $lastMessage,

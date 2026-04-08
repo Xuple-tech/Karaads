@@ -8,8 +8,8 @@ import ChatInput from '@/spa/components/SpaChatInput';
 import ChatMessageRenderer from '@/spa/components/ChatMessageRenderer';
 import { apiRequest } from '@/spa/lib/api';
 import { authHeaders } from '@/spa/lib/auth-token';
-import { subscribeToPrivateChannel, type RealtimePayload } from '@/spa/lib/realtime';
-import { useSessionQuery } from '@/spa/lib/session';
+import { getChatTransport } from '@/spa/lib/chat-transport';
+import { subscribeToPrivateChannel } from '@/spa/lib/realtime';
 
 type ChatState = {
     messages: Message[];
@@ -123,6 +123,13 @@ const WELCOME_PROMPTS = [
     'Create a weekly meal plan',
 ];
 
+type StreamPayload = {
+    event?: string;
+    conversation_id?: string;
+    message_id?: string;
+    [key: string]: unknown;
+};
+
 export default function SpaChatInterface({
     isAuthenticated,
     initialMessages = [],
@@ -135,7 +142,6 @@ export default function SpaChatInterface({
     userName?: string;
 }) {
     const queryClient = useQueryClient();
-    const session = useSessionQuery();
     const [state, dispatch] = useReducer(reducer, {
         messages: initialMessages,
         conversationId: initialConversationId,
@@ -150,6 +156,7 @@ export default function SpaChatInterface({
     const [userScrolledUp, setUserScrolledUp] = useState(false);
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
+    const chatTransport = getChatTransport();
 
     const isNearBottom = () => {
         const el = scrollRef.current;
@@ -194,7 +201,7 @@ export default function SpaChatInterface({
         if (!userScrolledUp) {
             scrollToBottom(true);
         }
-    }, [state.messages.length]);
+    }, [state.messages.length, userScrolledUp]);
 
     const syncConversation = useCallback(async (conversationId: string) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -227,18 +234,19 @@ export default function SpaChatInterface({
         }
     }, []);
 
-    const handleRealtimeEvent = useCallback(async (eventName: string, payload: RealtimePayload) => {
+    const handleStreamEvent = useCallback(async (eventName: string, payload: StreamPayload) => {
         const messageId = typeof payload.message_id === 'string' ? payload.message_id : null;
         const conversationId = typeof payload.conversation_id === 'string'
             ? payload.conversation_id
             : state.conversationId;
 
-        if (eventName !== 'conversation.updated') {
-            setIsDelayed(false);
-        }
-
         if (eventName === 'message.created' && payload.message && typeof payload.message === 'object') {
             const message = payload.message as Message;
+
+            if (conversationId && !state.conversationId) {
+                history.replaceState({}, '', `/c/${conversationId}`);
+            }
+
             dispatch({
                 type: 'assistant.create',
                 message: {
@@ -282,26 +290,87 @@ export default function SpaChatInterface({
                 content: typeof payload.content === 'string' ? payload.content : undefined,
             });
             setIsLoading(false);
+            setIsDelayed(false);
+            if (conversationId) {
+                await syncConversation(conversationId);
+                void queryClient.invalidateQueries({ queryKey: ['spa', 'conversations'] });
+            }
         }
 
-        if (eventName === 'message.failed' && messageId) {
+        if (eventName === 'message.failed') {
             const error = String(payload.error ?? 'Request failed');
-            dispatch({ type: 'assistant.fail', messageId, error });
+            if (messageId) {
+                dispatch({ type: 'assistant.fail', messageId, error });
+            }
             setError(error);
             setIsLoading(false);
+            setIsDelayed(false);
+            if (conversationId) {
+                await syncConversation(conversationId);
+            }
+        }
+    }, [queryClient, state.conversationId, syncConversation]);
+
+    const readEventStream = useCallback(async (response: Response) => {
+        if (!response.ok || !response.body) {
+            throw new Error(`Streaming request failed (${response.status})`);
         }
 
-        if (eventName === 'message.synced' && conversationId) {
-            await syncConversation(conversationId);
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        while (true) {
+            const { value, done } = await reader.read();
+            if (done) {
+                break;
+            }
+
+            buffer += decoder.decode(value, { stream: true });
+            const frames = buffer.split('\n\n');
+            buffer = frames.pop() ?? '';
+
+            for (const frame of frames) {
+                const lines = frame.split('\n');
+                let eventName = 'message';
+                const dataLines: string[] = [];
+
+                for (const line of lines) {
+                    if (line.startsWith('event:')) {
+                        eventName = line.slice(6).trim();
+                    } else if (line.startsWith('data:')) {
+                        dataLines.push(line.slice(5).trim());
+                    }
+                }
+
+                if (dataLines.length === 0) {
+                    continue;
+                }
+
+                const rawData = dataLines.join('\n');
+                let payload: StreamPayload = {};
+
+                try {
+                    payload = JSON.parse(rawData) as StreamPayload;
+                } catch {
+                    continue;
+                }
+
+                await handleStreamEvent(eventName, payload);
+            }
         }
+    }, [handleStreamEvent]);
+
+    const handleRealtimeEvent = useCallback(async (eventName: string, payload: StreamPayload) => {
+        await handleStreamEvent(eventName, payload);
 
         if (eventName === 'conversation.updated') {
             void queryClient.invalidateQueries({ queryKey: ['spa', 'conversations'] });
         }
-    }, [queryClient, state.conversationId, syncConversation]);
+    }, [handleStreamEvent, queryClient]);
 
     useEffect(() => {
-        if (!state.conversationId) {
+        if (chatTransport !== 'ws' || !state.conversationId) {
             return;
         }
 
@@ -320,10 +389,10 @@ export default function SpaChatInterface({
                 },
             },
         );
-    }, [handleRealtimeEvent, state.conversationId, syncConversation]);
+    }, [chatTransport, handleRealtimeEvent, state.conversationId, syncConversation]);
 
     useEffect(() => {
-        if (!isLoading || !state.conversationId) {
+        if (chatTransport !== 'sse' || !isLoading || !state.conversationId) {
             setIsDelayed(false);
             return;
         }
@@ -340,20 +409,7 @@ export default function SpaChatInterface({
             window.clearTimeout(delayedTimer);
             window.clearInterval(syncInterval);
         };
-    }, [isLoading, state.conversationId, syncConversation]);
-
-    useEffect(() => {
-        const userId = session.data?.user?.id;
-        if (!userId) {
-            return;
-        }
-
-        return subscribeToPrivateChannel(`user.${userId}`, (eventName) => {
-            if (eventName === 'conversation.updated') {
-                void queryClient.invalidateQueries({ queryKey: ['spa', 'conversations'] });
-            }
-        });
-    }, [queryClient, session.data?.user?.id]);
+    }, [chatTransport, isLoading, state.conversationId, syncConversation]);
 
     const sendMessage = useCallback(async (prompt: string, type: 'text' | 'image', attachedFiles?: File[]) => {
         setError(null);
@@ -390,53 +446,83 @@ export default function SpaChatInterface({
             }),
         })));
 
-        const response = await fetch('/api/chat/messages', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json', ...authHeaders() },
-            body: JSON.stringify({
-                conversation_id: state.conversationId,
-                message: prompt,
-                type,
-                model: 'grok-4-fast-reasoning',
-                files: processedFiles,
-            }),
-        });
+        if (chatTransport === 'ws') {
+            const response = await fetch('/api/chat/messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json', ...authHeaders() },
+                body: JSON.stringify({
+                    conversation_id: state.conversationId,
+                    message: prompt,
+                    type,
+                    model: 'grok-4-fast-non-reasoning',
+                    files: processedFiles,
+                }),
+            });
 
-        if (!response.ok) {
-            setIsLoading(false);
-            setError('Could not send message. Please try again.');
+            if (!response.ok) {
+                setIsLoading(false);
+                setError('Could not send message. Please try again.');
+                return;
+            }
+
+            const payload = await response.json();
+            const conversationId = payload.conversation_id as string | null;
+
+            if (conversationId && !state.conversationId) {
+                history.replaceState({}, '', `/c/${conversationId}`);
+            }
+
+            if (payload.assistant_message && conversationId) {
+                dispatch({
+                    type: 'assistant.create',
+                    message: {
+                        id: payload.assistant_message.id,
+                        conversation_id: conversationId,
+                        role: 'assistant',
+                        status: 'streaming',
+                        provider: payload.assistant_message.provider,
+                        model: payload.assistant_message.model,
+                        content: '',
+                        content_markdown: '',
+                        attachments: [],
+                        tool_runs: payload.assistant_message.tool_runs ?? [],
+                        isStreaming: true,
+                    },
+                    conversationId,
+                });
+            }
+
+            setFiles([]);
             return;
         }
 
-        const payload = await response.json();
-        const conversationId = payload.conversation_id as string | null;
-
-        if (conversationId && !state.conversationId) {
-            history.replaceState({}, '', `/c/${conversationId}`);
-        }
-
-        if (payload.assistant_message && conversationId) {
-            dispatch({
-                type: 'assistant.create',
-                message: {
-                    id: payload.assistant_message.id,
-                    conversation_id: conversationId,
-                    role: 'assistant',
-                    status: 'streaming',
-                    provider: payload.assistant_message.provider,
-                    model: payload.assistant_message.model,
-                    content: '',
-                    content_markdown: '',
-                    attachments: [],
-                    tool_runs: payload.assistant_message.tool_runs ?? [],
-                    isStreaming: true,
-                },
-                conversationId,
+        try {
+            const response = await fetch('/api/chat/messages/stream', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream', ...authHeaders() },
+                body: JSON.stringify({
+                    conversation_id: state.conversationId,
+                    message: prompt,
+                    type,
+                    model: 'grok-4-fast-non-reasoning',
+                    files: processedFiles,
+                }),
             });
-        }
 
-        setFiles([]);
-    }, [isLoading, state.conversationId]);
+            if (!response.ok) {
+                setIsLoading(false);
+                setError('Could not send message. Please try again.');
+                return;
+            }
+
+            await readEventStream(response);
+            setFiles([]);
+        } catch (streamError) {
+            setIsLoading(false);
+            setIsDelayed(false);
+            setError(streamError instanceof Error ? streamError.message : 'Could not send message. Please try again.');
+        }
+    }, [chatTransport, readEventStream, state.conversationId]);
 
     const handleSubmit = useCallback(async (event: FormEvent, type: 'text' | 'image', attachedFiles?: File[]) => {
         event.preventDefault();
@@ -456,35 +542,58 @@ export default function SpaChatInterface({
         setIsDelayed(false);
         setIsLoading(true);
 
-        const response = await fetch(`/api/chat/messages/${messageId}/regenerate`, {
-            method: 'POST',
-            headers: { Accept: 'application/json', ...authHeaders() },
-        });
+        if (chatTransport === 'ws') {
+            const response = await fetch(`/api/chat/messages/${messageId}/regenerate`, {
+                method: 'POST',
+                headers: { Accept: 'application/json', ...authHeaders() },
+            });
 
-        if (!response.ok) {
-            setError('Could not regenerate message.');
-            setIsLoading(false);
+            if (!response.ok) {
+                setError('Could not regenerate message.');
+                setIsLoading(false);
+                return;
+            }
+
+            const payload = await response.json();
+
+            dispatch({
+                type: 'assistant.create',
+                message: {
+                    id: payload.assistant_message.id,
+                    conversation_id: payload.conversation_id || state.conversationId || undefined,
+                    role: 'assistant',
+                    status: 'streaming',
+                    content: '',
+                    content_markdown: '',
+                    attachments: [],
+                    tool_runs: payload.assistant_message.tool_runs ?? [],
+                    isStreaming: true,
+                },
+                replace: true,
+            });
+
             return;
         }
 
-        const payload = await response.json();
+        try {
+            const response = await fetch(`/api/chat/messages/${messageId}/regenerate/stream`, {
+                method: 'POST',
+                headers: { Accept: 'text/event-stream', ...authHeaders() },
+            });
 
-        dispatch({
-            type: 'assistant.create',
-            message: {
-                id: payload.assistant_message.id,
-                conversation_id: payload.conversation_id || state.conversationId || undefined,
-                role: 'assistant',
-                status: 'streaming',
-                content: '',
-                content_markdown: '',
-                attachments: [],
-                tool_runs: payload.assistant_message.tool_runs ?? [],
-                isStreaming: true,
-            },
-            replace: true,
-        });
-    }, [state.conversationId]);
+            if (!response.ok) {
+                setError('Could not regenerate message.');
+                setIsLoading(false);
+                return;
+            }
+
+            await readEventStream(response);
+        } catch (streamError) {
+            setIsLoading(false);
+            setIsDelayed(false);
+            setError(streamError instanceof Error ? streamError.message : 'Could not regenerate message.');
+        }
+    }, [chatTransport, readEventStream, state.conversationId]);
 
     const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
         if (event.key === 'Enter' && !event.shiftKey) {

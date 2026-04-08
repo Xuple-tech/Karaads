@@ -1,14 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import SpaChatInterface from '@/spa/components/SpaChatInterface';
 import { apiRequest } from '@/spa/lib/api';
+import { subscribeToPrivateChannel } from '@/spa/lib/realtime';
 import { useSessionQuery } from '@/spa/lib/session';
+import type { Message } from '@/types/chat';
 
 type ConversationResponse = {
     conversation: {
         id: string;
         title: string;
+        ai_generated_title?: boolean;
         messages: Array<{
             id: string;
             role: string;
@@ -84,17 +88,45 @@ function ChatSkeleton() {
 
 export function Component() {
     const { conversationId = '' } = useParams();
+    const navigate = useNavigate();
     const session = useSessionQuery();
     const conversation = useQuery({
         queryKey: ['spa', 'conversation', conversationId],
         queryFn: () => apiRequest<ConversationResponse>(`/api/chat/conversations/${conversationId}`),
     });
+    const userId = session.data?.user?.id;
+
+    useEffect(() => {
+        if (!userId || !conversationId) {
+            return;
+        }
+
+        return subscribeToPrivateChannel(`user.${userId}`, (eventName, payload) => {
+            if (eventName !== 'conversation.updated') {
+                return;
+            }
+
+            if (payload.cleared) {
+                navigate('/new');
+                return;
+            }
+
+            if (payload.conversation_id === conversationId && payload.deleted) {
+                navigate('/new');
+                return;
+            }
+
+            if ((payload.conversation as { id?: string } | undefined)?.id === conversationId) {
+                void conversation.refetch();
+            }
+        });
+    }, [conversation, conversationId, navigate, userId]);
 
     if (conversation.isLoading) {
         return <ChatSkeleton />;
     }
 
-    const messages =
+    const messages: Message[] =
         conversation.data?.conversation.messages.map((item) => ({
             id: item.id,
             role: item.role,
@@ -112,7 +144,7 @@ export function Component() {
     return (
         <SpaChatInterface
             initialConversationId={conversationId}
-            initialMessages={messages as any}
+            initialMessages={messages}
             isAuthenticated={true}
             userName={session.data?.user?.name?.split(' ')[0]}
         />
