@@ -1,12 +1,15 @@
 import type { ChatAttachment, Message } from '@/types/chat';
 import { AlertCircle, ArrowDown } from 'lucide-react';
 import { FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import ChatInput from '@/spa/components/SpaChatInput';
 import ChatMessageRenderer, { type StreamActivity } from '@/spa/components/ChatMessageRenderer';
 import { apiRequest } from '@/spa/lib/api';
 import { authHeaders } from '@/spa/lib/auth-token';
+import { subscribeToPrivateChannel, type RealtimePayload } from '@/spa/lib/realtime';
+import { useSessionQuery } from '@/spa/lib/session';
 
 type ChatState = {
     messages: Message[];
@@ -33,9 +36,7 @@ function reducer(state: ChatState, action: ChatAction): ChatState {
         case 'user.append':
             return { ...state, messages: [...state.messages, action.message] };
         case 'assistant.create': {
-            const baseMessages = action.replace
-                ? state.messages.filter((m) => m.id !== action.message.id)
-                : state.messages;
+            const baseMessages = state.messages.filter((m) => m.id !== action.message.id);
             return {
                 ...state,
                 conversationId: action.conversationId ?? state.conversationId,
@@ -103,37 +104,6 @@ function reducer(state: ChatState, action: ChatAction): ChatState {
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function readSse(response: Response, onEvent: (event: string, payload: any) => void) {
-    if (!response.body) throw new Error('Missing response body');
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = '';
-
-    while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-        const chunks = buffer.split('\n\n');
-        buffer = chunks.pop() || '';
-
-        for (const chunk of chunks) {
-            let eventName = 'message';
-            let data = '';
-
-            for (const line of chunk.split('\n')) {
-                if (line.startsWith('event: ')) eventName = line.slice(7).trim();
-                if (line.startsWith('data: ')) data += line.slice(6);
-            }
-
-            if (!data) continue;
-            onEvent(eventName, JSON.parse(data));
-        }
-    }
-}
-
 const WELCOME_PROMPTS = [
     'Write me a business proposal',
     'Explain quantum computing simply',
@@ -152,6 +122,8 @@ export default function SpaChatInterface({
     initialConversationId?: string | null;
     userName?: string;
 }) {
+    const queryClient = useQueryClient();
+    const session = useSessionQuery();
     const [state, dispatch] = useReducer(reducer, {
         messages: initialMessages,
         conversationId: initialConversationId,
@@ -236,6 +208,116 @@ export default function SpaChatInterface({
         dispatch({ type: 'hydrate', conversationId, messages: mappedMessages });
     }, []);
 
+    const handleRealtimeEvent = useCallback(async (eventName: string, payload: RealtimePayload) => {
+        const messageId = typeof payload.message_id === 'string' ? payload.message_id : null;
+        const conversationId = typeof payload.conversation_id === 'string'
+            ? payload.conversation_id
+            : state.conversationId;
+
+        if (eventName === 'message.created' && payload.message && typeof payload.message === 'object') {
+            const message = payload.message as Message;
+            dispatch({
+                type: 'assistant.create',
+                message: {
+                    id: message.id,
+                    conversation_id: message.conversation_id,
+                    role: message.role,
+                    status: message.status ?? 'streaming',
+                    provider: message.provider,
+                    model: message.model,
+                    type: message.type,
+                    content: message.content_markdown ?? '',
+                    content_markdown: message.content_markdown ?? '',
+                    content_text: message.content_text ?? '',
+                    attachments: message.attachments ?? [],
+                    isStreaming: true,
+                },
+                conversationId,
+                replace: Boolean(payload.replace),
+            });
+        }
+
+        if (eventName === 'message.delta' && messageId) {
+            dispatch({ type: 'assistant.delta', messageId, content: String(payload.content ?? '') });
+        }
+
+        if (eventName === 'tool.started') {
+            dispatch({ type: 'activity', activity: { tool_name: String(payload.tool_name ?? 'tool'), status: 'started', message: payload.message as string | undefined } });
+        }
+
+        if (eventName === 'tool.completed') {
+            dispatch({ type: 'activity', activity: { tool_name: String(payload.tool_name ?? 'tool'), status: 'completed', message: payload.summary as string | undefined } });
+        }
+
+        if (eventName === 'tool.failed') {
+            dispatch({ type: 'activity', activity: { tool_name: String(payload.tool_name ?? 'tool'), status: 'failed', message: payload.error as string | undefined } });
+        }
+
+        if (eventName === 'attachment.created' && messageId && payload.attachment && typeof payload.attachment === 'object') {
+            dispatch({ type: 'attachment.add', messageId, attachment: payload.attachment as ChatAttachment });
+        }
+
+        if (eventName === 'message.completed' && messageId) {
+            dispatch({
+                type: 'assistant.complete',
+                messageId,
+                content: typeof payload.content === 'string' ? payload.content : undefined,
+            });
+            dispatch({ type: 'activity.clear' });
+            setIsLoading(false);
+        }
+
+        if (eventName === 'message.failed' && messageId) {
+            const error = String(payload.error ?? 'Request failed');
+            dispatch({ type: 'assistant.fail', messageId, error });
+            dispatch({ type: 'activity.clear' });
+            setError(error);
+            setIsLoading(false);
+        }
+
+        if (eventName === 'message.synced' && conversationId) {
+            await syncConversation(conversationId);
+        }
+
+        if (eventName === 'conversation.updated') {
+            void queryClient.invalidateQueries({ queryKey: ['spa', 'conversations'] });
+        }
+    }, [queryClient, state.conversationId, syncConversation]);
+
+    useEffect(() => {
+        if (!state.conversationId) {
+            return;
+        }
+
+        return subscribeToPrivateChannel(
+            `conversation.${state.conversationId}`,
+            (eventName, payload) => {
+                void handleRealtimeEvent(eventName, payload);
+            },
+            {
+                onSubscribed: () => {
+                    void syncConversation(state.conversationId!);
+                },
+                onError: () => {
+                    setError('Realtime connection failed. Refresh to resync this chat.');
+                },
+            },
+        );
+    }, [handleRealtimeEvent, state.conversationId, syncConversation]);
+
+    useEffect(() => {
+        const userId = session.data?.user?.id;
+        if (!userId) {
+            return;
+        }
+
+        return subscribeToPrivateChannel(`user.${userId}`, (eventName) => {
+            if (eventName === 'conversation.updated') {
+                void queryClient.invalidateQueries({ queryKey: ['spa', 'conversations'] });
+            }
+        });
+    }, [queryClient, session.data?.user?.id]);
+
     const sendMessage = useCallback(async (prompt: string, type: 'text' | 'image', attachedFiles?: File[]) => {
         setError(null);
         setIsLoading(true);
@@ -273,7 +355,7 @@ export default function SpaChatInterface({
 
         const response = await fetch('/api/chat/messages', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream', ...authHeaders() },
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json', ...authHeaders() },
             body: JSON.stringify({
                 conversation_id: state.conversationId,
                 message: prompt,
@@ -289,72 +371,34 @@ export default function SpaChatInterface({
             return;
         }
 
-        let assistantMessageId: string | null = null;
-        let conversationId = state.conversationId;
+        const payload = await response.json();
+        const conversationId = payload.conversation_id as string | null;
 
-        await readSse(response, async (eventName, payload) => {
-            if (eventName === 'message.created') {
-                assistantMessageId = payload.message.id;
-                conversationId = payload.conversation_id || conversationId;
+        if (conversationId && !state.conversationId) {
+            history.replaceState({}, '', `/c/${conversationId}`);
+        }
 
-                if (conversationId && !state.conversationId) {
-                    history.replaceState({}, '', `/c/${conversationId}`);
-                }
-
-                dispatch({
-                    type: 'assistant.create',
-                    message: {
-                        id: payload.message.id,
-                        conversation_id: payload.conversation_id,
-                        role: 'assistant',
-                        status: 'streaming',
-                        provider: payload.message.provider,
-                        model: payload.message.model,
-                        content: '',
-                        content_markdown: '',
-                        attachments: [],
-                        isStreaming: true,
-                    },
-                    conversationId,
-                    replace: payload.replace ?? false,
-                });
-            }
-
-            if (eventName === 'message.delta' && assistantMessageId) {
-                dispatch({ type: 'assistant.delta', messageId: assistantMessageId, content: payload.content || '' });
-            }
-
-            if (eventName === 'tool.started') {
-                dispatch({ type: 'activity', activity: { tool_name: payload.tool_name, status: 'started', message: payload.message } });
-            }
-
-            if (eventName === 'tool.completed') {
-                dispatch({ type: 'activity', activity: { tool_name: payload.tool_name, status: 'completed', message: payload.summary } });
-            }
-
-            if (eventName === 'tool.failed') {
-                dispatch({ type: 'activity', activity: { tool_name: payload.tool_name, status: 'failed', message: payload.error } });
-            }
-
-            if (eventName === 'attachment.created' && assistantMessageId) {
-                dispatch({ type: 'attachment.add', messageId: assistantMessageId, attachment: payload.attachment });
-            }
-
-            if (eventName === 'message.failed' && assistantMessageId) {
-                dispatch({ type: 'assistant.fail', messageId: assistantMessageId, error: payload.error || 'Request failed' });
-                setError(payload.error || 'Request failed');
-                setIsLoading(false);
-            }
-
-            if (eventName === 'message.completed' && conversationId) {
-                await syncConversation(conversationId);
-                setIsLoading(false);
-            }
-        });
+        if (payload.assistant_message && conversationId) {
+            dispatch({
+                type: 'assistant.create',
+                message: {
+                    id: payload.assistant_message.id,
+                    conversation_id: conversationId,
+                    role: 'assistant',
+                    status: 'streaming',
+                    provider: payload.assistant_message.provider,
+                    model: payload.assistant_message.model,
+                    content: '',
+                    content_markdown: '',
+                    attachments: [],
+                    isStreaming: true,
+                },
+                conversationId,
+            });
+        }
 
         setFiles([]);
-        setIsLoading(false);
-    }, [isLoading, state.conversationId, syncConversation]);
+    }, [isLoading, state.conversationId]);
 
     const handleSubmit = useCallback(async (event: FormEvent, type: 'text' | 'image', attachedFiles?: File[]) => {
         event.preventDefault();
@@ -376,7 +420,7 @@ export default function SpaChatInterface({
 
         const response = await fetch(`/api/chat/messages/${messageId}/regenerate`, {
             method: 'POST',
-            headers: { Accept: 'text/event-stream', ...authHeaders() },
+            headers: { Accept: 'application/json', ...authHeaders() },
         });
 
         if (!response.ok) {
@@ -385,56 +429,23 @@ export default function SpaChatInterface({
             return;
         }
 
-        await readSse(response, async (eventName, payload) => {
-            if (eventName === 'message.created') {
-                dispatch({
-                    type: 'assistant.create',
-                    message: {
-                        id: payload.message.id,
-                        conversation_id: payload.conversation_id || state.conversationId || undefined,
-                        role: 'assistant',
-                        status: 'streaming',
-                        content: '',
-                        content_markdown: '',
-                        attachments: [],
-                        isStreaming: true,
-                    },
-                    replace: true,
-                });
-            }
+        const payload = await response.json();
 
-            if (eventName === 'message.delta') {
-                dispatch({ type: 'assistant.delta', messageId, content: payload.content || '' });
-            }
-
-            if (eventName === 'tool.started') {
-                dispatch({ type: 'activity', activity: { tool_name: payload.tool_name, status: 'started', message: payload.message } });
-            }
-
-            if (eventName === 'tool.completed') {
-                dispatch({ type: 'activity', activity: { tool_name: payload.tool_name, status: 'completed', message: payload.summary } });
-            }
-
-            if (eventName === 'tool.failed') {
-                dispatch({ type: 'activity', activity: { tool_name: payload.tool_name, status: 'failed', message: payload.error } });
-            }
-
-            if (eventName === 'attachment.created') {
-                dispatch({ type: 'attachment.add', messageId, attachment: payload.attachment });
-            }
-
-            if (eventName === 'message.completed' && state.conversationId) {
-                await syncConversation(state.conversationId);
-                setIsLoading(false);
-            }
-
-            if (eventName === 'message.failed') {
-                setError(payload.error || 'Regeneration failed');
-                dispatch({ type: 'assistant.fail', messageId, error: payload.error || 'Regeneration failed' });
-                setIsLoading(false);
-            }
+        dispatch({
+            type: 'assistant.create',
+            message: {
+                id: payload.assistant_message.id,
+                conversation_id: payload.conversation_id || state.conversationId || undefined,
+                role: 'assistant',
+                status: 'streaming',
+                content: '',
+                content_markdown: '',
+                attachments: [],
+                isStreaming: true,
+            },
+            replace: true,
         });
-    }, [state.conversationId, syncConversation]);
+    }, [state.conversationId]);
 
     const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
         if (event.key === 'Enter' && !event.shiftKey) {

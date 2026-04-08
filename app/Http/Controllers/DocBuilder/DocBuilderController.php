@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\DocBuilder;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ProcessDocBuilderRealtime;
 use App\Models\ChatMessage;
 use App\Models\Conversation;
+use App\Services\DocBuilder\DocBuilderRealtimeService;
 use App\Services\PythonDocumentGenerationService;
+use App\Services\Realtime\RealtimePublisher;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -33,12 +36,57 @@ class DocBuilderController extends Controller
     ];
 
     public function __construct(
-        private readonly PythonDocumentGenerationService $docService
+        private readonly PythonDocumentGenerationService $docService,
+        private readonly DocBuilderRealtimeService $realtimeService,
+        private readonly RealtimePublisher $publisher,
     ) {}
 
     // ─────────────────────────────────────────────────────────────────────────
     // Streaming
     // ─────────────────────────────────────────────────────────────────────────
+
+    public function store(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'message' => 'required|string|max:12000',
+            'document' => 'nullable|string',
+            'title' => 'nullable|string|max:255',
+            'document_type' => 'nullable|string|in:' . implode(',', self::DOCUMENT_TYPES),
+            'model' => 'nullable|string|in:' . implode(',', array_keys(self::MODELS)),
+            'conversation_id' => 'nullable|string',
+        ]);
+
+        $prepared = $this->realtimeService->queueMessage((string) Auth::id(), $validated);
+        $assistantMessage = $prepared['assistant_message'];
+
+        $this->publisher->toConversation($prepared['conversation']->id, [
+            'event' => 'message.created',
+            'conversation_id' => $prepared['conversation']->id,
+            'message' => [
+                'id' => $assistantMessage->id,
+                'conversation_id' => $assistantMessage->conversation_id,
+                'role' => $assistantMessage->role,
+                'status' => $assistantMessage->status,
+                'provider' => $assistantMessage->provider,
+                'model' => $assistantMessage->model,
+                'type' => $assistantMessage->type,
+                'content_markdown' => $assistantMessage->content_markdown,
+                'content_text' => $assistantMessage->content_text,
+                'created_at' => $assistantMessage->created_at?->toIso8601String(),
+                'attachments' => [],
+            ],
+        ]);
+        $this->publisher->conversationUpdated($prepared['conversation'], $prepared['user_message']->content_text);
+
+        ProcessDocBuilderRealtime::dispatch($assistantMessage->id);
+
+        return response()->json([
+            'success' => true,
+            'conversation_id' => $prepared['conversation']->id,
+            'user_message_id' => $prepared['user_message']->id,
+            'assistant_message_id' => $assistantMessage->id,
+        ], 202);
+    }
 
     public function stream(Request $request): StreamedResponse
     {
@@ -287,8 +335,8 @@ class DocBuilderController extends Controller
     public function config(): JsonResponse
     {
         return response()->json([
-            'models'         => self::MODELS,
-            'document_types' => self::DOCUMENT_TYPES,
+            'models'         => DocBuilderRealtimeService::MODELS,
+            'document_types' => DocBuilderRealtimeService::DOCUMENT_TYPES,
         ]);
     }
 

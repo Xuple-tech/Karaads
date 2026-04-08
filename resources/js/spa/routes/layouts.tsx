@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { AudioLines, CreditCard, FileText, LogOut, Mail, MoreHorizontal, PenSquare, Settings, SquarePen, Star } from 'lucide-react';
+import { useEffect } from 'react';
 import { NavLink, Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
@@ -29,6 +30,7 @@ import {
 import { cn } from '@/lib/utils';
 import { apiRequest } from '@/spa/lib/api';
 import { useSpaLang } from '@/spa/lib/lang';
+import { subscribeToPrivateChannel } from '@/spa/lib/realtime';
 import { useSessionQuery } from '@/spa/lib/session';
 
 // ─── helpers ────────────────────────────────────────────────────────────────
@@ -131,6 +133,20 @@ function SpaSidebar() {
         queryKey: ['spa', 'doc-builder-sessions'],
         queryFn: () => apiRequest<{ sessions: DocSession[] }>('/api/doc-builder/sessions'),
     });
+    const userId = session.data?.user?.id;
+
+    useEffect(() => {
+        if (!userId) {
+            return;
+        }
+
+        return subscribeToPrivateChannel(`user.${userId}`, (eventName) => {
+            if (eventName === 'conversation.updated') {
+                void conversations.refetch();
+                void docSessions.refetch();
+            }
+        });
+    }, [conversations, docSessions, userId]);
 
     const groups = groupConversations(conversations.data?.conversations ?? []);
     const hasConversations = (conversations.data?.conversations?.length ?? 0) > 0;
@@ -480,4 +496,3 @@ export function AppLayout() {
         </SidebarProvider>
     );
 }
-

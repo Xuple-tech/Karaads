@@ -49,7 +49,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/conversations/{conversation}', [ChatConversationController::class, 'update'])->name('chat.api.conversations.update');
         Route::delete('/conversations/{conversation}', [ChatConversationController::class, 'destroy'])->name('chat.api.conversations.destroy');
         Route::post('/messages', [ChatMessageController::class, 'store'])->name('chat.api.messages.store');
+        Route::post('/messages/stream', [ChatMessageController::class, 'storeStream'])->name('chat.api.messages.stream');
         Route::post('/messages/{message}/regenerate', [ChatMessageController::class, 'regenerate'])->name('chat.api.messages.regenerate');
+        Route::post('/messages/{message}/regenerate/stream', [ChatMessageController::class, 'regenerateStream'])->name('chat.api.messages.regenerate.stream');
         Route::get('/files/{file}', [ChatMessageController::class, 'file'])->name('chat.file.download');
     });
 
@@ -126,6 +128,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Doc Builder
     Route::prefix('doc-builder')->group(function () {
         Route::get('/config', [DocBuilderController::class, 'config'])->name('doc-builder.config');
+        Route::post('/messages', [DocBuilderController::class, 'store'])->name('doc-builder.messages.store');
         Route::post('/stream', [DocBuilderController::class, 'stream'])->name('doc-builder.stream');
         Route::post('/export', [DocBuilderController::class, 'export'])->name('doc-builder.export');
         Route::get('/sessions', [DocBuilderController::class, 'index'])->name('doc-builder.sessions.index');

@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api\Chat;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ProcessChatMessageRealtime;
 use App\Models\ChatMessageAttachment;
 use App\Models\ChatMessage;
 use App\Services\Chat\ChatMessageService;
+use App\Services\Chat\ChatConversationService;
 use App\Services\ChatFileAttachmentService;
+use App\Services\Realtime\RealtimePublisher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -16,11 +19,44 @@ class MessageController extends Controller
 {
     public function __construct(
         private readonly ChatMessageService $messages,
+        private readonly ChatConversationService $conversations,
         private readonly ChatFileAttachmentService $files,
+        private readonly RealtimePublisher $publisher,
     ) {
     }
 
-    public function store(Request $request): StreamedResponse
+    public function store(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'conversation_id' => ['nullable', 'string', 'exists:conversations,id'],
+            'message' => ['required', 'string'],
+            'type' => ['nullable', 'string'],
+            'model' => ['nullable', 'string'],
+            'files' => ['nullable', 'array'],
+        ]);
+
+        $prepared = $this->messages->queueSend($request->user(), $validated);
+        $assistantMessage = $prepared['assistant_message'];
+
+        $this->publisher->toConversation($prepared['conversation']->id, [
+            'event' => 'message.created',
+            'conversation_id' => $prepared['conversation']->id,
+            'message' => $this->conversations->serializeMessage($assistantMessage),
+        ]);
+        $this->publisher->conversationUpdated($prepared['conversation'], $prepared['user_message']->content_text);
+
+        ProcessChatMessageRealtime::dispatch($assistantMessage->id);
+
+        return response()->json([
+            'success' => true,
+            'conversation_id' => $prepared['conversation']->id,
+            'user_message_id' => $prepared['user_message']->id,
+            'assistant_message_id' => $assistantMessage->id,
+            'assistant_message' => $this->conversations->serializeMessage($assistantMessage),
+        ], 202);
+    }
+
+    public function storeStream(Request $request): StreamedResponse
     {
         $validated = $request->validate([
             'conversation_id' => ['nullable', 'string', 'exists:conversations,id'],
@@ -53,7 +89,30 @@ class MessageController extends Controller
         ]);
     }
 
-    public function regenerate(Request $request, ChatMessage $message): StreamedResponse
+    public function regenerate(Request $request, ChatMessage $message): JsonResponse
+    {
+        $prepared = $this->messages->queueRegenerate($request->user(), $message);
+        $assistantMessage = $prepared['assistant_message'];
+
+        $this->publisher->toConversation($prepared['conversation']->id, [
+            'event' => 'message.created',
+            'conversation_id' => $prepared['conversation']->id,
+            'message' => $this->conversations->serializeMessage($assistantMessage),
+            'replace' => true,
+        ]);
+
+        ProcessChatMessageRealtime::dispatch($assistantMessage->id);
+
+        return response()->json([
+            'success' => true,
+            'conversation_id' => $prepared['conversation']->id,
+            'assistant_message_id' => $assistantMessage->id,
+            'assistant_message' => $this->conversations->serializeMessage($assistantMessage),
+            'replace' => true,
+        ], 202);
+    }
+
+    public function regenerateStream(Request $request, ChatMessage $message): StreamedResponse
     {
         return response()->stream(function () use ($request, $message): void {
             $emit = function (string $event, array $payload): void {

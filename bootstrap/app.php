@@ -24,6 +24,10 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    ->withBroadcasting(
+        __DIR__.'/../routes/channels.php',
+        ['middleware' => ['auth:sanctum']],
+    )
     ->withMiddleware(function (Middleware $middleware) {
         RedirectIfAuthenticated::redirectUsing(function ($request) {
             return AuthRedirect::sanitize($request->query('redirect'))

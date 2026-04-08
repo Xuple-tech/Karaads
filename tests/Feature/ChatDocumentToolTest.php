@@ -28,7 +28,7 @@ class ChatDocumentToolTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $response = $this->post('/api/chat/messages', [
+        $response = $this->post('/api/chat/messages/stream', [
             'message' => 'Create a board proposal as a PDF',
             'type' => 'text',
             'model' => 'grok-4-fast-reasoning',
@@ -64,7 +64,7 @@ class ChatDocumentToolTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $response = $this->post('/api/chat/messages', [
+        $response = $this->post('/api/chat/messages/stream', [
             'message' => 'Create a quarterly report in DOCX',
             'type' => 'text',
             'model' => 'grok-4-fast-reasoning',
@@ -116,7 +116,7 @@ class ChatDocumentToolTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $response = $this->post('/api/chat/messages', [
+        $response = $this->post('/api/chat/messages/stream', [
             'message' => 'Create a PDF',
             'type' => 'text',
         ], ['Accept' => 'text/event-stream']);

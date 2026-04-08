@@ -23,7 +23,7 @@ class ChatMessageService
     ) {
     }
 
-    public function sendStreaming(User $user, array $payload, callable $emit): array
+    public function queueSend(User $user, array $payload): array
     {
         $conversation = $this->resolveConversation($user, $payload['conversation_id'] ?? null, $payload['message'] ?? null);
         $this->migrationService->migrateConversationIfNeeded($conversation);
@@ -41,29 +41,21 @@ class ChatMessageService
             'content_text' => '',
         ]);
 
-        $emit('message.created', [
-            'message' => $this->conversationService->serializeMessage($assistantMessage->loadMissing('attachments')),
-            'conversation_id' => $conversation->id,
-        ]);
-
-        $this->streamAssistantResponse($conversation, $assistantMessage, $payload, $emit);
-
         return [
-            'conversation' => $conversation,
+            'conversation' => $conversation->fresh(),
             'user_message' => $userMessage,
             'assistant_message' => $assistantMessage->fresh(['attachments', 'toolRuns', 'sources']),
         ];
     }
 
-    public function regenerateStreaming(User $user, ChatMessage $assistantMessage, callable $emit): ChatMessage
+    public function queueRegenerate(User $user, ChatMessage $assistantMessage): array
     {
         abort_unless($assistantMessage->role === 'assistant', 422);
+
         $conversation = Conversation::findOrFail($assistantMessage->conversation_id);
         abort_unless($conversation->user_id === $user->id, 403);
 
         $this->migrationService->migrateConversationIfNeeded($conversation);
-
-        $userMessage = ChatMessage::findOrFail($assistantMessage->reply_to_id);
 
         DB::transaction(function () use ($assistantMessage): void {
             $assistantMessage->attachments()->delete();
@@ -77,29 +69,61 @@ class ChatMessageService
             ]);
         });
 
+        return [
+            'conversation' => $conversation->fresh(),
+            'user_message' => ChatMessage::query()->findOrFail($assistantMessage->reply_to_id)->fresh(['attachments']),
+            'assistant_message' => $assistantMessage->fresh(['attachments', 'toolRuns', 'sources']),
+            'replace' => true,
+        ];
+    }
+
+    public function sendStreaming(User $user, array $payload, callable $emit): array
+    {
+        $prepared = $this->queueSend($user, $payload);
+        /** @var Conversation $conversation */
+        $conversation = $prepared['conversation'];
+        /** @var ChatMessage $userMessage */
+        $userMessage = $prepared['user_message'];
+        /** @var ChatMessage $assistantMessage */
+        $assistantMessage = $prepared['assistant_message'];
+
+        $emit('message.created', [
+            'message' => $this->conversationService->serializeMessage($assistantMessage->loadMissing('attachments')),
+            'conversation_id' => $conversation->id,
+        ]);
+
+        $this->processAssistantMessage($assistantMessage, $emit);
+
+        return $prepared;
+    }
+
+    public function regenerateStreaming(User $user, ChatMessage $assistantMessage, callable $emit): ChatMessage
+    {
+        $prepared = $this->queueRegenerate($user, $assistantMessage);
+        /** @var Conversation $conversation */
+        $conversation = $prepared['conversation'];
+        /** @var ChatMessage $assistantMessage */
+        $assistantMessage = $prepared['assistant_message'];
+
         $emit('message.created', [
             'message' => $this->conversationService->serializeMessage($assistantMessage->fresh(['attachments'])),
             'conversation_id' => $conversation->id,
             'replace' => true,
         ]);
 
-        $payload = [
-            'conversation_id' => $conversation->id,
-            'message' => $userMessage->content_text ?: $userMessage->content_markdown,
-            'model' => $assistantMessage->model,
-            'type' => $assistantMessage->type,
-            'files' => [],
-            'assistant_message_id' => $assistantMessage->id,
-        ];
-
-        $this->streamAssistantResponse($conversation, $assistantMessage, $payload, $emit);
+        $this->processAssistantMessage($assistantMessage, $emit);
 
         return $assistantMessage->fresh(['attachments', 'toolRuns', 'sources']);
     }
 
-    private function streamAssistantResponse(Conversation $conversation, ChatMessage $assistantMessage, array $payload, callable $emit): void
+    public function processAssistantMessage(ChatMessage $assistantMessage, callable $emit): ChatMessage
     {
+        $assistantMessage->loadMissing('conversation.user', 'replyTo.attachments');
+        $conversation = $assistantMessage->conversation;
+        abort_unless($conversation instanceof Conversation, 404);
+
         $body = '';
+        $payload = $this->buildAssistantPayload($assistantMessage);
 
         $this->provider->streamResponse(
             $this->buildProviderMessages($conversation),
@@ -219,6 +243,8 @@ class ChatMessageService
                 $emit($eventName, array_merge($data, ['message_id' => $assistantMessage->id]));
             }
         );
+
+        return $assistantMessage->fresh(['attachments', 'toolRuns', 'sources']);
     }
 
     private function resolveConversation(User $user, ?string $conversationId, ?string $prompt): Conversation
@@ -316,6 +342,20 @@ class ChatMessageService
         ]);
     }
 
+    private function buildAssistantPayload(ChatMessage $assistantMessage): array
+    {
+        $userMessage = $assistantMessage->replyTo()->with('attachments')->firstOrFail();
+
+        return [
+            'conversation_id' => $assistantMessage->conversation_id,
+            'message' => $userMessage->content_text ?: $userMessage->content_markdown,
+            'model' => $assistantMessage->model,
+            'type' => $assistantMessage->type,
+            'files' => $this->buildProviderFilesFromMessage($userMessage),
+            'assistant_message_id' => $assistantMessage->id,
+        ];
+    }
+
     private function buildProviderMessages(Conversation $conversation): array
     {
         return ChatMessage::query()
@@ -329,6 +369,27 @@ class ChatMessageService
                     : ($message->content_markdown ?: $message->content_text ?: ''),
             ])
             ->filter(fn (array $message) => $message['content'] !== '')
+            ->values()
+            ->all();
+    }
+
+    private function buildProviderFilesFromMessage(ChatMessage $message): array
+    {
+        return $message->attachments
+            ->map(function (ChatMessageAttachment $attachment): ?array {
+                if (! $attachment->path || ! Storage::disk('private')->exists($attachment->path)) {
+                    return null;
+                }
+
+                $content = Storage::disk('private')->get($attachment->path);
+
+                return [
+                    'name' => $attachment->name,
+                    'type' => $attachment->mime_type ?? 'application/octet-stream',
+                    'data' => 'data:'.($attachment->mime_type ?? 'application/octet-stream').';base64,'.base64_encode($content),
+                ];
+            })
+            ->filter()
             ->values()
             ->all();
     }
