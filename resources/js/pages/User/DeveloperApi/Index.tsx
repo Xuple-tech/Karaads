@@ -161,7 +161,8 @@ function copyToClipboard(text: string, label = 'Copied!') {
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function WalletCard({ wallet, topupConfig }: { wallet: WalletSummary; topupConfig: PageProps['topupConfig'] }) {
+function WalletCard({ wallet, topupConfig }: { wallet: WalletSummary | null | undefined; topupConfig: PageProps['topupConfig'] }) {
+    const w: WalletSummary = wallet ?? { balance_usd: 0, lifetime_credited_usd: 0, lifetime_debited_usd: 0 };
     const [topupAmount, setTopupAmount] = useState(String(topupConfig.default_amount_usd));
     const [loading, setLoading] = useState(false);
 
@@ -190,10 +191,10 @@ function WalletCard({ wallet, topupConfig }: { wallet: WalletSummary; topupConfi
                 </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-                <div className="text-3xl font-bold">${wallet.balance_usd.toFixed(4)}</div>
+                <div className="text-3xl font-bold">${w.balance_usd.toFixed(4)}</div>
                 <div className="text-sm text-muted-foreground space-y-1">
-                    <div>Total credited: ${wallet.lifetime_credited_usd.toFixed(2)}</div>
-                    <div>Total spent: ${wallet.lifetime_debited_usd.toFixed(4)}</div>
+                    <div>Total credited: ${w.lifetime_credited_usd.toFixed(2)}</div>
+                    <div>Total spent: ${w.lifetime_debited_usd.toFixed(4)}</div>
                 </div>
                 <div className="flex items-center gap-2">
                     <Input
@@ -215,12 +216,20 @@ function WalletCard({ wallet, topupConfig }: { wallet: WalletSummary; topupConfi
     );
 }
 
-function StatsRow({ stats }: { stats: UsageStats }) {
+function StatsRow({ stats }: { stats: UsageStats | null | undefined }) {
+    const s: UsageStats = stats ?? {
+        total_requests: 0,
+        successful_requests: 0,
+        failed_requests: 0,
+        total_tokens: 0,
+        total_cost_usd: 0,
+        avg_tokens_per_request: 0,
+    };
     const items = [
-        { label: 'Total Requests', value: stats.total_requests.toLocaleString() },
-        { label: 'Success Rate', value: stats.total_requests > 0 ? `${((stats.successful_requests / stats.total_requests) * 100).toFixed(1)}%` : '—' },
-        { label: 'Total Tokens', value: stats.total_tokens.toLocaleString() },
-        { label: 'Total Spend', value: formatUsd(stats.total_cost_usd) },
+        { label: 'Total Requests', value: s.total_requests.toLocaleString() },
+        { label: 'Success Rate', value: s.total_requests > 0 ? `${((s.successful_requests / s.total_requests) * 100).toFixed(1)}%` : '—' },
+        { label: 'Total Tokens', value: s.total_tokens.toLocaleString() },
+        { label: 'Total Spend', value: formatUsd(s.total_cost_usd) },
     ];
     return (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
-use Inertia\Inertia;
 
 class MetaAccountController extends Controller
 {
@@ -44,11 +43,7 @@ class MetaAccountController extends Controller
                 'subscriptionTier' => $currentPlan?->tier ?? 'free',
             ];
 
-            if (request()->expectsJson()) {
-                return response()->json($payload);
-            }
-
-            return Inertia::render('Meta/Dashboard', $payload);
+            return response()->json($payload);
         }
 
         $accounts = MetaAccount::where('user_id', $user->id)
@@ -106,11 +101,7 @@ class MetaAccountController extends Controller
             'subscriptionTier' => $currentPlan->tier,
         ];
 
-        if (request()->expectsJson()) {
-            return response()->json($payload);
-        }
-
-        return Inertia::render('Meta/Dashboard', $payload);
+        return response()->json($payload);
     }
 
     /**
@@ -152,11 +143,7 @@ class MetaAccountController extends Controller
             'canAccessMeta' => $currentPlan && $currentPlan->tier !== 'free',
         ];
 
-        if (request()->expectsJson()) {
-            return response()->json($payload);
-        }
-
-        return Inertia::render('Meta/Accounts', $payload);
+        return response()->json($payload);
     }
 
     /**

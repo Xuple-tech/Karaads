@@ -13,7 +13,6 @@ use App\Services\MetaMessageAnalyzerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Inertia\Inertia;
 
 class MetaMessageController extends Controller
 {
@@ -70,11 +69,7 @@ class MetaMessageController extends Controller
             'conversations' => $conversations,
         ];
 
-        if ($request->expectsJson()) {
-            return response()->json($payload);
-        }
-
-        return Inertia::render('Meta/Conversations', $payload);
+        return response()->json($payload);
     }
 
     /**
@@ -142,11 +137,7 @@ class MetaMessageController extends Controller
             'drafts' => $drafts,
         ];
 
-        if ($request->expectsJson()) {
-            return response()->json($payload);
-        }
-
-        return Inertia::render('Meta/Conversation', $payload);
+        return response()->json($payload);
     }
 
     /**

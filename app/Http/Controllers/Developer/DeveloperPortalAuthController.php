@@ -41,8 +41,9 @@ class DeveloperPortalAuthController extends Controller
         }
 
         $request->session()->regenerate();
+        $request->session()->forget('url.intended');
 
-        return redirect()->intended(route('developer-api.index'));
+        return redirect()->route('developer-api.index');
     }
 
     public function logout(Request $request): RedirectResponse
@@ -81,6 +82,7 @@ class DeveloperPortalAuthController extends Controller
         event(new Registered($user));
 
         Auth::login($user, true);
+        $request->session()->forget('url.intended');
 
         return redirect()->route('developer-api.index');
     }

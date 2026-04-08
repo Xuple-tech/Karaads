@@ -8,7 +8,6 @@ use App\Models\MetaAccount;
 use App\Models\MetaAutomationPreference;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
 
 class MetaPreferenceController extends Controller
 {
@@ -71,11 +70,7 @@ class MetaPreferenceController extends Controller
             $payload['metaAccount']['phone_number'] = $account->platform_data['display_phone_number'] ?? null;
         }
 
-        if (request()->expectsJson()) {
-            return response()->json($payload);
-        }
-
-        return Inertia::render('Meta/Preferences', $payload);
+        return response()->json($payload);
     }
 
     /**
@@ -135,7 +130,7 @@ class MetaPreferenceController extends Controller
             ]
         );
 
-        return Inertia::render('Meta/GlobalPreferences', [
+        return response()->json([
             'preference' => [
                 'id' => $preference->id,
                 'enable_auto_reply' => $preference->enable_auto_reply,

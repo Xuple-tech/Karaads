@@ -12,7 +12,6 @@ use App\Http\Controllers\Meta\MetaWebhookController;
 use App\Http\Controllers\ConversationShareController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use Torann\GeoIP\Facades\GeoIP;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -125,12 +124,8 @@ Route::get('test_ip_address', function () {
 });
 
 
-Route::get('ex/auth/meta/privacy-policy',function(){
-    return Inertia::render('Meta/Privacy');
-});
-Route::get('ex/auth/meta/terms-of-services',function(){
-    return Inertia::render('Meta/TermOfServices');
-});
+Route::redirect('ex/auth/meta/privacy-policy', '/privacy');
+Route::redirect('ex/auth/meta/terms-of-services', '/terms');
 
 Route::post('a/feedback/sms', function (Request $request) {
     $message = trim($request->input('feedback', ''));
