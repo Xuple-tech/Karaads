@@ -71,7 +71,7 @@ class DeveloperApiChatService
                 ->withToken($upstreamKey)
                 ->acceptJson()
                 ->timeout(120)
-                ->when(!app()->isProduction(), fn ($r) => $r->withoutVerifying())
+                ->withoutVerifying()
                 ->post(rtrim($baseUrl, '/') . '/chat/completions', $upstreamPayload)
                 ->throw();
         } catch (RequestException $exception) {
