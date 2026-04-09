@@ -9,7 +9,6 @@ use App\Services\SubscriptionService;
 use App\Services\Widget\WidgetKnowledgeService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Vite;
 
 class WidgetConfigController extends Controller
 {
@@ -290,7 +289,7 @@ class WidgetConfigController extends Controller
     private function serializeWidgetDetail(WidgetConfig $widget): array
     {
         $widget->loadMissing(['knowledgeItems', 'tools', 'sessions.messages']);
-        $scriptUrl = Vite::asset('resources/js/widget/index.tsx');
+        $scriptUrl = route('widget.embed.loader');
 
         return [
             'id' => $widget->id,
@@ -312,7 +311,7 @@ class WidgetConfigController extends Controller
             ],
             'embed_script_url' => $scriptUrl,
             'embed_code' => '<script>window.KwatiWidgetToken = "' . $widget->token . '";</script>' . "\n" .
-                '<script src="' . $scriptUrl . '" async></script>',
+                '<script type="module" src="' . $scriptUrl . '"></script>',
             'preview_url' => url('/widget-preview/' . $widget->token),
             'created_at' => $widget->created_at,
             'updated_at' => $widget->updated_at,

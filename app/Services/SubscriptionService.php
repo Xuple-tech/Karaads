@@ -530,12 +530,12 @@ class SubscriptionService
                 'widget_requests' => $today?->widget_requests_used ?? 0,
             ],
             'monthly' => [
-                'requests' => $monthlyUsage['requests_used'],
-                'tokens' => $monthlyUsage['tokens_used'],
-                'images' => $monthlyUsage['total_images'],
-                'voice_messages' => $monthlyUsage['total_voice_messages'],
-                'emails' => $monthlyUsage['total_emails'],
-                'widget_requests' => $monthlyUsage['widget_requests_used'],
+                'requests' => $monthlyUsage['requests_used'] ?? 0,
+                'tokens' => $monthlyUsage['tokens_used'] ?? 0,
+                'images' => $monthlyUsage['images_generated'] ?? 0,
+                'voice_messages' => $monthlyUsage['voice_messages'] ?? 0,
+                'emails' => $monthlyUsage['emails_processed'] ?? 0,
+                'widget_requests' => $monthlyUsage['widget_requests_used'] ?? 0,
             ],
             'limits' => $plan ? [
                 'requests_per_day' => $this->entitlements->getDailyLimitForUsage($plan, 'requests'),
@@ -570,9 +570,14 @@ class SubscriptionService
     /**
      * Upgrade user to a new plan
      */
-    public function upgradePlan(User $user, SubscriptionPlan $newPlan, ?string $paymentMethod = null): Subscription
+    public function upgradePlan(
+        User $user,
+        SubscriptionPlan $newPlan,
+        ?string $paymentMethod = null,
+        string $billingPeriod = 'monthly'
+    ): Subscription
     {
-        return DB::transaction(function () use ($user, $newPlan, $paymentMethod) {
+        return DB::transaction(function () use ($user, $newPlan, $paymentMethod, $billingPeriod) {
             // Cancel existing active subscription
             $activeSubscription = Subscription::getActiveSubscriptionForUser($user->id);
             if ($activeSubscription) {
@@ -585,8 +590,9 @@ class SubscriptionService
                 'plan_id' => $newPlan->id,
                 'status' => 'active',
                 'started_at' => now(),
-                'renews_at' => now()->addMonth(),
+                'renews_at' => $billingPeriod === 'yearly' ? now()->addYear() : now()->addMonth(),
                 'payment_method' => $paymentMethod,
+                'billing_period' => $billingPeriod,
                 'is_trial' => false,
             ]);
 

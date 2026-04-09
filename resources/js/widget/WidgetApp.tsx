@@ -58,8 +58,7 @@ export function WidgetApp({ token }: { token: string }) {
     }
 
     return (
-        <div className="kwati-widget-shell" style={{ ['--widget-color' as string]: config?.theme_color || '#7c3aed' }}>
-            <WidgetLauncher botName={config?.bot_name || 'Kwati'} onClick={() => setOpen((current) => !current)} open={open} unreadCount={unreadCount} />
+        <div className="kwati-widget-shell" style={{ ['--kwati-color' as string]: config?.theme_color || '#7c3aed' }}>
             {open ? (
                 <WidgetPanel
                     botName={config?.bot_name || 'Kwati'}
@@ -71,7 +70,9 @@ export function WidgetApp({ token }: { token: string }) {
                     onClose={() => setOpen(false)}
                     onSend={sendMessage}
                 />
-            ) : null}
+            ) : (
+                <WidgetLauncher botName={config?.bot_name || 'Kwati'} onClick={() => setOpen(true)} open={false} unreadCount={unreadCount} />
+            )}
         </div>
     );
 }

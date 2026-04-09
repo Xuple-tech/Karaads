@@ -12,4 +12,5 @@ Route::prefix('/docs')->name('docs.')->group(function () {
     });
 
     Route::get('/api', [DeveloperApiDocsController::class, 'index'])->name('api');
+    Route::get('/agents', [DeveloperApiDocsController::class, 'agents'])->name('agents');
 });

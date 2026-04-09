@@ -12,7 +12,7 @@ export function WidgetLauncher({
     return (
         <button
             type="button"
-            className={`kwati-launcher${open ? ' is-open' : ''}`}
+            className={`kwati-launcher${open ? ' is-open' : ' hin'}`}
             onClick={onClick}
             aria-label={open ? 'Close chat' : `Chat with ${botName}`}
         >

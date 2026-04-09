@@ -13,11 +13,9 @@ Route::get('/api/subscription/plans', [SubscriptionController::class, 'getPlans'
 // Subscription checkout success route
 Route::get('/subscription/success', [SubscriptionController::class, 'handleCheckoutSuccess'])->name('subscription.success');
 
-// Authenticated SPA pages
-Route::middleware('auth')->group(function () {
-    Route::get('/subscription', SpaController::class)->name('subscription.index');
-    Route::get('/billing', SpaController::class)->name('billing.index');
-});
+// SPA entry pages are served publicly; the SPA itself enforces protected access.
+Route::get('/subscription', SpaController::class)->name('subscription.index');
+Route::get('/billing', SpaController::class)->name('billing.index');
 
 // Authenticated subscription API routes
 Route::middleware('auth:sanctum')->group(function () {

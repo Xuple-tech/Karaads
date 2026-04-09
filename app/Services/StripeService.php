@@ -20,6 +20,11 @@ class StripeService
         Stripe::setApiKey(config('services.stripe.secret'));
     }
 
+    public function isConfigured(): bool
+    {
+        return filled(config('services.stripe.secret')) && filled(config('services.stripe.public'));
+    }
+
     /**
      * Create or retrieve Stripe customer for user
      */
@@ -122,6 +127,10 @@ class StripeService
      */
     public function createCheckoutSession(User $user, SubscriptionPlan $plan, string $billingPeriod = 'monthly'): string
     {
+        if (! $this->isConfigured()) {
+            throw new \RuntimeException('Stripe is not configured.');
+        }
+
         $customer = $this->getOrCreateCustomer($user);
         $prices = $this->ensurePlanPrices($plan);
 
@@ -146,6 +155,7 @@ class StripeService
             'metadata' => [
                 'user_id' => $user->id,
                 'plan_id' => $plan->id,
+                'billing_period' => $billingPeriod,
             ],
         ]);
 

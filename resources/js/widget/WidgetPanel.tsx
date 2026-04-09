@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { WidgetInput } from './WidgetInput';
 import { WidgetMessage } from './WidgetMessage';
@@ -30,10 +30,13 @@ export function WidgetPanel({
     onSend: (message: string, files: File[]) => Promise<void>;
 }) {
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const [dismissedError, setDismissedError] = useState<string | null>(null);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
+
+    const visibleError = error && error !== dismissedError ? error : null;
 
     return (
         <div className="kwati-panel">
@@ -66,7 +69,19 @@ export function WidgetPanel({
                 {messages.map((message) => (
                     <WidgetMessage key={message.id} message={message} />
                 ))}
-                {error ? <div className="kwati-error">{error}</div> : null}
+                {visibleError ? (
+                    <div className="kwati-error">
+                        <span className="kwati-error-text">{visibleError}</span>
+                        <button
+                            type="button"
+                            className="kwati-error-dismiss"
+                            onClick={() => setDismissedError(error)}
+                            aria-label="Dismiss error"
+                        >
+                            ×
+                        </button>
+                    </div>
+                ) : null}
                 <div ref={messagesEndRef} />
             </div>
 

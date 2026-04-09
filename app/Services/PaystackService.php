@@ -148,6 +148,87 @@ class PaystackService
         return $url;
     }
 
+    public function createSubscriptionCheckoutAuthorization(
+        User $user,
+        float $amountUsd,
+        string $callbackUrl,
+        string $cancelUrl,
+        array $metadata = []
+    ): string {
+        if (! $this->isConfigured()) {
+            throw new \RuntimeException('Paystack is not configured.');
+        }
+
+        $reference = 'kwati_sub_' . Str::lower(Str::random(24));
+        $currency = $this->getCheckoutCurrency();
+        $exchangeRate = $this->getUsdExchangeRate();
+        $checkoutAmount = $this->convertUsdToCheckoutAmount($amountUsd);
+        $checkoutAmountMinor = $this->convertUsdToCheckoutMinorAmount($amountUsd);
+
+        try {
+            $response = $this->http
+                ->withToken((string) config('services.paystack.secret_key'))
+                ->acceptJson()
+                ->timeout((int) config('services.paystack.timeout', 60))
+                ->connectTimeout((int) config('services.paystack.connect_timeout', 15))
+                ->withOptions([
+                    'verify' => (bool) config('services.paystack.verify_ssl', false),
+                ])
+                ->post(rtrim((string) config('services.paystack.base_url'), '/') . '/transaction/initialize', [
+                    'email' => $user->email,
+                    'amount' => $checkoutAmountMinor,
+                    'currency' => $currency,
+                    'reference' => $reference,
+                    'callback_url' => $callbackUrl,
+                    'metadata' => array_merge($metadata, [
+                        'purpose' => 'subscription_checkout',
+                        'user_id' => $user->id,
+                        'amount_usd' => number_format($amountUsd, 2, '.', ''),
+                        'checkout_currency' => $currency,
+                        'checkout_exchange_rate' => number_format($exchangeRate, 4, '.', ''),
+                        'checkout_amount' => number_format($checkoutAmount, 2, '.', ''),
+                        'checkout_amount_minor' => $checkoutAmountMinor,
+                        'cancel_url' => $cancelUrl,
+                    ]),
+                ])
+                ->throw()
+                ->json();
+        } catch (ConnectionException $exception) {
+            Log::error('Paystack subscription checkout initialization connection failure.', [
+                'user_id' => $user->id,
+                'reference' => $reference,
+                'amount_usd' => round($amountUsd, 2),
+                'message' => $exception->getMessage(),
+            ]);
+
+            throw new \RuntimeException('Paystack checkout is currently unavailable.');
+        } catch (RequestException $exception) {
+            Log::error('Paystack subscription checkout initialization failed.', [
+                'user_id' => $user->id,
+                'reference' => $reference,
+                'amount_usd' => round($amountUsd, 2),
+                'status' => $exception->response?->status(),
+                'body' => $exception->response?->json() ?? $exception->response?->body(),
+            ]);
+
+            throw new \RuntimeException('Paystack checkout could not be initialized. Please try again or use another payment method.');
+        }
+
+        $url = data_get($response, 'data.authorization_url');
+        if (! is_string($url) || $url === '') {
+            Log::error('Paystack subscription checkout returned no authorization URL.', [
+                'user_id' => $user->id,
+                'reference' => $reference,
+                'amount_usd' => round($amountUsd, 2),
+                'response' => $response,
+            ]);
+
+            throw new \RuntimeException('Paystack checkout could not be initialized.');
+        }
+
+        return $url;
+    }
+
     public function verifyTransaction(string $reference): array
     {
         if (! $this->isConfigured()) {

@@ -29,4 +29,11 @@ class DeveloperApiDocsController extends Controller
             'appName' => config('app.name', 'Kwati AI'),
         ]);
     }
+
+    public function agents(): Response
+    {
+        return Inertia::render('Docs/Agents', [
+            'appName' => config('app.name', 'Kwati AI'),
+        ]);
+    }
 }

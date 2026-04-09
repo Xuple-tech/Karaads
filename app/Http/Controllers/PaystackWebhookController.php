@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Services\DeveloperApiBillingService;
 use App\Services\PaystackService;
+use App\Services\SubscriptionService;
+use App\Models\Subscription;
+use App\Models\SubscriptionPlan;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -15,6 +18,7 @@ class PaystackWebhookController extends Controller
     public function __construct(
         private readonly PaystackService $paystackService,
         private readonly DeveloperApiBillingService $billingService,
+        private readonly SubscriptionService $subscriptionService,
     ) {
     }
 
@@ -23,19 +27,25 @@ class PaystackWebhookController extends Controller
         $reference = (string) ($request->query('reference') ?: $request->query('trxref'));
 
         if ($reference === '') {
-            return redirect()->route('developer-api.billing.index');
+            return redirect()->to('/subscription');
         }
 
         try {
             $payload = $this->paystackService->verifyTransaction($reference);
-            $this->creditFromTransactionPayload(data_get($payload, 'data', []));
+            $redirect = $this->handleTransactionPayload(data_get($payload, 'data', []));
+
+            if ($redirect) {
+                return redirect()->to($redirect);
+            }
         } catch (\Throwable $exception) {
             Log::error('Paystack callback verification failed: ' . $exception->getMessage(), [
                 'reference' => $reference,
             ]);
+
+            return redirect()->to('/subscription?payment=failed&provider=paystack');
         }
 
-        return redirect()->route('developer-api.billing.index');
+        return redirect()->to('/subscription?payment=success&provider=paystack');
     }
 
     public function webhook(Request $request): JsonResponse
@@ -54,7 +64,7 @@ class PaystackWebhookController extends Controller
         }
 
         try {
-            $this->creditFromTransactionPayload($event['data'] ?? []);
+            $this->handleTransactionPayload($event['data'] ?? []);
         } catch (\Throwable $exception) {
             Log::error('Paystack webhook handling failed: ' . $exception->getMessage(), [
                 'reference' => data_get($event, 'data.reference'),
@@ -66,22 +76,30 @@ class PaystackWebhookController extends Controller
         return response()->json(['success' => true]);
     }
 
-    private function creditFromTransactionPayload(array $transaction): void
+    private function handleTransactionPayload(array $transaction): ?string
     {
         if (($transaction['status'] ?? null) !== 'success') {
-            return;
+            return null;
         }
 
         $metadata = $transaction['metadata'] ?? [];
-        if (($metadata['purpose'] ?? null) !== 'developer_wallet_topup') {
-            return;
-        }
+
+        return match ($metadata['purpose'] ?? null) {
+            'developer_wallet_topup' => $this->creditFromTransactionPayload($transaction),
+            'subscription_checkout' => $this->activateSubscriptionFromTransactionPayload($transaction),
+            default => null,
+        };
+    }
+
+    private function creditFromTransactionPayload(array $transaction): ?string
+    {
+        $metadata = $transaction['metadata'] ?? [];
 
         $userId    = $metadata['user_id'] ?? null;
         $reference = $transaction['reference'] ?? null;
 
         if (! $userId || ! $reference) {
-            return;
+            return null;
         }
 
         $amountUsd = (float) ($metadata['amount_usd'] ?? 0);
@@ -98,13 +116,13 @@ class PaystackWebhookController extends Controller
                 'reference' => $reference,
                 'metadata'  => $metadata,
             ]);
-            return;
+            return null;
         }
 
         $user = User::find($userId);
         if (! $user) {
             Log::warning('Paystack top-up: user not found', ['user_id' => $userId, 'reference' => $reference]);
-            return;
+            return null;
         }
 
         $this->billingService->creditWallet(
@@ -121,5 +139,67 @@ class PaystackWebhookController extends Controller
             'amount_usd' => $amountUsd,
             'reference'  => $reference,
         ]);
+
+        return route('developer-api.billing.index');
+    }
+
+    private function activateSubscriptionFromTransactionPayload(array $transaction): ?string
+    {
+        $metadata = $transaction['metadata'] ?? [];
+        $userId = $metadata['user_id'] ?? null;
+        $planId = $metadata['plan_id'] ?? null;
+        $reference = $transaction['reference'] ?? null;
+        $billingPeriod = in_array(($metadata['billing_period'] ?? 'monthly'), ['monthly', 'yearly'], true)
+            ? $metadata['billing_period']
+            : 'monthly';
+
+        if (! $userId || ! $planId || ! $reference) {
+            return '/subscription?payment=failed&provider=paystack';
+        }
+
+        $user = User::find($userId);
+        $plan = SubscriptionPlan::find($planId);
+
+        if (! $user || ! $plan) {
+            Log::warning('Paystack subscription activation missing user or plan', [
+                'user_id' => $userId,
+                'plan_id' => $planId,
+                'reference' => $reference,
+            ]);
+
+            return '/subscription?payment=failed&provider=paystack';
+        }
+
+        $existing = Subscription::query()
+            ->where('user_id', $user->id)
+            ->where('external_subscription_id', $reference)
+            ->latest()
+            ->first();
+
+        if (! $existing) {
+            $subscription = $this->subscriptionService->upgradePlan($user, $plan, 'paystack', $billingPeriod);
+            $amountUsd = (float) ($metadata['amount_usd'] ?? 0);
+
+            $subscription->update([
+                'external_subscription_id' => $reference,
+                'amount_paid' => $amountUsd > 0
+                    ? $amountUsd
+                    : $this->paystackService->convertCheckoutMinorAmountToUsd(
+                        (float) ($transaction['amount'] ?? 0),
+                        (string) ($transaction['currency'] ?? $metadata['checkout_currency'] ?? $this->paystackService->getCheckoutCurrency()),
+                        isset($metadata['checkout_exchange_rate']) ? (float) $metadata['checkout_exchange_rate'] : null,
+                    ),
+                'billing_period' => $billingPeriod,
+            ]);
+
+            Log::info('Subscription activated via Paystack', [
+                'user_id' => $user->id,
+                'plan_id' => $plan->id,
+                'reference' => $reference,
+                'billing_period' => $billingPeriod,
+            ]);
+        }
+
+        return '/subscription?payment=success&provider=paystack&plan=' . urlencode($plan->slug);
     }
 }

@@ -110,12 +110,19 @@
   display:         flex;
   align-items:     center;
   justify-content: space-between;
-  padding:         14px 16px 14px 18px;
-  background:      linear-gradient(135deg,
-    color-mix(in srgb, var(--kw-color) 14%, #fff) 0%,
-    color-mix(in srgb, var(--kw-color)  6%, #fff) 100%);
-  border-bottom:   1px solid rgba(15, 23, 42, 0.07);
+  padding:         16px 16px 16px 18px;
+  background:      var(--kw-color);
+  position:        relative;
   flex-shrink:     0;
+}
+
+/* darkening overlay so it reads as a gradient without color-mix() */
+.kwati-panel-header::after {
+  content:        '';
+  position:       absolute;
+  inset:          0;
+  background:     linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0.22) 100%);
+  pointer-events: none;
 }
 
 .kwati-panel-identity {
@@ -126,12 +133,11 @@
 }
 
 .kwati-avatar {
-  width:         38px;
-  height:        38px;
+  width:         40px;
+  height:        40px;
   border-radius: 50%;
   object-fit:    cover;
-  border:        2px solid rgba(255,255,255,0.8);
-  box-shadow:    0 2px 8px rgba(15, 23, 42, 0.12);
+  border:        2px solid rgba(255,255,255,0.35);
   flex-shrink:   0;
 }
 
@@ -139,22 +145,21 @@
   display:         inline-flex;
   align-items:     center;
   justify-content: center;
-  width:           38px;
-  height:          38px;
+  width:           40px;
+  height:          40px;
   border-radius:   50%;
-  background:      color-mix(in srgb, var(--kw-color) 14%, #fff);
-  color:           var(--kw-color);
+  background:      rgba(255,255,255,0.18);
+  color:           #fff;
   font-weight:     700;
-  font-size:       15px;
-  border:          2px solid rgba(255,255,255,0.8);
-  box-shadow:      0 2px 8px rgba(15, 23, 42, 0.1);
+  font-size:       16px;
+  border:          2px solid rgba(255,255,255,0.3);
   flex-shrink:     0;
 }
 
 .kwati-panel-name {
   display:        flex;
   flex-direction: column;
-  gap:            1px;
+  gap:            2px;
   min-width:      0;
 }
 
@@ -162,7 +167,7 @@
   display:       block;
   font-size:     14px;
   font-weight:   600;
-  color:         #0f172a;
+  color:         #fff;
   white-space:   nowrap;
   overflow:      hidden;
   text-overflow: ellipsis;
@@ -171,27 +176,28 @@
 .kwati-panel-name span {
   display:     block;
   font-size:   12px;
-  color:       #64748b;
+  color:       rgba(255,255,255,0.75);
   white-space: nowrap;
 }
 
 .kwati-online-dot {
-  display:       inline-block;
-  width:         6px;
-  height:        6px;
-  border-radius: 50%;
-  background:    #22c55e;
-  margin-right:  4px;
+  display:        inline-block;
+  width:          7px;
+  height:         7px;
+  border-radius:  50%;
+  background:     #4ade80;
+  margin-right:   5px;
   vertical-align: middle;
+  box-shadow:     0 0 0 2px rgba(74, 222, 128, 0.3);
 }
 
 .kwati-close {
-  width:         32px;
-  height:        32px;
+  width:         30px;
+  height:        30px;
   border:        none;
   border-radius: 50%;
-  background:    rgba(15, 23, 42, 0.06);
-  color:         #475569;
+  background:    rgba(255,255,255,0.15);
+  color:         rgba(255,255,255,0.9);
   cursor:        pointer;
   display:       flex;
   align-items:   center;
@@ -202,13 +208,13 @@
 }
 
 .kwati-close:hover {
-  background: rgba(15, 23, 42, 0.12);
-  color:      #0f172a;
+  background: rgba(255,255,255,0.25);
+  color:      #fff;
 }
 
 .kwati-close svg {
-  width:  16px;
-  height: 16px;
+  width:  15px;
+  height: 15px;
 }
 
 /* ─── messages area ─────────────────────────────────────────────────────────── */
@@ -219,7 +225,7 @@
   display:        flex;
   flex-direction: column;
   gap:            10px;
-  background:     linear-gradient(180deg, #f8fafc 0%, #fff 40%);
+  background:     #f8fafc;
   scroll-behavior: smooth;
 }
 
@@ -245,24 +251,25 @@
 }
 
 .kwati-bubble {
-  padding:       10px 14px;
-  border-radius: 18px;
-  font-size:     14px;
-  line-height:   1.55;
+  padding:       11px 15px;
+  border-radius: 20px;
+  font-size:     13.5px;
+  line-height:   1.6;
   white-space:   pre-wrap;
   word-break:    break-word;
 }
 
 .kwati-message.is-assistant .kwati-bubble {
-  background:          #f1f5f9;
-  color:               #0f172a;
-  border-bottom-left-radius: 6px;
+  background:                #fff;
+  color:                     #0f172a;
+  border-bottom-left-radius: 4px;
+  box-shadow:                0 1px 3px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.04);
 }
 
 .kwati-message.is-user .kwati-bubble {
-  background:              linear-gradient(135deg, var(--kw-color), color-mix(in srgb, var(--kw-color) 80%, #4f46e5));
-  color:                   #fff;
-  border-bottom-right-radius: 6px;
+  background:                linear-gradient(135deg, var(--kw-color), color-mix(in srgb, var(--kw-color) 80%, #4f46e5));
+  color:                     #fff;
+  border-bottom-right-radius: 4px;
 }
 
 /* streaming cursor */
@@ -315,18 +322,40 @@
 
 /* ─── error ─────────────────────────────────────────────────────────────────── */
 .kwati-error {
-  padding:       10px 13px;
+  display:       flex;
+  align-items:   flex-start;
+  gap:           8px;
+  padding:       10px 12px;
   border-radius: 14px;
-  background:    rgba(239, 68, 68, 0.08);
-  border:        1px solid rgba(239, 68, 68, 0.2);
+  background:    #fff5f5;
+  border:        1px solid #fecaca;
   color:         #b91c1c;
-  font-size:     13px;
+  font-size:     12.5px;
+  line-height:   1.5;
 }
+
+.kwati-error-text {
+  flex: 1;
+}
+
+.kwati-error-dismiss {
+  border:      none;
+  background:  none;
+  color:       #b91c1c;
+  cursor:      pointer;
+  padding:     0;
+  line-height: 1;
+  opacity:     0.6;
+  font-size:   16px;
+  flex-shrink: 0;
+}
+
+.kwati-error-dismiss:hover { opacity: 1; }
 
 /* ─── input area ────────────────────────────────────────────────────────────── */
 .kwati-input {
   border-top: 1px solid rgba(15, 23, 42, 0.07);
-  padding:    12px 14px 10px;
+  padding:    10px 12px 8px;
   background: #fff;
   flex-shrink: 0;
 }
@@ -334,17 +363,17 @@
 .kwati-input-row {
   display:       flex;
   align-items:   flex-end;
-  gap:           8px;
-  border:        1px solid rgba(15, 23, 42, 0.14);
-  border-radius: 16px;
-  padding:       8px 8px 8px 14px;
-  background:    #f8fafc;
+  gap:           6px;
+  border:        1.5px solid rgba(15, 23, 42, 0.12);
+  border-radius: 14px;
+  padding:       10px 10px 10px 14px;
+  background:    #fff;
   transition:    border-color 0.15s, box-shadow 0.15s;
 }
 
 .kwati-input-row:focus-within {
   border-color: var(--kw-color);
-  box-shadow:   0 0 0 3px color-mix(in srgb, var(--kw-color) 14%, transparent);
+  box-shadow:   0 0 0 3px rgba(124, 58, 237, 0.12);
   background:   #fff;
 }
 
@@ -402,7 +431,7 @@
   gap:             4px;
   padding:         2px 8px;
   border-radius:   999px;
-  background:      color-mix(in srgb, var(--kw-color) 10%, transparent);
+  background:      rgba(124, 58, 237, 0.1);
   color:           var(--kw-color);
   font-size:       11px;
   font-weight:     600;

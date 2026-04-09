@@ -19,6 +19,24 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Vite;
 
+if (! function_exists('widget_embed_asset_url')) {
+    function widget_embed_asset_url(): string
+    {
+        $manifestPath = public_path('build/manifest.json');
+
+        if (is_file($manifestPath)) {
+            $manifest = json_decode((string) file_get_contents($manifestPath), true);
+            $entry = $manifest['resources/js/widget/index.tsx']['file'] ?? null;
+
+            if (is_string($entry) && $entry !== '') {
+                return url('/build/' . ltrim($entry, '/'));
+            }
+        }
+
+        return Vite::asset('resources/js/widget/index.tsx');
+    }
+}
+
 Route::get('/', SpaController::class)->name('home');
 Route::get('/app', SpaController::class)->name('app');
 Route::get('/new', SpaController::class)->name('new');
@@ -96,8 +114,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/meta/oauth/callback', [MetaAccountController::class, 'handleCallback'])->name('meta.oauth.callback');
 });
 
+Route::get('/widget/embed.js', function () {
+    return redirect()->away(widget_embed_asset_url());
+})->name('widget.embed.loader');
+
 Route::get('/widget-preview/{token}', function (string $token) {
-    $scriptUrl = Vite::asset('resources/js/widget/index.tsx');
+    $scriptUrl = route('widget.embed.loader');
     $html = <<<HTML
 <!doctype html>
 <html lang="en">
@@ -121,7 +143,7 @@ Route::get('/widget-preview/{token}', function (string $token) {
         </div>
     </div>
     <script>window.KwatiWidgetToken = "{$token}";</script>
-    <script src="{$scriptUrl}" async></script>
+    <script type="module" src="{$scriptUrl}"></script>
 </body>
 </html>
 HTML;

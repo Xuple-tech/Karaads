@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use App\Services\PlanEntitlementService;
+use App\Services\PaystackService;
 use App\Services\SubscriptionService;
 use App\Services\StripeService;
 use Illuminate\Http\Request;
@@ -16,12 +17,19 @@ class SubscriptionController extends Controller
 {
     protected $subscriptionService;
     protected $stripeService;
+    protected $paystackService;
     protected $entitlements;
 
-    public function __construct(SubscriptionService $subscriptionService, StripeService $stripeService, PlanEntitlementService $entitlements)
+    public function __construct(
+        SubscriptionService $subscriptionService,
+        StripeService $stripeService,
+        PaystackService $paystackService,
+        PlanEntitlementService $entitlements
+    )
     {
         $this->subscriptionService = $subscriptionService;
         $this->stripeService = $stripeService;
+        $this->paystackService = $paystackService;
         $this->entitlements = $entitlements;
     }
 
@@ -65,6 +73,7 @@ class SubscriptionController extends Controller
             'success' => true,
             'plans' => $plans,
             'userSubscription' => $userSubscription,
+            'paymentProviders' => $this->getAvailablePaymentProviders(),
         ]);
     }
 
@@ -90,6 +99,7 @@ class SubscriptionController extends Controller
                 'entitlements' => $this->entitlements->getPlanEntitlements($plan),
             ]) : null,
             'usage' => $usage,
+            'paymentProviders' => $this->getAvailablePaymentProviders(),
         ]);
     }
 
@@ -105,20 +115,36 @@ class SubscriptionController extends Controller
         $request->validate([
             'plan_id' => 'required|uuid|exists:subscription_plans,id',
             'billing_period' => 'nullable|in:monthly,yearly',
+            'provider' => 'nullable|in:stripe,paystack',
         ]);
 
         try {
             $user = Auth::user();
             $plan = SubscriptionPlan::findOrFail($request->plan_id);
             $billingPeriod = $request->billing_period ?? 'monthly';
+            $provider = $request->provider ?? 'stripe';
 
-            // Create checkout session
-            $checkoutUrl = $this->stripeService->createCheckoutSession($user, $plan, $billingPeriod);
+            if ($provider === 'paystack') {
+                $checkoutUrl = $this->paystackService->createSubscriptionCheckoutAuthorization(
+                    $user,
+                    (float) ($billingPeriod === 'yearly' ? $plan->yearly_price : $plan->monthly_price),
+                    route('paystack.callback', [], true),
+                    route('subscription.index', [], true) . '?payment=cancelled&provider=paystack',
+                    [
+                        'plan_id' => $plan->id,
+                        'billing_period' => $billingPeriod,
+                        'plan_slug' => $plan->slug,
+                    ]
+                );
+            } else {
+                $checkoutUrl = $this->stripeService->createCheckoutSession($user, $plan, $billingPeriod);
+            }
 
             return response()->json([
                 'success' => true,
                 'message' => 'Checkout session created',
                 'checkout_url' => $checkoutUrl,
+                'provider' => $provider,
             ]);
         } catch (\Exception $e) {
             Log::error('Subscription upgrade error: ' . $e->getMessage());
@@ -132,7 +158,7 @@ class SubscriptionController extends Controller
     /**
      * Handle successful checkout
      */
-    public function handleCheckoutSuccess(Request $request)
+    public function handleCheckoutSuccess(Request $request): RedirectResponse
     {
         $request->validate([
             'session_id' => 'required|string',
@@ -143,10 +169,7 @@ class SubscriptionController extends Controller
             $session = \Stripe\Checkout\Session::retrieve($request->session_id);
 
             if ($session->payment_status !== 'paid') {
-                return response()->json([
-                    'success' => false,
-                    'error' => 'Payment not completed',
-                ], 400);
+                return redirect()->to('/subscription?payment=failed&provider=stripe');
             }
 
             // Get user and plan from session metadata
@@ -155,10 +178,7 @@ class SubscriptionController extends Controller
 
             if (!$userId || !$planId) {
                 Log::warning('Missing metadata in checkout session', ['session_id' => $request->session_id]);
-                return response()->json([
-                    'success' => false,
-                    'error' => 'Invalid session metadata',
-                ], 400);
+                return redirect()->to('/subscription?payment=failed&provider=stripe');
             }
 
             // Find user and plan
@@ -166,37 +186,38 @@ class SubscriptionController extends Controller
             $plan = SubscriptionPlan::find($planId);
 
             if (!$user || !$plan) {
-                return response()->json([
-                    'success' => false,
-                    'error' => 'User or plan not found',
-                ], 404);
+                return redirect()->to('/subscription?payment=failed&provider=stripe');
+            }
+
+            $existing = Subscription::query()
+                ->where('user_id', $user->id)
+                ->where('external_subscription_id', (string) $session->subscription)
+                ->latest()
+                ->first();
+
+            if ($existing) {
+                return redirect()->to('/subscription?payment=success&provider=stripe&plan=' . urlencode($plan->slug));
             }
 
             // Update user subscription with the paid plan
-            $subscription = $this->subscriptionService->upgradePlan($user, $plan, 'stripe');
+            $billingPeriod = $session->metadata['billing_period'] ?? 'monthly';
+            $subscription = $this->subscriptionService->upgradePlan($user, $plan, 'stripe', $billingPeriod);
 
             // Store the Stripe subscription ID for webhook sync
             if ($session->subscription) {
                 $subscription->update([
                     'external_subscription_id' => $session->subscription,
                     'amount_paid' => ($session->amount_total / 100) ?? 0,
+                    'billing_period' => $billingPeriod,
                 ]);
             }
 
             Log::info("Payment successful for user {$userId}, upgraded to plan {$plan->slug}");
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Payment successful! Your plan has been activated.',
-                'subscription' => $subscription,
-                'plan' => $plan,
-            ]);
+            return redirect()->to('/subscription?payment=success&provider=stripe&plan=' . urlencode($plan->slug));
         } catch (\Exception $e) {
             Log::error('Checkout success handling error: ' . $e->getMessage(), ['exception' => $e]);
-            return response()->json([
-                'success' => false,
-                'error' => 'Failed to process checkout success: ' . $e->getMessage(),
-            ], 500);
+            return redirect()->to('/subscription?payment=failed&provider=stripe');
         }
     }
 
@@ -366,6 +387,15 @@ class SubscriptionController extends Controller
         }
 
         try {
+            $subscription = $this->subscriptionService->getUserSubscription($user);
+
+            if ($subscription && $subscription->payment_method && $subscription->payment_method !== 'stripe') {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Billing portal is only available for Stripe subscriptions.',
+                ], 422);
+            }
+
             return response()->json([
                 'success' => true,
                 'portal_url' => $this->stripeService->createBillingPortalSession($user),
@@ -388,5 +418,28 @@ class SubscriptionController extends Controller
     public function billing(): RedirectResponse
     {
         return redirect()->to(Auth::check() ? '/billing' : '/login');
+    }
+
+    private function getAvailablePaymentProviders(): array
+    {
+        $providers = [];
+
+        if ($this->paystackService->isConfigured()) {
+            $providers[] = [
+                'id' => 'paystack',
+                'label' => 'Paystack',
+                'currency' => $this->paystackService->getCheckoutCurrency(),
+            ];
+        }
+
+        if ($this->stripeService->isConfigured()) {
+            $providers[] = [
+                'id' => 'stripe',
+                'label' => 'Stripe',
+                'currency' => 'USD',
+            ];
+        }
+
+        return $providers;
     }
 }

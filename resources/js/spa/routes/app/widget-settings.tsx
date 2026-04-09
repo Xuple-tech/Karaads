@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Bot, Code2, Copy, Globe2, Loader2, Save, Settings2, Wrench } from 'lucide-react';
+import { ArrowLeft, Bot, Code2, Copy, Globe2, Layers3, Loader2, Save, Settings2, Sparkles, Wrench } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -202,16 +202,17 @@ export function Component() {
     if (widgetQuery.isLoading || !widget) {
         return (
             <div className="mx-auto flex w-full max-w-6xl flex-col gap-4">
-                <Skeleton className="h-40 w-full rounded-3xl" />
-                <Skeleton className="h-96 w-full rounded-3xl" />
+                <Skeleton className="h-48 w-full rounded-[32px]" />
+                <Skeleton className="h-[720px] w-full rounded-[32px]" />
             </div>
         );
     }
 
     return (
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
-            <section className="rounded-3xl border border-border/60 bg-gradient-to-br from-primary/8 via-background to-emerald-500/8 p-6 sm:p-8">
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
+            <section className="relative overflow-hidden rounded-[32px] border border-border/60 bg-card px-6 py-7 shadow-sm sm:px-8">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.12),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(16,185,129,0.12),transparent_26%)]" />
+                <div className="relative flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
                     <div className="space-y-3">
                         <Button asChild variant="ghost" className="w-fit px-0 text-muted-foreground hover:text-foreground">
                             <Link to="/widget">
@@ -221,40 +222,42 @@ export function Component() {
                         </Button>
                         <div className="space-y-2">
                             <div className="flex items-center gap-2">
-                                <h1 className="text-2xl font-semibold tracking-tight text-foreground">{widget.name}</h1>
+                                <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">{widget.name}</h1>
                                 <Badge variant={widget.is_active ? 'default' : 'secondary'}>
-                                    {widget.is_active ? 'Active' : 'Paused'}
+                                    {widget.is_active ? 'Live' : 'Paused'}
                                 </Badge>
                             </div>
-                            <p className="max-w-2xl text-sm text-muted-foreground">
-                                Manage branding, embed code, knowledge, API tools, and remote MCP servers for this widget.
+                            <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+                                Configure branding, deployment, knowledge, tools, and assistant behavior for the widget your customers will interact with.
                             </p>
                         </div>
                     </div>
                     <div className="flex gap-3">
-                        <StatCard label="Sessions" value={widget.analytics.sessions} />
-                        <StatCard label="Messages" value={widget.analytics.messages} />
+                        <StatCard label="Sessions" value={widget.analytics.sessions} icon={<Globe2 className="h-4 w-4" />} />
+                        <StatCard label="Messages" value={widget.analytics.messages} icon={<Bot className="h-4 w-4" />} />
+                        <StatCard label="Knowledge" value={widget.knowledge.length} icon={<Layers3 className="h-4 w-4" />} />
                     </div>
                 </div>
             </section>
 
             <Tabs defaultValue="general" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-5">
-                    <TabsTrigger value="general">General</TabsTrigger>
-                    <TabsTrigger value="embed">Embed Code</TabsTrigger>
-                    <TabsTrigger value="knowledge">Knowledge Base</TabsTrigger>
-                    <TabsTrigger value="tools">API Tools</TabsTrigger>
-                    <TabsTrigger value="analytics">Analytics</TabsTrigger>
+                <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-2xl border border-border/60 bg-card p-2 md:grid-cols-5">
+                    <TabsTrigger value="general" className="rounded-xl">General</TabsTrigger>
+                    <TabsTrigger value="embed" className="rounded-xl">Embed</TabsTrigger>
+                    <TabsTrigger value="knowledge" className="rounded-xl">Knowledge</TabsTrigger>
+                    <TabsTrigger value="tools" className="rounded-xl">Tools</TabsTrigger>
+                    <TabsTrigger value="analytics" className="rounded-xl">Analytics</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="general">
+                    <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
                     <Card className="border-border/60">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Settings2 className="h-4 w-4 text-primary" />
                                 General settings
                             </CardTitle>
-                            <CardDescription>Control branding, prompt behavior, domain restrictions, and uploads.</CardDescription>
+                            <CardDescription>Define how the widget looks, speaks, and where it can run.</CardDescription>
                         </CardHeader>
                         <CardContent className="grid gap-5 md:grid-cols-2">
                             <Field label="Widget name">
@@ -301,19 +304,23 @@ export function Component() {
                                     }
                                 />
                             </Field>
-                            <div className="flex items-center justify-between rounded-2xl border border-border/60 p-4">
+                            <div className="rounded-2xl border border-border/60 p-4">
+                                <div className="flex items-start justify-between gap-4">
                                 <div>
-                                    <Label className="font-medium">Active</Label>
-                                    <p className="text-sm text-muted-foreground">Show the widget publicly and accept new sessions.</p>
+                                    <Label className="font-medium">Widget status</Label>
+                                    <p className="text-sm text-muted-foreground">Turn the widget on or pause new sessions instantly.</p>
                                 </div>
                                 <Switch checked={widget.is_active} onCheckedChange={(value) => setWidget({ ...widget, is_active: value })} />
+                                </div>
                             </div>
-                            <div className="flex items-center justify-between rounded-2xl border border-border/60 p-4">
+                            <div className="rounded-2xl border border-border/60 p-4">
+                                <div className="flex items-start justify-between gap-4">
                                 <div>
-                                    <Label className="font-medium">Allow visitor file uploads</Label>
-                                    <p className="text-sm text-muted-foreground">Expose file attachments inside the widget input.</p>
+                                    <Label className="font-medium">Visitor file uploads</Label>
+                                    <p className="text-sm text-muted-foreground">Allow customers to send files in the widget if their plan supports it.</p>
                                 </div>
                                 <Switch checked={widget.allow_file_uploads} onCheckedChange={(value) => setWidget({ ...widget, allow_file_uploads: value })} />
+                                </div>
                             </div>
                             <div className="md:col-span-2 flex justify-end">
                                 <Button type="button" onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending}>
@@ -323,30 +330,60 @@ export function Component() {
                             </div>
                         </CardContent>
                     </Card>
+                    <Card className="border-border/60">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <Sparkles className="h-4 w-4 text-primary" />
+                                Deployment summary
+                            </CardTitle>
+                            <CardDescription>Quick reference for what is currently live on this widget.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <SummaryRow label="Public status" value={widget.is_active ? 'Live and accepting new sessions' : 'Paused'} />
+                            <SummaryRow label="Bot identity" value={widget.bot_name} />
+                            <SummaryRow label="Theme" value={widget.theme_color} />
+                            <SummaryRow label="Allowed domains" value={widget.allowed_domains.length ? `${widget.allowed_domains.length} restricted domain(s)` : 'Open to all domains'} />
+                            <SummaryRow label="File uploads" value={widget.allow_file_uploads ? 'Enabled' : 'Disabled'} />
+                            <SummaryRow label="Tools" value={`${widget.tools.length} configured`} />
+                            <SummaryRow label="Knowledge" value={`${widget.knowledge.length} added`} />
+                            <div className="rounded-2xl border border-border/60 bg-muted/30 p-4">
+                                <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Token</p>
+                                <div className="mt-2 flex items-center gap-2">
+                                    <code className="min-w-0 flex-1 truncate rounded-lg bg-background px-3 py-2 font-mono text-xs text-foreground">{widget.token}</code>
+                                    <Button type="button" size="sm" variant="outline" onClick={() => copyText(widget.token)}>
+                                        <Copy className="mr-2 h-3.5 w-3.5" />
+                                        Copy
+                                    </Button>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                    </div>
                 </TabsContent>
 
                 <TabsContent value="embed">
-                    <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+                    <div className="grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
                         <Card className="border-border/60">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <Code2 className="h-4 w-4 text-primary" />
-                                    Embed snippet
+                                    Embed code
                                 </CardTitle>
-                                <CardDescription>Paste this snippet into any site where you want the widget to appear.</CardDescription>
+                                <CardDescription>Paste this exact snippet before the closing `&lt;/body&gt;` tag on the target site.</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <div className="flex items-center gap-2 rounded-xl border border-border/60 bg-muted/30 px-3 py-2.5">
-                                    <span className="text-xs text-muted-foreground">Widget token:</span>
-                                    <code className="flex-1 truncate font-mono text-xs text-foreground">{widget.token}</code>
-                                    <Button type="button" size="sm" variant="ghost" className="h-7 px-2 text-xs" onClick={() => copyText(widget.token)}>
-                                        <Copy className="mr-1 h-3 w-3" />
-                                        Copy
-                                    </Button>
+                                <div className="rounded-2xl border border-border/60 bg-muted/30 p-4">
+                                    <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Embed loader</p>
+                                    <p className="mt-2 break-all font-mono text-xs text-foreground">{widget.embed_script_url}</p>
                                 </div>
-                                <pre className="overflow-x-auto rounded-2xl border border-border/60 bg-muted/40 p-4 text-xs text-foreground">
-                                    <code>{widget.embed_code}</code>
-                                </pre>
+                                <div className="overflow-hidden rounded-2xl border border-border/60">
+                                    <div className="border-b border-border/60 bg-muted/30 px-4 py-2 text-xs font-medium text-muted-foreground">
+                                        Ready-to-paste snippet
+                                    </div>
+                                    <pre className="overflow-x-auto bg-background p-4 text-xs leading-6 text-foreground">
+                                        <code>{widget.embed_code}</code>
+                                    </pre>
+                                </div>
                                 <Button type="button" variant="outline" onClick={() => copyText(widget.embed_code)}>
                                     <Copy className="mr-2 h-4 w-4" />
                                     Copy embed code
@@ -357,10 +394,10 @@ export function Component() {
                         <Card className="border-border/60">
                             <CardHeader>
                                 <CardTitle>Live preview</CardTitle>
-                                <CardDescription>Preview the real widget bundle in an isolated frame.</CardDescription>
+                                <CardDescription>Preview the widget exactly as it will load through the app-hosted embed loader.</CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <iframe src={widget.preview_url} title="Widget preview" className="h-[520px] w-full rounded-2xl border border-border/60 bg-white" />
+                                <iframe src={widget.preview_url} title="Widget preview" className="h-[560px] w-full rounded-2xl border border-border/60 bg-white" />
                             </CardContent>
                         </Card>
                     </div>
@@ -374,7 +411,7 @@ export function Component() {
                                     <Bot className="h-4 w-4 text-primary" />
                                     Add knowledge
                                 </CardTitle>
-                                <CardDescription>Text, URLs, and PDFs can all feed the widget’s system context.</CardDescription>
+                                <CardDescription>Give the widget reliable context from text notes, website pages, and PDFs.</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-5">
                                 <Field label="Text note">
@@ -412,7 +449,7 @@ export function Component() {
                         <Card className="border-border/60">
                             <CardHeader>
                                 <CardTitle>Knowledge items</CardTitle>
-                                <CardDescription>Ready items are injected into the widget context when relevant.</CardDescription>
+                                <CardDescription>Ready items are added to the widget context when answers are generated.</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <ScrollArea className="h-[640px] pr-4">
@@ -456,7 +493,7 @@ export function Component() {
                                     <Wrench className="h-4 w-4 text-primary" />
                                     Add tool or MCP server
                                 </CardTitle>
-                                <CardDescription>Configure HTTPS tools or remote MCP servers for this widget.</CardDescription>
+                                <CardDescription>Connect external APIs or remote MCP servers the widget can call during conversations.</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <Field label="Type">
@@ -531,7 +568,7 @@ export function Component() {
                         <Card className="border-border/60">
                             <CardHeader>
                                 <CardTitle>Configured tools</CardTitle>
-                                <CardDescription>HTTP tools and remote MCP servers available to this widget.</CardDescription>
+                                <CardDescription>These tools are available to the widget whenever the AI decides they are needed.</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <ScrollArea className="h-[680px] pr-4">
@@ -571,13 +608,13 @@ export function Component() {
                     <Card className="border-border/60">
                         <CardHeader>
                             <CardTitle>Analytics</CardTitle>
-                            <CardDescription>Current widget activity and space for deeper reporting.</CardDescription>
+                            <CardDescription>High-level activity for this widget and room for deeper reporting later.</CardDescription>
                         </CardHeader>
                         <CardContent className="grid gap-4 md:grid-cols-3">
-                            <StatCard label="Sessions" value={widget.analytics.sessions} />
-                            <StatCard label="Messages" value={widget.analytics.messages} />
-                            <div className="rounded-2xl border border-dashed border-border/60 p-4 text-sm text-muted-foreground">
-                                Detailed analytics can expand here later.
+                            <StatCard label="Sessions" value={widget.analytics.sessions} icon={<Globe2 className="h-4 w-4" />} />
+                            <StatCard label="Messages" value={widget.analytics.messages} icon={<Bot className="h-4 w-4" />} />
+                            <div className="rounded-2xl border border-dashed border-border/60 p-4 text-sm leading-6 text-muted-foreground">
+                                Message trends, conversion rates, and domain-level breakdowns can expand here in the next pass.
                             </div>
                         </CardContent>
                     </Card>
@@ -592,16 +629,28 @@ function Field({ label, hint, className, children }: { label: string; hint?: str
         <div className={className}>
             <Label className="mb-2 block">{label}</Label>
             {children}
-            {hint ? <p className="mt-2 text-xs text-muted-foreground">{hint}</p> : null}
+            {hint ? <p className="mt-2 text-xs leading-5 text-muted-foreground">{hint}</p> : null}
         </div>
     );
 }
 
-function StatCard({ label, value }: { label: string; value: number }) {
+function StatCard({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) {
     return (
-        <div className="rounded-2xl border border-border/60 p-4">
-            <div className="text-2xl font-semibold text-foreground">{value}</div>
-            <div className="text-sm text-muted-foreground">{label}</div>
+        <div className="rounded-2xl border border-border/60 bg-background/75 p-4">
+            <div className="flex items-center justify-between gap-3">
+                <div className="text-sm text-muted-foreground">{label}</div>
+                <div className="text-muted-foreground">{icon}</div>
+            </div>
+            <div className="mt-3 text-2xl font-semibold text-foreground">{value}</div>
+        </div>
+    );
+}
+
+function SummaryRow({ label, value }: { label: string; value: string }) {
+    return (
+        <div className="rounded-2xl border border-border/60 bg-background/75 px-4 py-3">
+            <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+            <p className="mt-2 text-sm font-medium text-foreground">{value}</p>
         </div>
     );
 }
