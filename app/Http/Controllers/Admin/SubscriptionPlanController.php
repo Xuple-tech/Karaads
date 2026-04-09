@@ -297,13 +297,14 @@ class SubscriptionPlanController extends Controller
             'total_subscriptions' => $totalSubscriptions,
             'monthly_revenue_estimate' => $activeSubscriptions * (float) $plan->monthly_price,
             'yearly_revenue_estimate' => $activeSubscriptions * (float) ($plan->yearly_price ?? 0),
-            'usage' => [
-                'requests' => $monthlyUsage->sum('requests_used'),
-                'tokens' => $monthlyUsage->sum('tokens_used'),
-                'images' => $monthlyUsage->sum('images_generated'),
-                'voice_messages' => $monthlyUsage->sum('voice_messages'),
-                'emails_processed' => $monthlyUsage->sum('emails_processed'),
-            ],
+                'usage' => [
+                    'requests' => $monthlyUsage->sum('requests_used'),
+                    'tokens' => $monthlyUsage->sum('tokens_used'),
+                    'images' => $monthlyUsage->sum('images_generated'),
+                    'voice_messages' => $monthlyUsage->sum('voice_messages'),
+                    'emails_processed' => $monthlyUsage->sum('emails_processed'),
+                    'widget_requests' => $monthlyUsage->sum('widget_requests_used'),
+                ],
         ];
     }
 

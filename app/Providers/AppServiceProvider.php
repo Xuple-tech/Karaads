@@ -18,6 +18,7 @@ use App\Services\OpenAISpeechToTextService;
 use App\Services\OpenAITextToSpeechService;
 use App\Services\PodcastGenerationService;
 use App\Services\VoiceConversationService;
+use App\Services\Widget\WidgetToolExecutionContext;
 use App\Listeners\CreateTrialSubscription;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\ServiceProvider;
@@ -35,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(MessageFormatter::class);
         $this->app->singleton(RequestTelemetry::class);
         $this->app->singleton(ToolRegistry::class);
+        $this->app->singleton(WidgetToolExecutionContext::class);
         $this->app->singleton(AssetWorkflowService::class);
         $this->app->singleton(ToolExecutor::class);
         $this->app->singleton(StreamingProcessor::class);

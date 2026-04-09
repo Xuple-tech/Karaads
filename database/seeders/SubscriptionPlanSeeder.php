@@ -32,6 +32,10 @@ class SubscriptionPlanSeeder extends Seeder
                     'email_automation' => false,
                     'projects' => false,
                     'priority_support' => false,
+                    'widget_chat' => false,
+                    'widget_tools' => false,
+                    'widget_file_uploads' => false,
+                    'widget_mcp' => false,
                 ],
                 'quotas' => [
                     'requests' => ['daily' => 20, 'monthly' => 500, 'total' => null],
@@ -39,6 +43,8 @@ class SubscriptionPlanSeeder extends Seeder
                     'images' => ['daily' => null, 'monthly' => null, 'total' => null],
                     'voice_messages' => ['daily' => null, 'monthly' => null, 'total' => null],
                     'emails_processed' => ['daily' => null, 'monthly' => null, 'total' => null],
+                    'widget_requests' => ['daily' => null, 'monthly' => null, 'total' => null],
+                    'widgets' => ['daily' => null, 'monthly' => null, 'total' => 0],
                 ],
             ],
             [
@@ -62,6 +68,10 @@ class SubscriptionPlanSeeder extends Seeder
                     'email_automation' => false,
                     'projects' => false,
                     'priority_support' => false,
+                    'widget_chat' => true,
+                    'widget_tools' => true,
+                    'widget_file_uploads' => false,
+                    'widget_mcp' => false,
                 ],
                 'quotas' => [
                     'requests' => ['daily' => 200, 'monthly' => 5000, 'total' => null],
@@ -69,6 +79,8 @@ class SubscriptionPlanSeeder extends Seeder
                     'images' => ['daily' => 20, 'monthly' => 500, 'total' => null],
                     'voice_messages' => ['daily' => null, 'monthly' => null, 'total' => null],
                     'emails_processed' => ['daily' => null, 'monthly' => null, 'total' => null],
+                    'widget_requests' => ['daily' => null, 'monthly' => 1000, 'total' => null],
+                    'widgets' => ['daily' => null, 'monthly' => null, 'total' => 2],
                 ],
             ],
             [
@@ -92,6 +104,10 @@ class SubscriptionPlanSeeder extends Seeder
                     'email_automation' => true,
                     'projects' => true,
                     'priority_support' => true,
+                    'widget_chat' => true,
+                    'widget_tools' => true,
+                    'widget_file_uploads' => true,
+                    'widget_mcp' => true,
                 ],
                 'quotas' => [
                     'requests' => ['daily' => null, 'monthly' => null, 'total' => null],
@@ -99,6 +115,8 @@ class SubscriptionPlanSeeder extends Seeder
                     'images' => ['daily' => null, 'monthly' => null, 'total' => null],
                     'voice_messages' => ['daily' => null, 'monthly' => null, 'total' => null],
                     'emails_processed' => ['daily' => null, 'monthly' => null, 'total' => null],
+                    'widget_requests' => ['daily' => null, 'monthly' => null, 'total' => null],
+                    'widgets' => ['daily' => null, 'monthly' => null, 'total' => 10],
                 ],
             ],
         ];

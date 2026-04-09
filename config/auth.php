@@ -44,6 +44,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'internal' => [
+            'driver' => 'session',
+            'provider' => 'internal_users',
+        ],
     ],
 
     /*
@@ -67,6 +71,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+        'internal_users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\InternalUser::class,
         ],
 
         // 'users' => [

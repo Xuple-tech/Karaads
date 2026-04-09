@@ -37,6 +37,22 @@ class PlanEntitlementService
             'label' => 'Priority Support',
             'description' => 'Give subscribers access to priority support handling.',
         ],
+        'widget_chat' => [
+            'label' => 'Embeddable Widget',
+            'description' => 'Allow customers to deploy and use the embeddable AI widget.',
+        ],
+        'widget_tools' => [
+            'label' => 'Widget API Tools',
+            'description' => 'Allow widget bots to call configured HTTPS tools.',
+        ],
+        'widget_file_uploads' => [
+            'label' => 'Widget File Uploads',
+            'description' => 'Allow visitors to upload files in widget conversations.',
+        ],
+        'widget_mcp' => [
+            'label' => 'Widget MCP Servers',
+            'description' => 'Allow widget bots to use remote MCP server tools.',
+        ],
     ];
 
     public const QUOTAS = [
@@ -84,6 +100,24 @@ class PlanEntitlementService
             'monthly_column' => null,
             'usage_daily_field' => 'emails_processed',
             'usage_monthly_field' => 'emails_processed',
+        ],
+        'widget_requests' => [
+            'label' => 'Widget Requests',
+            'description' => 'Public widget chat requests and streaming responses.',
+            'unit' => 'requests',
+            'daily_column' => null,
+            'monthly_column' => null,
+            'usage_daily_field' => 'widget_requests_used',
+            'usage_monthly_field' => 'widget_requests_used',
+        ],
+        'widgets' => [
+            'label' => 'Active Widgets',
+            'description' => 'Maximum number of active widgets a subscriber can run.',
+            'unit' => 'widgets',
+            'daily_column' => null,
+            'monthly_column' => null,
+            'usage_daily_field' => null,
+            'usage_monthly_field' => null,
         ],
     ];
 

@@ -22,6 +22,7 @@ class UsageQuota extends Model
         'images_generated',
         'voice_messages',
         'emails_processed',
+        'widget_requests_used',
         'metadata',
     ];
 
@@ -86,6 +87,11 @@ class UsageQuota extends Model
         $this->increment('emails_processed', $amount);
     }
 
+    public function incrementWidgetRequests(int $amount = 1): void
+    {
+        $this->increment('widget_requests_used', $amount);
+    }
+
     /**
      * Get today's quota for user
      */
@@ -113,6 +119,7 @@ class UsageQuota extends Model
                 'images_generated' => 0,
                 'voice_messages' => 0,
                 'emails_processed' => 0,
+                'widget_requests_used' => 0,
             ]
         );
     }
@@ -144,6 +151,7 @@ class UsageQuota extends Model
             'images_generated' => $usage->sum('images_generated'),
             'voice_messages' => $usage->sum('voice_messages'),
             'emails_processed' => $usage->sum('emails_processed'),
+            'widget_requests_used' => $usage->sum('widget_requests_used'),
         ];
     }
 

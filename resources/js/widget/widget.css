@@ -1,0 +1,469 @@
+/* ─── reset / root ──────────────────────────────────────────────────────────── */
+:host,
+.kwati-widget-shell {
+  --kw-color:        var(--kwati-color, #7c3aed);
+  --kw-radius:       20px;
+  --kw-panel-w:      min(380px, calc(100vw - 32px));
+  --kw-panel-h:      min(620px, calc(100vh - 110px));
+  font-family:       Inter, system-ui, -apple-system, sans-serif;
+  font-size:         14px;
+  line-height:       1.5;
+  color-scheme:      light;
+  box-sizing:        border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/* ─── shell ─────────────────────────────────────────────────────────────────── */
+.kwati-widget-shell {
+  position: fixed;
+  right:    24px;
+  bottom:   24px;
+  z-index:  2147483647;
+  display:  flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+/* ─── launcher button ───────────────────────────────────────────────────────── */
+.kwati-launcher {
+  position:      relative;
+  width:         56px;
+  height:        56px;
+  border:        none;
+  border-radius: 50%;
+  background:    linear-gradient(135deg, var(--kw-color) 0%, color-mix(in srgb, var(--kw-color) 75%, #111827) 100%);
+  color:         #fff;
+  cursor:        pointer;
+  display:       flex;
+  align-items:   center;
+  justify-content: center;
+  box-shadow:    0 4px 24px color-mix(in srgb, var(--kw-color) 40%, transparent),
+                 0 1px 4px rgba(15, 23, 42, 0.18);
+  transition:    transform 0.2s ease, box-shadow 0.2s ease;
+  outline:       none;
+  flex-shrink:   0;
+}
+
+.kwati-launcher:hover {
+  transform:  translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--kw-color) 50%, transparent),
+              0 2px 6px rgba(15, 23, 42, 0.22);
+}
+
+.kwati-launcher:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.kwati-launcher svg {
+  width:      24px;
+  height:     24px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.kwati-launcher-badge {
+  position:   absolute;
+  top:        -3px;
+  right:      -3px;
+  min-width:  20px;
+  height:     20px;
+  padding:    0 5px;
+  border-radius: 999px;
+  background: #ef4444;
+  color:      white;
+  font-size:  11px;
+  font-weight: 700;
+  display:    inline-flex;
+  align-items: center;
+  justify-content: center;
+  border:     2px solid white;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+}
+
+/* ─── panel ─────────────────────────────────────────────────────────────────── */
+.kwati-panel {
+  width:         var(--kw-panel-w);
+  height:        var(--kw-panel-h);
+  border-radius: var(--kw-radius);
+  border:        1px solid rgba(15, 23, 42, 0.08);
+  background:    #fff;
+  box-shadow:    0 8px 40px rgba(15, 23, 42, 0.14), 0 2px 8px rgba(15, 23, 42, 0.08);
+  display:       flex;
+  flex-direction: column;
+  overflow:      hidden;
+  transform-origin: bottom right;
+  animation:     kwati-slide-in 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes kwati-slide-in {
+  from { opacity: 0; transform: scale(0.9) translateY(12px); }
+  to   { opacity: 1; transform: scale(1)   translateY(0);    }
+}
+
+/* ─── panel header ──────────────────────────────────────────────────────────── */
+.kwati-panel-header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  padding:         14px 16px 14px 18px;
+  background:      linear-gradient(135deg,
+    color-mix(in srgb, var(--kw-color) 14%, #fff) 0%,
+    color-mix(in srgb, var(--kw-color)  6%, #fff) 100%);
+  border-bottom:   1px solid rgba(15, 23, 42, 0.07);
+  flex-shrink:     0;
+}
+
+.kwati-panel-identity {
+  display:     flex;
+  align-items: center;
+  gap:         12px;
+  min-width:   0;
+}
+
+.kwati-avatar {
+  width:         38px;
+  height:        38px;
+  border-radius: 50%;
+  object-fit:    cover;
+  border:        2px solid rgba(255,255,255,0.8);
+  box-shadow:    0 2px 8px rgba(15, 23, 42, 0.12);
+  flex-shrink:   0;
+}
+
+.kwati-avatar-fallback {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  width:           38px;
+  height:          38px;
+  border-radius:   50%;
+  background:      color-mix(in srgb, var(--kw-color) 14%, #fff);
+  color:           var(--kw-color);
+  font-weight:     700;
+  font-size:       15px;
+  border:          2px solid rgba(255,255,255,0.8);
+  box-shadow:      0 2px 8px rgba(15, 23, 42, 0.1);
+  flex-shrink:     0;
+}
+
+.kwati-panel-name {
+  display:        flex;
+  flex-direction: column;
+  gap:            1px;
+  min-width:      0;
+}
+
+.kwati-panel-name strong {
+  display:       block;
+  font-size:     14px;
+  font-weight:   600;
+  color:         #0f172a;
+  white-space:   nowrap;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+}
+
+.kwati-panel-name span {
+  display:     block;
+  font-size:   12px;
+  color:       #64748b;
+  white-space: nowrap;
+}
+
+.kwati-online-dot {
+  display:       inline-block;
+  width:         6px;
+  height:        6px;
+  border-radius: 50%;
+  background:    #22c55e;
+  margin-right:  4px;
+  vertical-align: middle;
+}
+
+.kwati-close {
+  width:         32px;
+  height:        32px;
+  border:        none;
+  border-radius: 50%;
+  background:    rgba(15, 23, 42, 0.06);
+  color:         #475569;
+  cursor:        pointer;
+  display:       flex;
+  align-items:   center;
+  justify-content: center;
+  transition:    background 0.15s;
+  flex-shrink:   0;
+  outline:       none;
+}
+
+.kwati-close:hover {
+  background: rgba(15, 23, 42, 0.12);
+  color:      #0f172a;
+}
+
+.kwati-close svg {
+  width:  16px;
+  height: 16px;
+}
+
+/* ─── messages area ─────────────────────────────────────────────────────────── */
+.kwati-messages {
+  flex:           1;
+  overflow-y:     auto;
+  padding:        16px;
+  display:        flex;
+  flex-direction: column;
+  gap:            10px;
+  background:     linear-gradient(180deg, #f8fafc 0%, #fff 40%);
+  scroll-behavior: smooth;
+}
+
+.kwati-messages::-webkit-scrollbar { width: 4px; }
+.kwati-messages::-webkit-scrollbar-track { background: transparent; }
+.kwati-messages::-webkit-scrollbar-thumb { background: rgba(15, 23, 42, 0.12); border-radius: 4px; }
+
+/* ─── message bubbles ───────────────────────────────────────────────────────── */
+.kwati-message {
+  display:        flex;
+  flex-direction: column;
+  max-width:      82%;
+}
+
+.kwati-message.is-user {
+  align-self:  flex-end;
+  align-items: flex-end;
+}
+
+.kwati-message.is-assistant {
+  align-self:  flex-start;
+  align-items: flex-start;
+}
+
+.kwati-bubble {
+  padding:       10px 14px;
+  border-radius: 18px;
+  font-size:     14px;
+  line-height:   1.55;
+  white-space:   pre-wrap;
+  word-break:    break-word;
+}
+
+.kwati-message.is-assistant .kwati-bubble {
+  background:          #f1f5f9;
+  color:               #0f172a;
+  border-bottom-left-radius: 6px;
+}
+
+.kwati-message.is-user .kwati-bubble {
+  background:              linear-gradient(135deg, var(--kw-color), color-mix(in srgb, var(--kw-color) 80%, #4f46e5));
+  color:                   #fff;
+  border-bottom-right-radius: 6px;
+}
+
+/* streaming cursor */
+.kwati-cursor {
+  display:        inline-block;
+  width:          2px;
+  height:         1em;
+  background:     currentColor;
+  margin-left:    2px;
+  vertical-align: middle;
+  border-radius:  1px;
+  opacity:        0.7;
+  animation:      kwati-blink 0.9s infinite;
+}
+
+@keyframes kwati-blink {
+  0%, 100% { opacity: 0.7; }
+  50%       { opacity: 0;   }
+}
+
+/* ─── typing indicator ──────────────────────────────────────────────────────── */
+.kwati-typing {
+  display:     flex;
+  align-items: center;
+  gap:         5px;
+  padding:     12px 14px;
+  background:  #f1f5f9;
+  border-radius: 18px;
+  border-bottom-left-radius: 6px;
+  width: fit-content;
+}
+
+.kwati-typing span {
+  display:       block;
+  width:         7px;
+  height:        7px;
+  border-radius: 50%;
+  background:    #94a3b8;
+  animation:     kwati-bounce 1.2s infinite ease-in-out;
+}
+
+.kwati-typing span:nth-child(1) { animation-delay: 0s;    }
+.kwati-typing span:nth-child(2) { animation-delay: 0.18s; }
+.kwati-typing span:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes kwati-bounce {
+  0%, 60%, 100% { transform: translateY(0);    background: #94a3b8; }
+  30%            { transform: translateY(-6px); background: var(--kw-color); }
+}
+
+/* ─── error ─────────────────────────────────────────────────────────────────── */
+.kwati-error {
+  padding:       10px 13px;
+  border-radius: 14px;
+  background:    rgba(239, 68, 68, 0.08);
+  border:        1px solid rgba(239, 68, 68, 0.2);
+  color:         #b91c1c;
+  font-size:     13px;
+}
+
+/* ─── input area ────────────────────────────────────────────────────────────── */
+.kwati-input {
+  border-top: 1px solid rgba(15, 23, 42, 0.07);
+  padding:    12px 14px 10px;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.kwati-input-row {
+  display:       flex;
+  align-items:   flex-end;
+  gap:           8px;
+  border:        1px solid rgba(15, 23, 42, 0.14);
+  border-radius: 16px;
+  padding:       8px 8px 8px 14px;
+  background:    #f8fafc;
+  transition:    border-color 0.15s, box-shadow 0.15s;
+}
+
+.kwati-input-row:focus-within {
+  border-color: var(--kw-color);
+  box-shadow:   0 0 0 3px color-mix(in srgb, var(--kw-color) 14%, transparent);
+  background:   #fff;
+}
+
+.kwati-textarea {
+  flex:       1;
+  min-height: 22px;
+  max-height: 120px;
+  resize:     none;
+  border:     none;
+  background: transparent;
+  padding:    0;
+  font:       inherit;
+  font-size:  14px;
+  color:      #0f172a;
+  outline:    none;
+  line-height: 1.5;
+  overflow-y: auto;
+}
+
+.kwati-textarea::placeholder {
+  color: #94a3b8;
+}
+
+.kwati-input-actions {
+  display:     flex;
+  align-items: center;
+  gap:         4px;
+  flex-shrink: 0;
+}
+
+.kwati-file {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           32px;
+  height:          32px;
+  border-radius:   10px;
+  border:          none;
+  background:      transparent;
+  color:           #94a3b8;
+  cursor:          pointer;
+  transition:      background 0.15s, color 0.15s;
+}
+
+.kwati-file:hover {
+  background: rgba(15, 23, 42, 0.06);
+  color:      #475569;
+}
+
+.kwati-file svg { width: 16px; height: 16px; }
+
+.kwati-file-badge {
+  display:         inline-flex;
+  align-items:     center;
+  gap:             4px;
+  padding:         2px 8px;
+  border-radius:   999px;
+  background:      color-mix(in srgb, var(--kw-color) 10%, transparent);
+  color:           var(--kw-color);
+  font-size:       11px;
+  font-weight:     600;
+  cursor:          pointer;
+}
+
+.kwati-send {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  width:           34px;
+  height:          34px;
+  border-radius:   10px;
+  border:          none;
+  background:      var(--kw-color);
+  color:           white;
+  cursor:          pointer;
+  transition:      opacity 0.15s, transform 0.15s;
+  flex-shrink:     0;
+}
+
+.kwati-send:hover:not(:disabled) {
+  opacity:   0.88;
+  transform: scale(1.05);
+}
+
+.kwati-send:disabled {
+  opacity: 0.4;
+  cursor:  not-allowed;
+}
+
+.kwati-send svg { width: 16px; height: 16px; }
+
+/* ─── branding footer ───────────────────────────────────────────────────────── */
+.kwati-branding {
+  text-align: center;
+  font-size:  11px;
+  color:      #94a3b8;
+  padding:    5px 0 2px;
+}
+
+.kwati-branding a {
+  color:           inherit;
+  text-decoration: none;
+  font-weight:     500;
+}
+
+.kwati-branding a:hover {
+  color: var(--kw-color);
+}
+
+/* ─── mobile ────────────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .kwati-widget-shell {
+    right:  12px;
+    bottom: 12px;
+  }
+
+  .kwati-panel {
+    width:  calc(100vw - 24px);
+    height: calc(100dvh - 90px);
+    border-radius: 18px;
+  }
+}

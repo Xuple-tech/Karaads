@@ -495,6 +495,19 @@ class MetaAccountController extends Controller
         }
     }
 
+    public function webhookInfo(MetaAccount $account)
+    {
+        $this->authorize('view', $account);
+
+        $verifyToken = (string) config('services.meta.webhook_verify_token');
+
+        return response()->json([
+            'webhook_url' => url('/meta/webhook/receive/' . $verifyToken),
+            'verify_token' => $verifyToken,
+            'platform' => $account->platform,
+        ]);
+    }
+
     /**
      * Refresh account token if needed
      */

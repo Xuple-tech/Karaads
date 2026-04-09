@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ArrowRight, BookOpen, Facebook, Instagram, Mail, MessageSquare, Plus, Radio, Settings2, Smartphone, Zap } from 'lucide-react';
+import { ArrowRight, BookOpen, Facebook, Instagram, Mail, MessageSquare, Plus, Radio, Settings2, Smartphone, WandSparkles, Zap } from 'lucide-react';
 import { useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -205,6 +205,13 @@ export function Component() {
                                         </div>
                                         <div className="flex shrink-0 items-center gap-1">
                                             <Link
+                                                to={`/meta/accounts/${account.id}/setup`}
+                                                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                                                title="Setup guide"
+                                            >
+                                                <WandSparkles className="h-4 w-4" />
+                                            </Link>
+                                            <Link
                                                 to={`/meta/accounts/${account.id}/broadcast`}
                                                 className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground"
                                                 title="Broadcast"
@@ -304,6 +311,12 @@ export function Component() {
                                 <Link to="/mails">
                                     <span className="text-sm text-foreground">Email inbox</span>
                                     <Mail className="h-4 w-4 text-muted-foreground" />
+                                </Link>
+                            </Button>
+                            <Button asChild variant="ghost" className="h-auto justify-between px-3 py-2.5 text-left">
+                                <Link to="/widget">
+                                    <span className="text-sm text-foreground">Website widget</span>
+                                    <MessageSquare className="h-4 w-4 text-muted-foreground" />
                                 </Link>
                             </Button>
                         </div>

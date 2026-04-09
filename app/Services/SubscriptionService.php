@@ -276,6 +276,153 @@ class SubscriptionService
         ];
     }
 
+    public function canUseWidgetRequest(User $user, int $count = 1): array
+    {
+        $plan = $this->getUserPlan($user);
+
+        if (! $plan) {
+            return [
+                'allowed' => false,
+                'reason' => 'No plan found',
+            ];
+        }
+
+        if (! $this->entitlements->hasCapability($plan, 'widget_chat')) {
+            return [
+                'allowed' => false,
+                'reason' => 'Widget chat is not included in this plan',
+                'plan_id' => $plan->id,
+                'plan_name' => $plan->name,
+            ];
+        }
+
+        $dailyLimit = $this->entitlements->getDailyLimitForUsage($plan, 'widget_requests');
+        $monthlyLimit = $this->entitlements->getMonthlyLimitForUsage($plan, 'widget_requests');
+
+        if (! $dailyLimit && ! $monthlyLimit) {
+            return [
+                'allowed' => true,
+                'plan_id' => $plan->id,
+                'plan_name' => $plan->name,
+            ];
+        }
+
+        $quota = UsageQuota::getOrCreateTodayQuota($user->id, $plan->id);
+
+        if ($dailyLimit && ($quota->widget_requests_used + $count) > $dailyLimit) {
+            RateLimitViolation::logViolation(
+                $user->id,
+                $plan->id,
+                'widget_requests_per_day',
+                $dailyLimit,
+                $quota->widget_requests_used + $count,
+                "Attempted {$count} widget requests, limit is {$dailyLimit}"
+            );
+
+            return [
+                'allowed' => false,
+                'reason' => 'Daily widget request limit exceeded',
+                'limit' => $dailyLimit,
+                'used' => $quota->widget_requests_used,
+                'needed' => $count,
+                'plan_id' => $plan->id,
+                'plan_name' => $plan->name,
+                'reset_at' => now()->addDay()->startOfDay()->toDateTimeString(),
+                'reset_type' => 'daily',
+            ];
+        }
+
+        if ($monthlyLimit) {
+            $monthlyUsage = UsageQuota::getAggregatedMonthlyUsage($user->id);
+
+            if (($monthlyUsage['widget_requests_used'] + $count) > $monthlyLimit) {
+                RateLimitViolation::logViolation(
+                    $user->id,
+                    $plan->id,
+                    'widget_requests_per_month',
+                    $monthlyLimit,
+                    $monthlyUsage['widget_requests_used'] + $count,
+                    "Attempted {$count} widget requests, monthly limit is {$monthlyLimit}"
+                );
+
+                return [
+                    'allowed' => false,
+                    'reason' => 'Monthly widget request limit exceeded',
+                    'limit' => $monthlyLimit,
+                    'used' => $monthlyUsage['widget_requests_used'],
+                    'needed' => $count,
+                    'plan_id' => $plan->id,
+                    'plan_name' => $plan->name,
+                    'reset_at' => now()->addMonth()->startOfMonth()->toDateTimeString(),
+                    'reset_type' => 'monthly',
+                ];
+            }
+        }
+
+        return [
+            'allowed' => true,
+            'plan_id' => $plan->id,
+            'plan_name' => $plan->name,
+        ];
+    }
+
+    public function canCreateWidget(User $user, int $activeWidgets = 0): array
+    {
+        $plan = $this->getUserPlan($user);
+
+        if (! $plan) {
+            return [
+                'allowed' => false,
+                'reason' => 'No plan found',
+            ];
+        }
+
+        if (! $this->entitlements->hasCapability($plan, 'widget_chat')) {
+            return [
+                'allowed' => false,
+                'reason' => 'Embeddable widget is not included in this plan',
+                'plan_id' => $plan->id,
+                'plan_name' => $plan->name,
+            ];
+        }
+
+        $widgetLimit = $this->entitlements->getQuotaLimit($plan, 'widgets', 'total');
+
+        if (! $widgetLimit) {
+            return [
+                'allowed' => true,
+                'plan_id' => $plan->id,
+                'plan_name' => $plan->name,
+            ];
+        }
+
+        if ($activeWidgets >= $widgetLimit) {
+            return [
+                'allowed' => false,
+                'reason' => 'Active widget limit exceeded',
+                'limit' => $widgetLimit,
+                'used' => $activeWidgets,
+                'plan_id' => $plan->id,
+                'plan_name' => $plan->name,
+            ];
+        }
+
+        return [
+            'allowed' => true,
+            'plan_id' => $plan->id,
+            'plan_name' => $plan->name,
+            'limit' => $widgetLimit,
+            'used' => $activeWidgets,
+        ];
+    }
+
+    public function hasPlanCapability(User $user, string $capability): bool
+    {
+        $plan = $this->getUserPlan($user);
+
+        return $plan ? $this->entitlements->hasCapability($plan, $capability) : false;
+    }
+
     /**
      * Record a request usage
      */
@@ -347,6 +494,18 @@ class SubscriptionService
         $quota->incrementEmails($count);
     }
 
+    public function recordWidgetRequest(User $user, int $count = 1): void
+    {
+        $plan = $this->getUserPlan($user);
+
+        if (! $plan) {
+            return;
+        }
+
+        $quota = UsageQuota::getOrCreateTodayQuota($user->id, $plan->id);
+        $quota->incrementWidgetRequests($count);
+    }
+
     /**
      * Get user's usage statistics
      */
@@ -368,6 +527,7 @@ class SubscriptionService
                 'images' => $today?->images_generated ?? 0,
                 'voice_messages' => $today?->voice_messages ?? 0,
                 'emails' => $today?->emails_processed ?? 0,
+                'widget_requests' => $today?->widget_requests_used ?? 0,
             ],
             'monthly' => [
                 'requests' => $monthlyUsage['requests_used'],
@@ -375,6 +535,7 @@ class SubscriptionService
                 'images' => $monthlyUsage['total_images'],
                 'voice_messages' => $monthlyUsage['total_voice_messages'],
                 'emails' => $monthlyUsage['total_emails'],
+                'widget_requests' => $monthlyUsage['widget_requests_used'],
             ],
             'limits' => $plan ? [
                 'requests_per_day' => $this->entitlements->getDailyLimitForUsage($plan, 'requests'),
@@ -383,6 +544,9 @@ class SubscriptionService
                 'tokens_per_month' => $this->entitlements->getMonthlyLimitForUsage($plan, 'tokens'),
                 'images_per_day' => $this->entitlements->getDailyLimitForUsage($plan, 'images'),
                 'images_per_month' => $this->entitlements->getMonthlyLimitForUsage($plan, 'images'),
+                'widget_requests_per_day' => $this->entitlements->getDailyLimitForUsage($plan, 'widget_requests'),
+                'widget_requests_per_month' => $this->entitlements->getMonthlyLimitForUsage($plan, 'widget_requests'),
+                'widgets_total' => $this->entitlements->getQuotaLimit($plan, 'widgets', 'total'),
             ] : null,
             'progress' => [
                 'daily_requests' => $today ? $this->calculateProgress($today->requests_used, $this->entitlements->getDailyLimitForUsage($plan, 'requests')) : 0,

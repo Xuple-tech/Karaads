@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Auth\AdminSessionController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\StaffController;
@@ -13,6 +14,15 @@ use App\Http\Controllers\Admin\DeveloperApiController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\AdminOrStaffMiddleware;
 use Illuminate\Support\Facades\Route;
+
+// ========== ADMIN AUTH (guest) ==========
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::middleware('guest:internal')->group(function () {
+        Route::get('/login', [AdminSessionController::class, 'create'])->name('login');
+        Route::post('/login', [AdminSessionController::class, 'store'])->name('login.store');
+    });
+    Route::post('/logout', [AdminSessionController::class, 'destroy'])->name('logout');
+});
 
 // ========== ADMIN MANAGEMENT ROUTES ==========
 Route::middleware([AdminMiddleware::class])->prefix('admin')->name('admin.')->group(function () {

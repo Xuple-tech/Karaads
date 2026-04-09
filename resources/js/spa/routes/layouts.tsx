@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { AudioLines, CreditCard, LogOut, PenSquare, RadioTower, Settings, SquarePen, Star, Trash2, MoreHorizontal } from 'lucide-react';
+import { AudioLines, CreditCard, Globe2, LogOut, PenSquare, RadioTower, Settings, SquarePen, Star, Trash2, MoreHorizontal } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { NavLink, Navigate, Outlet, matchPath, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -128,6 +128,7 @@ const mainNavItems = [
     { to: '/new', label: 'New Chat', icon: SquarePen },
     { to: '/voice-chat', label: 'Voice', icon: AudioLines },
     { to: '/automations', label: 'Automations', icon: RadioTower },
+    { to: '/widget', label: 'Widget', icon: Globe2 },
     { to: '/subscription', label: 'Upgrade Plan', icon: Star },
 ];
 

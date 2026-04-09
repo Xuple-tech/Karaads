@@ -18,6 +18,8 @@ use App\Http\Controllers\Meta\MetaMessageController;
 use App\Http\Controllers\Meta\MetaPreferenceController;
 use App\Http\Controllers\Meta\MetaReplyTemplateController;
 use App\Http\Controllers\Meta\MetaBroadcastController;
+use App\Http\Controllers\WidgetConfigController;
+use App\Http\Controllers\WidgetPublicController;
 use App\Http\Controllers\Admin\PersonalizationAdminController;
 use App\Http\Controllers\Admin\AIModeController;
 use App\Http\Controllers\Admin\SubscriptionPlanController as AdminSubscriptionPlanController;
@@ -35,6 +37,12 @@ Route::prefix('session')->group(function () {
     Route::get('/verify-email/{id}/{hash}', [SessionAuthController::class, 'verifyEmail'])
         ->middleware(['signed', 'throttle:6,1'])
         ->name('session.verification.verify');
+});
+
+Route::prefix('widget')->group(function () {
+    Route::get('/{token}/config', [WidgetPublicController::class, 'config']);
+    Route::post('/{token}/session', [WidgetPublicController::class, 'startSession']);
+    Route::post('/{token}/chat', [WidgetPublicController::class, 'chat']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -104,6 +112,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/accounts/initiate-oauth', [MetaAccountController::class, 'initiateOAuth']);
         Route::delete('/accounts/{account}', [MetaAccountController::class, 'disconnect']);
         Route::patch('/accounts/{account}/status', [MetaAccountController::class, 'updateStatus']);
+        Route::get('/accounts/{account}/webhook-info', [MetaAccountController::class, 'webhookInfo']);
+        Route::post('/accounts/{account}/test-connection', [MetaAccountController::class, 'testConnection']);
         Route::get('/accounts/{account}/preferences', [MetaPreferenceController::class, 'show']);
         Route::put('/accounts/{account}/preferences', [MetaPreferenceController::class, 'update']);
         Route::get('/accounts/{account}/conversations', [MetaMessageController::class, 'conversations']);
@@ -129,6 +139,24 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/accounts/{account}/broadcasts', [MetaBroadcastController::class, 'store']);
         Route::get('/accounts/{account}/broadcasts/{broadcast}', [MetaBroadcastController::class, 'show']);
         Route::post('/accounts/{account}/broadcasts/{broadcast}/send', [MetaBroadcastController::class, 'send']);
+    });
+
+    Route::prefix('widget')->group(function () {
+        Route::get('/', [WidgetConfigController::class, 'index']);
+        Route::post('/', [WidgetConfigController::class, 'store']);
+        Route::get('/{widget}', [WidgetConfigController::class, 'show']);
+        Route::put('/{widget}', [WidgetConfigController::class, 'update']);
+        Route::delete('/{widget}', [WidgetConfigController::class, 'destroy']);
+
+        Route::get('/{widget}/knowledge', [WidgetConfigController::class, 'listKnowledge']);
+        Route::post('/{widget}/knowledge', [WidgetConfigController::class, 'addKnowledge']);
+        Route::post('/{widget}/knowledge/pdf', [WidgetConfigController::class, 'uploadPdf']);
+        Route::delete('/{widget}/knowledge/{item}', [WidgetConfigController::class, 'deleteKnowledge']);
+
+        Route::get('/{widget}/tools', [WidgetConfigController::class, 'listTools']);
+        Route::post('/{widget}/tools', [WidgetConfigController::class, 'addTool']);
+        Route::put('/{widget}/tools/{tool}', [WidgetConfigController::class, 'updateTool']);
+        Route::delete('/{widget}/tools/{tool}', [WidgetConfigController::class, 'deleteTool']);
     });
 
     // Image Generation

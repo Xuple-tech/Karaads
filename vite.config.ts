@@ -8,7 +8,7 @@ import { wayfinder } from '@laravel/vite-plugin-wayfinder';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.tsx', 'resources/js/spa.tsx'],
+            input: ['resources/css/app.css', 'resources/js/app.tsx', 'resources/js/spa.tsx', 'resources/js/widget/index.tsx'],
             ssr: 'resources/js/ssr.tsx',
             refresh: true,
         }),
@@ -18,5 +18,14 @@ export default defineConfig({
     ],
     esbuild: {
         jsx: 'automatic',
-    }
+    },
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    widget: ['resources/js/widget/index.tsx'],
+                },
+            },
+        },
+    },
 });

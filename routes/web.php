@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Vite;
 
 Route::get('/', SpaController::class)->name('home');
 Route::get('/app', SpaController::class)->name('app');
@@ -93,6 +94,39 @@ Route::post('/meta/webhook/receive/{token}', [MetaWebhookController::class, 'han
 
 Route::middleware('auth')->group(function () {
     Route::get('/meta/oauth/callback', [MetaAccountController::class, 'handleCallback'])->name('meta.oauth.callback');
+});
+
+Route::get('/widget-preview/{token}', function (string $token) {
+    $scriptUrl = Vite::asset('resources/js/widget/index.tsx');
+    $html = <<<HTML
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Widget Preview</title>
+    <style>
+        body { margin: 0; font-family: system-ui, sans-serif; background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%); min-height: 100vh; }
+        .shell { max-width: 960px; margin: 0 auto; padding: 48px 24px 120px; }
+        .card { background: rgba(255,255,255,.82); backdrop-filter: blur(12px); border: 1px solid rgba(15,23,42,.08); border-radius: 24px; padding: 24px; box-shadow: 0 20px 45px rgba(15,23,42,.08); }
+        h1 { margin: 0 0 8px; font-size: 32px; color: #0f172a; }
+        p { margin: 0; color: #475569; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <div class="card">
+            <h1>Widget Preview</h1>
+            <p>This preview loads the live embeddable widget bundle exactly as it will appear on a customer site.</p>
+        </div>
+    </div>
+    <script>window.KwatiWidgetToken = "{$token}";</script>
+    <script src="{$scriptUrl}" async></script>
+</body>
+</html>
+HTML;
+
+    return response($html)->header('Content-Type', 'text/html');
 });
 
 Route::get('test_ip_address', function () {

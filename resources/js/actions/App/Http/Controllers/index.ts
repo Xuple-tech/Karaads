@@ -1,5 +1,7 @@
 import Api from './Api'
+import WidgetPublicController from './WidgetPublicController'
 import Meta from './Meta'
+import WidgetConfigController from './WidgetConfigController'
 import Admin from './Admin'
 import SpaController from './SpaController'
 import MailController from './MailController'
@@ -22,7 +24,9 @@ import DeveloperApiDocsController from './DeveloperApiDocsController'
 import DeveloperApi from './DeveloperApi'
 const Controllers = {
     Api: Object.assign(Api, Api),
+WidgetPublicController: Object.assign(WidgetPublicController, WidgetPublicController),
 Meta: Object.assign(Meta, Meta),
+WidgetConfigController: Object.assign(WidgetConfigController, WidgetConfigController),
 Admin: Object.assign(Admin, Admin),
 SpaController: Object.assign(SpaController, SpaController),
 MailController: Object.assign(MailController, MailController),

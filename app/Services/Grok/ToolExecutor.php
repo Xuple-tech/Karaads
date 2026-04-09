@@ -3,13 +3,15 @@
 namespace App\Services\Grok;
 
 use App\Services\SearchService;
+use App\Services\Widget\WidgetToolExecutionContext;
 use Illuminate\Support\Facades\Log;
 
 class ToolExecutor
 {
     public function __construct(
         private SearchService $searchService,
-        private AssetWorkflowService $assetWorkflowService
+        private AssetWorkflowService $assetWorkflowService,
+        private WidgetToolExecutionContext $widgetToolContext
     ) {
     }
 
@@ -23,7 +25,7 @@ class ToolExecutor
                 'edit_image' => $this->assetWorkflowService->handleImageEdit($arguments, $chatId),
                 'generate_pdf_document' => $this->assetWorkflowService->generatePdfDocument($arguments, $chatId),
                 'generate_word_document' => $this->assetWorkflowService->generateWordDocument($arguments, $chatId),
-                default => throw new \Exception("This feature isn't available right now."),
+                default => $this->executeDynamicTool($functionName, $arguments),
             };
         } catch (\Throwable $e) {
             Log::error("Tool execution failed for {$functionName}: " . $e->getMessage(), [
@@ -34,6 +36,15 @@ class ToolExecutor
 
             throw new \Exception($e->getMessage());
         }
+    }
+
+    private function executeDynamicTool(string $functionName, array $arguments): array
+    {
+        if ($this->widgetToolContext->hasHandler($functionName)) {
+            return $this->widgetToolContext->execute($functionName, $arguments);
+        }
+
+        throw new \Exception("This feature isn't available right now.");
     }
 
     private function executeWebSearch(array $arguments): array

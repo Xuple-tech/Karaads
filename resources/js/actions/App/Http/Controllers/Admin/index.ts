@@ -1,6 +1,7 @@
 import AIModeController from './AIModeController'
 import PersonalizationAdminController from './PersonalizationAdminController'
 import SubscriptionPlanController from './SubscriptionPlanController'
+import Auth from './Auth'
 import DashboardController from './DashboardController'
 import UserController from './UserController'
 import StaffController from './StaffController'
@@ -15,6 +16,7 @@ const Admin = {
     AIModeController: Object.assign(AIModeController, AIModeController),
 PersonalizationAdminController: Object.assign(PersonalizationAdminController, PersonalizationAdminController),
 SubscriptionPlanController: Object.assign(SubscriptionPlanController, SubscriptionPlanController),
+Auth: Object.assign(Auth, Auth),
 DashboardController: Object.assign(DashboardController, DashboardController),
 UserController: Object.assign(UserController, UserController),
 StaffController: Object.assign(StaffController, StaffController),

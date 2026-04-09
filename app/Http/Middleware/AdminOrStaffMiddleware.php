@@ -14,14 +14,16 @@ class AdminOrStaffMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::check()) {
-            return redirect()->route('login');
+        if (! Auth::guard('internal')->check()) {
+            return redirect()->route('admin.login');
         }
 
-        $user = Auth::user();
+        /** @var \App\Models\InternalUser $user */
+        $user = Auth::guard('internal')->user();
 
-        if (!($user->isAdmin() || $user->isStaff())) {
-            abort(403, 'Unauthorized access. Admin or Staff privileges required.');
+        if (! $user->is_active) {
+            Auth::guard('internal')->logout();
+            return redirect()->route('admin.login');
         }
 
         return $next($request);
