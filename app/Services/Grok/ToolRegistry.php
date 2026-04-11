@@ -115,7 +115,7 @@ class ToolRegistry
                 'type' => 'function',
                 'function' => [
                     'name' => 'generate_pdf_document',
-                    'description' => 'Generate a PDF document with formatted content. Use when the user asks to create a PDF, report, or any document that needs to be easily readable and printable.',
+                    'description' => 'Generate a PDF document. Use ONLY when the user explicitly requests a PDF file. For all other document requests (reports, proposals, letters, etc.) use generate_word_document instead.',
                     'parameters' => [
                         'type' => 'object',
                         'properties' => [
@@ -152,7 +152,7 @@ class ToolRegistry
                 'type' => 'function',
                 'function' => [
                     'name' => 'generate_word_document',
-                    'description' => 'Generate a Microsoft Word (.docx) document with formatted content. Use when the user specifically requests a Word document.',
+                    'description' => 'Generate a Microsoft Word (.docx) document. This is the DEFAULT document format. Use whenever the user asks to create any document, report, proposal, letter, resume, contract, or written content — unless they explicitly ask for PDF.',
                     'parameters' => [
                         'type' => 'object',
                         'properties' => [

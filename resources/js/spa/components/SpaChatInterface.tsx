@@ -415,6 +415,7 @@ export default function SpaChatInterface({
         setError(null);
         setIsDelayed(false);
         setIsLoading(true);
+        document.dispatchEvent(new CustomEvent('kwati:message-sent'));
 
         dispatch({
             type: 'user.append',
@@ -602,6 +603,19 @@ export default function SpaChatInterface({
         }
     }, [files, handleSubmit, mode]);
 
+    // Wire suggestion chip clicks into the input
+    useEffect(() => {
+        const handler = (e: Event) => {
+            const text = (e as CustomEvent<string>).detail;
+            if (!text || !inputRef.current) return;
+            inputRef.current.value = text;
+            inputRef.current.focus();
+            inputRef.current.dispatchEvent(new Event('input', { bubbles: true }));
+        };
+        document.addEventListener('kwati:suggestion', handler);
+        return () => document.removeEventListener('kwati:suggestion', handler);
+    }, []);
+
     const welcome = useMemo(() => state.messages.length === 0, [state.messages.length]);
     const firstName = userName?.split(' ')[0];
 
@@ -612,30 +626,30 @@ export default function SpaChatInterface({
             <div ref={scrollRef} className="flex-1 overflow-y-auto overscroll-contain pb-48 pt-6 custom-scrollbar">
                 <div className="mx-auto w-full max-w-2xl px-4">
 
-                    {/* Welcome — Claude-style centered greeting */}
+                    {/* Welcome screen */}
                     {welcome && (
-                        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-8 text-center">
-                            {/* Avatar */}
-                            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] shadow-lg">
-                                <svg className="h-9 w-9 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                                    <path d="M2 17l10 5 10-5"/>
-                                    <path d="M2 12l10 5 10-5"/>
-                                </svg>
-                            </div>
+                        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-7 text-center">
 
-                            <div className="space-y-2">
-                                <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-                                    {firstName ? `Good to see you, ${firstName}` : 'How can I help you?'}
-                                </h1>
-                            </div>
+                            {/* Logo */}
+                            <img
+                                src="/logo.png"
+                                alt="Kwati AI"
+                                className="h-9 w-auto select-none opacity-90"
+                                draggable={false}
+                            />
 
-                            <div className="grid w-full max-w-xl grid-cols-2 gap-2">
+                            {/* Greeting */}
+                            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+                                {firstName ? `Good to see you, ${firstName}` : 'How can I help you?'}
+                            </h1>
+
+                            {/* Prompt suggestions */}
+                            <div className="grid w-full max-w-lg grid-cols-2 gap-2">
                                 {WELCOME_PROMPTS.map((prompt) => (
                                     <button
                                         key={prompt}
                                         type="button"
-                                        className="rounded-xl border border-border bg-card px-4 py-3.5 text-left text-sm text-muted-foreground transition-all hover:border-primary/40 hover:bg-accent hover:text-foreground"
+                                        className="rounded-xl border border-border/60 bg-card px-4 py-3 text-left text-[0.825rem] text-muted-foreground transition-all hover:border-[#8b5cf6]/30 hover:bg-accent hover:text-foreground"
                                         onClick={() => {
                                             if (inputRef.current) {
                                                 inputRef.current.value = prompt;
@@ -670,15 +684,14 @@ export default function SpaChatInterface({
 
                     {/* Messages */}
                     <div className="space-y-8">
-                        {state.messages.map((message) => {
-                            return (
-                                <ChatMessageRenderer
-                                    key={message.id}
-                                    message={message}
-                                    onRegenerate={message.role === 'assistant' ? handleRegenerate : undefined}
-                                />
-                            );
-                        })}
+                        {state.messages.map((message, index) => (
+                            <ChatMessageRenderer
+                                key={message.id}
+                                message={message}
+                                onRegenerate={message.role === 'assistant' ? handleRegenerate : undefined}
+                                isLast={index === state.messages.length - 1}
+                            />
+                        ))}
 
                         {/* Skeleton while waiting for first SSE token */}
                         {isLoading && !state.streamingMessageId && (

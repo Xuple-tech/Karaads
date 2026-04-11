@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { AudioLines, CreditCard, Globe2, LogOut, PenSquare, RadioTower, Settings, SquarePen, Star, Trash2, MoreHorizontal } from 'lucide-react';
+import { AudioLines, CreditCard, LogOut, PenSquare, RadioTower, Settings, SquarePen, Star, Trash2, MoreHorizontal } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { NavLink, Navigate, Outlet, matchPath, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -128,7 +128,6 @@ const mainNavItems = [
     { to: '/new', label: 'New Chat', icon: SquarePen },
     { to: '/voice-chat', label: 'Voice', icon: AudioLines },
     { to: '/automations', label: 'Automations', icon: RadioTower },
-    { to: '/widget', label: 'Widget', icon: Globe2 },
     { to: '/subscription', label: 'Upgrade Plan', icon: Star },
 ];
 
@@ -212,6 +211,7 @@ function SpaSidebar() {
                 <nav className="mb-1 space-y-0.5 pt-1">
                     {mainNavItems.map(({ to, label, icon: Icon }) => (
                         <NavLink
+                            key={to}
                             className={({ isActive }) =>
                                 cn(
                                     'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors',
@@ -220,7 +220,6 @@ function SpaSidebar() {
                                         : 'text-sidebar-foreground/60 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'
                                 )
                             }
-                            key={to}
                             to={to}
                         >
                             <Icon size={15} className="flex-shrink-0 opacity-70" />
@@ -454,15 +453,8 @@ export function PublicLayout() {
             <header className="sticky top-0 z-50 border-b border-border/30 bg-background/90 backdrop-blur-md">
                 <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
                     {/* Logo */}
-                    <NavLink className="flex items-center gap-2 hover:opacity-80 transition-opacity" to={data?.authenticated ? '/app' : '/'}>
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9]">
-                            <svg className="h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                                <path d="M2 17l10 5 10-5"/>
-                                <path d="M2 12l10 5 10-5"/>
-                            </svg>
-                        </div>
-                        <span className="text-sm font-semibold text-foreground">Kwati AI</span>
+                    <NavLink className="hover:opacity-75 transition-opacity" to={data?.authenticated ? '/app' : '/'}>
+                        <img src="/logo.png" alt="Kwati AI" className="h-7 w-auto select-none" draggable={false} />
                     </NavLink>
 
                     {/* Links */}

@@ -1,18 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
-import { Check, ChevronDown, Copy, Download, ExternalLink, FileText, Globe, ImageIcon } from 'lucide-react';
+import { Check, ChevronDown, Copy, Download, ExternalLink, FileText, Globe } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Card, CardContent } from '@/components/ui/card';
 import 'katex/dist/katex.min.css';
 
 type Segment =
     | { type: 'markdown'; content: string }
     | { type: 'sources'; payload: any[] }
-    | { type: 'attachments'; payload: any[] };
+    | { type: 'attachments'; payload: any[] }
+    | { type: 'suggestions'; payload: string[] };
 
 /**
  * Strip all kwati-tool/sources/attachments fenced blocks (complete or partial)
@@ -20,15 +20,15 @@ type Segment =
  * activities during streaming, so we never render these blocks inline.
  */
 function stripKwatiBlocks(markdown: string): string {
-    // Remove complete blocks
+    // Remove complete kwati-tool blocks (tool status shown via SSE, not inline)
     let result = markdown.replace(/```kwati-tool[\s\S]*?```/g, '');
-    // Remove any partial/incomplete block that hasn't received its closing ```
+    // Remove any partial/incomplete kwati-tool block
     result = result.replace(/```kwati-tool[\s\S]*$/g, '');
     return result;
 }
 
 function parseSegments(markdown: string): Segment[] {
-    const pattern = /```kwati-(sources|attachments)\n([\s\S]*?)```/g;
+    const pattern = /```kwati-(sources|attachments|suggestions)\n([\s\S]*?)```/g;
     const segments: Segment[] = [];
     let lastIndex = 0;
     let match: RegExpExecArray | null;
@@ -44,7 +44,7 @@ function parseSegments(markdown: string): Segment[] {
 
         try {
             const payload = JSON.parse(json);
-            segments.push({ type: kind as 'sources' | 'attachments', payload });
+            segments.push({ type: kind as 'sources' | 'attachments' | 'suggestions', payload });
         } catch {
             // Malformed JSON — treat as plain markdown
             segments.push({ type: 'markdown', content: fullMatch });
@@ -246,63 +246,113 @@ function SourcesBlock({ payload }: { payload: any[] }) {
 }
 
 function AttachmentsBlock({ payload }: { payload: any[] }) {
-    const extensionFor = (attachment: any) => {
-        const name = attachment.name || '';
-        const match = name.match(/\.([a-z0-9]+)$/i);
-
-        if (match) return match[1].toUpperCase();
-        if (attachment.mime_type === 'application/pdf') return 'PDF';
-        if (attachment.mime_type?.includes('wordprocessingml')) return 'DOCX';
-
-        return attachment.kind === 'image' ? 'IMAGE' : 'FILE';
-    };
+    const images = payload.filter((a) => a.kind === 'image' || a.mime_type?.startsWith('image/'));
+    const files  = payload.filter((a) => a.kind !== 'image' && !a.mime_type?.startsWith('image/'));
 
     return (
-        <div className="grid gap-3 md:grid-cols-2 mt-4">
-            {payload.map((attachment) => (
-                <Card className="overflow-hidden border-border/60 bg-background/80 shadow-sm" key={attachment.id || attachment.url || attachment.name}>
-                    <CardContent className="flex items-start gap-3 p-4">
-                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                            {attachment.kind === 'image'
-                                ? <ImageIcon className="h-4 w-4" />
-                                : <FileText className="h-4 w-4" />}
+        <div className="mt-3 space-y-3">
+            {/* Images — inline preview */}
+            {images.map((attachment) => (
+                <div key={attachment.id || attachment.url} className="group/img relative w-fit max-w-full overflow-hidden rounded-2xl border border-border/30">
+                    <img
+                        src={attachment.url}
+                        alt={attachment.name || 'Generated image'}
+                        className="block max-h-[480px] max-w-full rounded-2xl object-contain"
+                        loading="lazy"
+                    />
+                    {attachment.url && (
+                        <div className="absolute inset-x-0 bottom-0 flex items-center justify-end gap-1.5 bg-gradient-to-t from-black/60 to-transparent px-3 py-2.5 opacity-0 transition-opacity group-hover/img:opacity-100">
+                            <a
+                                href={attachment.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm transition hover:bg-white/20"
+                            >
+                                <ExternalLink className="h-3 w-3" />
+                                Open
+                            </a>
+                            <a
+                                href={attachment.url}
+                                download
+                                className="flex items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm transition hover:bg-white/20"
+                            >
+                                <Download className="h-3 w-3" />
+                                Save
+                            </a>
                         </div>
-                        <div className="min-w-0 flex-1 space-y-2">
-                            <div className="flex items-center gap-2">
-                                <span className="inline-flex rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-                                    {extensionFor(attachment)}
-                                </span>
-                                {attachment.size ? (
-                                    <span className="text-[11px] text-muted-foreground">
-                                        {(attachment.size / 1024).toFixed(1)} KB
-                                    </span>
-                                ) : null}
-                            </div>
-                            <div>
-                                <p className="truncate text-sm font-semibold text-foreground">{attachment.name || 'Attachment'}</p>
-                                {attachment.mime_type ? <p className="truncate text-xs text-muted-foreground">{attachment.mime_type}</p> : null}
-                            </div>
-                            {attachment.url ? (
-                                <div className="flex items-center gap-3 text-xs font-semibold">
-                                    <a className="inline-flex items-center gap-1 text-primary hover:underline" href={attachment.url} rel="noreferrer" target="_blank">
-                                        <ExternalLink className="h-3.5 w-3.5" />
-                                        Open
-                                    </a>
-                                    <a className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground" download href={attachment.url}>
-                                        <Download className="h-3.5 w-3.5" />
-                                        Download
-                                    </a>
+                    )}
+                </div>
+            ))}
+
+            {/* Files — Claude-style document card */}
+            {files.length > 0 && (
+                <div className="flex flex-col gap-2">
+                    {files.map((attachment) => {
+                        const name = attachment.name || 'Document';
+                        const ext = name.match(/\.([a-z0-9]+)$/i)?.[1]?.toUpperCase() ?? 'FILE';
+                        return (
+                            <div
+                                key={attachment.id || attachment.url}
+                                className="flex items-center gap-3 rounded-xl border border-border/50 bg-card px-4 py-3 max-w-sm"
+                            >
+                                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted/60">
+                                    <FileText className="h-4 w-4 text-muted-foreground" />
                                 </div>
-                            ) : null}
-                        </div>
-                    </CardContent>
-                </Card>
+                                <div className="min-w-0 flex-1">
+                                    <p className="truncate text-sm font-medium text-foreground">{name}</p>
+                                    <p className="text-xs text-muted-foreground">{ext}</p>
+                                </div>
+                                {attachment.url && (
+                                    <a
+                                        href={attachment.url}
+                                        download
+                                        title="Download"
+                                        className="shrink-0 rounded-lg p-1.5 text-muted-foreground transition hover:bg-accent hover:text-foreground"
+                                    >
+                                        <Download className="h-4 w-4" />
+                                    </a>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
+}
+
+function SuggestionsBlock({ payload, isLast }: { payload: string[]; isLast: boolean }) {
+    const [visible, setVisible] = useState(true);
+
+    useEffect(() => {
+        const hide = () => setVisible(false);
+        document.addEventListener('kwati:message-sent', hide);
+        return () => document.removeEventListener('kwati:message-sent', hide);
+    }, []);
+
+    if (!payload.length || !visible || !isLast) return null;
+
+    return (
+        <div className="mt-4 flex flex-wrap gap-2">
+            {payload.map((suggestion) => (
+                <button
+                    key={suggestion}
+                    type="button"
+                    onClick={() =>
+                        document.dispatchEvent(
+                            new CustomEvent('kwati:suggestion', { detail: suggestion })
+                        )
+                    }
+                    className="rounded-xl border border-border/60 bg-card px-3.5 py-2 text-left text-[0.8rem] text-muted-foreground transition-colors hover:border-[#8b5cf6]/40 hover:bg-[#8b5cf6]/5 hover:text-foreground"
+                >
+                    {suggestion}
+                </button>
             ))}
         </div>
     );
 }
 
-export default function MarkdownRenderer({ markdown }: { markdown: string }) {
+export default function MarkdownRenderer({ markdown, isLast = false }: { markdown: string; isLast?: boolean }) {
     const cleaned = stripKwatiBlocks(markdown);
     const segments = parseSegments(cleaned);
 
@@ -314,6 +364,9 @@ export default function MarkdownRenderer({ markdown }: { markdown: string }) {
                 }
                 if (segment.type === 'sources') {
                     return <SourcesBlock key={index} payload={segment.payload} />;
+                }
+                if (segment.type === 'suggestions') {
+                    return <SuggestionsBlock key={index} payload={segment.payload} isLast={isLast} />;
                 }
                 return <AttachmentsBlock key={index} payload={segment.payload} />;
             })}

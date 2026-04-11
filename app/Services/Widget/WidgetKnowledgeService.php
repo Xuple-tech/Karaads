@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\WidgetConfig;
 use App\Models\WidgetKnowledgeItem;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -41,7 +42,7 @@ class WidgetKnowledgeService
         ]);
 
         try {
-            $response = Http::timeout(10)->get($url);
+            $response = $this->sendPublicGet($url);
             $response->throw();
 
             $content = $this->normalizeText(strip_tags($response->body()));
@@ -63,6 +64,22 @@ class WidgetKnowledgeService
         }
 
         return $item->fresh();
+    }
+
+    public function syncUrl(WidgetConfig $widget, User $user, string $url, ?string $name = null): WidgetKnowledgeItem
+    {
+        $existing = WidgetKnowledgeItem::query()
+            ->where('widget_id', $widget->id)
+            ->where('user_id', $user->id)
+            ->where('type', 'url')
+            ->where('source_url', $url)
+            ->first();
+
+        if ($existing) {
+            $existing->delete();
+        }
+
+        return $this->addUrl($widget, $user, $url, $name);
     }
 
     public function addPdf(WidgetConfig $widget, User $user, UploadedFile $file): WidgetKnowledgeItem
@@ -144,5 +161,38 @@ class WidgetKnowledgeService
                 throw new \RuntimeException('Private or reserved network targets are not allowed.');
             }
         }
+    }
+
+    private function sendPublicGet(string $url)
+    {
+        $client = Http::timeout(5)->connectTimeout(3)->withoutRedirecting();
+
+        try {
+            return $client->get($url);
+        } catch (\Throwable $e) {
+            if (! $this->isCertificateAuthorityError($e)) {
+                throw $e;
+            }
+
+            Log::warning('Retrying widget knowledge fetch without SSL verification after certificate error.', [
+                'url' => $url,
+                'error' => $e->getMessage(),
+            ]);
+
+            return $this->insecurePublicClient()->get($url);
+        }
+    }
+
+    private function insecurePublicClient(): PendingRequest
+    {
+        return Http::timeout(5)
+            ->connectTimeout(3)
+            ->withoutRedirecting()
+            ->withoutVerifying();
+    }
+
+    private function isCertificateAuthorityError(\Throwable $e): bool
+    {
+        return str_contains(strtolower($e->getMessage()), 'curl error 60');
     }
 }

@@ -40,7 +40,7 @@ export function WidgetApp({ token }: { token: string }) {
         void loadConfig();
     }, [token]);
 
-    const { messages, isSending, sendMessage, error: chatError } = useWidgetChat({
+    const { messages, isSending, sendMessage, clearConversation, error: chatError } = useWidgetChat({
         token,
         greeting: config?.greeting,
     });
@@ -67,6 +67,7 @@ export function WidgetApp({ token }: { token: string }) {
                     isSending={isSending}
                     error={chatError || error}
                     allowFileUploads={Boolean(config?.allow_file_uploads)}
+                    onClear={clearConversation}
                     onClose={() => setOpen(false)}
                     onSend={sendMessage}
                 />

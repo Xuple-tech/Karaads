@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { CheckCircle2, Zap } from 'lucide-react';
+import { Check } from 'lucide-react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button } from '@/components/ui/button';
 import { apiRequest } from '@/spa/lib/api';
 
 type PricingResponse = {
@@ -19,7 +19,15 @@ type PricingResponse = {
     }>;
 };
 
+function formatPrice(value: string | number | null | undefined): string {
+    const n = Number(value ?? 0);
+    if (!Number.isFinite(n) || n <= 0) return 'Free';
+    return `$${n.toFixed(0)}`;
+}
+
 export function Component() {
+    const [period, setPeriod] = useState<'monthly' | 'yearly'>('monthly');
+
     const plans = useQuery({
         queryKey: ['spa', 'pricing'],
         queryFn: () => apiRequest<PricingResponse>('/api/subscription/plans'),
@@ -27,90 +35,109 @@ export function Component() {
     });
 
     return (
-        <section className="mx-auto max-w-5xl px-6 py-20">
+        <section className="mx-auto max-w-4xl px-6 py-20">
+
             {/* Header */}
-            <div className="mx-auto max-w-2xl text-center mb-14">
-                <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+            <div className="mb-12 text-center">
+                <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
                     Simple, transparent pricing
                 </h1>
-                <p className="mt-4 text-lg text-muted-foreground">
+                <p className="mt-3 text-base text-muted-foreground">
                     Choose the plan that fits your workflow. Upgrade or cancel anytime.
                 </p>
-                <div className="mt-8 flex items-center justify-center gap-3">
-                    <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90 px-6">
-                        <Link to="/register">Get started free</Link>
-                    </Button>
-                    <Button asChild variant="ghost" className="text-muted-foreground hover:text-foreground px-6">
-                        <Link to="/login">Sign in</Link>
-                    </Button>
+
+                {/* Toggle */}
+                <div className="mt-7 inline-flex rounded-xl border border-border/60 bg-card p-1">
+                    {(['monthly', 'yearly'] as const).map((p) => (
+                        <button
+                            key={p}
+                            type="button"
+                            onClick={() => setPeriod(p)}
+                            className={`rounded-lg px-6 py-1.5 text-sm font-medium transition-colors ${
+                                period === p
+                                    ? 'bg-[#8b5cf6] text-white shadow-sm'
+                                    : 'text-muted-foreground hover:text-foreground'
+                            }`}
+                        >
+                            {p === 'monthly' ? 'Monthly' : 'Yearly'}
+                        </button>
+                    ))}
                 </div>
             </div>
 
-            {/* Plan cards */}
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {plans.data?.plans?.map((plan) => {
-                    const isPro = plan.slug === 'pro';
-                    return (
-                        <div
-                            key={plan.id}
-                            className={`relative flex flex-col rounded-2xl border p-6 gap-5 ${
-                                isPro
-                                    ? 'border-primary bg-primary/5 shadow-lg shadow-primary/10'
-                                    : 'border-border/50 bg-card'
-                            }`}
-                        >
-                            {isPro && (
-                                <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[11px] font-semibold bg-primary text-primary-foreground px-3 py-0.5 rounded-full">
-                                    Most popular
-                                </span>
-                            )}
+            {/* Cards */}
+            {plans.isLoading ? (
+                <div className="grid gap-4 sm:grid-cols-3">
+                    {[0, 1, 2].map((i) => (
+                        <div key={i} className="h-80 animate-pulse rounded-2xl border border-border/50 bg-card" />
+                    ))}
+                </div>
+            ) : (
+                <div className="grid gap-4 sm:grid-cols-3">
+                    {plans.data?.plans?.map((plan) => {
+                        const price = period === 'yearly' ? plan.yearly_price : plan.monthly_price;
+                        const isFeatured = plan.slug === 'pro';
+                        const features = [
+                            ...(plan.features ?? []),
+                            plan.requests_per_day ? `${plan.requests_per_day} requests/day` : 'Unlimited requests',
+                            plan.tokens_per_day ? `${plan.tokens_per_day.toLocaleString()} tokens/day` : 'Unlimited tokens',
+                        ].slice(0, 6);
 
-                            <div>
-                                <p className="text-lg font-semibold text-foreground">{plan.name}</p>
-                                <p className="text-sm text-muted-foreground mt-0.5">
-                                    {plan.description ?? 'Full access to chat and user tools.'}
-                                </p>
-                            </div>
-
-                            <div>
-                                <p className="text-4xl font-bold text-foreground">${plan.monthly_price ?? '0'}</p>
-                                <p className="text-sm text-muted-foreground mt-0.5">per month</p>
-                                {plan.yearly_price && (
-                                    <p className="text-xs text-primary mt-1">or ${plan.yearly_price}/year</p>
-                                )}
-                            </div>
-
-                            <div className="space-y-2 text-sm text-muted-foreground flex-1">
-                                <p className="flex items-center gap-2">
-                                    <Zap className="h-4 w-4 text-primary flex-shrink-0" />
-                                    {plan.requests_per_day ?? 'Unlimited'} requests/day
-                                </p>
-                                <p className="flex items-center gap-2">
-                                    <Zap className="h-4 w-4 text-primary flex-shrink-0" />
-                                    {plan.tokens_per_day ?? 'Unlimited'} tokens/day
-                                </p>
-                                {(plan.features ?? []).slice(0, 4).map((feature) => (
-                                    <p key={feature} className="flex items-center gap-2">
-                                        <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
-                                        {feature}
-                                    </p>
-                                ))}
-                            </div>
-
-                            <Button
-                                asChild
-                                className={`w-full ${isPro ? 'bg-primary text-primary-foreground hover:bg-primary/90' : ''}`}
-                                variant={isPro ? 'default' : 'outline'}
+                        return (
+                            <div
+                                key={plan.id}
+                                className={`relative flex flex-col rounded-2xl border p-6 ${
+                                    isFeatured
+                                        ? 'border-[#8b5cf6]/35 bg-[#8b5cf6]/5'
+                                        : 'border-border/50 bg-card'
+                                }`}
                             >
-                                <Link to="/register">Get started</Link>
-                            </Button>
-                        </div>
-                    );
-                })}
-            </div>
+                                {isFeatured && (
+                                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#8b5cf6] px-3 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
+                                        Most popular
+                                    </span>
+                                )}
 
-            {/* Footer note */}
-            <p className="text-center text-xs text-muted-foreground/60 mt-10">
+                                <p className="text-[0.95rem] font-semibold text-foreground">{plan.name}</p>
+                                <p className="mt-1 text-[0.8rem] text-muted-foreground line-clamp-2">
+                                    {plan.description ?? 'Full access to chat and AI tools.'}
+                                </p>
+
+                                <div className="mt-5">
+                                    <p className="text-[2rem] font-semibold tracking-tight text-foreground leading-none">
+                                        {formatPrice(price)}
+                                    </p>
+                                    <p className="mt-1 text-xs text-muted-foreground">
+                                        per {period === 'yearly' ? 'year' : 'month'}
+                                    </p>
+                                </div>
+
+                                <ul className="mt-5 flex-1 space-y-2">
+                                    {features.map((f) => (
+                                        <li key={f} className="flex items-start gap-2 text-[0.8rem] text-muted-foreground">
+                                            <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#8b5cf6]" />
+                                            {f}
+                                        </li>
+                                    ))}
+                                </ul>
+
+                                <Link
+                                    to="/register"
+                                    className={`mt-5 block w-full rounded-xl py-2.5 text-center text-sm font-medium transition-all ${
+                                        isFeatured
+                                            ? 'bg-[#8b5cf6] text-white hover:bg-[#7c3aed]'
+                                            : 'border border-border text-foreground hover:bg-accent'
+                                    }`}
+                                >
+                                    Get started
+                                </Link>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+
+            <p className="mt-10 text-center text-xs text-muted-foreground/40">
                 All plans include access to the full chat workspace. No hidden fees.
             </p>
         </section>

@@ -1,10 +1,12 @@
-import { AlertCircle, Check, Copy, RefreshCcw, Zap } from 'lucide-react';
+import { AlertCircle, Check, Copy, RefreshCcw } from 'lucide-react';
 import { useState } from 'react';
 
 import type { Message } from '@/types/chat';
 import { Button } from '@/components/ui/button';
 import MarkdownRenderer from '@/spa/components/MarkdownRenderer';
 import ToolTimeline from '@/spa/components/ToolTimeline';
+
+// ─── user message ─────────────────────────────────────────────────────────────
 
 function UserMessage({ message }: { message: Message }) {
     const text = message.content_text || message.content || '';
@@ -33,6 +35,8 @@ function UserMessage({ message }: { message: Message }) {
     );
 }
 
+// ─── thinking skeleton ────────────────────────────────────────────────────────
+
 function ThinkingSkeleton() {
     return (
         <div className="animate-pulse space-y-2.5 py-1">
@@ -43,19 +47,23 @@ function ThinkingSkeleton() {
     );
 }
 
+// ─── assistant message ────────────────────────────────────────────────────────
+
 function AssistantMessage({
     message,
     onRegenerate,
+    isLast,
 }: {
     message: Message;
     onRegenerate?: (id: string) => void;
+    isLast?: boolean;
 }) {
     const [copied, setCopied] = useState(false);
-    const content = message.content_markdown || message.content || '';
+    const content     = message.content_markdown || message.content || '';
     const isStreaming = !!message.isStreaming;
-    const isFailed = message.status === 'failed';
-    const isEmpty = !content.trim();
-    const toolRuns = message.tool_runs ?? [];
+    const isFailed    = message.status === 'failed';
+    const isEmpty     = !content.trim();
+    const toolRuns    = message.tool_runs ?? [];
 
     const copy = async () => {
         await navigator.clipboard.writeText(content);
@@ -65,13 +73,17 @@ function AssistantMessage({
 
     return (
         <div className="flex gap-3 group">
-            <div className="mt-0.5 flex-shrink-0">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] shadow-sm">
-                    <Zap className="h-4 w-4 text-white" />
-                </div>
+            {/* avatar */}
+            <div className="mt-1 flex-shrink-0">
+                <img src="/icon.png" alt="Kwati AI" className="h-5 w-5 select-none opacity-80" draggable={false} />
             </div>
 
             <div className="min-w-0 flex-1 space-y-1">
+
+                {/* tool activity — above content, subtle */}
+                <ToolTimeline toolRuns={toolRuns} isStreaming={isStreaming} />
+
+                {/* message body */}
                 <div className="text-sm leading-relaxed">
                     {isFailed ? (
                         <div className="flex items-center gap-2 text-sm text-destructive">
@@ -81,12 +93,11 @@ function AssistantMessage({
                     ) : isStreaming && isEmpty ? (
                         <ThinkingSkeleton />
                     ) : (
-                        <MarkdownRenderer markdown={content} />
+                        <MarkdownRenderer markdown={content} isLast={isLast} />
                     )}
                 </div>
 
-                <ToolTimeline toolRuns={toolRuns} isStreaming={isStreaming} />
-
+                {/* action row */}
                 {!isStreaming && !isFailed && content && (
                     <div className="flex items-center gap-0.5 pt-1 opacity-0 transition-opacity group-hover:opacity-100">
                         <Button
@@ -116,21 +127,17 @@ function AssistantMessage({
     );
 }
 
+// ─── export ───────────────────────────────────────────────────────────────────
+
 export default function ChatMessageRenderer({
     message,
     onRegenerate,
+    isLast,
 }: {
     message: Message;
     onRegenerate?: (messageId: string) => void;
+    isLast?: boolean;
 }) {
-    if (message.role === 'user') {
-        return <UserMessage message={message} />;
-    }
-
-    return (
-        <AssistantMessage
-            message={message}
-            onRegenerate={onRegenerate}
-        />
-    );
+    if (message.role === 'user') return <UserMessage message={message} />;
+    return <AssistantMessage message={message} onRegenerate={onRegenerate} isLast={isLast} />;
 }

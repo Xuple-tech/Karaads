@@ -191,6 +191,15 @@
   box-shadow:     0 0 0 2px rgba(74, 222, 128, 0.3);
 }
 
+.kwati-panel-actions {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  position:    relative;
+  z-index:     1;
+}
+
+.kwati-header-action,
 .kwati-close {
   width:         30px;
   height:        30px;
@@ -207,11 +216,13 @@
   outline:       none;
 }
 
+.kwati-header-action:hover,
 .kwati-close:hover {
   background: rgba(255,255,255,0.25);
   color:      #fff;
 }
 
+.kwati-header-action svg,
 .kwati-close svg {
   width:  15px;
   height: 15px;
@@ -238,6 +249,7 @@
   display:        flex;
   flex-direction: column;
   max-width:      82%;
+  gap:            6px;
 }
 
 .kwati-message.is-user {
@@ -255,7 +267,6 @@
   border-radius: 20px;
   font-size:     13.5px;
   line-height:   1.6;
-  white-space:   pre-wrap;
   word-break:    break-word;
 }
 
@@ -270,6 +281,157 @@
   background:                linear-gradient(135deg, var(--kw-color), color-mix(in srgb, var(--kw-color) 80%, #4f46e5));
   color:                     #fff;
   border-bottom-right-radius: 4px;
+  white-space:               pre-wrap;
+}
+
+.kwati-markdown > :first-child {
+  margin-top: 0;
+}
+
+.kwati-markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.kwati-markdown p,
+.kwati-markdown ul,
+.kwati-markdown ol,
+.kwati-markdown pre,
+.kwati-markdown blockquote,
+.kwati-markdown table {
+  margin: 0 0 10px;
+}
+
+.kwati-markdown ul,
+.kwati-markdown ol {
+  padding-left: 18px;
+}
+
+.kwati-markdown li + li {
+  margin-top: 4px;
+}
+
+.kwati-markdown strong {
+  font-weight: 700;
+}
+
+.kwati-markdown a {
+  color: var(--kw-color);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.kwati-markdown code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  padding: 1px 4px;
+  border-radius: 6px;
+  background: #e2e8f0;
+}
+
+.kwati-markdown pre {
+  overflow-x: auto;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+.kwati-markdown pre code {
+  padding: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.kwati-markdown blockquote {
+  padding: 8px 12px;
+  border-left: 3px solid color-mix(in srgb, var(--kw-color) 70%, white);
+  background: #f8fafc;
+  color: #475569;
+}
+
+.kwati-tool-timeline {
+  display:        flex;
+  flex-direction: column;
+  gap:            6px;
+  width:          100%;
+}
+
+.kwati-tool-run {
+  display:        flex;
+  align-items:    flex-start;
+  gap:            8px;
+  padding:        9px 11px;
+  border-radius:  14px;
+  background:     #ffffff;
+  border:         1px solid rgba(15, 23, 42, 0.08);
+  box-shadow:     0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+.kwati-tool-run.is-started {
+  border-color: color-mix(in srgb, var(--kw-color) 28%, white);
+  background:   color-mix(in srgb, var(--kw-color) 6%, white);
+}
+
+.kwati-tool-run.is-failed {
+  border-color: #fecaca;
+  background:   #fff5f5;
+}
+
+.kwati-tool-icon {
+  width:          18px;
+  height:         18px;
+  border-radius:  999px;
+  display:        inline-flex;
+  align-items:    center;
+  justify-content: center;
+  flex-shrink:    0;
+  font-size:      11px;
+  font-weight:    700;
+  background:     #e2e8f0;
+  color:          #334155;
+}
+
+.kwati-tool-run.is-started .kwati-tool-icon {
+  background: var(--kw-color);
+  color:      #fff;
+  animation:  kwati-tool-pulse 1.2s infinite ease-in-out;
+}
+
+.kwati-tool-run.is-failed .kwati-tool-icon {
+  background: #dc2626;
+  color:      #fff;
+}
+
+.kwati-tool-copy {
+  min-width: 0;
+}
+
+.kwati-tool-title {
+  font-size:   11px;
+  font-weight: 700;
+  line-height: 1.2;
+  color:       #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.kwati-tool-name {
+  margin-top:  2px;
+  font-size:   12.5px;
+  font-weight: 600;
+  color:       #0f172a;
+}
+
+.kwati-tool-detail {
+  margin-top:  2px;
+  font-size:   12px;
+  line-height: 1.45;
+  color:       #475569;
+}
+
+@keyframes kwati-tool-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.88; }
 }
 
 /* streaming cursor */

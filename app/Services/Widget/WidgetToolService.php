@@ -4,6 +4,7 @@ namespace App\Services\Widget;
 
 use App\Models\WidgetConfig;
 use App\Models\WidgetTool;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -105,11 +106,7 @@ class WidgetToolService
         $headers = $this->sanitizeHeaders($tool->headers ?? []);
         $client = Http::timeout(10)->withoutRedirecting()->acceptJson()->withHeaders($headers);
 
-        $response = match ($method) {
-            'GET' => $client->get($tool->endpoint_url, $arguments),
-            'DELETE' => $client->send('DELETE', $tool->endpoint_url, ['query' => $arguments]),
-            default => $client->send($method, $tool->endpoint_url, ['json' => $arguments]),
-        };
+        $response = $this->sendHttpToolRequest($client, $tool, $arguments);
 
         $response->throw();
 
@@ -159,6 +156,27 @@ class WidgetToolService
             ->withHeaders($this->sanitizeHeaders($tool->headers ?? []))
             ->accept('application/json, text/event-stream')
             ->post($tool->endpoint_url, $payload);
+
+        try {
+            $response->throw();
+        } catch (\Throwable $e) {
+            if (! $this->isCertificateAuthorityError($e)) {
+                throw $e;
+            }
+
+            Log::warning('Retrying widget MCP call without SSL verification after certificate error.', [
+                'tool_id' => $tool->id,
+                'endpoint' => $tool->endpoint_url,
+                'error' => $e->getMessage(),
+            ]);
+
+            $response = Http::timeout(15)
+                ->withoutRedirecting()
+                ->withoutVerifying()
+                ->withHeaders($this->sanitizeHeaders($tool->headers ?? []))
+                ->accept('application/json, text/event-stream')
+                ->post($tool->endpoint_url, $payload);
+        }
 
         $response->throw();
 
@@ -286,5 +304,48 @@ class WidgetToolService
                 throw new \RuntimeException('Private or reserved network targets are not allowed.');
             }
         }
+    }
+
+    private function sendHttpToolRequest(PendingRequest $client, WidgetTool $tool, array $arguments)
+    {
+        try {
+            return $this->dispatchHttpRequest($client, $tool, $arguments);
+        } catch (\Throwable $e) {
+            if (! $this->isCertificateAuthorityError($e)) {
+                throw $e;
+            }
+
+            Log::warning('Retrying widget HTTP tool without SSL verification after certificate error.', [
+                'tool_id' => $tool->id,
+                'endpoint' => $tool->endpoint_url,
+                'error' => $e->getMessage(),
+            ]);
+
+            return $this->dispatchHttpRequest(
+                Http::timeout(10)
+                    ->withoutRedirecting()
+                    ->withoutVerifying()
+                    ->acceptJson()
+                    ->withHeaders($this->sanitizeHeaders($tool->headers ?? [])),
+                $tool,
+                $arguments
+            );
+        }
+    }
+
+    private function dispatchHttpRequest(PendingRequest $client, WidgetTool $tool, array $arguments)
+    {
+        $method = strtoupper($tool->method ?: 'GET');
+
+        return match ($method) {
+            'GET' => $client->get($tool->endpoint_url, $arguments),
+            'DELETE' => $client->send('DELETE', $tool->endpoint_url, ['query' => $arguments]),
+            default => $client->send($method, $tool->endpoint_url, ['json' => $arguments]),
+        };
+    }
+
+    private function isCertificateAuthorityError(\Throwable $e): bool
+    {
+        return str_contains(strtolower($e->getMessage()), 'curl error 60');
     }
 }
