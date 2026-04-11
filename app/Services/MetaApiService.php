@@ -24,11 +24,13 @@ class MetaApiService
 
     public function __construct()
     {
+        $verifySsl = config('services.meta.verify_ssl');
+
         $this->client = new Client([
             'timeout' => 30,
             'connect_timeout' => 10,
             'http_errors' => true,
-            'verify' => config('services.meta.verify_ssl', !app()->environment('local')),
+            'verify' => is_null($verifySsl) ? !app()->environment('local') : filter_var($verifySsl, FILTER_VALIDATE_BOOL),
         ]);
 
         $this->platformConfig = [

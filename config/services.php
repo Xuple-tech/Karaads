@@ -112,7 +112,7 @@ return [
         'max_retries' => env('META_MAX_RETRIES', 3),
         'retry_delay' => env('META_RETRY_DELAY', 1000), // milliseconds
         'rate_limit_per_minute' => env('META_RATE_LIMIT_PER_MINUTE', 600),
-        'verify_ssl' => filter_var(env('META_VERIFY_SSL', !app()->environment('local')), FILTER_VALIDATE_BOOL),
+        'verify_ssl' => env('META_VERIFY_SSL'),
 
         // Scopes & Events
         'required_scopes' => explode(',', env(
