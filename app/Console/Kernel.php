@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \App\Console\Commands\GenerateConversationTitles::class,
         \App\Console\Commands\ListConversations::class,
+        \App\Console\Commands\RecrawlWidgetWebsiteSources::class,
     ];
 
     /**
@@ -25,6 +26,11 @@ class Kernel extends ConsoleKernel
         // Generate conversation titles using Grok daily at 2 AM
         $schedule->command('conversations:generate-titles --limit=50')
                  ->dailyAt('02:00')
+                 ->withoutOverlapping()
+                 ->runInBackground();
+
+        $schedule->command('widget-sources:recrawl')
+                 ->hourly()
                  ->withoutOverlapping()
                  ->runInBackground();
 

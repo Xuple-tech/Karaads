@@ -28,6 +28,7 @@ class MetaApiService
             'timeout' => 30,
             'connect_timeout' => 10,
             'http_errors' => true,
+            'verify' => config('services.meta.verify_ssl', !app()->environment('local')),
         ]);
 
         $this->platformConfig = [
@@ -49,7 +50,7 @@ class MetaApiService
     /**
      * Generate Meta OAuth authorization URL
      */
-    public function getOAuthUrl(string $platform, string $redirectUri, array $additionalScopes = []): string
+    public function getOAuthUrl(string $platform, string $redirectUri, array $additionalScopes = [], ?string $state = null): string
     {
         $clientId = config('services.meta.client_id');
         $scopes = array_merge($this->getScopeForPlatform($platform), $additionalScopes);
@@ -59,7 +60,7 @@ class MetaApiService
             'redirect_uri' => $redirectUri,
             'scope' => implode(',', array_unique($scopes)),
             'response_type' => 'code',
-            'state' => $this->generateStateParameter(),
+            'state' => $state ?: $this->generateStateParameter(),
             'auth_type' => 'rerequest',
         ];
 

@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
+use App\Models\User;
+use Illuminate\Support\Carbon;
 
 class MetaAccountController extends Controller
 {
@@ -155,11 +157,15 @@ class MetaAccountController extends Controller
             'platform' => 'required|in:facebook,instagram,whatsapp',
         ]);
 
-        $redirectUri = route('meta.oauth.callback');
-        $authUrl = $this->metaService->getOAuthUrl($validated['platform'], $redirectUri);
+        $user = $request->user();
 
-        // Store the platform in session so we know which platform user is authenticating with
-        session(['meta_oauth_platform' => $validated['platform']]);
+        if (!$user) {
+            abort(401, 'Authentication required.');
+        }
+
+        $redirectUri = route('meta.oauth.callback');
+        $state = $this->encodeOAuthState($user, $validated['platform']);
+        $authUrl = $this->metaService->getOAuthUrl($validated['platform'], $redirectUri, state: $state);
 
         if ($request->expectsJson()) {
             return response()->json(['oauth_url' => $authUrl]);
@@ -173,11 +179,11 @@ class MetaAccountController extends Controller
      */
     public function handleCallback(Request $request)
     {
-        $user = Auth::user();
-
         $code = $request->get('code');
         $error = $request->get('error');
-        $state = $request->get('state');
+        $stateData = $this->decodeOAuthState($request->string('state')->toString());
+        $user = $stateData['user'] ?? Auth::user();
+        $platform = $stateData['platform'] ?? 'facebook';
 
         if ($error) {
             Log::error('Meta OAuth callback error', ['error' => $error]);
@@ -189,6 +195,11 @@ class MetaAccountController extends Controller
             return redirect('/meta?status=error&message=' . urlencode('No authorization code received'));
         }
 
+        if (!$user) {
+            Log::error('Meta OAuth callback missing user context');
+            return redirect('/meta?status=error&message=' . urlencode('Your login session could not be verified. Start the Meta connection again from the dashboard.'));
+        }
+
         try {
             // Exchange code for token
             $tokenData = $this->metaService->exchangeCodeForToken($code, route('meta.oauth.callback'));
@@ -197,9 +208,6 @@ class MetaAccountController extends Controller
                 Log::error('Meta OAuth token exchange failed', ['response' => $tokenData]);
                 return redirect('/meta?status=error&message=' . urlencode('Failed to obtain access token'));
             }
-
-            // Determine platform and fetch account details
-            $platform = session('meta_oauth_platform', 'facebook');
 
             // Use the new getUserAccounts method or individual methods
             $accountDetails = $this->fetchAccountDetails($platform, $tokenData['access_token']);
@@ -323,6 +331,53 @@ class MetaAccountController extends Controller
             Log::error('Failed to fetch all account details', ['error' => $e->getMessage()]);
             return [];
         }
+    }
+
+    private function encodeOAuthState(User $user, string $platform): string
+    {
+        return Crypt::encryptString(json_encode([
+            'user_id' => $user->id,
+            'platform' => $platform,
+            'issued_at' => now()->timestamp,
+        ], JSON_THROW_ON_ERROR));
+    }
+
+    private function decodeOAuthState(?string $state): array
+    {
+        if (!$state) {
+            return [];
+        }
+
+        try {
+            $payload = json_decode(Crypt::decryptString($state), true, 512, JSON_THROW_ON_ERROR);
+        } catch (\Throwable $e) {
+            Log::warning('Meta OAuth state decode failed', ['error' => $e->getMessage()]);
+            return [];
+        }
+
+        $userId = $payload['user_id'] ?? null;
+        $platform = $payload['platform'] ?? null;
+        $issuedAt = (int) ($payload['issued_at'] ?? 0);
+
+        if (!$userId || !in_array($platform, ['facebook', 'instagram', 'whatsapp'], true)) {
+            return [];
+        }
+
+        if ($issuedAt > 0 && Carbon::createFromTimestamp($issuedAt)->diffInMinutes(now()) > 30) {
+            Log::warning('Meta OAuth state expired', ['user_id' => $userId, 'platform' => $platform]);
+            return [];
+        }
+
+        $user = User::find($userId);
+
+        if (!$user) {
+            return [];
+        }
+
+        return [
+            'user' => $user,
+            'platform' => $platform,
+        ];
     }
 
     /**

@@ -30,6 +30,10 @@ export function Component() {
     const [open, setOpen] = useState(false);
     const [name, setName] = useState('');
     const [greeting, setGreeting] = useState('Hi! How can I help you today?');
+    const [connectWebsite, setConnectWebsite] = useState(false);
+    const [websiteSourceType, setWebsiteSourceType] = useState<'wordpress_url' | 'wordpress_plugin'>('wordpress_url');
+    const [siteUrl, setSiteUrl] = useState('');
+    const [verificationMethod, setVerificationMethod] = useState<'meta_tag' | 'file'>('meta_tag');
 
     const widgetsQuery = useQuery({
         queryKey: ['spa', 'widgets'],
@@ -37,12 +41,31 @@ export function Component() {
     });
 
     const createMutation = useMutation({
-        mutationFn: () => apiRequest('/api/widget', { method: 'POST', json: { name, greeting } }),
+        mutationFn: () => apiRequest('/api/widget', {
+            method: 'POST',
+            json: {
+                name,
+                greeting,
+                website_source: connectWebsite && siteUrl.trim()
+                    ? {
+                        source_type: websiteSourceType,
+                        site_url: siteUrl,
+                        verification_method: websiteSourceType === 'wordpress_url' ? verificationMethod : null,
+                        scope_mode: 'safe_public',
+                        recrawl_interval_hours: 24,
+                    }
+                    : undefined,
+            },
+        }),
         onSuccess: async () => {
             toast.success('Widget created');
             setOpen(false);
             setName('');
             setGreeting('Hi! How can I help you today?');
+            setConnectWebsite(false);
+            setSiteUrl('');
+            setWebsiteSourceType('wordpress_url');
+            setVerificationMethod('meta_tag');
             await queryClient.invalidateQueries({ queryKey: ['spa', 'widgets'] });
         },
         onError: (error) => toast.error(error instanceof ApiError ? error.message : 'Failed to create widget.'),
@@ -175,6 +198,55 @@ export function Component() {
                                 value={greeting}
                                 onChange={(e) => setGreeting(e.target.value)}
                             />
+                        </div>
+                        <div className="space-y-2 rounded-xl border border-border/60 p-4">
+                            <div className="flex items-center justify-between gap-3">
+                                <div>
+                                    <Label>Connect website now</Label>
+                                    <p className="mt-1 text-xs text-muted-foreground">Optional quick start for WordPress site agents.</p>
+                                </div>
+                                <input
+                                    type="checkbox"
+                                    checked={connectWebsite}
+                                    onChange={(event) => setConnectWebsite(event.target.checked)}
+                                />
+                            </div>
+                            {connectWebsite ? (
+                                <div className="space-y-3 pt-3">
+                                    <div className="space-y-2">
+                                        <Label>Connection type</Label>
+                                        <select
+                                            value={websiteSourceType}
+                                            onChange={(event) => setWebsiteSourceType(event.target.value as 'wordpress_url' | 'wordpress_plugin')}
+                                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                                        >
+                                            <option value="wordpress_url">Paste WordPress URL</option>
+                                            <option value="wordpress_plugin">Connect with WordPress plugin</option>
+                                        </select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Site URL</Label>
+                                        <Input
+                                            value={siteUrl}
+                                            onChange={(event) => setSiteUrl(event.target.value)}
+                                            placeholder="https://example.com"
+                                        />
+                                    </div>
+                                    {websiteSourceType === 'wordpress_url' ? (
+                                        <div className="space-y-2">
+                                            <Label>Verification method</Label>
+                                            <select
+                                                value={verificationMethod}
+                                                onChange={(event) => setVerificationMethod(event.target.value as 'meta_tag' | 'file')}
+                                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                                            >
+                                                <option value="meta_tag">Meta tag</option>
+                                                <option value="file">Verification file</option>
+                                            </select>
+                                        </div>
+                                    ) : null}
+                                </div>
+                            ) : null}
                         </div>
                     </div>
                     <DialogFooter>

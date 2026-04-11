@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Bot, Code2, Copy, Globe2, Layers3, Loader2, Save, Settings2, Sparkles, Wrench } from 'lucide-react';
+import { ArrowLeft, Bot, Code2, Copy, Download, Globe2, Layers3, Loader2, Save, Settings2, ShieldCheck, Sparkles, Wrench } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -39,6 +39,54 @@ type WidgetTool = {
     is_active: boolean;
 };
 
+type WidgetWebsiteSourcePage = {
+    id: string;
+    url: string;
+    path: string;
+    title?: string | null;
+    status: 'queued' | 'crawling' | 'ready' | 'failed' | 'skipped';
+    failure_reason?: string | null;
+    last_crawled_at?: string | null;
+    knowledge_item_id?: string | null;
+};
+
+type WidgetWebsiteSource = {
+    id: string;
+    source_type: 'wordpress_url' | 'wordpress_plugin';
+    site_name?: string | null;
+    site_url: string;
+    site_host: string;
+    is_wordpress: boolean;
+    verification_method?: 'meta_tag' | 'file' | null;
+    verification_status: 'pending' | 'verified' | 'failed';
+    verification_token: string;
+    verification_meta_tag: string;
+    verification_filename: string;
+    verification_file_content: string;
+    connection_token?: string | null;
+    connection_secret?: string | null;
+    plugin_sync_url?: string | null;
+    crawl_status: 'idle' | 'queued' | 'crawling' | 'completed' | 'failed';
+    include_paths: string[];
+    exclude_paths: string[];
+    seed_urls: string[];
+    settings: {
+        recrawl_interval_hours?: number;
+    };
+    last_verified_at?: string | null;
+    last_crawled_at?: string | null;
+    last_sync_at?: string | null;
+    next_recrawl_at?: string | null;
+    is_active: boolean;
+    stats: {
+        pages_total: number;
+        pages_ready: number;
+        pages_failed: number;
+        pages_skipped: number;
+    };
+    pages: WidgetWebsiteSourcePage[];
+};
+
 type WidgetDetail = {
     id: string;
     name: string;
@@ -52,7 +100,9 @@ type WidgetDetail = {
     allow_file_uploads: boolean;
     allowed_domains: string[];
     knowledge: WidgetKnowledge[];
+    website_sources: WidgetWebsiteSource[];
     tools: WidgetTool[];
+    embed_script_url: string;
     embed_code: string;
     preview_url: string;
     analytics: {
@@ -66,6 +116,17 @@ export function Component() {
     const [widget, setWidget] = useState<WidgetDetail | null>(null);
     const [textKnowledge, setTextKnowledge] = useState({ name: '', content: '' });
     const [urlKnowledge, setUrlKnowledge] = useState({ name: '', url: '' });
+    const [websiteSourceForm, setWebsiteSourceForm] = useState({
+        source_type: 'wordpress_url' as 'wordpress_url' | 'wordpress_plugin',
+        site_name: '',
+        site_url: '',
+        verification_method: 'meta_tag' as 'meta_tag' | 'file',
+        include_paths: '',
+        exclude_paths: '',
+        seed_urls: '',
+        scope_mode: 'safe_public' as 'safe_public' | 'custom',
+        recrawl_interval_hours: '24',
+    });
     const [toolForm, setToolForm] = useState({
         tool_type: 'http' as 'http' | 'mcp_server',
         name: '',
@@ -120,6 +181,57 @@ export function Component() {
             await queryClient.invalidateQueries({ queryKey: ['spa', 'widget', widgetId] });
         },
         onError: (error) => toast.error(error instanceof ApiError ? error.message : 'Failed to fetch URL knowledge.'),
+    });
+
+    const addWebsiteSourceMutation = useMutation({
+        mutationFn: () => apiRequest(`/api/widget/${widgetId}/website-sources`, {
+            method: 'POST',
+            json: {
+                source_type: websiteSourceForm.source_type,
+                site_name: websiteSourceForm.site_name || null,
+                site_url: websiteSourceForm.site_url,
+                verification_method: websiteSourceForm.source_type === 'wordpress_url' ? websiteSourceForm.verification_method : null,
+                include_paths: splitLines(websiteSourceForm.include_paths),
+                exclude_paths: splitLines(websiteSourceForm.exclude_paths),
+                seed_urls: splitLines(websiteSourceForm.seed_urls),
+                scope_mode: websiteSourceForm.scope_mode,
+                recrawl_interval_hours: Number(websiteSourceForm.recrawl_interval_hours || '24'),
+            },
+        }),
+        onSuccess: async () => {
+            toast.success('Website source connected');
+            setWebsiteSourceForm({
+                source_type: 'wordpress_url',
+                site_name: '',
+                site_url: '',
+                verification_method: 'meta_tag',
+                include_paths: '',
+                exclude_paths: '',
+                seed_urls: '',
+                scope_mode: 'safe_public',
+                recrawl_interval_hours: '24',
+            });
+            await queryClient.invalidateQueries({ queryKey: ['spa', 'widget', widgetId] });
+        },
+        onError: (error) => toast.error(error instanceof ApiError ? error.message : 'Failed to connect website source.'),
+    });
+
+    const verifyWebsiteSourceMutation = useMutation({
+        mutationFn: (sourceId: string) => apiRequest(`/api/widget/${widgetId}/website-sources/${sourceId}/verify`, { method: 'POST' }),
+        onSuccess: async () => {
+            toast.success('Verification check completed');
+            await queryClient.invalidateQueries({ queryKey: ['spa', 'widget', widgetId] });
+        },
+        onError: (error) => toast.error(error instanceof ApiError ? error.message : 'Failed to verify website source.'),
+    });
+
+    const crawlWebsiteSourceMutation = useMutation({
+        mutationFn: (sourceId: string) => apiRequest(`/api/widget/${widgetId}/website-sources/${sourceId}/crawl`, { method: 'POST' }),
+        onSuccess: async () => {
+            toast.success('Website crawl queued');
+            await queryClient.invalidateQueries({ queryKey: ['spa', 'widget', widgetId] });
+        },
+        onError: (error) => toast.error(error instanceof ApiError ? error.message : 'Failed to queue website crawl.'),
     });
 
     const uploadPdfMutation = useMutation({
@@ -411,9 +523,107 @@ export function Component() {
                                     <Bot className="h-4 w-4 text-primary" />
                                     Add knowledge
                                 </CardTitle>
-                                <CardDescription>Give the widget reliable context from text notes, website pages, and PDFs.</CardDescription>
+                                <CardDescription>Connect a WordPress site for guided crawling, then add manual text, URLs, and PDFs when needed.</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-5">
+                                <Field label="Connect website">
+                                    <div className="grid gap-3">
+                                        <Select
+                                            value={websiteSourceForm.source_type}
+                                            onValueChange={(value) =>
+                                                setWebsiteSourceForm({
+                                                    ...websiteSourceForm,
+                                                    source_type: value as 'wordpress_url' | 'wordpress_plugin',
+                                                })
+                                            }
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="wordpress_url">Paste WordPress URL</SelectItem>
+                                                <SelectItem value="wordpress_plugin">Connect with WordPress plugin</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <Input
+                                            value={websiteSourceForm.site_url}
+                                            onChange={(event) => setWebsiteSourceForm({ ...websiteSourceForm, site_url: event.target.value })}
+                                            placeholder="https://example.com"
+                                        />
+                                        <Input
+                                            value={websiteSourceForm.site_name}
+                                            onChange={(event) => setWebsiteSourceForm({ ...websiteSourceForm, site_name: event.target.value })}
+                                            placeholder="Optional site name"
+                                        />
+                                        {websiteSourceForm.source_type === 'wordpress_url' ? (
+                                            <>
+                                                <Select
+                                                    value={websiteSourceForm.verification_method}
+                                                    onValueChange={(value) =>
+                                                        setWebsiteSourceForm({ ...websiteSourceForm, verification_method: value as 'meta_tag' | 'file' })
+                                                    }
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="meta_tag">Verify with meta tag</SelectItem>
+                                                        <SelectItem value="file">Verify with file</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                                <Select
+                                                    value={websiteSourceForm.scope_mode}
+                                                    onValueChange={(value) =>
+                                                        setWebsiteSourceForm({ ...websiteSourceForm, scope_mode: value as 'safe_public' | 'custom' })
+                                                    }
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="safe_public">Safe public pages</SelectItem>
+                                                        <SelectItem value="custom">Custom scope</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                                <Input
+                                                    value={websiteSourceForm.recrawl_interval_hours}
+                                                    onChange={(event) => setWebsiteSourceForm({ ...websiteSourceForm, recrawl_interval_hours: event.target.value })}
+                                                    placeholder="Recrawl interval in hours"
+                                                    type="number"
+                                                    min={1}
+                                                    max={168}
+                                                />
+                                                <Textarea
+                                                    rows={3}
+                                                    value={websiteSourceForm.include_paths}
+                                                    onChange={(event) => setWebsiteSourceForm({ ...websiteSourceForm, include_paths: event.target.value })}
+                                                    placeholder="/blog&#10;/products"
+                                                />
+                                                <Textarea
+                                                    rows={3}
+                                                    value={websiteSourceForm.exclude_paths}
+                                                    onChange={(event) => setWebsiteSourceForm({ ...websiteSourceForm, exclude_paths: event.target.value })}
+                                                    placeholder="/cart&#10;/checkout"
+                                                />
+                                                <Textarea
+                                                    rows={3}
+                                                    value={websiteSourceForm.seed_urls}
+                                                    onChange={(event) => setWebsiteSourceForm({ ...websiteSourceForm, seed_urls: event.target.value })}
+                                                    placeholder="https://example.com/faq"
+                                                />
+                                            </>
+                                        ) : null}
+                                        <Button
+                                            type="button"
+                                            onClick={() => addWebsiteSourceMutation.mutate()}
+                                            disabled={addWebsiteSourceMutation.isPending || !websiteSourceForm.site_url.trim()}
+                                        >
+                                            {addWebsiteSourceMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ShieldCheck className="mr-2 h-4 w-4" />}
+                                            Connect website
+                                        </Button>
+                                    </div>
+                                </Field>
+
                                 <Field label="Text note">
                                     <Input value={textKnowledge.name} onChange={(event) => setTextKnowledge({ ...textKnowledge, name: event.target.value })} placeholder="Shipping policy" />
                                     <Textarea className="mt-2" rows={5} value={textKnowledge.content} onChange={(event) => setTextKnowledge({ ...textKnowledge, content: event.target.value })} />
@@ -448,13 +658,127 @@ export function Component() {
 
                         <Card className="border-border/60">
                             <CardHeader>
-                                <CardTitle>Knowledge items</CardTitle>
-                                <CardDescription>Ready items are added to the widget context when answers are generated.</CardDescription>
+                                <CardTitle>Website sources and knowledge</CardTitle>
+                                <CardDescription>Website sources are grouped separately from manual knowledge so you can verify, crawl, and monitor sync state.</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <ScrollArea className="h-[640px] pr-4">
-                                    <div className="space-y-3">
-                                        {widget.knowledge.length ? widget.knowledge.map((item) => (
+                                    <div className="space-y-6">
+                                        <div className="space-y-3">
+                                            <div className="flex items-center justify-between gap-3">
+                                                <h3 className="text-sm font-semibold text-foreground">Connected websites</h3>
+                                                <Badge variant="outline">{widget.website_sources.length}</Badge>
+                                            </div>
+                                            {widget.website_sources.length ? widget.website_sources.map((source) => (
+                                                <div key={source.id} className="rounded-2xl border border-border/60 p-4">
+                                                    <div className="flex flex-wrap items-start justify-between gap-3">
+                                                        <div className="space-y-2">
+                                                            <div className="flex flex-wrap items-center gap-2">
+                                                                <p className="font-medium text-foreground">{source.site_name || source.site_host}</p>
+                                                                <Badge variant="outline">{source.source_type === 'wordpress_plugin' ? 'Plugin' : 'URL crawl'}</Badge>
+                                                                <Badge variant={source.verification_status === 'verified' ? 'default' : source.verification_status === 'failed' ? 'destructive' : 'secondary'}>
+                                                                    {source.verification_status}
+                                                                </Badge>
+                                                                <Badge variant={source.crawl_status === 'completed' ? 'default' : source.crawl_status === 'failed' ? 'destructive' : 'secondary'}>
+                                                                    {source.crawl_status}
+                                                                </Badge>
+                                                            </div>
+                                                            <p className="text-xs text-muted-foreground">{source.site_url}</p>
+                                                            <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                                                                <span>Ready pages: {source.stats.pages_ready}</span>
+                                                                <span>Failed: {source.stats.pages_failed}</span>
+                                                                <span>Skipped: {source.stats.pages_skipped}</span>
+                                                                {source.last_sync_at ? <span>Last updated: {new Date(source.last_sync_at).toLocaleString()}</span> : null}
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex flex-wrap gap-2">
+                                                            {source.source_type === 'wordpress_url' ? (
+                                                                <>
+                                                                    <Button type="button" size="sm" variant="outline" onClick={() => verifyWebsiteSourceMutation.mutate(source.id)}>
+                                                                        Verify ownership
+                                                                    </Button>
+                                                                    <Button
+                                                                        type="button"
+                                                                        size="sm"
+                                                                        onClick={() => crawlWebsiteSourceMutation.mutate(source.id)}
+                                                                        disabled={source.verification_status !== 'verified'}
+                                                                    >
+                                                                        Sync now
+                                                                    </Button>
+                                                                    {source.verification_method === 'file' ? (
+                                                                        <Button
+                                                                            type="button"
+                                                                            size="sm"
+                                                                            variant="ghost"
+                                                                            onClick={() => window.open(`/api/widget/${widget.id}/website-sources/${source.id}/verification-file`, '_blank')}
+                                                                        >
+                                                                            <Download className="mr-1 h-3.5 w-3.5" />
+                                                                            File
+                                                                        </Button>
+                                                                    ) : null}
+                                                                </>
+                                                            ) : null}
+                                                        </div>
+                                                    </div>
+
+                                                    {source.source_type === 'wordpress_url' && source.verification_status !== 'verified' ? (
+                                                        <div className="mt-4 rounded-2xl border border-border/60 bg-muted/20 p-3 text-xs text-muted-foreground">
+                                                            <p className="font-medium text-foreground">Verification instructions</p>
+                                                            {source.verification_method === 'meta_tag' ? (
+                                                                <code className="mt-2 block whitespace-pre-wrap rounded-lg bg-background px-3 py-2 text-[11px]">{source.verification_meta_tag}</code>
+                                                            ) : (
+                                                                <>
+                                                                    <p className="mt-2">Upload this file to the root of your WordPress site:</p>
+                                                                    <code className="mt-2 block rounded-lg bg-background px-3 py-2 text-[11px]">{source.verification_filename}</code>
+                                                                    <code className="mt-2 block rounded-lg bg-background px-3 py-2 text-[11px]">{source.verification_file_content}</code>
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                    ) : null}
+
+                                                    {source.source_type === 'wordpress_plugin' ? (
+                                                        <div className="mt-4 rounded-2xl border border-border/60 bg-muted/20 p-3 text-xs text-muted-foreground">
+                                                            <p className="font-medium text-foreground">Plugin connection</p>
+                                                            <p className="mt-2">Sync URL</p>
+                                                            <code className="mt-1 block break-all rounded-lg bg-background px-3 py-2 text-[11px]">{source.plugin_sync_url}</code>
+                                                            <p className="mt-2">Connection token</p>
+                                                            <code className="mt-1 block break-all rounded-lg bg-background px-3 py-2 text-[11px]">{source.connection_token}</code>
+                                                            <p className="mt-2">Connection secret</p>
+                                                            <code className="mt-1 block break-all rounded-lg bg-background px-3 py-2 text-[11px]">{source.connection_secret}</code>
+                                                        </div>
+                                                    ) : null}
+
+                                                    {source.pages.length ? (
+                                                        <div className="mt-4 space-y-2">
+                                                            <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">Crawled pages</p>
+                                                            {source.pages.slice(0, 8).map((page) => (
+                                                                <div key={page.id} className="rounded-xl border border-border/50 px-3 py-2">
+                                                                    <div className="flex items-center gap-2">
+                                                                        <p className="truncate text-sm font-medium text-foreground">{page.title || page.path}</p>
+                                                                        <Badge variant={page.status === 'ready' ? 'default' : page.status === 'failed' ? 'destructive' : 'secondary'}>
+                                                                            {page.status}
+                                                                        </Badge>
+                                                                    </div>
+                                                                    <p className="mt-1 truncate text-xs text-muted-foreground">{page.url}</p>
+                                                                    {page.failure_reason ? <p className="mt-1 text-xs text-destructive">{page.failure_reason}</p> : null}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ) : null}
+                                                </div>
+                                            )) : (
+                                                <div className="rounded-2xl border border-dashed border-border/60 p-6 text-center text-sm text-muted-foreground">
+                                                    No website sources connected yet.
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            <div className="flex items-center justify-between gap-3">
+                                                <h3 className="text-sm font-semibold text-foreground">Manual knowledge</h3>
+                                                <Badge variant="outline">{widget.knowledge.length}</Badge>
+                                            </div>
+                                            {widget.knowledge.length ? widget.knowledge.map((item) => (
                                             <div key={item.id} className="rounded-2xl border border-border/60 p-4">
                                                 <div className="flex items-start justify-between gap-3">
                                                     <div>
@@ -478,6 +802,7 @@ export function Component() {
                                                 No knowledge items yet.
                                             </div>
                                         )}
+                                        </div>
                                     </div>
                                 </ScrollArea>
                             </CardContent>
@@ -661,6 +986,13 @@ function parseJson(value: string) {
     } catch {
         return {};
     }
+}
+
+function splitLines(value: string) {
+    return value
+        .split('\n')
+        .map((line) => line.trim())
+        .filter(Boolean);
 }
 
 async function copyText(value: string) {

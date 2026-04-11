@@ -7,14 +7,17 @@ use App\Models\WidgetKnowledgeItem;
 use App\Models\WidgetTool;
 use App\Services\SubscriptionService;
 use App\Services\Widget\WidgetKnowledgeService;
+use App\Services\Widget\WidgetWebsiteSourceService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class WidgetConfigController extends Controller
 {
     public function __construct(
         private readonly WidgetKnowledgeService $knowledge,
-        private readonly SubscriptionService $subscriptions
+        private readonly SubscriptionService $subscriptions,
+        private readonly WidgetWebsiteSourceService $websiteSources,
     ) {
     }
 
@@ -36,6 +39,19 @@ class WidgetConfigController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'greeting' => 'nullable|string|max:255',
+            'website_source' => 'nullable|array',
+            'website_source.site_url' => 'required_with:website_source|string|max:2048',
+            'website_source.source_type' => 'required_with:website_source|in:wordpress_url,wordpress_plugin',
+            'website_source.site_name' => 'nullable|string|max:255',
+            'website_source.verification_method' => 'nullable|in:meta_tag,file',
+            'website_source.include_paths' => 'nullable|array',
+            'website_source.include_paths.*' => 'string|max:255',
+            'website_source.exclude_paths' => 'nullable|array',
+            'website_source.exclude_paths.*' => 'string|max:255',
+            'website_source.seed_urls' => 'nullable|array',
+            'website_source.seed_urls.*' => 'string|max:2048',
+            'website_source.scope_mode' => 'nullable|in:safe_public,custom',
+            'website_source.recrawl_interval_hours' => 'nullable|integer|min:1|max:168',
         ]);
 
         $activeWidgets = WidgetConfig::query()
@@ -51,19 +67,33 @@ class WidgetConfigController extends Controller
             ], 422);
         }
 
-        $widget = WidgetConfig::create([
-            'user_id' => $request->user()->id,
-            'name' => $validated['name'],
-            'token' => WidgetConfig::generateToken(),
-            'bot_name' => $validated['name'],
-            'greeting' => $validated['greeting'] ?: 'Hi! How can I help you today?',
-            'theme_color' => '#7c3aed',
-            'is_active' => true,
-        ]);
+        try {
+            $widget = DB::transaction(function () use ($request, $validated) {
+                $widget = WidgetConfig::create([
+                    'user_id' => $request->user()->id,
+                    'name' => $validated['name'],
+                    'token' => WidgetConfig::generateToken(),
+                    'bot_name' => $validated['name'],
+                    'greeting' => $validated['greeting'] ?: 'Hi! How can I help you today?',
+                    'theme_color' => '#7c3aed',
+                    'is_active' => true,
+                ]);
+
+                if (! empty($validated['website_source'])) {
+                    $this->websiteSources->createSource($widget, $request->user(), $validated['website_source']);
+                }
+
+                return $widget;
+            });
+        } catch (\RuntimeException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
+        }
 
         return response()->json([
             'message' => 'Widget created successfully.',
-            'widget' => $this->serializeWidgetDetail($widget->fresh(['knowledgeItems', 'tools'])),
+            'widget' => $this->serializeWidgetDetail($widget->fresh(['knowledgeItems', 'tools', 'websiteSources.pages'])),
         ], 201);
     }
 
@@ -304,6 +334,12 @@ class WidgetConfigController extends Controller
             'allow_file_uploads' => $widget->allow_file_uploads,
             'allowed_domains' => $widget->allowed_domains ?? [],
             'knowledge' => $widget->knowledgeItems()->latest()->get()->values(),
+            'website_sources' => $widget->websiteSources()
+                ->with('pages')
+                ->latest()
+                ->get()
+                ->map(fn ($source) => $this->websiteSources->serializeSource($source, true))
+                ->values(),
             'tools' => $widget->tools()->latest()->get()->values(),
             'analytics' => [
                 'sessions' => $widget->sessions()->count(),

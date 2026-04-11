@@ -20,6 +20,7 @@ use App\Http\Controllers\Meta\MetaReplyTemplateController;
 use App\Http\Controllers\Meta\MetaBroadcastController;
 use App\Http\Controllers\WidgetConfigController;
 use App\Http\Controllers\WidgetPublicController;
+use App\Http\Controllers\WidgetWebsiteSourceController;
 use App\Http\Controllers\Admin\PersonalizationAdminController;
 use App\Http\Controllers\Admin\AIModeController;
 use App\Http\Controllers\Admin\SubscriptionPlanController as AdminSubscriptionPlanController;
@@ -43,6 +44,7 @@ Route::prefix('widget')->group(function () {
     Route::get('/{token}/config', [WidgetPublicController::class, 'config']);
     Route::post('/{token}/session', [WidgetPublicController::class, 'startSession']);
     Route::post('/{token}/chat', [WidgetPublicController::class, 'chat']);
+    Route::post('/plugin/{token}/sync', [WidgetWebsiteSourceController::class, 'pluginSync']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -152,6 +154,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/{widget}/knowledge', [WidgetConfigController::class, 'addKnowledge']);
         Route::post('/{widget}/knowledge/pdf', [WidgetConfigController::class, 'uploadPdf']);
         Route::delete('/{widget}/knowledge/{item}', [WidgetConfigController::class, 'deleteKnowledge']);
+
+        Route::post('/{widget}/website-sources', [WidgetWebsiteSourceController::class, 'store']);
+        Route::put('/{widget}/website-sources/{source}', [WidgetWebsiteSourceController::class, 'update']);
+        Route::post('/{widget}/website-sources/{source}/verify', [WidgetWebsiteSourceController::class, 'verify']);
+        Route::post('/{widget}/website-sources/{source}/crawl', [WidgetWebsiteSourceController::class, 'crawl']);
+        Route::get('/{widget}/website-sources/{source}/verification-file', [WidgetWebsiteSourceController::class, 'verificationFile']);
 
         Route::get('/{widget}/tools', [WidgetConfigController::class, 'listTools']);
         Route::post('/{widget}/tools', [WidgetConfigController::class, 'addTool']);

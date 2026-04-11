@@ -110,9 +110,7 @@ Route::post('/meta/webhook/receive/{token}', [MetaWebhookController::class, 'han
     ->withoutMiddleware(VerifyCsrfToken::class)
     ->middleware(['throttle:1000,1']);
 
-Route::middleware('auth')->group(function () {
-    Route::get('/meta/oauth/callback', [MetaAccountController::class, 'handleCallback'])->name('meta.oauth.callback');
-});
+Route::get('/meta/oauth/callback', [MetaAccountController::class, 'handleCallback'])->name('meta.oauth.callback');
 
 Route::get('/widget/embed.js', function () {
     return redirect()->away(widget_embed_asset_url());

@@ -53,6 +53,11 @@ class WidgetConfig extends Model
         return $this->hasMany(WidgetTool::class, 'widget_id');
     }
 
+    public function websiteSources(): HasMany
+    {
+        return $this->hasMany(WidgetWebsiteSource::class, 'widget_id');
+    }
+
     public static function generateToken(): string
     {
         do {
