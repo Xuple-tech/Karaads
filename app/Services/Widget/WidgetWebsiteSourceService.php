@@ -386,15 +386,20 @@ class WidgetWebsiteSourceService
             WidgetWebsiteSourcePage::query()->firstOrCreate(
                 [
                     'website_source_id' => $source->id,
-                    'url' => $url,
+                    'url_hash' => sha1($url),
                 ],
                 [
+                    'url' => $url,
                     'path' => $path,
                     'status' => 'queued',
                 ]
             ),
-            function (WidgetWebsiteSourcePage $page) use ($path, $attributes): void {
-                $page->update(array_merge(['path' => $path], $attributes));
+            function (WidgetWebsiteSourcePage $page) use ($url, $path, $attributes): void {
+                $page->update(array_merge([
+                    'url' => $url,
+                    'url_hash' => sha1($url),
+                    'path' => $path,
+                ], $attributes));
             }
         )->fresh();
     }

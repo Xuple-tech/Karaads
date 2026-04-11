@@ -13,6 +13,7 @@ return new class extends Migration
             $table->foreignUlid('website_source_id')->references('id')->on('widget_website_sources')->cascadeOnDelete();
             $table->foreignUlid('knowledge_item_id')->nullable()->references('id')->on('widget_knowledge_items')->nullOnDelete();
             $table->string('url', 2048);
+            $table->string('url_hash', 40);
             $table->string('path', 1024);
             $table->string('title')->nullable();
             $table->enum('status', ['queued', 'crawling', 'ready', 'failed', 'skipped'])->default('queued');
@@ -22,7 +23,7 @@ return new class extends Migration
             $table->json('metadata')->nullable();
             $table->timestamps();
 
-            $table->unique(['website_source_id', 'url'], 'widget_website_source_pages_source_url_unique');
+            $table->unique(['website_source_id', 'url_hash'], 'widget_website_source_pages_source_url_hash_unique');
         });
     }
 

@@ -16,6 +16,7 @@ class WidgetWebsiteSourcePage extends Model
         'website_source_id',
         'knowledge_item_id',
         'url',
+        'url_hash',
         'path',
         'title',
         'status',
