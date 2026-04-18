@@ -66,6 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/conversations/{conversation}', [ChatConversationController::class, 'destroy'])->name('chat.api.conversations.destroy');
         Route::post('/messages', [ChatMessageController::class, 'store'])->name('chat.api.messages.store');
         Route::post('/messages/stream', [ChatMessageController::class, 'storeStream'])->name('chat.api.messages.stream');
+        Route::get('/messages/stream', fn () => response()->json(['error' => 'Use POST to this endpoint.'], 405))->name('chat.api.messages.stream.get-guard');
         Route::post('/messages/{message}/regenerate', [ChatMessageController::class, 'regenerate'])->name('chat.api.messages.regenerate');
         Route::post('/messages/{message}/regenerate/stream', [ChatMessageController::class, 'regenerateStream'])->name('chat.api.messages.regenerate.stream');
         Route::get('/files/{file}', [ChatMessageController::class, 'file'])->name('chat.file.download');
