@@ -73,9 +73,13 @@ return new class extends Migration
             'subscription_plan_tools',
         ];
 
+        Schema::disableForeignKeyConstraints();
+
         foreach ($tables as $table) {
             Schema::dropIfExists($table);
         }
+
+        Schema::enableForeignKeyConstraints();
 
         if (Schema::hasTable('conversations') && Schema::hasColumn('conversations', 'project_id')) {
             Schema::table('conversations', function (Blueprint $table) {
