@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import AdminLayout from '@/layouts/AdminLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Edit2, Eye, Trash2, ToggleLeft, ToggleRight } from 'lucide-react';
-import { router, usePage } from '@inertiajs/react';
+import AdminLayout from '@/layouts/AdminLayout';
+import { router } from '@inertiajs/react';
+import { Bot, Edit2, Eye, Plus, ToggleLeft, ToggleRight, Trash2 } from 'lucide-react';
+import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface AIMode {
@@ -24,206 +24,251 @@ interface Props {
     modes: AIMode[];
 }
 
+const truncate = (text: string, max = 100) =>
+    text.length <= max ? text : text.slice(0, max) + '…';
+
 export default function Index({ modes }: Props) {
     const [togglingId, setTogglingId] = useState<number | null>(null);
 
-    const handleToggleStatus = async (mode: AIMode) => {
+    const handleToggle = async (mode: AIMode) => {
         setTogglingId(mode.id);
-
-        try {
-            await router.patch(route('admin.ai-modes.toggle', mode.id), {}, {
-                onSuccess: () => {
-                    toast.success(`Mode ${mode.is_active ? 'deactivated' : 'activated'} successfully`);
-                },
-                onError: () => {
-                    toast.error('Failed to toggle mode status');
-                },
-                onFinish: () => {
-                    setTogglingId(null);
-                }
-            });
-        } catch (error) {
-            console.error('Error toggling mode:', error);
-            toast.error('Failed to toggle mode status');
-            setTogglingId(null);
-        }
+        await router.patch(route('admin.ai-modes.toggle', mode.id), {}, {
+            onSuccess: () => toast.success(`Mode ${mode.is_active ? 'deactivated' : 'activated'}`),
+            onError: () => toast.error('Failed to toggle mode status'),
+            onFinish: () => setTogglingId(null),
+        });
     };
 
     const handleDelete = async (mode: AIMode) => {
-        if (!confirm(`Are you sure you want to delete "${mode.name}"? This action cannot be undone.`)) {
-            return;
-        }
-
-        try {
-            await router.delete(route('admin.ai-modes.destroy', mode.id), {
-                onSuccess: () => {
-                    toast.success('Mode deleted successfully');
-                },
-                onError: () => {
-                    toast.error('Failed to delete mode');
-                }
-            });
-        } catch (error) {
-            console.error('Error deleting mode:', error);
-            toast.error('Failed to delete mode');
-        }
+        if (!confirm(`Delete "${mode.name}"? This cannot be undone.`)) return;
+        await router.delete(route('admin.ai-modes.destroy', mode.id), {
+            onSuccess: () => toast.success('Mode deleted'),
+            onError: () => toast.error('Failed to delete mode'),
+        });
     };
 
-    const truncateText = (text: string, maxLength: number = 100) => {
-        if (text.length <= maxLength) return text;
-        return text.substring(0, maxLength) + '...';
-    };
+    const stats = [
+        { label: 'Total modes', value: modes.length },
+        { label: 'Active', value: modes.filter((m) => m.is_active).length },
+        { label: 'Inactive', value: modes.filter((m) => !m.is_active).length },
+        { label: 'Max order', value: modes.length > 0 ? Math.max(...modes.map((m) => m.display_order)) : 0 },
+    ];
 
     return (
         <AdminLayout>
-            <div className="max-w-7xl mx-auto space-y-6">
-                <div className="flex items-center justify-between">
+            <div className="mx-auto max-w-7xl space-y-6 px-4 sm:px-6">
+
+                {/* ── Header ── */}
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold">AI Modes</h1>
-                        <p className="text-gray-500 mt-1">Manage AI conversation modes and their system prompts</p>
+                        <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">AI Modes</h1>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                            Manage AI conversation modes and their system prompts.
+                        </p>
                     </div>
-                    <Button onClick={() => router.visit(route('admin.ai-modes.create'))}>
-                        <Plus className="w-4 h-4 mr-2" />
-                        Create Mode
+                    <Button
+                        onClick={() => router.visit(route('admin.ai-modes.create'))}
+                        className="w-full sm:w-auto"
+                    >
+                        <Plus className="mr-2 h-4 w-4" />
+                        Create mode
                     </Button>
                 </div>
 
-                {/* Statistics */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="text-2xl font-bold">{modes.length}</div>
-                            <p className="text-xs text-muted-foreground">Total Modes</p>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="text-2xl font-bold">{modes.filter(m => m.is_active).length}</div>
-                            <p className="text-xs text-muted-foreground">Active Modes</p>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="text-2xl font-bold">{modes.filter(m => !m.is_active).length}</div>
-                            <p className="text-xs text-muted-foreground">Inactive Modes</p>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="text-2xl font-bold">
-                                {modes.length > 0 ? Math.max(...modes.map(m => m.display_order)) : 0}
-                            </div>
-                            <p className="text-xs text-muted-foreground">Max Display Order</p>
-                        </CardContent>
-                    </Card>
+                {/* ── Stats ── */}
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    {stats.map(({ label, value }) => (
+                        <Card key={label}>
+                            <CardContent className="pt-5 pb-4">
+                                <p className="text-2xl font-bold text-foreground">{value}</p>
+                                <p className="mt-0.5 text-xs text-muted-foreground">{label}</p>
+                            </CardContent>
+                        </Card>
+                    ))}
                 </div>
 
-                {/* Modes Table */}
+                {/* ── Modes list ── */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>All AI Modes</CardTitle>
+                        <CardTitle>All AI modes</CardTitle>
                         <CardDescription>
-                            Configure different AI personalities and behaviors for conversations
+                            Configure different AI personalities and behaviors for conversations.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-0">
                         {modes.length === 0 ? (
-                            <div className="text-center py-8">
-                                <p className="text-gray-500 mb-4">No AI modes created yet.</p>
+                            <div className="flex flex-col items-center gap-3 py-16 text-center">
+                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                                    <Bot className="h-6 w-6 text-muted-foreground" />
+                                </div>
+                                <div>
+                                    <p className="font-medium text-foreground">No AI modes yet</p>
+                                    <p className="mt-0.5 text-sm text-muted-foreground">Create your first mode to get started.</p>
+                                </div>
                                 <Button onClick={() => router.visit(route('admin.ai-modes.create'))}>
-                                    <Plus className="w-4 h-4 mr-2" />
-                                    Create Your First Mode
+                                    <Plus className="mr-2 h-4 w-4" />
+                                    Create your first mode
                                 </Button>
                             </div>
                         ) : (
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Mode</TableHead>
-                                        <TableHead>Description</TableHead>
-                                        <TableHead>System Prompt</TableHead>
-                                        <TableHead>Order</TableHead>
-                                        <TableHead>Status</TableHead>
-                                        <TableHead>Actions</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
+                            <>
+                                {/* ── Mobile cards (hidden on md+) ── */}
+                                <div className="divide-y divide-border md:hidden">
                                     {modes.map((mode) => (
-                                        <TableRow key={mode.id}>
-                                            <TableCell>
-                                                <div className="flex items-center gap-3">
-                                                    <span className="text-2xl">{mode.emoji}</span>
-                                                    <div>
-                                                        <div className="font-medium">{mode.name}</div>
-                                                        <div className="text-sm text-gray-500">ID: {mode.id}</div>
+                                        <div key={mode.id} className="p-4 space-y-3">
+                                            {/* Top row */}
+                                            <div className="flex items-start justify-between gap-3">
+                                                <div className="flex items-center gap-3 min-w-0">
+                                                    <span className="text-2xl shrink-0">{mode.emoji}</span>
+                                                    <div className="min-w-0">
+                                                        <p className="font-semibold text-foreground truncate">{mode.name}</p>
+                                                        <p className="text-xs text-muted-foreground">ID: {mode.id} · Order: {mode.display_order}</p>
                                                     </div>
                                                 </div>
-                                            </TableCell>
-                                            <TableCell>
-                                                <div className="max-w-xs">
-                                                    {truncateText(mode.description, 80)}
-                                                </div>
-                                            </TableCell>
-                                            <TableCell>
-                                                <div className="max-w-xs">
-                                                    <div className="text-sm font-mono bg-gray-50 p-2 rounded text-gray-700">
-                                                        {truncateText(mode.system_prompt, 120)}
-                                                    </div>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge variant="outline">
-                                                    {mode.display_order}
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge className={mode.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
+                                                <Badge
+                                                    className={`shrink-0 ${mode.is_active ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-400' : 'bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-400'}`}
+                                                >
                                                     {mode.is_active ? 'Active' : 'Inactive'}
                                                 </Badge>
-                                            </TableCell>
-                                            <TableCell>
-                                                <div className="flex gap-2">
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        onClick={() => router.visit(route('admin.ai-modes.show', mode.id))}
-                                                    >
-                                                        <Eye className="w-4 h-4" />
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        onClick={() => router.visit(route('admin.ai-modes.edit', mode.id))}
-                                                    >
-                                                        <Edit2 className="w-4 h-4" />
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        variant={mode.is_active ? "destructive" : "default"}
-                                                        onClick={() => handleToggleStatus(mode)}
-                                                        disabled={togglingId === mode.id}
-                                                    >
-                                                        {togglingId === mode.id ? (
-                                                            <div className="w-4 h-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                                                        ) : mode.is_active ? (
-                                                            <ToggleRight className="w-4 h-4" />
-                                                        ) : (
-                                                            <ToggleLeft className="w-4 h-4" />
-                                                        )}
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="destructive"
-                                                        onClick={() => handleDelete(mode)}
-                                                    >
-                                                        <Trash2 className="w-4 h-4" />
-                                                    </Button>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
+                                            </div>
+
+                                            {/* Description */}
+                                            {mode.description && (
+                                                <p className="text-sm text-muted-foreground">{truncate(mode.description, 120)}</p>
+                                            )}
+
+                                            {/* System prompt preview */}
+                                            <div className="rounded-lg bg-muted/40 px-3 py-2 font-mono text-xs text-muted-foreground">
+                                                {truncate(mode.system_prompt, 100)}
+                                            </div>
+
+                                            {/* Actions */}
+                                            <div className="flex flex-wrap gap-2 pt-1">
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="flex-1"
+                                                    onClick={() => router.visit(route('admin.ai-modes.show', mode.id))}
+                                                >
+                                                    <Eye className="mr-1.5 h-3.5 w-3.5" />
+                                                    View
+                                                </Button>
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="flex-1"
+                                                    onClick={() => router.visit(route('admin.ai-modes.edit', mode.id))}
+                                                >
+                                                    <Edit2 className="mr-1.5 h-3.5 w-3.5" />
+                                                    Edit
+                                                </Button>
+                                                <Button
+                                                    size="sm"
+                                                    variant={mode.is_active ? 'destructive' : 'default'}
+                                                    className="flex-1"
+                                                    onClick={() => handleToggle(mode)}
+                                                    disabled={togglingId === mode.id}
+                                                >
+                                                    {togglingId === mode.id ? (
+                                                        <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                                                    ) : mode.is_active ? (
+                                                        <><ToggleRight className="mr-1.5 h-3.5 w-3.5" />Deactivate</>
+                                                    ) : (
+                                                        <><ToggleLeft className="mr-1.5 h-3.5 w-3.5" />Activate</>
+                                                    )}
+                                                </Button>
+                                                <Button
+                                                    size="sm"
+                                                    variant="destructive"
+                                                    onClick={() => handleDelete(mode)}
+                                                >
+                                                    <Trash2 className="h-3.5 w-3.5" />
+                                                </Button>
+                                            </div>
+                                        </div>
                                     ))}
-                                </TableBody>
-                            </Table>
+                                </div>
+
+                                {/* ── Desktop table (hidden below md) ── */}
+                                <div className="hidden md:block overflow-x-auto">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Mode</TableHead>
+                                                <TableHead>Description</TableHead>
+                                                <TableHead>System prompt</TableHead>
+                                                <TableHead className="w-16 text-center">Order</TableHead>
+                                                <TableHead className="w-24">Status</TableHead>
+                                                <TableHead className="w-44">Actions</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {modes.map((mode) => (
+                                                <TableRow key={mode.id}>
+                                                    <TableCell>
+                                                        <div className="flex items-center gap-3">
+                                                            <span className="text-2xl">{mode.emoji}</span>
+                                                            <div>
+                                                                <p className="font-medium text-foreground">{mode.name}</p>
+                                                                <p className="text-xs text-muted-foreground">ID: {mode.id}</p>
+                                                            </div>
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <p className="max-w-[180px] text-sm text-muted-foreground">
+                                                            {truncate(mode.description, 80)}
+                                                        </p>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <div className="max-w-[220px] rounded-lg bg-muted/40 px-2 py-1.5 font-mono text-xs text-muted-foreground">
+                                                            {truncate(mode.system_prompt, 120)}
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell className="text-center">
+                                                        <Badge variant="outline">{mode.display_order}</Badge>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Badge
+                                                            className={mode.is_active
+                                                                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-400'
+                                                                : 'bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-400'}
+                                                        >
+                                                            {mode.is_active ? 'Active' : 'Inactive'}
+                                                        </Badge>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <div className="flex items-center gap-1.5">
+                                                            <Button size="sm" variant="outline" onClick={() => router.visit(route('admin.ai-modes.show', mode.id))}>
+                                                                <Eye className="h-3.5 w-3.5" />
+                                                            </Button>
+                                                            <Button size="sm" variant="outline" onClick={() => router.visit(route('admin.ai-modes.edit', mode.id))}>
+                                                                <Edit2 className="h-3.5 w-3.5" />
+                                                            </Button>
+                                                            <Button
+                                                                size="sm"
+                                                                variant={mode.is_active ? 'destructive' : 'default'}
+                                                                onClick={() => handleToggle(mode)}
+                                                                disabled={togglingId === mode.id}
+                                                            >
+                                                                {togglingId === mode.id ? (
+                                                                    <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                                                                ) : mode.is_active ? (
+                                                                    <ToggleRight className="h-3.5 w-3.5" />
+                                                                ) : (
+                                                                    <ToggleLeft className="h-3.5 w-3.5" />
+                                                                )}
+                                                            </Button>
+                                                            <Button size="sm" variant="destructive" onClick={() => handleDelete(mode)}>
+                                                                <Trash2 className="h-3.5 w-3.5" />
+                                                            </Button>
+                                                        </div>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            </>
                         )}
                     </CardContent>
                 </Card>
