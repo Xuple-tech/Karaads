@@ -42,14 +42,12 @@ class GoogleController extends Controller
         try {
             $googleUser = Socialite::driver('google')->user();
 
-            // Ensure we have an email address
             if (!$googleUser->email) {
                 throw new \Exception('Google account does not have an email address');
             }
 
             $user = User::where('email', $googleUser->email)->first();
 
-            // Create user if doesn't exist
             if (!$user) {
                 $user = User::create([
                     'name' => $googleUser->name,
@@ -63,10 +61,6 @@ class GoogleController extends Controller
                 ]);
             }
 
-            // Login the user
-            Auth::login($user);
-
-            // Check if we should link Gmail account
             $linkEmail = session('oauth_link_email', false);
             session()->forget('oauth_link_email');
 
@@ -78,11 +72,16 @@ class GoogleController extends Controller
                 ]);
             }
 
-            if ($redirectTarget = AuthRedirect::fromRequest($request)) {
-                return redirect()->to($redirectTarget);
-            }
+            // Issue a Sanctum token for the SPA (token-based auth, not session-based).
+            $user->tokens()->whereIn('name', ['spa', 'spa:v1'])->delete();
+            $token = $user->createToken('spa:v1')->plainTextToken;
 
-            return redirect()->intended('/new');
+            $redirectTarget = AuthRedirect::fromRequest($request) ?? '/new';
+
+            return response()->view('auth.spa-token-handoff', [
+                'token'    => $token,
+                'redirect' => $redirectTarget,
+            ]);
 
         } catch (\Exception $e) {
             Log::error('Google OAuth callback error', [
