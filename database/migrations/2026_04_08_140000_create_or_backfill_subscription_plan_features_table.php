@@ -17,7 +17,23 @@ return new class extends Migration
             );
 
             if (! empty($legacyIndex)) {
+                // Drop foreign key constraint first since it may use the index
+                $foreignKeys = DB::select(
+                    'SELECT CONSTRAINT_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ? AND REFERENCED_TABLE_NAME IS NOT NULL',
+                    ['subscription_plan_features', DB::getDatabaseName()]
+                );
+
+                foreach ($foreignKeys as $fk) {
+                    DB::statement("ALTER TABLE subscription_plan_features DROP FOREIGN KEY {$fk->CONSTRAINT_NAME}");
+                }
+
+                // Now drop the legacy index
                 DB::statement('ALTER TABLE subscription_plan_features DROP INDEX subscription_plan_features_plan_id_feature_key_unique');
+
+                // Recreate the foreign key constraint
+                Schema::table('subscription_plan_features', function (Blueprint $table) {
+                    $table->foreign('plan_id')->references('id')->on('subscription_plans')->onDelete('cascade');
+                });
             }
 
             $correctIndex = DB::select(
