@@ -10,7 +10,27 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (! Schema::hasTable('subscription_plan_features')) {
+        if (Schema::hasTable('subscription_plan_features')) {
+            $legacyIndex = DB::select(
+                'SHOW INDEX FROM subscription_plan_features WHERE Key_name = ?',
+                ['subscription_plan_features_plan_id_feature_key_unique']
+            );
+
+            if (! empty($legacyIndex)) {
+                DB::statement('ALTER TABLE subscription_plan_features DROP INDEX subscription_plan_features_plan_id_feature_key_unique');
+            }
+
+            $correctIndex = DB::select(
+                'SHOW INDEX FROM subscription_plan_features WHERE Key_name = ?',
+                ['subscription_plan_features_plan_id_feature_key_limit_type_unique']
+            );
+
+            if (empty($correctIndex)) {
+                Schema::table('subscription_plan_features', function (Blueprint $table) {
+                    $table->unique(['plan_id', 'feature_key', 'limit_type'], 'subscription_plan_features_plan_id_feature_key_limit_type_unique');
+                });
+            }
+        } else {
             Schema::create('subscription_plan_features', function (Blueprint $table) {
                 $table->uuid('id')->primary();
                 $table->uuid('plan_id');
@@ -24,7 +44,7 @@ return new class extends Migration
                 $table->timestamps();
 
                 $table->foreign('plan_id')->references('id')->on('subscription_plans')->onDelete('cascade');
-                $table->index(['plan_id', 'feature_key']);
+                $table->unique(['plan_id', 'feature_key', 'limit_type'], 'subscription_plan_features_plan_id_feature_key_limit_type_unique');
             });
         }
 
@@ -82,19 +102,27 @@ return new class extends Migration
                     continue;
                 }
 
-                DB::table('subscription_plan_features')->insert([
-                    'id' => (string) Str::uuid(),
+                $capabilityKey = [
                     'plan_id' => $plan->id,
                     'feature_key' => $featureKey,
-                    'feature_name' => $config['label'],
-                    'description' => $config['description'],
-                    'limit' => null,
                     'limit_type' => null,
-                    'is_enabled' => true,
-                    'metadata' => null,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                ];
+
+                if (! DB::table('subscription_plan_features')->where($capabilityKey)->exists()) {
+                    DB::table('subscription_plan_features')->insert([
+                        'id' => (string) Str::uuid(),
+                        'plan_id' => $plan->id,
+                        'feature_key' => $featureKey,
+                        'feature_name' => $config['label'],
+                        'description' => $config['description'],
+                        'limit' => null,
+                        'limit_type' => null,
+                        'is_enabled' => true,
+                        'metadata' => null,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
             }
 
             $quotaRows = [
@@ -111,19 +139,27 @@ return new class extends Migration
                     continue;
                 }
 
-                DB::table('subscription_plan_features')->insert([
-                    'id' => (string) Str::uuid(),
+                $quotaKey = [
                     'plan_id' => $plan->id,
                     'feature_key' => $row['feature_key'],
-                    'feature_name' => $row['feature_name'],
-                    'description' => $row['feature_name'] . ' quota',
-                    'limit' => $row['limit'],
                     'limit_type' => $row['limit_type'],
-                    'is_enabled' => true,
-                    'metadata' => null,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                ];
+
+                if (! DB::table('subscription_plan_features')->where($quotaKey)->exists()) {
+                    DB::table('subscription_plan_features')->insert([
+                        'id' => (string) Str::uuid(),
+                        'plan_id' => $plan->id,
+                        'feature_key' => $row['feature_key'],
+                        'feature_name' => $row['feature_name'],
+                        'description' => $row['feature_name'] . ' quota',
+                        'limit' => $row['limit'],
+                        'limit_type' => $row['limit_type'],
+                        'is_enabled' => true,
+                        'metadata' => null,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
             }
         }
     }
