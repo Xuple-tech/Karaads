@@ -151,7 +151,6 @@ export default function SpaChatInterface({
     const [mode, setMode] = useState<'text' | 'image'>('text');
     const [files, setFiles] = useState<File[]>([]);
     const [error, setError] = useState<string | null>(null);
-    const [isDelayed, setIsDelayed] = useState(false);
     const [showScrollBtn, setShowScrollBtn] = useState(false);
     const [userScrolledUp, setUserScrolledUp] = useState(false);
     const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -230,7 +229,6 @@ export default function SpaChatInterface({
         const hasStreamingMessage = mappedMessages.some((message) => message.status === 'streaming');
         if (!hasStreamingMessage) {
             setIsLoading(false);
-            setIsDelayed(false);
         }
     }, []);
 
@@ -290,7 +288,6 @@ export default function SpaChatInterface({
                 content: typeof payload.content === 'string' ? payload.content : undefined,
             });
             setIsLoading(false);
-            setIsDelayed(false);
             if (conversationId) {
                 await syncConversation(conversationId);
                 void queryClient.invalidateQueries({ queryKey: ['spa', 'conversations'] });
@@ -304,7 +301,6 @@ export default function SpaChatInterface({
             }
             setError(error);
             setIsLoading(false);
-            setIsDelayed(false);
             if (conversationId) {
                 await syncConversation(conversationId);
             }
@@ -384,36 +380,15 @@ export default function SpaChatInterface({
                     void syncConversation(state.conversationId!);
                 },
                 onError: () => {
-                    setIsDelayed(true);
                     setError('Realtime connection failed. Refresh to resync this chat.');
                 },
             },
         );
     }, [chatTransport, handleRealtimeEvent, state.conversationId, syncConversation]);
 
-    useEffect(() => {
-        if (chatTransport !== 'sse' || !isLoading || !state.conversationId) {
-            setIsDelayed(false);
-            return;
-        }
-
-        const conversationId = state.conversationId;
-        const delayedTimer = window.setTimeout(() => {
-            setIsDelayed(true);
-        }, 8000);
-        const syncInterval = window.setInterval(() => {
-            void syncConversation(conversationId);
-        }, 5000);
-
-        return () => {
-            window.clearTimeout(delayedTimer);
-            window.clearInterval(syncInterval);
-        };
-    }, [chatTransport, isLoading, state.conversationId, syncConversation]);
 
     const sendMessage = useCallback(async (prompt: string, type: 'text' | 'image', attachedFiles?: File[]) => {
         setError(null);
-        setIsDelayed(false);
         setIsLoading(true);
         document.dispatchEvent(new CustomEvent('kwati:message-sent'));
 
@@ -520,7 +495,6 @@ export default function SpaChatInterface({
             setFiles([]);
         } catch (streamError) {
             setIsLoading(false);
-            setIsDelayed(false);
             setError(streamError instanceof Error ? streamError.message : 'Could not send message. Please try again.');
         }
     }, [chatTransport, readEventStream, state.conversationId]);
@@ -540,7 +514,6 @@ export default function SpaChatInterface({
 
     const handleRegenerate = useCallback(async (messageId: string) => {
         setError(null);
-        setIsDelayed(false);
         setIsLoading(true);
 
         if (chatTransport === 'ws') {
@@ -591,7 +564,6 @@ export default function SpaChatInterface({
             await readEventStream(response);
         } catch (streamError) {
             setIsLoading(false);
-            setIsDelayed(false);
             setError(streamError instanceof Error ? streamError.message : 'Could not regenerate message.');
         }
     }, [chatTransport, readEventStream, state.conversationId]);
@@ -670,15 +642,6 @@ export default function SpaChatInterface({
                         <Alert className="mb-6 rounded-xl border-destructive/30 bg-destructive/8" variant="destructive">
                             <AlertCircle className="h-4 w-4" />
                             <AlertDescription>{error}</AlertDescription>
-                        </Alert>
-                    )}
-
-                    {isDelayed && !error && (
-                        <Alert className="mb-6 rounded-xl border-amber-500/30 bg-amber-500/10 text-amber-100">
-                            <AlertCircle className="h-4 w-4 text-amber-300" />
-                            <AlertDescription>
-                                Response is taking longer than expected. Queue processing or realtime delivery may be delayed.
-                            </AlertDescription>
                         </Alert>
                     )}
 
