@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Auth\RegisteredUserController::store
- * @see app/Http/Controllers/Auth/RegisteredUserController.php:36
- * @route '/register'
- */
+* @see app/Http/Controllers/Auth/RegisteredUserController.php:36
+* @route '/register'
+*/
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
@@ -16,22 +16,23 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Auth\RegisteredUserController::store
- * @see app/Http/Controllers/Auth/RegisteredUserController.php:36
- * @route '/register'
- */
+* @see app/Http/Controllers/Auth/RegisteredUserController.php:36
+* @route '/register'
+*/
 store.url = (options?: RouteQueryOptions) => {
     return store.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\Auth\RegisteredUserController::store
- * @see app/Http/Controllers/Auth/RegisteredUserController.php:36
- * @route '/register'
- */
+* @see app/Http/Controllers/Auth/RegisteredUserController.php:36
+* @route '/register'
+*/
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
     method: 'post',
 })
+
 const RegisteredUserController = { store }
 
 export default RegisteredUserController

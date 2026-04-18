@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { AudioLines, CreditCard, LogOut, PenSquare, RadioTower, Settings, SquarePen, Star, Trash2, MoreHorizontal } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { AudioLines, CreditCard, LogOut, Menu, PenSquare, RadioTower, Settings, SquarePen, Star, Trash2, MoreHorizontal, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { NavLink, Navigate, Outlet, matchPath, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -446,28 +446,47 @@ function SpaTopBar() {
 
 export function PublicLayout() {
     const { data } = useSessionQuery();
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+    const location = useLocation();
+
+    // close mobile menu on route change
+    useEffect(() => { setMobileOpen(false); }, [location.pathname]);
+
+    // close on outside click
+    useEffect(() => {
+        if (!mobileOpen) return;
+        const handler = (e: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+                setMobileOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+    }, [mobileOpen]);
+
+    const navLinks = [
+        { to: '/pricing', label: 'Pricing' },
+        { to: '/privacy', label: 'Privacy' },
+        { to: '/terms', label: 'Terms' },
+    ];
 
     return (
         <div className="min-h-screen bg-background">
-            {/* Nav */}
-            <header className="sticky top-0 z-50 border-b border-border/30 bg-background/90 backdrop-blur-md">
+            <header className="sticky top-0 z-50 border-b border-border/30 bg-background/90 backdrop-blur-md" ref={menuRef}>
                 <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
                     {/* Logo */}
                     <NavLink className="hover:opacity-75 transition-opacity" to={data?.authenticated ? '/app' : '/'}>
                         <img src="/logo.png" alt="Kwati AI" className="h-7 w-auto select-none" draggable={false} />
                     </NavLink>
 
-                    {/* Links */}
-                    <nav className="flex items-center gap-5 text-sm">
-                        <NavLink className="text-muted-foreground hover:text-foreground transition-colors" to="/pricing">
-                            Pricing
-                        </NavLink>
-                        <NavLink className="text-muted-foreground hover:text-foreground transition-colors" to="/privacy">
-                            Privacy
-                        </NavLink>
-                        <NavLink className="text-muted-foreground hover:text-foreground transition-colors" to="/terms">
-                            Terms
-                        </NavLink>
+                    {/* Desktop nav */}
+                    <nav className="hidden md:flex items-center gap-5 text-sm">
+                        {navLinks.map(({ to, label }) => (
+                            <NavLink key={to} className="text-muted-foreground hover:text-foreground transition-colors" to={to}>
+                                {label}
+                            </NavLink>
+                        ))}
                         {data?.authenticated ? (
                             <NavLink
                                 className="rounded-lg bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
@@ -489,8 +508,58 @@ export function PublicLayout() {
                             </>
                         )}
                     </nav>
+
+                    {/* Mobile hamburger */}
+                    <button
+                        className="md:hidden flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
+                        onClick={() => setMobileOpen((v) => !v)}
+                        aria-label="Toggle menu"
+                    >
+                        {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                    </button>
                 </div>
+
+                {/* Mobile dropdown */}
+                {mobileOpen && (
+                    <div className="md:hidden border-t border-border/30 bg-background/95 backdrop-blur-md px-5 py-4 flex flex-col gap-1">
+                        {navLinks.map(({ to, label }) => (
+                            <NavLink
+                                key={to}
+                                to={to}
+                                className="rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
+                            >
+                                {label}
+                            </NavLink>
+                        ))}
+                        <div className="mt-2 pt-2 border-t border-border/30 flex flex-col gap-2">
+                            {data?.authenticated ? (
+                                <NavLink
+                                    to="/app"
+                                    className="rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground text-center hover:bg-primary/90 transition-colors"
+                                >
+                                    Open app
+                                </NavLink>
+                            ) : (
+                                <>
+                                    <NavLink
+                                        to="/login"
+                                        className="rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-foreground text-center hover:bg-accent/60 transition-colors"
+                                    >
+                                        Sign in
+                                    </NavLink>
+                                    <NavLink
+                                        to="/register"
+                                        className="rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground text-center hover:bg-primary/90 transition-colors"
+                                    >
+                                        Get started
+                                    </NavLink>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                )}
             </header>
+
             <main>
                 <Outlet />
             </main>

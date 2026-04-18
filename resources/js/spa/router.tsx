@@ -1,10 +1,34 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, useRouteError } from 'react-router-dom';
 
 import { AppLayout, GuestOnly, ProtectedOnly, PublicLayout } from '@/spa/routes/layouts';
 
+function RouteErrorPage() {
+    const error = useRouteError() as { status?: number; statusText?: string } | null;
+    const is404 = error?.status === 404;
+    return (
+        <div className="flex min-h-screen flex-col items-center justify-center bg-background px-5 text-center">
+            <p className="text-7xl font-bold text-foreground/10">{error?.status ?? (is404 ? 404 : 'Error')}</p>
+            <h1 className="mt-4 text-xl font-semibold text-foreground">{is404 ? 'Page not found' : (error?.statusText ?? 'Something went wrong')}</h1>
+            <button onClick={() => window.history.back()} className="mt-6 rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-violet-700 transition-colors">Go back</button>
+        </div>
+    );
+}
+
+function NotFoundPage() {
+    return (
+        <div className="flex min-h-screen flex-col items-center justify-center bg-background px-5 text-center">
+            <p className="text-7xl font-bold text-foreground/10">404</p>
+            <h1 className="mt-4 text-xl font-semibold text-foreground">Page not found</h1>
+            <button onClick={() => window.history.back()} className="mt-6 rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-violet-700 transition-colors">Go back</button>
+        </div>
+    );
+}
+
 export const router = createBrowserRouter([
+    // ── Public marketing pages (with nav header) ──
     {
         element: <PublicLayout />,
+        errorElement: <RouteErrorPage />,
         children: [
             { path: '/', lazy: () => import('@/spa/routes/public/home') },
             { path: '/pricing', lazy: () => import('@/spa/routes/public/pricing') },
@@ -14,26 +38,33 @@ export const router = createBrowserRouter([
             { path: '/terms', lazy: () => import('@/spa/routes/public/terms') },
             { path: '/terms-of-service', lazy: () => import('@/spa/routes/public/terms') },
             { path: '/share/:token', lazy: () => import('@/spa/routes/public/shared-conversation') },
-            {
-                element: <GuestOnly />,
-                children: [
-                    { path: '/login', lazy: () => import('@/spa/routes/auth/login') },
-                    { path: '/register', lazy: () => import('@/spa/routes/auth/register') },
-                    { path: '/forgot-password', lazy: () => import('@/spa/routes/auth/forgot-password') },
-                    { path: '/reset-password/:token', lazy: () => import('@/spa/routes/auth/reset-password') },
-                ],
-            },
-            {
-                element: <ProtectedOnly />,
-                children: [
-                    { path: '/verify-email', lazy: () => import('@/spa/routes/auth/verify-email') },
-                    { path: '/confirm-password', lazy: () => import('@/spa/routes/auth/confirm-password') },
-                ],
-            },
+        ],
+    },
+
+    // ── Auth pages (no nav header — AuthLayout provides its own) ──
+    {
+        element: <GuestOnly />,
+        errorElement: <RouteErrorPage />,
+        children: [
+            { path: '/login', lazy: () => import('@/spa/routes/auth/login') },
+            { path: '/register', lazy: () => import('@/spa/routes/auth/register') },
+            { path: '/forgot-password', lazy: () => import('@/spa/routes/auth/forgot-password') },
+            { path: '/reset-password/:token', lazy: () => import('@/spa/routes/auth/reset-password') },
         ],
     },
     {
         element: <ProtectedOnly />,
+        errorElement: <RouteErrorPage />,
+        children: [
+            { path: '/verify-email', lazy: () => import('@/spa/routes/auth/verify-email') },
+            { path: '/confirm-password', lazy: () => import('@/spa/routes/auth/confirm-password') },
+        ],
+    },
+
+    // ── Authenticated app ──
+    {
+        element: <ProtectedOnly />,
+        errorElement: <RouteErrorPage />,
         children: [
             {
                 element: <AppLayout />,
@@ -69,4 +100,7 @@ export const router = createBrowserRouter([
             },
         ],
     },
+
+    // ── Catch-all 404 ──
+    { path: '*', element: <NotFoundPage /> },
 ]);

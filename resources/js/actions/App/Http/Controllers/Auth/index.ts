@@ -6,15 +6,16 @@ import GoogleController from './GoogleController'
 import VerifyEmailController from './VerifyEmailController'
 import EmailVerificationNotificationController from './EmailVerificationNotificationController'
 import ConfirmablePasswordController from './ConfirmablePasswordController'
+
 const Auth = {
     RegisteredUserController: Object.assign(RegisteredUserController, RegisteredUserController),
-AuthenticatedSessionController: Object.assign(AuthenticatedSessionController, AuthenticatedSessionController),
-PasswordResetLinkController: Object.assign(PasswordResetLinkController, PasswordResetLinkController),
-NewPasswordController: Object.assign(NewPasswordController, NewPasswordController),
-GoogleController: Object.assign(GoogleController, GoogleController),
-VerifyEmailController: Object.assign(VerifyEmailController, VerifyEmailController),
-EmailVerificationNotificationController: Object.assign(EmailVerificationNotificationController, EmailVerificationNotificationController),
-ConfirmablePasswordController: Object.assign(ConfirmablePasswordController, ConfirmablePasswordController),
+    AuthenticatedSessionController: Object.assign(AuthenticatedSessionController, AuthenticatedSessionController),
+    PasswordResetLinkController: Object.assign(PasswordResetLinkController, PasswordResetLinkController),
+    NewPasswordController: Object.assign(NewPasswordController, NewPasswordController),
+    GoogleController: Object.assign(GoogleController, GoogleController),
+    VerifyEmailController: Object.assign(VerifyEmailController, VerifyEmailController),
+    EmailVerificationNotificationController: Object.assign(EmailVerificationNotificationController, EmailVerificationNotificationController),
+    ConfirmablePasswordController: Object.assign(ConfirmablePasswordController, ConfirmablePasswordController),
 }
 
 export default Auth

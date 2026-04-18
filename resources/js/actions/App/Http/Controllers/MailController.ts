@@ -1,9 +1,9 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\MailController::connectImap
- * @see app/Http/Controllers/MailController.php:335
- * @route '/api/emails/accounts/imap'
- */
+* @see app/Http/Controllers/MailController.php:335
+* @route '/api/emails/accounts/imap'
+*/
 export const connectImap = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: connectImap.url(options),
     method: 'post',
@@ -16,18 +16,18 @@ connectImap.definition = {
 
 /**
 * @see \App\Http\Controllers\MailController::connectImap
- * @see app/Http/Controllers/MailController.php:335
- * @route '/api/emails/accounts/imap'
- */
+* @see app/Http/Controllers/MailController.php:335
+* @route '/api/emails/accounts/imap'
+*/
 connectImap.url = (options?: RouteQueryOptions) => {
     return connectImap.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\MailController::connectImap
- * @see app/Http/Controllers/MailController.php:335
- * @route '/api/emails/accounts/imap'
- */
+* @see app/Http/Controllers/MailController.php:335
+* @route '/api/emails/accounts/imap'
+*/
 connectImap.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: connectImap.url(options),
     method: 'post',
@@ -35,9 +35,9 @@ connectImap.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\MailController::disconnectAccount
- * @see app/Http/Controllers/MailController.php:380
- * @route '/api/emails/accounts/{accountId}'
- */
+* @see app/Http/Controllers/MailController.php:380
+* @route '/api/emails/accounts/{accountId}'
+*/
 export const disconnectAccount = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: disconnectAccount.url(args, options),
     method: 'delete',
@@ -50,26 +50,25 @@ disconnectAccount.definition = {
 
 /**
 * @see \App\Http\Controllers\MailController::disconnectAccount
- * @see app/Http/Controllers/MailController.php:380
- * @route '/api/emails/accounts/{accountId}'
- */
+* @see app/Http/Controllers/MailController.php:380
+* @route '/api/emails/accounts/{accountId}'
+*/
 disconnectAccount.url = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { accountId: args }
     }
 
-    
     if (Array.isArray(args)) {
         args = {
-                    accountId: args[0],
-                }
+            accountId: args[0],
+        }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-                        accountId: args.accountId,
-                }
+        accountId: args.accountId,
+    }
 
     return disconnectAccount.definition.url
             .replace('{accountId}', parsedArgs.accountId.toString())
@@ -78,9 +77,9 @@ disconnectAccount.url = (args: { accountId: string | number } | [accountId: stri
 
 /**
 * @see \App\Http\Controllers\MailController::disconnectAccount
- * @see app/Http/Controllers/MailController.php:380
- * @route '/api/emails/accounts/{accountId}'
- */
+* @see app/Http/Controllers/MailController.php:380
+* @route '/api/emails/accounts/{accountId}'
+*/
 disconnectAccount.delete = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: disconnectAccount.url(args, options),
     method: 'delete',
@@ -88,9 +87,9 @@ disconnectAccount.delete = (args: { accountId: string | number } | [accountId: s
 
 /**
 * @see \App\Http\Controllers\MailController::syncEmails
- * @see app/Http/Controllers/MailController.php:406
- * @route '/api/emails/accounts/{accountId}/sync'
- */
+* @see app/Http/Controllers/MailController.php:406
+* @route '/api/emails/accounts/{accountId}/sync'
+*/
 export const syncEmails = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: syncEmails.url(args, options),
     method: 'post',
@@ -103,26 +102,25 @@ syncEmails.definition = {
 
 /**
 * @see \App\Http\Controllers\MailController::syncEmails
- * @see app/Http/Controllers/MailController.php:406
- * @route '/api/emails/accounts/{accountId}/sync'
- */
+* @see app/Http/Controllers/MailController.php:406
+* @route '/api/emails/accounts/{accountId}/sync'
+*/
 syncEmails.url = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { accountId: args }
     }
 
-    
     if (Array.isArray(args)) {
         args = {
-                    accountId: args[0],
-                }
+            accountId: args[0],
+        }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-                        accountId: args.accountId,
-                }
+        accountId: args.accountId,
+    }
 
     return syncEmails.definition.url
             .replace('{accountId}', parsedArgs.accountId.toString())
@@ -131,9 +129,9 @@ syncEmails.url = (args: { accountId: string | number } | [accountId: string | nu
 
 /**
 * @see \App\Http\Controllers\MailController::syncEmails
- * @see app/Http/Controllers/MailController.php:406
- * @route '/api/emails/accounts/{accountId}/sync'
- */
+* @see app/Http/Controllers/MailController.php:406
+* @route '/api/emails/accounts/{accountId}/sync'
+*/
 syncEmails.post = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: syncEmails.url(args, options),
     method: 'post',
@@ -141,9 +139,9 @@ syncEmails.post = (args: { accountId: string | number } | [accountId: string | n
 
 /**
 * @see \App\Http\Controllers\MailController::getEmails
- * @see app/Http/Controllers/MailController.php:392
- * @route '/api/emails/accounts/{accountId}/emails'
- */
+* @see app/Http/Controllers/MailController.php:392
+* @route '/api/emails/accounts/{accountId}/emails'
+*/
 export const getEmails = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getEmails.url(args, options),
     method: 'get',
@@ -156,26 +154,25 @@ getEmails.definition = {
 
 /**
 * @see \App\Http\Controllers\MailController::getEmails
- * @see app/Http/Controllers/MailController.php:392
- * @route '/api/emails/accounts/{accountId}/emails'
- */
+* @see app/Http/Controllers/MailController.php:392
+* @route '/api/emails/accounts/{accountId}/emails'
+*/
 getEmails.url = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { accountId: args }
     }
 
-    
     if (Array.isArray(args)) {
         args = {
-                    accountId: args[0],
-                }
+            accountId: args[0],
+        }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-                        accountId: args.accountId,
-                }
+        accountId: args.accountId,
+    }
 
     return getEmails.definition.url
             .replace('{accountId}', parsedArgs.accountId.toString())
@@ -184,18 +181,19 @@ getEmails.url = (args: { accountId: string | number } | [accountId: string | num
 
 /**
 * @see \App\Http\Controllers\MailController::getEmails
- * @see app/Http/Controllers/MailController.php:392
- * @route '/api/emails/accounts/{accountId}/emails'
- */
+* @see app/Http/Controllers/MailController.php:392
+* @route '/api/emails/accounts/{accountId}/emails'
+*/
 getEmails.get = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getEmails.url(args, options),
     method: 'get',
 })
+
 /**
 * @see \App\Http\Controllers\MailController::getEmails
- * @see app/Http/Controllers/MailController.php:392
- * @route '/api/emails/accounts/{accountId}/emails'
- */
+* @see app/Http/Controllers/MailController.php:392
+* @route '/api/emails/accounts/{accountId}/emails'
+*/
 getEmails.head = (args: { accountId: string | number } | [accountId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: getEmails.url(args, options),
     method: 'head',
@@ -203,9 +201,9 @@ getEmails.head = (args: { accountId: string | number } | [accountId: string | nu
 
 /**
 * @see \App\Http\Controllers\MailController::processEmail
- * @see app/Http/Controllers/MailController.php:430
- * @route '/api/emails/{emailId}/process'
- */
+* @see app/Http/Controllers/MailController.php:430
+* @route '/api/emails/{emailId}/process'
+*/
 export const processEmail = (args: { emailId: string | number } | [emailId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: processEmail.url(args, options),
     method: 'post',
@@ -218,26 +216,25 @@ processEmail.definition = {
 
 /**
 * @see \App\Http\Controllers\MailController::processEmail
- * @see app/Http/Controllers/MailController.php:430
- * @route '/api/emails/{emailId}/process'
- */
+* @see app/Http/Controllers/MailController.php:430
+* @route '/api/emails/{emailId}/process'
+*/
 processEmail.url = (args: { emailId: string | number } | [emailId: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { emailId: args }
     }
 
-    
     if (Array.isArray(args)) {
         args = {
-                    emailId: args[0],
-                }
+            emailId: args[0],
+        }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-                        emailId: args.emailId,
-                }
+        emailId: args.emailId,
+    }
 
     return processEmail.definition.url
             .replace('{emailId}', parsedArgs.emailId.toString())
@@ -246,9 +243,9 @@ processEmail.url = (args: { emailId: string | number } | [emailId: string | numb
 
 /**
 * @see \App\Http\Controllers\MailController::processEmail
- * @see app/Http/Controllers/MailController.php:430
- * @route '/api/emails/{emailId}/process'
- */
+* @see app/Http/Controllers/MailController.php:430
+* @route '/api/emails/{emailId}/process'
+*/
 processEmail.post = (args: { emailId: string | number } | [emailId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: processEmail.url(args, options),
     method: 'post',
@@ -256,9 +253,9 @@ processEmail.post = (args: { emailId: string | number } | [emailId: string | num
 
 /**
 * @see \App\Http\Controllers\MailController::getRules
- * @see app/Http/Controllers/MailController.php:449
- * @route '/api/emails/rules'
- */
+* @see app/Http/Controllers/MailController.php:449
+* @route '/api/emails/rules'
+*/
 export const getRules = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getRules.url(options),
     method: 'get',
@@ -271,27 +268,28 @@ getRules.definition = {
 
 /**
 * @see \App\Http\Controllers\MailController::getRules
- * @see app/Http/Controllers/MailController.php:449
- * @route '/api/emails/rules'
- */
+* @see app/Http/Controllers/MailController.php:449
+* @route '/api/emails/rules'
+*/
 getRules.url = (options?: RouteQueryOptions) => {
     return getRules.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\MailController::getRules
- * @see app/Http/Controllers/MailController.php:449
- * @route '/api/emails/rules'
- */
+* @see app/Http/Controllers/MailController.php:449
+* @route '/api/emails/rules'
+*/
 getRules.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: getRules.url(options),
     method: 'get',
 })
+
 /**
 * @see \App\Http\Controllers\MailController::getRules
- * @see app/Http/Controllers/MailController.php:449
- * @route '/api/emails/rules'
- */
+* @see app/Http/Controllers/MailController.php:449
+* @route '/api/emails/rules'
+*/
 getRules.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: getRules.url(options),
     method: 'head',
@@ -299,9 +297,9 @@ getRules.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\MailController::createRule
- * @see app/Http/Controllers/MailController.php:459
- * @route '/api/emails/rules'
- */
+* @see app/Http/Controllers/MailController.php:459
+* @route '/api/emails/rules'
+*/
 export const createRule = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: createRule.url(options),
     method: 'post',
@@ -314,18 +312,18 @@ createRule.definition = {
 
 /**
 * @see \App\Http\Controllers\MailController::createRule
- * @see app/Http/Controllers/MailController.php:459
- * @route '/api/emails/rules'
- */
+* @see app/Http/Controllers/MailController.php:459
+* @route '/api/emails/rules'
+*/
 createRule.url = (options?: RouteQueryOptions) => {
     return createRule.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\MailController::createRule
- * @see app/Http/Controllers/MailController.php:459
- * @route '/api/emails/rules'
- */
+* @see app/Http/Controllers/MailController.php:459
+* @route '/api/emails/rules'
+*/
 createRule.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: createRule.url(options),
     method: 'post',
@@ -333,9 +331,9 @@ createRule.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\MailController::updateRule
- * @see app/Http/Controllers/MailController.php:487
- * @route '/api/emails/rules/{ruleId}'
- */
+* @see app/Http/Controllers/MailController.php:487
+* @route '/api/emails/rules/{ruleId}'
+*/
 export const updateRule = (args: { ruleId: string | number } | [ruleId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateRule.url(args, options),
     method: 'put',
@@ -348,26 +346,25 @@ updateRule.definition = {
 
 /**
 * @see \App\Http\Controllers\MailController::updateRule
- * @see app/Http/Controllers/MailController.php:487
- * @route '/api/emails/rules/{ruleId}'
- */
+* @see app/Http/Controllers/MailController.php:487
+* @route '/api/emails/rules/{ruleId}'
+*/
 updateRule.url = (args: { ruleId: string | number } | [ruleId: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { ruleId: args }
     }
 
-    
     if (Array.isArray(args)) {
         args = {
-                    ruleId: args[0],
-                }
+            ruleId: args[0],
+        }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-                        ruleId: args.ruleId,
-                }
+        ruleId: args.ruleId,
+    }
 
     return updateRule.definition.url
             .replace('{ruleId}', parsedArgs.ruleId.toString())
@@ -376,9 +373,9 @@ updateRule.url = (args: { ruleId: string | number } | [ruleId: string | number ]
 
 /**
 * @see \App\Http\Controllers\MailController::updateRule
- * @see app/Http/Controllers/MailController.php:487
- * @route '/api/emails/rules/{ruleId}'
- */
+* @see app/Http/Controllers/MailController.php:487
+* @route '/api/emails/rules/{ruleId}'
+*/
 updateRule.put = (args: { ruleId: string | number } | [ruleId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: updateRule.url(args, options),
     method: 'put',
@@ -386,9 +383,9 @@ updateRule.put = (args: { ruleId: string | number } | [ruleId: string | number ]
 
 /**
 * @see \App\Http\Controllers\MailController::deleteRule
- * @see app/Http/Controllers/MailController.php:516
- * @route '/api/emails/rules/{ruleId}'
- */
+* @see app/Http/Controllers/MailController.php:516
+* @route '/api/emails/rules/{ruleId}'
+*/
 export const deleteRule = (args: { ruleId: string | number } | [ruleId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteRule.url(args, options),
     method: 'delete',
@@ -401,26 +398,25 @@ deleteRule.definition = {
 
 /**
 * @see \App\Http\Controllers\MailController::deleteRule
- * @see app/Http/Controllers/MailController.php:516
- * @route '/api/emails/rules/{ruleId}'
- */
+* @see app/Http/Controllers/MailController.php:516
+* @route '/api/emails/rules/{ruleId}'
+*/
 deleteRule.url = (args: { ruleId: string | number } | [ruleId: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { ruleId: args }
     }
 
-    
     if (Array.isArray(args)) {
         args = {
-                    ruleId: args[0],
-                }
+            ruleId: args[0],
+        }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-                        ruleId: args.ruleId,
-                }
+        ruleId: args.ruleId,
+    }
 
     return deleteRule.definition.url
             .replace('{ruleId}', parsedArgs.ruleId.toString())
@@ -429,9 +425,9 @@ deleteRule.url = (args: { ruleId: string | number } | [ruleId: string | number ]
 
 /**
 * @see \App\Http\Controllers\MailController::deleteRule
- * @see app/Http/Controllers/MailController.php:516
- * @route '/api/emails/rules/{ruleId}'
- */
+* @see app/Http/Controllers/MailController.php:516
+* @route '/api/emails/rules/{ruleId}'
+*/
 deleteRule.delete = (args: { ruleId: string | number } | [ruleId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: deleteRule.url(args, options),
     method: 'delete',
@@ -439,9 +435,9 @@ deleteRule.delete = (args: { ruleId: string | number } | [ruleId: string | numbe
 
 /**
 * @see \App\Http\Controllers\MailController::sendResponse
- * @see app/Http/Controllers/MailController.php:528
- * @route '/api/emails/responses/{responseId}/send'
- */
+* @see app/Http/Controllers/MailController.php:528
+* @route '/api/emails/responses/{responseId}/send'
+*/
 export const sendResponse = (args: { responseId: string | number } | [responseId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: sendResponse.url(args, options),
     method: 'post',
@@ -454,26 +450,25 @@ sendResponse.definition = {
 
 /**
 * @see \App\Http\Controllers\MailController::sendResponse
- * @see app/Http/Controllers/MailController.php:528
- * @route '/api/emails/responses/{responseId}/send'
- */
+* @see app/Http/Controllers/MailController.php:528
+* @route '/api/emails/responses/{responseId}/send'
+*/
 sendResponse.url = (args: { responseId: string | number } | [responseId: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { responseId: args }
     }
 
-    
     if (Array.isArray(args)) {
         args = {
-                    responseId: args[0],
-                }
+            responseId: args[0],
+        }
     }
 
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-                        responseId: args.responseId,
-                }
+        responseId: args.responseId,
+    }
 
     return sendResponse.definition.url
             .replace('{responseId}', parsedArgs.responseId.toString())
@@ -482,9 +477,9 @@ sendResponse.url = (args: { responseId: string | number } | [responseId: string 
 
 /**
 * @see \App\Http\Controllers\MailController::sendResponse
- * @see app/Http/Controllers/MailController.php:528
- * @route '/api/emails/responses/{responseId}/send'
- */
+* @see app/Http/Controllers/MailController.php:528
+* @route '/api/emails/responses/{responseId}/send'
+*/
 sendResponse.post = (args: { responseId: string | number } | [responseId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: sendResponse.url(args, options),
     method: 'post',
@@ -492,9 +487,9 @@ sendResponse.post = (args: { responseId: string | number } | [responseId: string
 
 /**
 * @see \App\Http\Controllers\MailController::connectGmail
- * @see app/Http/Controllers/MailController.php:104
- * @route '/emails/connect/gmail'
- */
+* @see app/Http/Controllers/MailController.php:104
+* @route '/emails/connect/gmail'
+*/
 export const connectGmail = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: connectGmail.url(options),
     method: 'get',
@@ -507,27 +502,28 @@ connectGmail.definition = {
 
 /**
 * @see \App\Http\Controllers\MailController::connectGmail
- * @see app/Http/Controllers/MailController.php:104
- * @route '/emails/connect/gmail'
- */
+* @see app/Http/Controllers/MailController.php:104
+* @route '/emails/connect/gmail'
+*/
 connectGmail.url = (options?: RouteQueryOptions) => {
     return connectGmail.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\MailController::connectGmail
- * @see app/Http/Controllers/MailController.php:104
- * @route '/emails/connect/gmail'
- */
+* @see app/Http/Controllers/MailController.php:104
+* @route '/emails/connect/gmail'
+*/
 connectGmail.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: connectGmail.url(options),
     method: 'get',
 })
+
 /**
 * @see \App\Http\Controllers\MailController::connectGmail
- * @see app/Http/Controllers/MailController.php:104
- * @route '/emails/connect/gmail'
- */
+* @see app/Http/Controllers/MailController.php:104
+* @route '/emails/connect/gmail'
+*/
 connectGmail.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: connectGmail.url(options),
     method: 'head',
@@ -535,9 +531,9 @@ connectGmail.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\MailController::gmailCallback
- * @see app/Http/Controllers/MailController.php:125
- * @route '/emails/callback/gmail'
- */
+* @see app/Http/Controllers/MailController.php:125
+* @route '/emails/callback/gmail'
+*/
 export const gmailCallback = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: gmailCallback.url(options),
     method: 'get',
@@ -550,27 +546,28 @@ gmailCallback.definition = {
 
 /**
 * @see \App\Http\Controllers\MailController::gmailCallback
- * @see app/Http/Controllers/MailController.php:125
- * @route '/emails/callback/gmail'
- */
+* @see app/Http/Controllers/MailController.php:125
+* @route '/emails/callback/gmail'
+*/
 gmailCallback.url = (options?: RouteQueryOptions) => {
     return gmailCallback.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\MailController::gmailCallback
- * @see app/Http/Controllers/MailController.php:125
- * @route '/emails/callback/gmail'
- */
+* @see app/Http/Controllers/MailController.php:125
+* @route '/emails/callback/gmail'
+*/
 gmailCallback.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: gmailCallback.url(options),
     method: 'get',
 })
+
 /**
 * @see \App\Http\Controllers\MailController::gmailCallback
- * @see app/Http/Controllers/MailController.php:125
- * @route '/emails/callback/gmail'
- */
+* @see app/Http/Controllers/MailController.php:125
+* @route '/emails/callback/gmail'
+*/
 gmailCallback.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: gmailCallback.url(options),
     method: 'head',
@@ -578,9 +575,9 @@ gmailCallback.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 
 /**
 * @see \App\Http\Controllers\MailController::connectOutlook
- * @see app/Http/Controllers/MailController.php:202
- * @route '/emails/connect/outlook'
- */
+* @see app/Http/Controllers/MailController.php:202
+* @route '/emails/connect/outlook'
+*/
 export const connectOutlook = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: connectOutlook.url(options),
     method: 'get',
@@ -593,27 +590,28 @@ connectOutlook.definition = {
 
 /**
 * @see \App\Http\Controllers\MailController::connectOutlook
- * @see app/Http/Controllers/MailController.php:202
- * @route '/emails/connect/outlook'
- */
+* @see app/Http/Controllers/MailController.php:202
+* @route '/emails/connect/outlook'
+*/
 connectOutlook.url = (options?: RouteQueryOptions) => {
     return connectOutlook.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\MailController::connectOutlook
- * @see app/Http/Controllers/MailController.php:202
- * @route '/emails/connect/outlook'
- */
+* @see app/Http/Controllers/MailController.php:202
+* @route '/emails/connect/outlook'
+*/
 connectOutlook.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: connectOutlook.url(options),
     method: 'get',
 })
+
 /**
 * @see \App\Http\Controllers\MailController::connectOutlook
- * @see app/Http/Controllers/MailController.php:202
- * @route '/emails/connect/outlook'
- */
+* @see app/Http/Controllers/MailController.php:202
+* @route '/emails/connect/outlook'
+*/
 connectOutlook.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: connectOutlook.url(options),
     method: 'head',
@@ -621,9 +619,9 @@ connectOutlook.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => 
 
 /**
 * @see \App\Http\Controllers\MailController::outlookCallback
- * @see app/Http/Controllers/MailController.php:231
- * @route '/emails/callback/outlook'
- */
+* @see app/Http/Controllers/MailController.php:231
+* @route '/emails/callback/outlook'
+*/
 export const outlookCallback = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: outlookCallback.url(options),
     method: 'get',
@@ -636,31 +634,33 @@ outlookCallback.definition = {
 
 /**
 * @see \App\Http\Controllers\MailController::outlookCallback
- * @see app/Http/Controllers/MailController.php:231
- * @route '/emails/callback/outlook'
- */
+* @see app/Http/Controllers/MailController.php:231
+* @route '/emails/callback/outlook'
+*/
 outlookCallback.url = (options?: RouteQueryOptions) => {
     return outlookCallback.definition.url + queryParams(options)
 }
 
 /**
 * @see \App\Http\Controllers\MailController::outlookCallback
- * @see app/Http/Controllers/MailController.php:231
- * @route '/emails/callback/outlook'
- */
+* @see app/Http/Controllers/MailController.php:231
+* @route '/emails/callback/outlook'
+*/
 outlookCallback.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: outlookCallback.url(options),
     method: 'get',
 })
+
 /**
 * @see \App\Http\Controllers\MailController::outlookCallback
- * @see app/Http/Controllers/MailController.php:231
- * @route '/emails/callback/outlook'
- */
+* @see app/Http/Controllers/MailController.php:231
+* @route '/emails/callback/outlook'
+*/
 outlookCallback.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: outlookCallback.url(options),
     method: 'head',
 })
+
 const MailController = { connectImap, disconnectAccount, syncEmails, getEmails, processEmail, getRules, createRule, updateRule, deleteRule, sendResponse, connectGmail, gmailCallback, connectOutlook, outlookCallback }
 
 export default MailController
