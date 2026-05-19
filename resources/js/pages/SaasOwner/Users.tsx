@@ -196,12 +196,12 @@ export default function UsersPage({
                                 <label className="text-sm font-medium mb-2 block">
                                     Role
                                 </label>
-                                <Select value={role} onValueChange={setRole}>
+                                <Select value={role || 'all'} onValueChange={(value) => setRole(value === 'all' ? '' : value)}>
                                     <SelectTrigger className="h-9">
                                         <SelectValue placeholder="All roles" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="">All roles</SelectItem>
+                                        <SelectItem value="all">All roles</SelectItem>
                                         <SelectItem value="user">User</SelectItem>
                                         <SelectItem value="staff">Staff</SelectItem>
                                         <SelectItem value="admin">Admin</SelectItem>
@@ -215,12 +215,12 @@ export default function UsersPage({
                                 <label className="text-sm font-medium mb-2 block">
                                     Subscription Status
                                 </label>
-                                <Select value={subscriptionStatus} onValueChange={setSubscriptionStatus}>
+                                <Select value={subscriptionStatus || 'all'} onValueChange={(value) => setSubscriptionStatus(value === 'all' ? '' : value)}>
                                     <SelectTrigger className="h-9">
                                         <SelectValue placeholder="All statuses" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="">All statuses</SelectItem>
+                                        <SelectItem value="all">All statuses</SelectItem>
                                         <SelectItem value="active">Active</SelectItem>
                                         <SelectItem value="paused">Paused</SelectItem>
                                         <SelectItem value="cancelled">Cancelled</SelectItem>
@@ -234,12 +234,12 @@ export default function UsersPage({
                                 <label className="text-sm font-medium mb-2 block">
                                     Email Verified
                                 </label>
-                                <Select value={verified} onValueChange={setVerified}>
+                                <Select value={verified || 'all'} onValueChange={(value) => setVerified(value === 'all' ? '' : value)}>
                                     <SelectTrigger className="h-9">
                                         <SelectValue placeholder="All" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="">All users</SelectItem>
+                                        <SelectItem value="all">All users</SelectItem>
                                         <SelectItem value="true">Verified</SelectItem>
                                         <SelectItem value="false">Not verified</SelectItem>
                                     </SelectContent>

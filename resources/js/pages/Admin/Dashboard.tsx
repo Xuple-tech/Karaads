@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
-import { BarChart3, Users, MessageSquare, Image, TrendingUp, TrendingDown } from 'lucide-react';
+import { BarChart3, Users, MessageSquare, Image, TrendingUp, TrendingDown, Gift } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import AdminLayout from '@/layouts/AdminLayout';
@@ -8,6 +8,7 @@ import TrialAnalytics from '@/components/Admin/TrialAnalytics';
 
 interface Stats {
   totalUsers: number;
+  totalReferrals: number;
   totalConversations: number;
   totalChats: number;
   totalImageUploads: number;
@@ -73,6 +74,7 @@ export default function Dashboard({ stats, recentImageUploads, topUsers, trial }
   // Default stats if not provided
   const defaultStats: Stats = {
     totalUsers: 0,
+    totalReferrals: 0,
     totalConversations: 0,
     totalChats: 0,
     totalImageUploads: 0,
@@ -117,6 +119,19 @@ export default function Dashboard({ stats, recentImageUploads, topUsers, trial }
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{displayStats.totalUsers.toLocaleString()}</div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Referrals</CardTitle>
+              <Gift className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{displayStats.totalReferrals.toLocaleString()}</div>
+              <p className="text-xs text-muted-foreground">
+                Users referred by others
+              </p>
             </CardContent>
           </Card>
 

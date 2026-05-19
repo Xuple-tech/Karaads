@@ -2,13 +2,16 @@
 
 namespace Tests\Feature;
 
+use App\Contracts\ChatProvider;
 use App\Models\Chat;
 use App\Models\ChatMessage;
 use App\Models\ChatFile;
 use App\Models\Conversation;
 use App\Models\User;
+use App\Models\ChatToolRun;
 use App\Services\Chat\ChatConversationService;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -116,6 +119,150 @@ class ChatApiTest extends TestCase
 
         $this->get('/api/spa/conversations')->assertNotFound();
         $this->post('/create-two-step-challagene')->assertStatus(405);
+    }
+
+    public function test_authenticated_user_can_send_image_attachment_without_text(): void
+    {
+        Storage::fake('private');
+
+        $this->app->bind(ChatProvider::class, fn () => new class implements ChatProvider
+        {
+            public function streamResponse(array $messages, array $tools, array $options, callable $onEvent): void
+            {
+                $onEvent('message.delta', ['content' => 'I can see the uploaded image.']);
+                $onEvent('message.completed', []);
+            }
+
+            public function generateResponse(array $messages, array $tools, array $options): array
+            {
+                return ['content' => 'I can see the uploaded image.'];
+            }
+
+            public function generateTitle(string $prompt): string
+            {
+                return Str::limit($prompt, 60, '');
+            }
+        });
+
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $response = $this->post('/api/chat/messages/stream', [
+            'type' => 'text',
+            'files' => [[
+                'name' => 'logo.png',
+                'type' => 'image/png',
+                'data' => 'data:image/png;base64,' . base64_encode('fake-image'),
+            ]],
+        ], ['Accept' => 'text/event-stream']);
+
+        $response->assertOk();
+        $this->assertStringContainsString('I can see the uploaded image.', $response->streamedContent());
+
+        $userMessage = ChatMessage::query()->where('role', 'user')->latest('created_at')->firstOrFail();
+        $userMessage->load('attachments');
+
+        $this->assertSame('Please analyze the uploaded image.', $userMessage->content_text);
+        $this->assertCount(1, $userMessage->attachments);
+        $this->assertSame('image', $userMessage->attachments->first()->kind);
+        $this->assertSame('image/png', $userMessage->attachments->first()->mime_type);
+    }
+
+    public function test_relative_follow_up_image_prompt_reuses_previous_image_generation_context(): void
+    {
+        Storage::fake('private');
+
+        $capture = (object) ['messages' => []];
+
+        $this->app->bind(ChatProvider::class, fn () => new class($capture) implements ChatProvider
+        {
+            public function __construct(private object $capture)
+            {
+            }
+
+            public function streamResponse(array $messages, array $tools, array $options, callable $onEvent): void
+            {
+                $this->capture->messages = $messages;
+
+                $onEvent('message.delta', ['content' => 'Generating another image now.']);
+                $onEvent('message.completed', []);
+            }
+
+            public function generateResponse(array $messages, array $tools, array $options): array
+            {
+                return ['content' => 'Generating another image now.'];
+            }
+
+            public function generateTitle(string $prompt): string
+            {
+                return 'Image follow-up';
+            }
+        });
+
+        $user = User::factory()->create();
+        $conversation = Conversation::create([
+            'user_id' => $user->id,
+            'title' => 'Image follow-up',
+            'context' => [],
+        ]);
+
+        $firstUserMessage = ChatMessage::query()->create([
+            'conversation_id' => $conversation->id,
+            'role' => 'user',
+            'status' => 'completed',
+            'type' => 'image',
+            'content_markdown' => 'create a beautiful lady',
+            'content_text' => 'create a beautiful lady',
+        ]);
+
+        $firstAssistantMessage = ChatMessage::query()->create([
+            'conversation_id' => $conversation->id,
+            'reply_to_id' => $firstUserMessage->id,
+            'role' => 'assistant',
+            'status' => 'completed',
+            'provider' => 'grok',
+            'model' => 'grok-4-fast-non-reasoning',
+            'type' => 'image',
+            'content_markdown' => '',
+            'content_text' => '',
+        ]);
+
+        ChatToolRun::query()->create([
+            'chat_message_id' => $firstAssistantMessage->id,
+            'tool_name' => 'generate_image',
+            'status' => 'completed',
+            'summary' => 'Generated 1 image',
+            'arguments' => [
+                'user_prompt' => 'create a beautiful lady',
+                'model' => 'sd3.5',
+                'size' => '1024x1024',
+            ],
+            'result' => [
+                'prompt' => 'create a beautiful lady',
+                'images_count' => 1,
+            ],
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $response = $this->post('/api/chat/messages/stream', [
+            'conversation_id' => $conversation->id,
+            'message' => 'create another image',
+            'type' => 'image',
+        ], ['Accept' => 'text/event-stream']);
+
+        $response->assertOk();
+        $response->streamedContent();
+
+        $this->assertNotEmpty($capture->messages);
+
+        $lastUserMessage = collect($capture->messages)->last(fn (array $message) => ($message['role'] ?? null) === 'user');
+
+        $this->assertNotNull($lastUserMessage);
+        $this->assertStringContainsString('create another image', (string) ($lastUserMessage['content'] ?? ''));
+        $this->assertStringContainsString('Previous successful image prompt: create a beautiful lady', (string) ($lastUserMessage['content'] ?? ''));
+        $this->assertStringContainsString('Previous model: sd3.5', (string) ($lastUserMessage['content'] ?? ''));
+        $this->assertStringContainsString('Previous size: 1024x1024', (string) ($lastUserMessage['content'] ?? ''));
     }
 
     public function test_authenticated_user_can_clear_only_their_conversation_history(): void

@@ -19,13 +19,13 @@ class CreateTrialSubscription
 
             if (!$freePlan) {
                 $freePlan = SubscriptionPlan::create([
-                    'name' => 'Free Trial',
-                    'slug' => 'free-trial',
-                    'description' => '7-day free trial for chat access',
+                    'name' => 'Free',
+                    'slug' => 'free',
+                    'description' => 'Get started with Kwati AI at no cost.',
                     'monthly_price' => 0,
                     'yearly_price' => 0,
                     'is_active' => true,
-                    'display_order' => 0,
+                    'display_order' => 1,
                 ]);
 
                 app(PlanEntitlementService::class)->syncPlanEntitlements($freePlan, [
@@ -37,9 +37,9 @@ class CreateTrialSubscription
                     'projects' => false,
                     'priority_support' => false,
                 ], [
-                    'requests' => ['daily' => null, 'monthly' => null, 'total' => null],
-                    'tokens' => ['daily' => null, 'monthly' => null, 'total' => null],
-                    'images' => ['daily' => null, 'monthly' => null, 'total' => null],
+                    'requests' => ['daily' => 20, 'monthly' => 500, 'total' => null],
+                    'tokens' => ['daily' => 50000, 'monthly' => 1000000, 'total' => null],
+                    'images' => ['daily' => 5, 'monthly' => null, 'total' => null],
                     'voice_messages' => ['daily' => null, 'monthly' => null, 'total' => null],
                     'emails_processed' => ['daily' => null, 'monthly' => null, 'total' => null],
                 ]);

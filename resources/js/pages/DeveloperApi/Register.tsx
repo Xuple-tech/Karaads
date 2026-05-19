@@ -1,14 +1,18 @@
 import React, { FormEventHandler, useState } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import InputError from '@/components/input-error';
 import { Eye, EyeOff, LoaderCircle, Terminal } from 'lucide-react';
+import type { SharedData } from '@/types';
+import { developerPortalUrl, normalizeDeveloperPortalBaseUrl } from '@/lib/developer-portal-url';
 
 export default function DeveloperApiRegister() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
+    const { developerPortal } = usePage<SharedData>().props;
+    const baseUrl = normalizeDeveloperPortalBaseUrl(developerPortal?.base_url);
 
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
@@ -19,7 +23,7 @@ export default function DeveloperApiRegister() {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post('/developer-api/register', {
+        post(developerPortalUrl(baseUrl, 'register'), {
             onFinish: () => reset('password', 'password_confirmation'),
         });
     };
@@ -157,7 +161,7 @@ export default function DeveloperApiRegister() {
                 <div className="mt-6 text-xs text-zinc-600 text-center space-y-2">
                     <p>
                         Already have an account?{' '}
-                        <a href="/developer-api/login" className="text-zinc-400 hover:text-white transition-colors">
+                        <a href={developerPortalUrl(baseUrl, 'login')} className="text-zinc-400 hover:text-white transition-colors">
                             Sign in
                         </a>
                     </p>

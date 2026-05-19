@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Plus, Search, Edit, Trash2, Eye, Check, X } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Eye, Check, X, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,7 +14,12 @@ interface User {
   id: string;
   name: string;
   email: string;
+  role: string;
   is_admin: boolean;
+  referral_code: string | null;
+  referrals_count: number;
+  referred_by_name: string | null;
+  referred_by_email: string | null;
   email_verified_at: string | null;
   created_at: string;
   updated_at: string;
@@ -112,12 +117,12 @@ export default function Index({ users, filters }: UsersIndexProps) {
                   />
                 </div>
               </div>
-              <Select value={adminFilter} onValueChange={setAdminFilter}>
+              <Select value={adminFilter || 'all'} onValueChange={(value) => setAdminFilter(value === 'all' ? '' : value)}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Admin Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem >All Users</SelectItem>
+                  <SelectItem value="all">All Users</SelectItem>
                   <SelectItem value="1">Admins</SelectItem>
                   <SelectItem value="0">Regular Users</SelectItem>
                 </SelectContent>
@@ -141,7 +146,10 @@ export default function Index({ users, filters }: UsersIndexProps) {
                 <TableRow>
                   <TableHead>Name</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead>Admin</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead>Referral Code</TableHead>
+                  <TableHead>Referrals</TableHead>
+                  <TableHead>Referred By</TableHead>
                   <TableHead>Verified</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -153,14 +161,30 @@ export default function Index({ users, filters }: UsersIndexProps) {
                     <TableCell className="font-medium">{user.name}</TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>
-                      <Badge variant={user.is_admin ? "default" : "secondary"}>
-                        {user.is_admin ? (
-                          <Check className="mr-1 h-3 w-3" />
-                        ) : (
-                          <X className="mr-1 h-3 w-3" />
-                        )}
-                        {user.is_admin ? 'Admin' : 'User'}
+                      <Badge variant={user.role === 'admin' ? "default" : "secondary"}>
+                        {user.role ?? 'user'}
                       </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <span className="font-mono text-xs tracking-wider text-muted-foreground">
+                        {user.referral_code ?? '—'}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1.5">
+                        <Users className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span className="text-sm font-medium">{user.referrals_count}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {user.referred_by_name ? (
+                        <div>
+                          <p className="text-sm font-medium leading-none">{user.referred_by_name}</p>
+                          <p className="text-xs text-muted-foreground">{user.referred_by_email}</p>
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
                     </TableCell>
                     <TableCell>
                       {user.email_verified_at ? (

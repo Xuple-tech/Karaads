@@ -32,7 +32,9 @@ class UserController extends Controller
             $query->where('role', $request->role);
         }
 
-        $users = $query->orderBy('created_at', 'desc')
+        $users = $query->withCount('referrals')
+                      ->with('referrer:id,name,email')
+                      ->orderBy('created_at', 'desc')
                       ->paginate(15)
                       ->through(function ($user) {
                           return [
@@ -40,6 +42,10 @@ class UserController extends Controller
                               'name' => $user->name,
                               'email' => $user->email,
                               'role' => $user->role,
+                              'referral_code' => $user->referral_code,
+                              'referrals_count' => $user->referrals_count,
+                              'referred_by_name' => $user->referrer?->name,
+                              'referred_by_email' => $user->referrer?->email,
                               'email_verified_at' => $user->email_verified_at,
                               'created_at' => $user->created_at->format('Y-m-d H:i:s'),
                               'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
@@ -87,6 +93,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $user->load('referrer:id,name,email', 'referrals:id,name,email,created_at');
+
         return Inertia::render('Admin/Users/Show', [
             'user' => [
                 'id' => $user->id,
@@ -98,6 +106,15 @@ class UserController extends Controller
                 'avatar' => $user->avatar,
                 'language' => $user->language,
                 'preferences' => $user->getPreferences(),
+                'referral_code' => $user->referral_code,
+                'referred_by_name' => $user->referrer?->name,
+                'referred_by_email' => $user->referrer?->email,
+                'referrals' => $user->referrals->map(fn($r) => [
+                    'id' => $r->id,
+                    'name' => $r->name,
+                    'email' => $r->email,
+                    'joined_at' => $r->created_at->format('Y-m-d'),
+                ]),
                 'created_at' => $user->created_at->format('Y-m-d H:i:s'),
                 'updated_at' => $user->updated_at->format('Y-m-d H:i:s'),
             ],

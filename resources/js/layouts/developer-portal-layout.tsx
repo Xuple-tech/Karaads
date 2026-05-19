@@ -43,10 +43,11 @@ import {
   SidebarTrigger,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { developerPortalUrl, normalizeDeveloperPortalBaseUrl } from '@/lib/developer-portal-url';
 
 interface NavItem {
   label: string;
-  href: string;
+  path: string;
   icon: React.ElementType;
   match: (url: string) => boolean;
   badge?: string;
@@ -55,34 +56,34 @@ interface NavItem {
 const navItems: NavItem[] = [
   {
     label: 'Dashboard',
-    href: '/developer-api',
+    path: '',
     icon: LayoutDashboard,
-    match: (url) => url === '/developer-api' || url === '/developer-api/',
+    match: (url) => url === '/developer-api' || url === '/developer-api/' || url === '/' || url === '',
   },
   {
     label: 'API Keys',
-    href: '/developer-api/keys',
+    path: 'keys',
     icon: Key,
-    match: (url) => url.startsWith('/developer-api/keys'),
+    match: (url) => url.startsWith('/developer-api/keys') || url.startsWith('/keys'),
   },
   {
     label: 'Usage',
-    href: '/developer-api/usage',
+    path: 'usage',
     icon: Activity,
-    match: (url) => url.startsWith('/developer-api/usage'),
+    match: (url) => url.startsWith('/developer-api/usage') || url.startsWith('/usage'),
   },
   {
     label: 'Billing',
-    href: '/developer-api/billing',
+    path: 'billing',
     icon: TrendingUp,
-    match: (url) => url.startsWith('/developer-api/billing'),
+    match: (url) => url.startsWith('/developer-api/billing') || url.startsWith('/billing'),
     badge: 'New',
   },
   {
     label: 'Quickstart',
-    href: '/developer-api/quickstart',
+    path: 'quickstart',
     icon: BookOpen,
-    match: (url) => url.startsWith('/developer-api/quickstart'),
+    match: (url) => url.startsWith('/developer-api/quickstart') || url.startsWith('/quickstart'),
   },
 ];
 
@@ -92,7 +93,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-function DeveloperSidebarContent({ url, navigate }: { url: string; navigate: (href: string) => void }) {
+function DeveloperSidebarContent({ url, navigate, baseUrl }: { url: string; navigate: (href: string) => void; baseUrl: string }) {
   const { state } = useSidebar();
   const isCollapsed = state === 'collapsed';
 
@@ -121,9 +122,9 @@ function DeveloperSidebarContent({ url, navigate }: { url: string; navigate: (hr
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => (
-                <SidebarMenuItem key={item.href}>
+                <SidebarMenuItem key={item.path || 'dashboard'}>
                   <SidebarMenuButton
-                    onClick={() => navigate(item.href)}
+                    onClick={() => navigate(developerPortalUrl(baseUrl, item.path))}
                     isActive={item.match(url)}
                     tooltip={item.label}
                   >
@@ -222,11 +223,13 @@ function DeveloperSidebarContent({ url, navigate }: { url: string; navigate: (hr
 }
 
 export default function DeveloperPortalLayout({ title, description, children }: Props) {
-  const { auth } = usePage<SharedData>().props;
+  const { auth, developerPortal } = usePage<SharedData>().props;
   const { url } = usePage();
+  const baseUrl = normalizeDeveloperPortalBaseUrl(developerPortal?.base_url);
+  const logoutUrl = developerPortal?.logout_url ?? developerPortalUrl(baseUrl, 'logout');
 
   function logout() {
-    router.post('/developer-api/logout');
+    router.post(logoutUrl);
   }
 
   function navigate(href: string) {
@@ -245,7 +248,7 @@ export default function DeveloperPortalLayout({ title, description, children }: 
     <SidebarProvider defaultOpen>
       <div className="flex h-screen w-full overflow-hidden">
         <Sidebar variant="inset" collapsible="icon">
-          <DeveloperSidebarContent url={url} navigate={navigate} />
+          <DeveloperSidebarContent url={url} navigate={navigate} baseUrl={baseUrl} />
         </Sidebar>
 
         <SidebarInset className="overflow-auto">

@@ -3,8 +3,8 @@
 use App\Http\Controllers\DeveloperApiDocsController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('/docs')->name('docs.')->group(function () {
-    Route::redirect('/', '/privacy')->name('main');
+Route::prefix('/developer-docs')->name('docs.')->group(function () {
+    Route::redirect('/', '/developer-docs/api')->name('main');
 
     Route::prefix('/legal')->name('legal.')->group(function () {
         Route::redirect('/terms', '/terms')->name('terms');

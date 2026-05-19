@@ -82,7 +82,8 @@ class ChatTransportService
                 callback: $callback,
                 messages: $messages,
                 model: $model,
-                chatId: $chatId ? (int) $chatId : null
+                chatId: $chatId ? (int) $chatId : null,
+                files: $files,
             );
 
             $responseTime = (microtime(true) - $startTime) * 1000;
@@ -206,6 +207,7 @@ class ChatTransportService
                     model: $model,
                     tools: $toolsToUse,
                     chatId: $chatId,
+                    files: $this->extractFilesFromMessages($messages),
                 );
             }
 
@@ -214,6 +216,36 @@ class ChatTransportService
             Log::error('Grok Chat Error: ' . $e->getMessage());
             throw $e;
         }
+    }
+
+    private function extractFilesFromMessages(array $messages): array
+    {
+        $files = [];
+
+        foreach ($messages as $message) {
+            $content = $message['content'] ?? null;
+            if (!is_array($content)) {
+                continue;
+            }
+
+            foreach ($content as $item) {
+                if (($item['type'] ?? null) !== 'image_url') {
+                    continue;
+                }
+
+                $url = $item['image_url']['url'] ?? null;
+                if (is_string($url) && str_starts_with($url, 'data:image/')) {
+                    $mime = explode(';', substr($url, 5), 2)[0] ?? 'image/png';
+                    $files[] = [
+                        'name' => 'uploaded-logo',
+                        'type' => $mime,
+                        'data' => $url,
+                    ];
+                }
+            }
+        }
+
+        return $files;
     }
 
     public function generateContent(

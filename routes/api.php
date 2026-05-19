@@ -12,7 +12,10 @@ use App\Http\Controllers\Api\EmailController;
 use App\Http\Controllers\Api\ImageGenerationController;
 use App\Http\Controllers\Api\SettingsController;
 use App\Http\Controllers\Api\ChatPreferenceController;
+use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\PersonalizationController;
+use App\Http\Controllers\Api\PresentationController;
+use App\Http\Controllers\Api\PresentationTemplateController;
 use App\Http\Controllers\Meta\MetaAccountController;
 use App\Http\Controllers\Meta\MetaMessageController;
 use App\Http\Controllers\Meta\MetaPreferenceController;
@@ -47,6 +50,11 @@ Route::prefix('widget')->group(function () {
     Route::post('/plugin/{token}/sync', [WidgetWebsiteSourceController::class, 'pluginSync']);
 });
 
+Route::prefix('presentations')->group(function () {
+    Route::get('/free-templates', [PresentationTemplateController::class, 'publicIndex']);
+    Route::get('/free-templates/{template}', [PresentationTemplateController::class, 'publicShow']);
+});
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('session')->group(function () {
         Route::post('/logout', [SessionAuthController::class, 'logout'])->name('session.logout');
@@ -72,6 +80,30 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/files/{file}', [ChatMessageController::class, 'file'])->name('chat.file.download');
     });
 
+    Route::prefix('presentations')->group(function () {
+        Route::get('/', [PresentationController::class, 'index']);
+        Route::post('/', [PresentationController::class, 'store']);
+        Route::get('/templates', [PresentationTemplateController::class, 'index']);
+        Route::get('/templates/{template}', [PresentationTemplateController::class, 'show']);
+        Route::post('/templates/{template}/favorite', [PresentationTemplateController::class, 'toggleFavorite']);
+        Route::post('/templates/{template}/use', [PresentationTemplateController::class, 'markUsed']);
+        Route::get('/{presentation}', [PresentationController::class, 'show']);
+        Route::put('/{presentation}', [PresentationController::class, 'update']);
+        Route::post('/{presentation}/slides', [PresentationController::class, 'addSlide']);
+        Route::put('/{presentation}/slides/reorder', [PresentationController::class, 'reorderSlides']);
+        Route::post('/{presentation}/slides/{slide}/duplicate', [PresentationController::class, 'duplicateSlide']);
+        Route::delete('/{presentation}/slides/{slide}', [PresentationController::class, 'deleteSlide']);
+        Route::post('/{presentation}/comments', [PresentationController::class, 'addComment']);
+        Route::post('/{presentation}/exports', [PresentationController::class, 'export']);
+        Route::post('/{presentation}/ai-content', [PresentationController::class, 'generateAiContent']);
+        Route::put('/slides/{slide}', [PresentationController::class, 'updateSlide']);
+    });
+
+    Route::prefix('documents')->group(function () {
+        Route::post('/generate', [DocumentController::class, 'generate']);
+        Route::post('/export', [DocumentController::class, 'export']);
+    });
+
     Route::prefix('spa/voice')->group(function () {
         Route::get('/conversations', [SpaVoiceConversationController::class, 'index'])->name('spa.voice.index');
         Route::post('/conversations', [SpaVoiceConversationController::class, 'store'])->name('spa.voice.store');
@@ -85,6 +117,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/user', [AuthController::class, 'user']);
     Route::post('/auth/refresh', [AuthController::class, 'refreshToken']);
+
+    // Referral
+    Route::get('/referral', function (Request $request) {
+        $user = $request->user();
+        return response()->json([
+            'referral_code' => $user->referral_code,
+            'referral_link' => url('/register?ref=' . $user->referral_code),
+            'referral_count' => $user->referrals()->count(),
+            'referrals' => $user->referrals()
+                ->orderByDesc('created_at')
+                ->get(['id', 'name', 'email', 'created_at'])
+                ->map(fn ($r) => [
+                    'name' => $r->name,
+                    'email' => $r->email,
+                    'joined_at' => $r->created_at->toDateString(),
+                ]),
+        ]);
+    });
 
     // Voice Conversations
     Route::prefix('voice')->group(function () {

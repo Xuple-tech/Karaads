@@ -168,14 +168,14 @@ export default function ImageUploads({ imageUploads, filters }: Props) {
                                 <div>
                                     <Label htmlFor="file_type">File Type</Label>
                                     <Select
-                                        value={currentFilters.file_type || ''}
-                                        onValueChange={(value) => handleFilterChange('file_type', value)}
+                                        value={currentFilters.file_type || 'all'}
+                                        onValueChange={(value) => handleFilterChange('file_type', value === 'all' ? '' : value)}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select file type" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="">All types</SelectItem>
+                                            <SelectItem value="all">All types</SelectItem>
                                             <SelectItem value="image">Images</SelectItem>
                                             <SelectItem value="video">Videos</SelectItem>
                                             <SelectItem value="audio">Audio</SelectItem>

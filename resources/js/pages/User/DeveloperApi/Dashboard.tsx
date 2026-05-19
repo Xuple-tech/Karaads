@@ -19,6 +19,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
+import type { SharedData } from '@/types';
+import { developerPortalUrl, normalizeDeveloperPortalBaseUrl } from '@/lib/developer-portal-url';
 
 interface WalletSummary {
     balance_usd: number;
@@ -43,11 +45,18 @@ interface PaymentProvider {
     rate: number;
 }
 
+interface ApiModelSummary {
+    id: string;
+    public_id: string;
+    name: string;
+}
+
 interface PageProps {
     wallet: WalletSummary | null;
     stats: UsageStats | null;
     apiBaseUrl: string;
     keyCount: number;
+    models: ApiModelSummary[];
     topupConfig: {
         default_amount_usd: number;
         min_amount_usd: number;
@@ -61,9 +70,10 @@ function formatUsd(val: number) {
     return '$' + val.toFixed(val < 0.01 ? 6 : 4);
 }
 
-export default function DeveloperApiDashboard({ wallet, stats, apiBaseUrl, keyCount, topupConfig }: PageProps) {
-    const { props } = usePage<{ flash?: { success?: string; error?: string } }>();
+export default function DeveloperApiDashboard({ wallet, stats, apiBaseUrl, keyCount, models, topupConfig }: PageProps) {
+    const { props } = usePage<SharedData & { flash?: { success?: string; error?: string } }>();
     const flash = props.flash ?? {};
+    const baseUrl = normalizeDeveloperPortalBaseUrl(props.developerPortal?.base_url);
 
     const w = wallet ?? { balance_usd: 0, lifetime_credited_usd: 0, lifetime_debited_usd: 0 };
     const s = stats ?? { requests: 0, success_requests: 0, error_requests: 0, total_tokens: 0, input_tokens: 0, output_tokens: 0, cost_usd: 0 };
@@ -88,7 +98,7 @@ export default function DeveloperApiDashboard({ wallet, stats, apiBaseUrl, keyCo
             return;
         }
         setTopupLoading(true);
-        router.post('/developer-api/top-up', { amount_usd: amount, provider: provider.id }, {
+        router.post(developerPortalUrl(baseUrl, 'top-up'), { amount_usd: amount, provider: provider.id }, {
             onError: (e) => { toast.error(Object.values(e)[0] as string); setTopupLoading(false); },
             onSuccess: () => setTopupLoading(false),
         });
@@ -102,10 +112,10 @@ export default function DeveloperApiDashboard({ wallet, stats, apiBaseUrl, keyCo
     ];
 
     const quick_links = [
-        { label: 'API Keys', description: `${keyCount} key${keyCount !== 1 ? 's' : ''} active`, href: '/developer-api/keys', icon: Key, color: 'text-blue-500' },
-        { label: 'Usage', description: `${s.requests.toLocaleString()} total requests`, href: '/developer-api/usage', icon: Activity, color: 'text-green-500' },
-        { label: 'Billing', description: `${formatUsd(w.balance_usd)} wallet balance`, href: '/developer-api/billing', icon: TrendingUp, color: 'text-purple-500' },
-        { label: 'Quickstart', description: 'Docs & code examples', href: '/developer-api/quickstart', icon: BookOpen, color: 'text-orange-500' },
+        { label: 'API Keys', description: `${keyCount} key${keyCount !== 1 ? 's' : ''} active`, href: developerPortalUrl(baseUrl, 'keys'), icon: Key, color: 'text-blue-500' },
+        { label: 'Usage', description: `${s.requests.toLocaleString()} total requests`, href: developerPortalUrl(baseUrl, 'usage'), icon: Activity, color: 'text-green-500' },
+        { label: 'Billing', description: `${formatUsd(w.balance_usd)} wallet balance`, href: developerPortalUrl(baseUrl, 'billing'), icon: TrendingUp, color: 'text-purple-500' },
+        { label: 'Quickstart', description: 'Docs & code examples', href: developerPortalUrl(baseUrl, 'quickstart'), icon: BookOpen, color: 'text-orange-500' },
     ];
 
     return (
@@ -221,7 +231,7 @@ export default function DeveloperApiDashboard({ wallet, stats, apiBaseUrl, keyCo
                             <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => router.visit('/developer-api/quickstart')}
+                                onClick={() => router.visit(developerPortalUrl(baseUrl, 'quickstart'))}
                                 className="w-full gap-1.5"
                             >
                                 <BookOpen className="w-4 h-4" />
@@ -230,6 +240,38 @@ export default function DeveloperApiDashboard({ wallet, stats, apiBaseUrl, keyCo
                         </CardContent>
                     </Card>
                 </div>
+
+                <Card>
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-base">Available Models</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                        <p className="text-sm text-muted-foreground">
+                            These are the model names currently available for your API keys and requests.
+                        </p>
+                        {models.length === 0 ? (
+                            <p className="text-sm text-muted-foreground">No active models are available right now.</p>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                {models.map((model) => (
+                                    <div key={model.id} className="rounded-lg border p-3">
+                                        <p className="font-medium text-sm">{model.name}</p>
+                                        <p className="text-xs text-muted-foreground font-mono mt-1">{model.public_id}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => router.visit(developerPortalUrl(baseUrl, 'quickstart'))}
+                            className="gap-1.5"
+                        >
+                            <BookOpen className="w-4 h-4" />
+                            View Full Model Guide
+                        </Button>
+                    </CardContent>
+                </Card>
 
                 {/* Quick navigation cards */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

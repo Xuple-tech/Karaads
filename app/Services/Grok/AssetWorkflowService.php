@@ -10,6 +10,7 @@ use App\Services\StabilityAIImageService;
 use App\Services\SubscriptionService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class AssetWorkflowService
 {
@@ -23,7 +24,7 @@ class AssetWorkflowService
     public function handleImageGeneration(array $arguments, string|int|null $chatId = null): array
     {
         try {
-            $prompt = $arguments['user_prompt'];
+            $prompt = $this->localizePromptToAfrica($arguments['user_prompt']);
             $numberOfImages = min(max($arguments['number_of_images'] ?? 1, 1), 10);
             $model = $arguments['model'] ?? 'sd3.5';
             $size = $arguments['size'] ?? '1024x1024';
@@ -70,6 +71,10 @@ class AssetWorkflowService
                 model: $model,
                 operation: 'generate'
             );
+
+            if ($this->subscriptionService && $user = $this->resolveExecutionUser(chatId: $chatId)) {
+                $this->subscriptionService->recordImageGeneration($user, count($savedImages));
+            }
 
             return [
                 'success' => true,
@@ -193,13 +198,14 @@ class AssetWorkflowService
         string $model = 'black-forest-labs/FLUX.1-dev',
         string $size = '1024x1024'
     ): array {
+        $localizedPrompt = $this->localizePromptToAfrica($prompt);
         $limitCheck = $this->checkImageLimits($n);
         if ($limitCheck !== null) {
             throw new \Exception($limitCheck['message'] ?? 'Image generation limit exceeded');
         }
 
         return $this->stabilityImageService->generateImage(
-            prompt: $prompt,
+            prompt: $localizedPrompt,
             model: $model,
             n: $n,
             options: [
@@ -217,10 +223,11 @@ class AssetWorkflowService
         string $model = 'sd3.5',
         string $size = '1024x1024'
     ): array {
+        $localizedPrompt = $this->localizePromptToAfrica($prompt);
         $sizeParts = explode('x', $size);
 
         return $this->stabilityImageService->generateAndSave(
-            prompt: $prompt,
+            prompt: $localizedPrompt,
             directory: $directory,
             n: $n,
             chatId: $chatId,
@@ -263,6 +270,11 @@ class AssetWorkflowService
     public function generatePdfDocument(array $arguments, string|int|null $chatId = null): array
     {
         return $this->generateDocument($arguments, $chatId, 'pdf', 'PDF', 'pdf_document');
+    }
+
+    public function generatePowerPointPresentation(array $arguments, string|int|null $chatId = null): array
+    {
+        return $this->generateDocument($arguments, $chatId, 'pptx', 'PowerPoint', 'powerpoint_presentation');
     }
 
     public function checkDocumentLimits(?User $user = null, string|int|null $chatId = null): ?array
@@ -318,6 +330,11 @@ class AssetWorkflowService
                 options: [
                     'include_header' => $arguments['include_header'] ?? true,
                     'include_page_numbers' => $arguments['include_page_numbers'] ?? true,
+                    'design_style' => $arguments['design_style'] ?? 'mixed',
+                    'design_styles' => $arguments['design_styles'] ?? null,
+                    'design_description' => $arguments['design_description'] ?? null,
+                    'logo_image' => $arguments['logo_image'] ?? null,
+                    'logo_position' => $arguments['logo_position'] ?? 'top_right',
                     'formatting' => $arguments['formatting'] ?? [],
                 ],
             );
@@ -331,6 +348,10 @@ class AssetWorkflowService
                 'format' => $result['format'],
                 'mime_type' => $result['mime_type'],
                 'document_type' => $result['document_type'],
+                'design_style' => $result['design_style'] ?? null,
+                'design_styles' => $result['design_styles'] ?? null,
+                'design_description' => $result['design_description'] ?? null,
+                'has_logo' => $result['has_logo'] ?? false,
                 'size' => $result['size'],
                 'generated_at' => $result['generated_at'],
                 'timestamp' => $result['generated_at'],
@@ -410,5 +431,38 @@ class AssetWorkflowService
             ->find($chatId);
 
         return $chat?->conversation?->user;
+    }
+
+    private function localizePromptToAfrica(string $prompt): string
+    {
+        $normalized = Str::lower($prompt);
+
+        if ($this->mentionsAfrica($normalized) || $this->mentionsExternalRegion($normalized)) {
+            return $prompt;
+        }
+
+        return trim($prompt) . "\n\nVisual direction: When a person is shown, use natural African skin tone only. Do not change the requested setting, clothing, architecture, props, or cultural environment unless the user explicitly asks for that.";
+    }
+
+    private function mentionsAfrica(string $prompt): bool
+    {
+        return Str::contains($prompt, [
+            'africa', 'african', 'lagos', 'abuja', 'kano', 'ibadan', 'port harcourt',
+            'nairobi', 'kampala', 'kigali', 'accra', 'johannesburg', 'cape town',
+            'casablanca', 'cairo', 'lusaka', 'harare', 'dar es salaam', 'abidjan',
+            'ghana', 'nigeria', 'kenya', 'uganda', 'rwanda', 'tanzania', 'ethiopia',
+            'south africa', 'senegal', 'morocco', 'egypt', 'zambia', 'zimbabwe'
+        ]);
+    }
+
+    private function mentionsExternalRegion(string $prompt): bool
+    {
+        return Str::contains($prompt, [
+            'new york', 'london', 'paris', 'tokyo', 'beijing', 'seoul', 'los angeles',
+            'usa', 'united states', 'canada', 'mexico', 'brazil', 'europe', 'european',
+            'asia', 'asian', 'middle east', 'dubai', 'india', 'indian', 'china',
+            'chinese', 'japan', 'japanese', 'korea', 'korean', 'france', 'germany',
+            'italy', 'spain', 'britain', 'british', 'australia'
+        ]);
     }
 }

@@ -172,7 +172,8 @@ class ChatConversationService
                 'name' => $attachment->name,
                 'mime_type' => $attachment->mime_type,
                 'size' => $attachment->size,
-                'url' => $attachment->url,
+                'url' => $this->normalizeAttachmentUrl($attachment->url),
+                'download_url' => route('chat.file.download', ['file' => $attachment->id]),
             ])->values(),
             'tool_runs' => $toolRuns->map(fn ($toolRun) => [
                 'id' => $toolRun->id,
@@ -244,5 +245,19 @@ class ChatConversationService
         }
 
         return trim(implode("\n", $lines)) . "\n";
+    }
+
+    private function normalizeAttachmentUrl(?string $url): ?string
+    {
+        if (!$url) {
+            return $url;
+        }
+
+        $path = parse_url($url, PHP_URL_PATH);
+        if (is_string($path) && Str::startsWith($path, '/storage/')) {
+            return $path;
+        }
+
+        return $url;
     }
 }

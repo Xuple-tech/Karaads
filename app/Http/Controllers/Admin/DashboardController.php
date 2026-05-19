@@ -43,6 +43,9 @@ class DashboardController extends Controller
         // Total users
         $totalUsers = User::count();
 
+        // Total referrals (users who were referred by someone)
+        $totalReferrals = User::whereNotNull('referred_by')->count();
+
         // Total conversations
         $totalConversations = Conversation::count();
 
@@ -111,6 +114,7 @@ class DashboardController extends Controller
 
         return [
             'totalUsers' => $totalUsers,
+            'totalReferrals' => $totalReferrals,
             'totalConversations' => $totalConversations,
             'totalChats' => $totalChats,
             'totalImageUploads' => $totalImageUploads,
@@ -151,12 +155,12 @@ class DashboardController extends Controller
                     'file_size' => round($file->file_size / 1024, 2) . ' KB',
                     'file_path' => asset('storage/' . $file->file_path),
                     'created_at' => $file->created_at->diffForHumans(),
-                    'user' => $file->chat->conversation->user ? [
+                    'user' => $file->chat?->conversation?->user ? [
                         'id' => $file->chat->conversation->user->id,
                         'name' => $file->chat->conversation->user->name,
                         'email' => $file->chat->conversation->user->email,
                     ] : null,
-                    'conversation_id' => $file->chat->conversation_id,
+                    'conversation_id' => $file->chat?->conversation_id,
                     'chat_id' => $file->chat_id,
                 ];
             });
@@ -217,12 +221,12 @@ class DashboardController extends Controller
                     'file_size' => round($file->file_size / 1024, 2) . ' KB',
                     'file_path' => asset('storage/' . $file->filepath),
                     'created_at' => $file->created_at->format('Y-m-d H:i:s'),
-                    'user' => $file->chat->conversation->user ? [
+                    'user' => $file->chat?->conversation?->user ? [
                         'id' => $file->chat->conversation->user->id,
                         'name' => $file->chat->conversation->user->name,
                         'email' => $file->chat->conversation->user->email,
                     ] : null,
-                    'conversation_id' => $file->chat->conversation_id,
+                    'conversation_id' => $file->chat?->conversation_id,
                     'chat_id' => $file->chat_id,
                 ];
             });

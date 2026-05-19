@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Developer;
 use App\Http\Controllers\Controller;
 use App\Models\ApiModel;
 use App\Models\DeveloperApiKey;
+use App\Support\DeveloperPortalUrl;
 use App\Services\DeveloperApiBillingService;
+use App\Services\DeveloperApiModelCatalogService;
 use App\Services\DeveloperApiTokenService;
 use App\Services\PaystackService;
 use App\Services\StripeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -19,6 +22,7 @@ class DeveloperPortalController extends Controller
     public function __construct(
         private readonly DeveloperApiTokenService $tokenService,
         private readonly DeveloperApiBillingService $billingService,
+        private readonly DeveloperApiModelCatalogService $modelCatalog,
         private readonly StripeService $stripeService,
         private readonly PaystackService $paystackService,
     ) {
@@ -26,7 +30,7 @@ class DeveloperPortalController extends Controller
 
     public function index(Request $request): \Illuminate\Http\RedirectResponse
     {
-        return redirect()->route('developer-api.index');
+        return redirect()->to(DeveloperPortalUrl::baseUrl($request));
     }
 
     public function dashboard(Request $request): Response
@@ -35,12 +39,14 @@ class DeveloperPortalController extends Controller
         $walletSummary = $this->billingService->getWalletSummary($user);
         $usageQuery = $this->billingService->buildUsageQuery([], $user);
         $keyCount = $user->developerApiKeys()->where('is_active', true)->count();
+        $models = $this->textModelSummaries(limit: 6);
 
         return Inertia::render('User/DeveloperApi/Dashboard', [
             'wallet' => $walletSummary,
             'stats' => $this->billingService->summarizeUsage(clone $usageQuery),
             'apiBaseUrl' => rtrim((string) config('developer-api.api_base_url', url('')), '/') . '/api/v1',
             'keyCount' => $keyCount,
+            'models' => $models,
             'topupConfig' => $this->topupConfig(),
         ]);
     }
@@ -60,22 +66,17 @@ class DeveloperPortalController extends Controller
                 'key_prefix' => $apiKey->key_prefix,
                 'is_active' => $apiKey->is_active,
                 'notes' => $apiKey->notes,
-                'allowed_model_ids' => $apiKey->allowed_model_ids ?? [],
+                'allowed_model_ids' => collect($apiKey->allowed_model_ids ?? [])
+                    ->map(fn (string $modelId) => $this->modelCatalog->publicModelId($modelId))
+                    ->values()
+                    ->all(),
                 'expires_at' => optional($apiKey->expires_at)->toIso8601String(),
                 'last_used_at' => optional($apiKey->last_used_at)->toIso8601String(),
                 'last_rotated_at' => optional($apiKey->last_rotated_at)->toIso8601String(),
                 'usage_requests_count' => (int) $apiKey->usage_records_count,
                 'usage_spend_usd' => round((float) ($apiKey->usage_records_sum_cost_usd ?? 0), 6),
             ]),
-            'models' => ApiModel::where('is_active', true)
-                ->where(fn ($q) => $q->whereNull('model_type')->orWhere('model_type', 'text'))
-                ->orderBy('public_id')
-                ->get()
-                ->map(fn ($m) => [
-                    'id' => $m->id,
-                    'public_id' => $m->public_id,
-                    'name' => $m->name,
-                ]),
+            'models' => $this->textModelSummaries(),
         ]);
     }
 
@@ -149,19 +150,7 @@ class DeveloperPortalController extends Controller
     {
         return Inertia::render('User/DeveloperApi/Quickstart', [
             'apiBaseUrl' => rtrim((string) config('developer-api.api_base_url', url('')), '/') . '/api/v1',
-            'models' => ApiModel::where('is_active', true)
-                ->where(fn ($q) => $q->whereNull('model_type')->orWhere('model_type', 'text'))
-                ->orderBy('public_id')
-                ->get()
-                ->map(fn ($m) => [
-                    'id' => $m->id,
-                    'public_id' => $m->public_id,
-                    'name' => $m->name,
-                    'description' => $m->description,
-                    'max_context_tokens' => $m->max_context_tokens,
-                    'supports_streaming' => $m->supports_streaming,
-                    'supports_tools' => $m->supports_tools,
-                ]),
+            'models' => $this->quickstartModels(),
         ]);
     }
 
@@ -171,14 +160,16 @@ class DeveloperPortalController extends Controller
             'name' => 'required|string|max:255',
             'notes' => 'nullable|string|max:1000',
             'allowed_model_ids' => 'nullable|array',
-            'allowed_model_ids.*' => 'string|exists:api_models,public_id',
+            'allowed_model_ids.*' => 'string',
             'expires_at' => 'nullable|date|after:now',
         ]);
+
+        $allowedModelIds = $this->normalizeAllowedModelIds($validated['allowed_model_ids'] ?? null);
 
         [, $plainTextKey] = $this->tokenService->createKey(
             $request->user(),
             $validated['name'],
-            $validated['allowed_model_ids'] ?? null,
+            $allowedModelIds,
             $validated['expires_at'] ?? null,
             $validated['notes'] ?? null
         );
@@ -196,14 +187,16 @@ class DeveloperPortalController extends Controller
             'name' => 'required|string|max:255',
             'notes' => 'nullable|string|max:1000',
             'allowed_model_ids' => 'nullable|array',
-            'allowed_model_ids.*' => 'string|exists:api_models,public_id',
+            'allowed_model_ids.*' => 'string',
             'expires_at' => 'nullable|date',
         ]);
+
+        $allowedModelIds = $this->normalizeAllowedModelIds($validated['allowed_model_ids'] ?? null);
 
         $this->tokenService->updateKey(
             $developerApiKey,
             $validated['name'],
-            $validated['allowed_model_ids'] ?? null,
+            $allowedModelIds,
             $validated['expires_at'] ?? null,
             $validated['notes'] ?? null
         );
@@ -242,7 +235,7 @@ class DeveloperPortalController extends Controller
 
         $amountUsd = (float) $validated['amount_usd'];
         $provider  = $validated['provider'] ?? $allowedProviders[0] ?? 'stripe';
-        $billingUrl = route('developer-api.billing.index', [], true);
+        $billingUrl = DeveloperPortalUrl::urlForPath($request, '/billing');
 
         if ($provider === 'paystack') {
             $url = $this->paystackService->createDeveloperWalletTopupAuthorization(
@@ -308,5 +301,120 @@ class DeveloperPortalController extends Controller
             'ledger_type' => $request->input('ledger_type'),
             'key_status' => $request->input('key_status'),
         ];
+    }
+
+    private function textModelSummaries(?int $limit = null): Collection
+    {
+        $query = ApiModel::query()
+            ->where('is_active', true)
+            ->where(fn ($q) => $q->whereNull('model_type')->orWhere('model_type', 'text'))
+            ->orderBy('public_id');
+
+        if ($limit !== null) {
+            $query->limit($limit);
+        }
+
+        $models = $query->get()->map(fn ($m) => [
+            'id' => $m->id,
+            'public_id' => $this->modelCatalog->publicModelId($m->public_id),
+            'name' => $m->name,
+        ]);
+
+        if ($models->isNotEmpty()) {
+            return $models->values();
+        }
+
+        return collect($this->fallbackTextModels())
+            ->when($limit !== null, fn (Collection $collection) => $collection->take($limit))
+            ->values();
+    }
+
+    private function quickstartModels(): Collection
+    {
+        $models = ApiModel::query()
+            ->where('is_active', true)
+            ->where(fn ($q) => $q->whereNull('model_type')->orWhere('model_type', 'text'))
+            ->orderBy('public_id')
+            ->get()
+            ->map(fn ($m) => [
+                'id' => $m->id,
+                'public_id' => $this->modelCatalog->publicModelId($m->public_id),
+                'name' => $m->name,
+                'description' => $m->description,
+                'max_context_tokens' => $m->max_context_tokens,
+                'supports_streaming' => $m->supports_streaming,
+                'supports_tools' => $m->supports_tools,
+            ]);
+
+        if ($models->isNotEmpty()) {
+            return $models->values();
+        }
+
+        return collect($this->fallbackTextModels())->map(fn (array $model) => [
+            'id' => $model['id'],
+            'public_id' => $model['public_id'],
+            'name' => $model['name'],
+            'description' => $model['description'],
+            'max_context_tokens' => $model['max_context_tokens'],
+            'supports_streaming' => $model['supports_streaming'],
+            'supports_tools' => $model['supports_tools'],
+        ])->values();
+    }
+
+    private function fallbackTextModels(): array
+    {
+        return [
+            [
+                'id' => 'fallback-grok-4',
+                'public_id' => 'grok-4',
+                'name' => 'Kwati',
+                'description' => 'Advanced reasoning, coding, and visual processing capabilities.',
+                'max_context_tokens' => null,
+                'supports_streaming' => true,
+                'supports_tools' => true,
+            ],
+            [
+                'id' => 'fallback-grok-4-fast-non-reasoning',
+                'public_id' => 'grok-4-fast-non-reasoning',
+                'name' => 'Kwati Fast',
+                'description' => 'General purpose model with strong performance.',
+                'max_context_tokens' => null,
+                'supports_streaming' => true,
+                'supports_tools' => true,
+            ],
+            [
+                'id' => 'fallback-grok-4-fast-reasoning',
+                'public_id' => 'grok-4-fast-reasoning',
+                'name' => 'Kwati Reasoning',
+                'description' => 'Reasoning-focused model for more deliberate responses.',
+                'max_context_tokens' => null,
+                'supports_streaming' => true,
+                'supports_tools' => true,
+            ],
+        ];
+    }
+
+    private function normalizeAllowedModelIds(?array $requestedModelIds): ?array
+    {
+        if (empty($requestedModelIds)) {
+            return null;
+        }
+
+        $resolved = collect($requestedModelIds)
+            ->filter(fn ($value) => is_string($value) && $value !== '')
+            ->map(function (string $modelId) {
+                $model = $this->modelCatalog->findTextModel($modelId);
+
+                if (!$model) {
+                    abort(422, "The selected model `{$modelId}` is invalid.");
+                }
+
+                return $model->public_id;
+            })
+            ->unique()
+            ->values()
+            ->all();
+
+        return $resolved === [] ? null : $resolved;
     }
 }

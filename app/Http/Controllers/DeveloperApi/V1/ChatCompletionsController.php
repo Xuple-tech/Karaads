@@ -7,7 +7,6 @@ use App\Models\DeveloperApiKey;
 use App\Services\DeveloperApiChatService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ChatCompletionsController extends Controller
 {
@@ -15,7 +14,7 @@ class ChatCompletionsController extends Controller
     {
     }
 
-    public function store(Request $request): JsonResponse|StreamedResponse
+    public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'model' => 'required|string',
@@ -28,6 +27,15 @@ class ChatCompletionsController extends Controller
             'stream' => 'nullable|boolean',
             'user' => 'nullable|string|max:255',
         ]);
+
+        if ((bool) ($validated['stream'] ?? false)) {
+            return $this->errorResponse(
+                'Streaming is not available on the Developer API yet.',
+                'invalid_request_error',
+                'unsupported_feature',
+                400
+            );
+        }
 
         /** @var DeveloperApiKey $apiKey */
         $apiKey = $request->attributes->get('developer_api_key');
@@ -43,11 +51,6 @@ class ChatCompletionsController extends Controller
             $type = $isInsufficient ? 'billing_error' : 'api_error';
             return $this->errorResponse($e->getMessage(), $type, $code, $status);
         }
-
-        if ((bool) ($validated['stream'] ?? false)) {
-            return $this->streamResponse($result);
-        }
-
         return response()->json([
             'id' => $result['request_id'],
             'object' => 'chat.completion',
@@ -63,53 +66,6 @@ class ChatCompletionsController extends Controller
                 'finish_reason' => $result['finish_reason'],
             ]],
             'usage' => $result['usage'],
-        ]);
-    }
-
-    private function streamResponse(array $result): StreamedResponse
-    {
-        return response()->stream(function () use ($result) {
-            $id = $result['request_id'];
-            $chunks = preg_split('/(\s+)/', $result['content'], -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-
-            foreach ($chunks as $chunk) {
-                echo 'data: ' . json_encode([
-                    'id' => $id,
-                    'object' => 'chat.completion.chunk',
-                    'created' => now()->timestamp,
-                    'model' => $result['model']->public_id,
-                    'choices' => [[
-                        'index' => 0,
-                        'delta' => ['role' => 'assistant', 'content' => $chunk],
-                        'logprobs' => null,
-                        'finish_reason' => null,
-                    ]],
-                ], JSON_UNESCAPED_UNICODE) . "\n\n";
-                @ob_flush();
-                flush();
-            }
-
-            echo 'data: ' . json_encode([
-                'id' => $id,
-                'object' => 'chat.completion.chunk',
-                'created' => now()->timestamp,
-                'model' => $result['model']->public_id,
-                'choices' => [[
-                    'index' => 0,
-                    'delta' => (object) [],
-                    'logprobs' => null,
-                    'finish_reason' => $result['finish_reason'],
-                ]],
-                'usage' => $result['usage'],
-            ]) . "\n\n";
-
-            echo "data: [DONE]\n\n";
-            @ob_flush();
-            flush();
-        }, 200, [
-            'Content-Type' => 'text/event-stream',
-            'Cache-Control' => 'no-cache, no-transform',
-            'X-Accel-Buffering' => 'no',
         ]);
     }
 

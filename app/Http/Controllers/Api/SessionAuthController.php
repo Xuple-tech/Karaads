@@ -65,12 +65,20 @@ class SessionAuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'referral_code' => 'nullable|string|max:12',
         ]);
+
+        $referredBy = null;
+        if (!empty($validated['referral_code'])) {
+            $referrer = User::where('referral_code', strtoupper($validated['referral_code']))->first();
+            $referredBy = $referrer?->id;
+        }
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'referred_by' => $referredBy,
         ]);
 
         event(new Registered($user));

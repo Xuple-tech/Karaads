@@ -376,7 +376,7 @@ export default function FAQPage() {
                 <h3 className="font-semibold text-sm">Need more help?</h3>
                 <div className="space-y-3">
                   <Button variant="outline" className="w-full justify-start gap-2" asChild>
-                    <a href="/docs">
+                    <a href="/developer-docs">
                       <MessageSquare className="h-4 w-4" />
                       Documentation
                     </a>

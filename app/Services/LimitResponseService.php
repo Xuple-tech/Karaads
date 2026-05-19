@@ -53,6 +53,14 @@ class LimitResponseService
         $action = self::LIMIT_ACTIONS[$limitType] ?? 'upgrade';
         $message = self::LIMIT_MESSAGES[$limitType] ?? 'You\'ve reached your usage limit.';
 
+        if (
+            $limitType === 'image_limit_exceeded'
+            && isset($metadata['limit'])
+            && (int) $metadata['limit'] === 5
+        ) {
+            $message = 'Free users can create up to 5 images per day. You have reached today\'s image limit.';
+        }
+
         $response = [
             'success' => false,
             'error' => 'limit_exceeded',

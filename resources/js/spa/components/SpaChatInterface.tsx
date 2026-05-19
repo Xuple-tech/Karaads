@@ -1,5 +1,5 @@
 import type { ChatAttachment, ChatToolRun, Message } from '@/types/chat';
-import { AlertCircle, ArrowDown } from 'lucide-react';
+import { AlertCircle, ArrowDown, Bot, Code2, FileText, LayoutGrid } from 'lucide-react';
 import { FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -10,6 +10,8 @@ import { apiRequest } from '@/spa/lib/api';
 import { authHeaders } from '@/spa/lib/auth-token';
 import { getChatTransport } from '@/spa/lib/chat-transport';
 import { subscribeToPrivateChannel } from '@/spa/lib/realtime';
+
+type PowerPointDesign = 'business_blue' | 'boardroom' | 'corporate' | 'creative' | 'editorial' | 'tech_grid' | 'financial_clean' | 'minimalist' | 'dark' | 'warm' | 'mixed';
 
 type ChatState = {
     messages: Message[];
@@ -26,6 +28,39 @@ type ChatAction =
     | { type: 'tool.sync'; messageId: string; toolRun: ChatToolRun }
     | { type: 'assistant.complete'; messageId: string; content?: string; attachments?: ChatAttachment[] }
     | { type: 'assistant.fail'; messageId: string; error: string };
+
+function mergeAttachments(existing: ChatAttachment[], incoming: ChatAttachment): ChatAttachment[] {
+    const matchIndex = existing.findIndex((attachment) => {
+        if (incoming.id && attachment.id === incoming.id) {
+            return true;
+        }
+
+        if (
+            attachment.kind === incoming.kind
+            && attachment.name
+            && incoming.name
+            && attachment.name === incoming.name
+            && (attachment.mime_type ?? null) === (incoming.mime_type ?? null)
+        ) {
+            return true;
+        }
+
+        return Boolean(
+            attachment.kind === incoming.kind
+            && attachment.url
+            && incoming.url
+            && attachment.url === incoming.url
+        );
+    });
+
+    if (matchIndex === -1) {
+        return [...existing, incoming];
+    }
+
+    return existing.map((attachment, index) =>
+        index === matchIndex ? { ...attachment, ...incoming } : attachment
+    );
+}
 
 function reducer(state: ChatState, action: ChatAction): ChatState {
     switch (action.type) {
@@ -56,7 +91,7 @@ function reducer(state: ChatState, action: ChatAction): ChatState {
                 ...state,
                 messages: state.messages.map((m) =>
                     m.id === action.messageId
-                        ? { ...m, attachments: [...(m.attachments || []), action.attachment] }
+                        ? { ...m, attachments: mergeAttachments(m.attachments || [], action.attachment) }
                         : m
                 ),
             };
@@ -116,12 +151,86 @@ function reducer(state: ChatState, action: ChatAction): ChatState {
     }
 }
 
-const WELCOME_PROMPTS = [
-    'Write me a business proposal',
-    'Explain quantum computing simply',
-    'Help me debug my code',
-    'Create a weekly meal plan',
+const QUICK_ACTIONS = [
+    { title: 'Write a doc', subtitle: 'Essays, reports, letters', icon: FileText },
+    { title: 'Make slides', subtitle: 'Decks, pitches, talks', icon: LayoutGrid },
+    { title: 'Write code', subtitle: 'Any language, any task', icon: Code2 },
+    { title: 'Build an agent', subtitle: 'Automate workflows', icon: Bot },
 ];
+
+const POWERPOINT_LOGO_IMAGE_TYPES = new Set(['image/png', 'image/jpeg', 'image/gif', 'image/svg+xml']);
+
+async function fileToDataUrl(file: File): Promise<{ name: string; type: string; data: string }> {
+    const normalizedFile = await normalizeImageForPowerPoint(file);
+
+    return {
+        name: normalizedFile.name,
+        type: normalizedFile.type,
+        data: await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+            reader.readAsDataURL(normalizedFile);
+        }),
+    };
+}
+
+async function normalizeImageForPowerPoint(file: File): Promise<File> {
+    if (!file.type.startsWith('image/') || POWERPOINT_LOGO_IMAGE_TYPES.has(file.type)) {
+        return file;
+    }
+
+    try {
+        const pngBlob = await convertImageFileToPng(file);
+        const normalizedName = file.name.replace(/\.[^.]+$/, '') || 'logo';
+
+        return new File([pngBlob], `${normalizedName}.png`, {
+            type: 'image/png',
+            lastModified: file.lastModified,
+        });
+    } catch {
+        return file;
+    }
+}
+
+async function convertImageFileToPng(file: File): Promise<Blob> {
+    const objectUrl = URL.createObjectURL(file);
+
+    try {
+        const image = new Image();
+        image.decoding = 'async';
+        image.src = objectUrl;
+
+        await new Promise<void>((resolve, reject) => {
+            image.onload = () => resolve();
+            image.onerror = () => reject(new Error('Could not decode uploaded image.'));
+        });
+
+        const canvas = document.createElement('canvas');
+        canvas.width = image.naturalWidth || image.width;
+        canvas.height = image.naturalHeight || image.height;
+
+        const context = canvas.getContext('2d');
+        if (!context || canvas.width <= 0 || canvas.height <= 0) {
+            throw new Error('Could not prepare image conversion.');
+        }
+
+        context.drawImage(image, 0, 0);
+
+        return await new Promise<Blob>((resolve, reject) => {
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    resolve(blob);
+                    return;
+                }
+
+                reject(new Error('Could not convert uploaded image.'));
+            }, 'image/png');
+        });
+    } finally {
+        URL.revokeObjectURL(objectUrl);
+    }
+}
 
 type StreamPayload = {
     event?: string;
@@ -129,6 +238,20 @@ type StreamPayload = {
     message_id?: string;
     [key: string]: unknown;
 };
+
+function appendPowerPointDesignPreference(prompt: string, selectedDesigns: PowerPointDesign[]): string {
+    if (selectedDesigns.length === 0) {
+        return prompt;
+    }
+
+    const designSentence = selectedDesigns.length === 1
+        ? selectedDesigns[0]
+        : `${selectedDesigns.slice(0, -1).join(', ')} and ${selectedDesigns[selectedDesigns.length - 1]}`;
+
+    const instruction = `If you create a PowerPoint presentation for this request, use these design styles: ${designSentence}.`;
+
+    return prompt.trim() === '' ? instruction : `${prompt}\n\n${instruction}`;
+}
 
 export default function SpaChatInterface({
     isAuthenticated,
@@ -153,6 +276,7 @@ export default function SpaChatInterface({
     const [error, setError] = useState<string | null>(null);
     const [showScrollBtn, setShowScrollBtn] = useState(false);
     const [userScrolledUp, setUserScrolledUp] = useState(false);
+    const [powerPointDesigns, setPowerPointDesigns] = useState<PowerPointDesign[]>([]);
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
     const chatTransport = getChatTransport();
@@ -292,6 +416,7 @@ export default function SpaChatInterface({
                 await syncConversation(conversationId);
                 void queryClient.invalidateQueries({ queryKey: ['spa', 'conversations'] });
             }
+            void queryClient.invalidateQueries({ queryKey: ['spa', 'subscription', 'usage', 'layout'] });
         }
 
         if (eventName === 'message.failed') {
@@ -391,6 +516,7 @@ export default function SpaChatInterface({
         setError(null);
         setIsLoading(true);
         document.dispatchEvent(new CustomEvent('kwati:message-sent'));
+        const promptWithDesigns = appendPowerPointDesignPreference(prompt, powerPointDesigns);
 
         dispatch({
             type: 'user.append',
@@ -411,16 +537,9 @@ export default function SpaChatInterface({
             },
         });
 
-        const processedFiles = await Promise.all((attachedFiles || []).map(async (file) => ({
-            name: file.name,
-            type: file.type,
-            data: await new Promise<string>((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result as string);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            }),
-        })));
+        const processedFiles = await Promise.all((attachedFiles || []).map(fileToDataUrl));
+        const hasImageUpload = processedFiles.some((file) => file.type.startsWith('image/'));
+        const selectedModel = hasImageUpload ? 'grok-4' : 'grok-4-fast-non-reasoning';
 
         if (chatTransport === 'ws') {
             const response = await fetch('/api/chat/messages', {
@@ -428,9 +547,9 @@ export default function SpaChatInterface({
                 headers: { 'Content-Type': 'application/json', Accept: 'application/json', ...authHeaders() },
                 body: JSON.stringify({
                     conversation_id: state.conversationId,
-                    message: prompt,
+                    message: promptWithDesigns,
                     type,
-                    model: 'grok-4-fast-non-reasoning',
+                    model: selectedModel,
                     files: processedFiles,
                 }),
             });
@@ -478,9 +597,9 @@ export default function SpaChatInterface({
                 headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream', ...authHeaders() },
                 body: JSON.stringify({
                     conversation_id: state.conversationId,
-                    message: prompt,
+                    message: promptWithDesigns,
                     type,
-                    model: 'grok-4-fast-non-reasoning',
+                    model: selectedModel,
                     files: processedFiles,
                 }),
             });
@@ -497,12 +616,18 @@ export default function SpaChatInterface({
             setIsLoading(false);
             setError(streamError instanceof Error ? streamError.message : 'Could not send message. Please try again.');
         }
-    }, [chatTransport, readEventStream, state.conversationId]);
+    }, [chatTransport, powerPointDesigns, readEventStream, state.conversationId]);
 
     const handleSubmit = useCallback(async (event: FormEvent, type: 'text' | 'image', attachedFiles?: File[]) => {
         event.preventDefault();
-        const prompt = inputRef.current?.value?.trim();
-        if (!prompt || isLoading) return;
+        const rawPrompt = inputRef.current?.value?.trim() ?? '';
+        const hasFiles = (attachedFiles?.length ?? 0) > 0;
+        if ((!rawPrompt && !hasFiles) || isLoading) return;
+        const prompt = rawPrompt || (
+            attachedFiles?.some((file) => file.type.startsWith('image/'))
+                ? 'Please analyze the uploaded image.'
+                : 'Please review the attached file.'
+        );
 
         if (inputRef.current) {
             inputRef.current.value = '';
@@ -511,6 +636,20 @@ export default function SpaChatInterface({
 
         await sendMessage(prompt, type, attachedFiles);
     }, [isLoading, sendMessage]);
+
+    const togglePowerPointDesign = useCallback((design: PowerPointDesign, checked: boolean) => {
+        setPowerPointDesigns((current) => {
+            if (checked) {
+                if (design === 'mixed') {
+                    return ['mixed'];
+                }
+
+                return [...current.filter((item) => item !== 'mixed' && item !== design), design];
+            }
+
+            return current.filter((item) => item !== design);
+        });
+    }, []);
 
     const handleRegenerate = useCallback(async (messageId: string) => {
         setError(null);
@@ -600,39 +739,62 @@ export default function SpaChatInterface({
 
                     {/* Welcome screen */}
                     {welcome && (
-                        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-7 text-center">
+                        <div className="flex min-h-[78vh] flex-col items-center justify-center gap-7 text-center">
+                            <div className="space-y-4">
+                                <div className="flex items-center justify-center">
+                                    <div className="flex items-center px-2 py-2">
+                                        <img
+                                            src="/logo.png"
+                                            alt="Kwati logo"
+                                            className="h-10 w-auto max-w-[220px] object-contain sm:h-12 sm:max-w-[260px]"
+                                            draggable={false}
+                                        />
+                                    </div>
+                                </div>
+                                <p className="text-base text-muted-foreground">
+                                    {firstName ? `Your AI for everything, ${firstName}. Ask, create, build.` : 'Your AI for everything. Ask, create, build.'}
+                                </p>
+                            </div>
 
-                            {/* Logo */}
-                            <img
-                                src="/logo.png"
-                                alt="Kwati AI"
-                                className="h-9 w-auto select-none opacity-90"
-                                draggable={false}
-                            />
-
-                            {/* Greeting */}
-                            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-                                {firstName ? `Good to see you, ${firstName}` : 'How can I help you?'}
-                            </h1>
-
-                            {/* Prompt suggestions */}
-                            <div className="grid w-full max-w-lg grid-cols-2 gap-2">
-                                {WELCOME_PROMPTS.map((prompt) => (
+                            <div className="mb-8 grid w-full max-w-[760px] gap-2 sm:grid-cols-2 xl:grid-cols-4">
+                                {QUICK_ACTIONS.map(({ title, subtitle, icon: Icon }) => (
                                     <button
-                                        key={prompt}
+                                        key={title}
                                         type="button"
-                                        className="rounded-xl border border-border/60 bg-card px-4 py-3 text-left text-[0.825rem] text-muted-foreground transition-all hover:border-[#8b5cf6]/30 hover:bg-accent hover:text-foreground"
+                                        className="min-h-[100px] rounded-[20px] border border-border/60 bg-card/45 px-3 py-3 text-left transition-all hover:border-[#6f4cff]/30 hover:bg-accent/35"
                                         onClick={() => {
                                             if (inputRef.current) {
-                                                inputRef.current.value = prompt;
+                                                inputRef.current.value = title;
                                                 inputRef.current.focus();
                                                 inputRef.current.dispatchEvent(new Event('input', { bubbles: true }));
                                             }
                                         }}
                                     >
-                                        {prompt}
+                                        <Icon className="mb-3 h-4 w-4 text-[#7c5cff]" />
+                                        <div className="space-y-0.5">
+                                            <p className="text-[15px] font-semibold text-foreground">{title}</p>
+                                            <p className="text-[11px] leading-4.5 text-muted-foreground">{subtitle}</p>
+                                        </div>
                                     </button>
                                 ))}
+                            </div>
+
+                            <div className="w-full max-w-2xl">
+                                <ChatInput
+                                    files={files}
+                                    handleKeyDown={handleKeyDown}
+                                    isAuthenticated={isAuthenticated}
+                                    is_processing={isLoading}
+                                    layout="inline"
+                                    mode={mode}
+                                    onSend={handleSubmit}
+                                    onClearPowerPointDesigns={() => setPowerPointDesigns([])}
+                                    onTogglePowerPointDesign={togglePowerPointDesign}
+                                    powerPointDesigns={powerPointDesigns}
+                                    ref={inputRef}
+                                    setFiles={setFiles}
+                                    setMode={(nextMode) => setMode(nextMode as 'text' | 'image')}
+                                />
                             </div>
                         </div>
                     )}
@@ -696,17 +858,23 @@ export default function SpaChatInterface({
             )}
 
             {/* Input pinned to bottom */}
-            <ChatInput
-                files={files}
-                handleKeyDown={handleKeyDown}
-                isAuthenticated={isAuthenticated}
-                is_processing={isLoading}
-                mode={mode}
-                onSend={handleSubmit}
-                ref={inputRef}
-                setFiles={setFiles}
-                setMode={(nextMode) => setMode(nextMode as 'text' | 'image')}
-            />
+            {!welcome && (
+                <ChatInput
+                    files={files}
+                    handleKeyDown={handleKeyDown}
+                    isAuthenticated={isAuthenticated}
+                    is_processing={isLoading}
+                    layout="floating"
+                    mode={mode}
+                    onSend={handleSubmit}
+                    onClearPowerPointDesigns={() => setPowerPointDesigns([])}
+                    onTogglePowerPointDesign={togglePowerPointDesign}
+                    powerPointDesigns={powerPointDesigns}
+                    ref={inputRef}
+                    setFiles={setFiles}
+                    setMode={(nextMode) => setMode(nextMode as 'text' | 'image')}
+                />
+            )}
         </div>
     );
 }

@@ -19,7 +19,8 @@ import {
     FileText,
     ClipboardList,
     Bell,
-    Cpu
+    Cpu,
+    Presentation
 } from 'lucide-react';
 import {
     Sidebar,
@@ -82,6 +83,7 @@ const MENU_GROUPS = [
         title: 'Content',
         items: [
             { name: 'Image Uploads', icon: Image, route: admin.imageUploads.url() },
+            { name: 'Slide Templates', icon: Presentation, route: route('admin.slide-templates.index') },
         ]
     },
     {

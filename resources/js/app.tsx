@@ -1,6 +1,11 @@
 import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/react';
+import { route } from 'ziggy-js';
+
+// Make route() available globally for Inertia components
+declare global { function route(...args: Parameters<typeof route>): ReturnType<typeof route>; }
+(window as any).route = route;
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { Toaster } from '@/components/ui/toaster';

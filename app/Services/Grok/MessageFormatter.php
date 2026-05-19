@@ -3,6 +3,7 @@
 namespace App\Services\Grok;
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Smalot\PdfParser\Parser;
 use Illuminate\Support\Facades\Log;
 
 class MessageFormatter
@@ -41,8 +42,11 @@ class MessageFormatter
             'content' => 'This current year is ' . date('Y') . ' the current month is ' . date('F') . ' and the current day is ' . date('d') . '.',
         ];
 
-        $messages[] = $this->languageDetector->getLanguageMessage($this->languageDetector->getLanguage());
-        
+        $languageMessage = $this->languageDetector->getLanguageMessage($this->languageDetector->getLanguage());
+        if ($languageMessage['content'] !== '') {
+            $messages[] = $languageMessage;
+        }
+
         foreach ($history as $msg) {
             $messages[] = [
                 'role' => $msg['role'],
@@ -74,11 +78,12 @@ class MessageFormatter
                     
                     if (str_starts_with($file['type'], 'text/')) {
                         $content = $decodedData;
+                    } elseif ($file['type'] === 'application/pdf') {
+                        $content = $this->parsePdf($decodedData, $file['name']);
                     } elseif (in_array($file['type'], ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])) {
-                        // Load Excel with XXE protection
                         $content = $this->parseExcelSafely($decodedData, $file['name']);
                     } else {
-                        $content = $decodedData; // Fallback
+                        $content = $decodedData;
                     }
                     $textContent .= "\n\nFile: " . $file['name'] . "\n" . $content;
                 }
@@ -122,7 +127,10 @@ class MessageFormatter
         $messages[] = $this->getVoiceSystemInstruction();
 
         // Add language instruction
-        $messages[] = $this->languageDetector->getLanguageMessage($this->languageDetector->getLanguage());
+        $languageMessage = $this->languageDetector->getLanguageMessage($this->languageDetector->getLanguage());
+        if ($languageMessage['content'] !== '') {
+            $messages[] = $languageMessage;
+        }
 
         // Add conversation history
         foreach ($history as $msg) {
@@ -208,14 +216,24 @@ After retrieving results, synthesise them naturally into your response. Do not d
 2. Stop immediately after a successful call — no commentary needed.
 3. On failure: briefly explain the error and stop.
 
-## Document Generation (`generate_word_document` / `generate_pdf_document`)
+## Document Generation (`generate_word_document` / `generate_pdf_document` / `generate_powerpoint_presentation`)
 When a user requests any document — report, proposal, letter, resume, contract, brief, etc.:
 1. Use `generate_word_document` by default for ALL document requests.
 2. Use `generate_pdf_document` **only** if the user explicitly says "PDF".
-3. Write the complete, professionally structured content in markdown before calling the tool.
-4. Pass all content in the `content` field.
-5. Stop immediately after a successful call. Do not repeat the document content in chat.
-6. On failure: briefly explain the error and stop.
+3. Choose exactly one document-generation tool per request. Never call both `generate_word_document` and `generate_pdf_document` for the same output.
+4. Use `generate_powerpoint_presentation` when the user explicitly asks for PowerPoint, PPT, PPTX, slides, a presentation, or a slide deck.
+5. Write the complete, professionally structured content in markdown before calling the tool. For presentations, use headings as slide titles and bullets as slide body points.
+   - To create a chart slide, include "Bar Chart", "Pie Chart", or "Histogram" in the slide heading.
+   - Put chart values as bullets in `Label: number` format, for example `- Q1: 125`.
+   - If the user asks for one named style, set `design_style` to one of: `mixed`, `business_blue`, `boardroom`, `editorial`, `tech_grid`, `financial_clean`, `corporate`, `creative`, `minimalist`, `dark`, or `warm`.
+   - If the user wants multiple styles in one deck, set `design_styles` to an array of those values.
+   - If the user describes the visual look in plain language instead of naming a preset, pass that text in `design_description` so the design library can match the closest preset automatically.
+   - If they do not pick a style, use `mixed`.
+   - If the user uploads a logo image and asks to use it, call the PowerPoint tool normally; the uploaded logo will be attached automatically. Set `logo_position` if they ask for a specific corner.
+   - If a PowerPoint was already created earlier and the user later uploads a logo or says to add the logo to it, call `generate_powerpoint_presentation` again using the previous PowerPoint generation context. Preserve the prior title, content, and design unless the user asks for changes.
+6. Pass all content in the `content` field.
+7. Stop immediately after a successful call. Do not repeat the document content in chat.
+8. On failure: briefly explain the error and stop.
 
 ## Tool Execution Reference
 
@@ -225,6 +243,7 @@ When a user requests any document — report, proposal, letter, resume, contract
 | Edit image | `edit_image` | Stop + suggestions |
 | Create Word doc | `generate_word_document` | Stop + suggestions |
 | Create PDF | `generate_pdf_document` | Stop + suggestions |
+| Create PowerPoint | `generate_powerpoint_presentation` | Stop + suggestions |
 | Web search | `web_search` / `web_fetch` | Continue with results |
 
 ---
@@ -271,6 +290,25 @@ If asked who built you or what powers you, say you were built by the KwatiAi tea
 
 Be warm, clear, and human. You are a knowledgeable friend having a natural conversation."
         ];
+    }
+
+    private function parsePdf(string $pdfData, string $filename): string
+    {
+        try {
+            $tempFile = tempnam(sys_get_temp_dir(), 'pdf_');
+            file_put_contents($tempFile, $pdfData);
+
+            $parser = new Parser();
+            $pdf = $parser->parseFile($tempFile);
+            $text = $pdf->getText();
+
+            unlink($tempFile);
+
+            return trim($text) ?: '[PDF contained no extractable text]';
+        } catch (\Exception $e) {
+            Log::error("PDF parsing failed for {$filename}: " . $e->getMessage());
+            throw new \Exception("Failed to parse PDF file '{$filename}'. Ensure it contains selectable text.");
+        }
     }
 
     /**

@@ -13,6 +13,7 @@ use App\Services\Realtime\RealtimePublisher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MessageController extends Controller
@@ -29,11 +30,13 @@ class MessageController extends Controller
     {
         $validated = $request->validate([
             'conversation_id' => ['nullable', 'string', 'exists:conversations,id'],
-            'message' => ['required', 'string'],
+            'message' => ['nullable', 'string'],
             'type' => ['nullable', 'string'],
             'model' => ['nullable', 'string'],
             'files' => ['nullable', 'array'],
         ]);
+        $this->ensureMessageOrFiles($validated);
+        $validated = $this->withDefaultAttachmentPrompt($validated);
 
         $prepared = $this->messages->queueSend($request->user(), $validated);
         $assistantMessage = $prepared['assistant_message'];
@@ -60,11 +63,13 @@ class MessageController extends Controller
     {
         $validated = $request->validate([
             'conversation_id' => ['nullable', 'string', 'exists:conversations,id'],
-            'message' => ['required', 'string'],
+            'message' => ['nullable', 'string'],
             'type' => ['nullable', 'string'],
             'model' => ['nullable', 'string'],
             'files' => ['nullable', 'array'],
         ]);
+        $this->ensureMessageOrFiles($validated);
+        $validated = $this->withDefaultAttachmentPrompt($validated);
 
         return response()->stream(function () use ($request, $validated): void {
             $emit = function (string $event, array $payload): void {
@@ -147,15 +152,35 @@ class MessageController extends Controller
             $message = $attachment->message()->with('conversation')->first();
             abort_unless($message && $message->conversation && $message->conversation->user_id === $request->user()->id, 403);
 
-            if (!$attachment->path || !Storage::disk('private')->exists($attachment->path)) {
+            if (!$attachment->path) {
                 return response()->json(['message' => 'File not found'], 404);
             }
 
-            return Storage::disk('private')->download(
-                $attachment->path,
-                $attachment->name,
-                ['Content-Type' => $attachment->mime_type ?: 'application/octet-stream']
-            );
+            if (Storage::disk('private')->exists($attachment->path)) {
+                return Storage::disk('private')->download(
+                    $attachment->path,
+                    $attachment->name,
+                    ['Content-Type' => $attachment->mime_type ?: 'application/octet-stream']
+                );
+            }
+
+            if (Storage::disk('public')->exists($attachment->path)) {
+                return Storage::disk('public')->download(
+                    $attachment->path,
+                    $attachment->name,
+                    ['Content-Type' => $attachment->mime_type ?: 'application/octet-stream']
+                );
+            }
+
+            if (Storage::disk('local')->exists($attachment->path)) {
+                return Storage::disk('local')->download(
+                    $attachment->path,
+                    $attachment->name,
+                    ['Content-Type' => $attachment->mime_type ?: 'application/octet-stream']
+                );
+            }
+
+            return response()->json(['message' => 'File not found'], 404);
         }
 
         $response = $this->files->serveFile((int) $file);
@@ -165,5 +190,34 @@ class MessageController extends Controller
         }
 
         return $response;
+    }
+
+    private function ensureMessageOrFiles(array $validated): void
+    {
+        if (trim((string) ($validated['message'] ?? '')) !== '' || !empty($validated['files'] ?? [])) {
+            return;
+        }
+
+        throw ValidationException::withMessages([
+            'message' => 'Enter a message or attach a file.',
+        ]);
+    }
+
+    private function withDefaultAttachmentPrompt(array $validated): array
+    {
+        if (trim((string) ($validated['message'] ?? '')) !== '') {
+            return $validated;
+        }
+
+        $files = $validated['files'] ?? [];
+        $hasImage = collect($files)->contains(
+            fn (array $file): bool => str_starts_with((string) ($file['type'] ?? ''), 'image/')
+        );
+
+        $validated['message'] = $hasImage
+            ? 'Please analyze the uploaded image.'
+            : 'Please review the attached file.';
+
+        return $validated;
     }
 }

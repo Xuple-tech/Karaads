@@ -37,6 +37,17 @@ type MetaAccount = {
         require_approval_before_send?: boolean;
         reply_tone?: string;
     } | null;
+    latest_ai_insight?: {
+        intent?: string | null;
+        priority?: string | null;
+        reply_goal?: string | null;
+        key_points?: string[];
+        memory_hits?: number | null;
+        status?: string | null;
+        confidence_score?: number | null;
+        sentiment?: string | null;
+        category?: string | null;
+    } | null;
 };
 
 type MetaDashboard = {
@@ -218,7 +229,8 @@ export function Component() {
                                     bg: 'bg-muted/50',
                                 };
                                 return (
-                                    <div key={account.id} className="flex items-center gap-3 rounded-xl border border-border/50 bg-card p-3.5">
+                                    <div key={account.id} className="rounded-xl border border-border/50 bg-card p-3.5">
+                                        <div className="flex items-center gap-3">
                                         <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${cfg.bg}`}>
                                             <cfg.Icon className={`h-4 w-4 ${cfg.color}`} />
                                         </div>
@@ -252,6 +264,60 @@ export function Component() {
                                                 </Link>
                                             ))}
                                         </div>
+                                        </div>
+
+                                        {account.latest_ai_insight && (
+                                            <div className="mt-3 rounded-lg border border-border/50 bg-muted/30 p-3">
+                                                <div className="flex flex-wrap items-center gap-2 text-xs">
+                                                    {account.latest_ai_insight.sentiment && (
+                                                        <span className="rounded-full bg-background px-2 py-1 text-muted-foreground">
+                                                            {account.latest_ai_insight.sentiment}
+                                                        </span>
+                                                    )}
+                                                    {account.latest_ai_insight.category && (
+                                                        <span className="rounded-full bg-background px-2 py-1 text-muted-foreground">
+                                                            {account.latest_ai_insight.category}
+                                                        </span>
+                                                    )}
+                                                    {account.latest_ai_insight.intent && (
+                                                        <span className="rounded-full bg-background px-2 py-1 text-muted-foreground capitalize">
+                                                            intent: {account.latest_ai_insight.intent.replaceAll('_', ' ')}
+                                                        </span>
+                                                    )}
+                                                    {account.latest_ai_insight.priority && (
+                                                        <span className="rounded-full bg-background px-2 py-1 text-muted-foreground capitalize">
+                                                            {account.latest_ai_insight.priority} priority
+                                                        </span>
+                                                    )}
+                                                    {account.latest_ai_insight.confidence_score != null && (
+                                                        <span className="rounded-full bg-primary/10 px-2 py-1 text-primary">
+                                                            {Math.round(Number(account.latest_ai_insight.confidence_score))}% confident
+                                                        </span>
+                                                    )}
+                                                </div>
+
+                                                {account.latest_ai_insight.reply_goal && (
+                                                    <p className="mt-2 text-xs text-muted-foreground">
+                                                        Goal: {account.latest_ai_insight.reply_goal}
+                                                    </p>
+                                                )}
+
+                                                {account.latest_ai_insight.key_points && account.latest_ai_insight.key_points.length > 0 && (
+                                                    <div className="mt-2 flex flex-wrap gap-1.5">
+                                                        {account.latest_ai_insight.key_points.map((point) => (
+                                                            <span key={point} className="rounded-full border border-border/60 px-2 py-1 text-[11px] text-foreground">
+                                                                {point}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                )}
+
+                                                <p className="mt-2 text-[11px] text-muted-foreground">
+                                                    Memory hits: {account.latest_ai_insight.memory_hits ?? 0}
+                                                    {account.latest_ai_insight.status ? ` · Draft status: ${account.latest_ai_insight.status}` : ''}
+                                                </p>
+                                            </div>
+                                        )}
                                     </div>
                                 );
                             })

@@ -16,6 +16,8 @@ import {
 import { Wallet, CreditCard, TrendingUp, CheckCircle2, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
+import type { SharedData } from '@/types';
+import { developerPortalUrl, normalizeDeveloperPortalBaseUrl } from '@/lib/developer-portal-url';
 
 interface WalletSummary {
     balance_usd: number;
@@ -76,8 +78,9 @@ const typeColor: Record<string, string> = {
 };
 
 export default function DeveloperApiBilling({ wallet, ledger, topupConfig }: PageProps) {
-    const { props } = usePage<{ flash?: { success?: string; error?: string } }>();
+    const { props } = usePage<SharedData & { flash?: { success?: string; error?: string } }>();
     const flash = props.flash ?? {};
+    const baseUrl = normalizeDeveloperPortalBaseUrl(props.developerPortal?.base_url);
 
     const w = wallet ?? { balance_usd: 0, lifetime_credited_usd: 0, lifetime_debited_usd: 0 };
 
@@ -102,7 +105,7 @@ export default function DeveloperApiBilling({ wallet, ledger, topupConfig }: Pag
             return;
         }
         setLoading(true);
-        router.post('/developer-api/top-up', { amount_usd: amount, provider: provider.id }, {
+        router.post(developerPortalUrl(baseUrl, 'top-up'), { amount_usd: amount, provider: provider.id }, {
             onError: (e) => { toast.error(Object.values(e)[0] as string); setLoading(false); },
             onSuccess: () => setLoading(false),
         });

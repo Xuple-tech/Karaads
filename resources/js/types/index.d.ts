@@ -28,6 +28,13 @@ export interface SharedData {
     auth: Auth;
     ziggy: Config & { location: string };
     sidebarOpen: boolean;
+    developerPortal?: {
+        base_url: string;
+        login_url: string;
+        register_url: string;
+        logout_url: string;
+        uses_subdomain: boolean;
+    };
     [key: string]: unknown;
 }
 

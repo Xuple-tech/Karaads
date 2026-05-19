@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Bot, Palette, Save, Shield, User } from 'lucide-react';
+import { Bot, Check, Copy, Gift, Palette, Save, Shield, User, Users } from 'lucide-react';
 import { type FormEvent, useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,7 @@ const tabs = [
     { id: 'ai', label: 'AI', icon: Bot },
     { id: 'appearance', label: 'Appearance', icon: Palette },
     { id: 'security', label: 'Security', icon: Shield },
+    { id: 'referral', label: 'Referral', icon: Gift },
 ] as const;
 
 type TabId = typeof tabs[number]['id'];
@@ -54,6 +55,27 @@ export function Component() {
             setSelectedMode(String(preferences.data.preferences.preferred_ai_mode_id ?? 'none'));
         }
     }, [preferences.data]);
+
+    const referral = useQuery({
+        queryKey: ['spa', 'referral'],
+        queryFn: () => apiRequest<any>('/api/referral'),
+        staleTime: 60_000,
+    });
+
+    const [copiedCode, setCopiedCode] = useState(false);
+    const [copiedLink, setCopiedLink] = useState(false);
+
+    const copyCode = () => {
+        navigator.clipboard.writeText(referral.data?.referral_code ?? '');
+        setCopiedCode(true);
+        setTimeout(() => setCopiedCode(false), 2000);
+    };
+
+    const copyLink = () => {
+        navigator.clipboard.writeText(referral.data?.referral_link ?? '');
+        setCopiedLink(true);
+        setTimeout(() => setCopiedLink(false), 2000);
+    };
 
     const flash = () => { setSaved(true); setTimeout(() => setSaved(false), 2000); };
 
@@ -300,6 +322,80 @@ export function Component() {
                             </Button>
                         </div>
                     </form>
+                </div>
+            )}
+
+            {/* ── Referral tab ── */}
+            {activeTab === 'referral' && (
+                <div className="space-y-8">
+                    <div>
+                        <h2 className="text-base font-medium text-foreground mb-1">Referral program</h2>
+                        <p className="text-sm text-muted-foreground">Share your link and invite friends to Kwati AI.</p>
+                    </div>
+
+                    {/* Stats */}
+                    <div className="rounded-xl border border-border/50 bg-card p-5 flex items-center gap-4">
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10">
+                            <Users className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                            <p className="text-2xl font-bold text-foreground">{referral.data?.referral_count ?? 0}</p>
+                            <p className="text-sm text-muted-foreground">Total referrals</p>
+                        </div>
+                    </div>
+
+                    {/* Referral code */}
+                    <div className="space-y-1.5">
+                        <Label className="text-sm text-muted-foreground">Your referral code</Label>
+                        <div className="flex gap-2">
+                            <Input
+                                readOnly
+                                value={referral.data?.referral_code ?? ''}
+                                className="bg-card border-border/60 h-10 text-sm font-mono tracking-widest"
+                            />
+                            <Button variant="outline" onClick={copyCode} className="shrink-0 h-10 gap-2">
+                                {copiedCode ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+                                {copiedCode ? 'Copied' : 'Copy'}
+                            </Button>
+                        </div>
+                    </div>
+
+                    {/* Referral link */}
+                    <div className="space-y-1.5">
+                        <Label className="text-sm text-muted-foreground">Referral link</Label>
+                        <div className="flex gap-2">
+                            <Input
+                                readOnly
+                                value={referral.data?.referral_link ?? ''}
+                                className="bg-card border-border/60 h-10 text-sm"
+                            />
+                            <Button variant="outline" onClick={copyLink} className="shrink-0 h-10 gap-2">
+                                {copiedLink ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+                                {copiedLink ? 'Copied' : 'Copy'}
+                            </Button>
+                        </div>
+                    </div>
+
+                    {/* Referred users list */}
+                    {(referral.data?.referrals?.length ?? 0) > 0 && (
+                        <div className="space-y-3">
+                            <h3 className="text-sm font-medium text-foreground">People you referred</h3>
+                            <div className="rounded-xl border border-border/40 overflow-hidden">
+                                {referral.data.referrals.map((r: any, i: number) => (
+                                    <div
+                                        key={i}
+                                        className="flex items-center justify-between px-4 py-3 border-b border-border/30 last:border-0 bg-card"
+                                    >
+                                        <div>
+                                            <p className="text-sm font-medium text-foreground">{r.name}</p>
+                                            <p className="text-xs text-muted-foreground">{r.email}</p>
+                                        </div>
+                                        <span className="text-xs text-muted-foreground">{r.joined_at}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

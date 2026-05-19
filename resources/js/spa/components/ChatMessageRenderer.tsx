@@ -14,8 +14,8 @@ function UserMessage({ message }: { message: Message }) {
 
     return (
         <div className="flex justify-end gap-3 group">
-            <div className="flex max-w-[75%] flex-col items-end gap-1">
-                <div className="rounded-2xl rounded-tr-sm bg-[#2f2f2f] px-4 py-2.5 text-sm leading-relaxed text-[#e8e8e4]">
+            <div className="flex min-w-0 max-w-[75%] flex-col items-end gap-1">
+                <div className="min-w-0 rounded-2xl rounded-tr-sm bg-[#2f2f2f] px-4 py-2.5 text-sm leading-relaxed text-[#e8e8e4] whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
                     {text}
                 </div>
                 {hasAttachments && (
@@ -64,6 +64,7 @@ function AssistantMessage({
     const isFailed    = message.status === 'failed';
     const isEmpty     = !content.trim();
     const toolRuns    = message.tool_runs ?? [];
+    const attachments = message.attachments ?? [];
 
     const copy = async () => {
         await navigator.clipboard.writeText(content);
@@ -78,13 +79,13 @@ function AssistantMessage({
                 <img src="/icon.png" alt="Kwati AI" className="h-5 w-5 select-none opacity-80" draggable={false} />
             </div>
 
-            <div className="min-w-0 flex-1 space-y-1">
+            <div className="min-w-0 max-w-full flex-1 space-y-1 overflow-hidden">
 
                 {/* tool activity — above content, subtle */}
                 <ToolTimeline toolRuns={toolRuns} isStreaming={isStreaming} />
 
                 {/* message body */}
-                <div className="text-sm leading-relaxed">
+                <div className="min-w-0 max-w-full overflow-hidden text-sm leading-relaxed [overflow-wrap:anywhere] [word-break:break-word]">
                     {isFailed ? (
                         <div className="flex items-center gap-2 text-sm text-destructive">
                             <AlertCircle className="h-4 w-4 flex-shrink-0" />
@@ -93,7 +94,7 @@ function AssistantMessage({
                     ) : isStreaming && isEmpty ? (
                         <ThinkingSkeleton />
                     ) : (
-                        <MarkdownRenderer markdown={content} isLast={isLast} />
+                        <MarkdownRenderer markdown={content} isLast={isLast} attachments={attachments} />
                     )}
                 </div>
 

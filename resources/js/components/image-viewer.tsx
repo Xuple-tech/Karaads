@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { X, ChevronLeft, ChevronRight, Download, ZoomIn, ZoomOut, Share, Info } from 'lucide-react'
 import type { Image } from "@/types/image"
+import { downloadImageWithKwatiWatermark, getKwatiWatermarkLogoUrl } from '@/lib/image-watermark'
 
 interface ImageViewerModalProps {
   images: Image[]
@@ -88,14 +89,16 @@ export function ImageViewerModal({
 
   const handleDownload = () => {
     if (!currentImage) return
-
-    // Create a temporary anchor element
-    const link = document.createElement("a")
-    link.href = currentImage.image_url
-    link.download = `image-${currentImage.id}.jpg`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    void (async () => {
+      try {
+        await downloadImageWithKwatiWatermark(
+          currentImage.image_url,
+          `kwati-image-${currentImage.id}`,
+        )
+      } catch {
+        window.open(currentImage.image_url, "_blank")
+      }
+    })()
   }
 
   const formatDate = (dateString: string) => {
@@ -156,6 +159,11 @@ export function ImageViewerModal({
               src={currentImage.image_url || "/placeholder.svg"}
               alt={currentImage.prompt}
               className="max-h-[85vh] max-w-full object-contain"
+            />
+            <img
+              src={getKwatiWatermarkLogoUrl()}
+              alt="Kwati AI watermark"
+              className="pointer-events-none absolute bottom-4 right-4 w-24 max-w-[28%] opacity-90 drop-shadow-md"
             />
           </div>
         </div>

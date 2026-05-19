@@ -113,24 +113,24 @@ export default function Index({ prompts, filters }: PromptsIndexProps) {
                                     onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                                 />
                             </div>
-                            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                            <Select value={categoryFilter || 'all'} onValueChange={(value) => setCategoryFilter(value === 'all' ? '' : value)}>
                                 <SelectTrigger className="w-48">
                                     <SelectValue placeholder="All Categories" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem >All Categories</SelectItem>
+                                    <SelectItem value="all">All Categories</SelectItem>
                                     <SelectItem value="general">General</SelectItem>
                                     <SelectItem value="coding">Coding</SelectItem>
                                     <SelectItem value="writing">Writing</SelectItem>
                                     <SelectItem value="business">Business</SelectItem>
                                 </SelectContent>
                             </Select>
-                            <Select value={activeFilter} onValueChange={setActiveFilter}>
+                            <Select value={activeFilter || 'all'} onValueChange={(value) => setActiveFilter(value === 'all' ? '' : value)}>
                                 <SelectTrigger className="w-32">
                                     <SelectValue placeholder="Status" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem >All</SelectItem>
+                                    <SelectItem value="all">All</SelectItem>
                                     <SelectItem value="1">Active</SelectItem>
                                     <SelectItem value="0">Inactive</SelectItem>
                                 </SelectContent>

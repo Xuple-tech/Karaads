@@ -129,6 +129,12 @@ class SubscriptionService
         $dailyLimit = $this->entitlements->getDailyLimitForUsage($plan, 'images');
         $monthlyLimit = $this->entitlements->getMonthlyLimitForUsage($plan, 'images');
 
+        // Free users are capped at 5 generated images per day even if the
+        // plan configuration is missing or more permissive.
+        if ($plan->isFree()) {
+            $dailyLimit = $dailyLimit ? min($dailyLimit, 5) : 5;
+        }
+
         if (!$dailyLimit && !$monthlyLimit) {
             return [
                 'allowed' => true,
@@ -707,11 +713,11 @@ class SubscriptionService
             'description' => 'Get started with Kwati AI for free',
             'monthly_price' => 0,
             'yearly_price' => null,
-            'requests_per_day' => 50,
+            'requests_per_day' => 20,
             'requests_per_month' => 500,
             'tokens_per_day' => 10000,
             'tokens_per_month' => 100000,
-            'images_per_day' => 1,
+            'images_per_day' => 5,
             'images_per_month' => 10,
             'features' => [
                 'web_search',
@@ -736,9 +742,9 @@ class SubscriptionService
             'projects' => false,
             'priority_support' => false,
         ], [
-            'requests' => ['daily' => 50, 'monthly' => 500, 'total' => null],
+            'requests' => ['daily' => 20, 'monthly' => 500, 'total' => null],
             'tokens' => ['daily' => 10000, 'monthly' => 100000, 'total' => null],
-            'images' => ['daily' => 1, 'monthly' => 10, 'total' => null],
+            'images' => ['daily' => 5, 'monthly' => 10, 'total' => null],
             'voice_messages' => ['daily' => null, 'monthly' => null, 'total' => null],
             'emails_processed' => ['daily' => null, 'monthly' => null, 'total' => null],
         ]);

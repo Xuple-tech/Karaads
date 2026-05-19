@@ -3,10 +3,14 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
+use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use App\Models\ApiUsageLog;
 use App\Models\ImageGeneration;
 
@@ -674,8 +678,9 @@ class StabilityAIImageService
                 $filepath = $directory . '/' . $filename;
 
                 // Save file
+                $imageContent = $this->applyKwatiLogo($imageContent);
                 if (Storage::put($filepath, $imageContent)) {
-                    $url = Storage::url($filepath);
+                    $url = $this->normalizePublicStorageUrl(Storage::url($filepath));
 
                     // Prepare metadata
                     $imageMetadata = array_merge([
@@ -722,6 +727,57 @@ class StabilityAIImageService
         return $savedImages;
     }
 
+    private function applyKwatiLogo(string $imageContent): string
+    {
+        $logoPath = public_path('logo.png');
+        if (!is_file($logoPath)) {
+            return $imageContent;
+        }
+
+        try {
+            $driver = $this->resolveImageDriver();
+            if ($driver === null) {
+                return $imageContent;
+            }
+
+            $manager = new ImageManager($driver);
+            $image = $manager->read($imageContent);
+            $logo = $manager->read($logoPath);
+
+            $maxWidth = max(120, (int) floor($image->width() * 0.18));
+            $maxHeight = max(36, (int) floor($image->height() * 0.12));
+            $logo->scaleDown(width: $maxWidth, height: $maxHeight);
+
+            $offsetX = max(18, (int) floor($image->width() * 0.025));
+            $offsetY = max(18, (int) floor($image->height() * 0.025));
+
+            $image->place($logo, 'bottom-right', $offsetX, $offsetY, 90);
+
+            return (string) $image->encodeByMediaType('image/png');
+        } catch (\Throwable $e) {
+            Log::warning('Failed to apply Kwati logo watermark', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return $imageContent;
+        }
+    }
+
+    private function resolveImageDriver(): Driver|ImagickDriver|null
+    {
+        if (extension_loaded('gd')) {
+            return new Driver();
+        }
+
+        if (extension_loaded('imagick')) {
+            return new ImagickDriver();
+        }
+
+        Log::info('Skipping Kwati logo watermark because no supported PHP image extension is loaded.');
+
+        return null;
+    }
+
     /**
      * Get file extension from content type
      */
@@ -736,6 +792,17 @@ class StabilityAIImageService
         ];
 
         return $mapping[$contentType] ?? '.png';
+    }
+
+    private function normalizePublicStorageUrl(string $url): string
+    {
+        $path = parse_url($url, PHP_URL_PATH);
+
+        if (is_string($path) && Str::startsWith($path, '/storage/')) {
+            return $path;
+        }
+
+        return $url;
     }
 
     /**

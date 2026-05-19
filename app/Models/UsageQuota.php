@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\QueryException;
 
 class UsageQuota extends Model
 {
@@ -107,12 +108,20 @@ class UsageQuota extends Model
      */
     public static function getOrCreateTodayQuota($userId, $planId)
     {
-        return self::firstOrCreate(
-            [
+        $date = now()->toDateString();
+
+        $existing = self::where('user_id', $userId)
+            ->whereDate('date', $date)
+            ->first();
+
+        if ($existing) {
+            return $existing;
+        }
+
+        try {
+            return self::create([
                 'user_id' => $userId,
-                'date' => now()->toDateString(),
-            ],
-            [
+                'date' => $date,
                 'plan_id' => $planId,
                 'requests_used' => 0,
                 'tokens_used' => 0,
@@ -120,8 +129,18 @@ class UsageQuota extends Model
                 'voice_messages' => 0,
                 'emails_processed' => 0,
                 'widget_requests_used' => 0,
-            ]
-        );
+            ]);
+        } catch (QueryException $exception) {
+            $quota = self::where('user_id', $userId)
+                ->whereDate('date', $date)
+                ->first();
+
+            if ($quota) {
+                return $quota;
+            }
+
+            throw $exception;
+        }
     }
 
     /**

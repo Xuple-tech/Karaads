@@ -14,7 +14,8 @@ export function Component() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const redirect = searchParams.get('redirect') || '/app';
-    const [form, setForm] = useState({ name: '', email: '', password: '', password_confirmation: '' });
+    const refCode = searchParams.get('ref') ?? '';
+    const [form, setForm] = useState({ name: '', email: '', password: '', password_confirmation: '', referral_code: refCode });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -126,6 +127,17 @@ export function Component() {
                             {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
                     </div>
+
+                    <input
+                        type="text"
+                        autoComplete="off"
+                        value={form.referral_code}
+                        onChange={(e) => setForm((c) => ({ ...c, referral_code: e.target.value.toUpperCase() }))}
+                        placeholder="Referral code (optional)"
+                        disabled={register.isPending}
+                        className={inputClass}
+                        maxLength={12}
+                    />
 
                     <button
                         type="submit"

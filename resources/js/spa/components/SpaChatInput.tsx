@@ -1,6 +1,6 @@
 import type React from "react"
 import {
-    FileUp, Mic, MicOff, SendHorizonal, Square, X,
+    Bot, CheckSquare, ChevronDown, FileUp, Mic, MicOff, Palette, Plus, Search, SendHorizonal, Square, X,
     Image as ImageIcon, FileText, FileSpreadsheet, File as FileIcon, Paperclip
 } from "lucide-react"
 import {
@@ -15,6 +15,7 @@ import CanvasEditor from "@/components/chat/CanvasEditor"
 import toast from "react-hot-toast"
 import { cn } from "@/lib/utils"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -55,7 +56,27 @@ interface ChatInputProps {
     isAuthenticated?: boolean
     files?: File[]
     setFiles?: (files: File[] | ((prev: File[]) => File[])) => void
+    powerPointDesigns?: PowerPointDesign[]
+    onTogglePowerPointDesign?: (design: PowerPointDesign, checked: boolean) => void
+    onClearPowerPointDesigns?: () => void
+    layout?: "floating" | "inline"
 }
+
+const POWERPOINT_DESIGN_OPTIONS = [
+    { value: "business_blue", label: "Business Blue", description: "Executive blue presentation with refined side panels, clean white content areas, and polished strategy-report layouts" },
+    { value: "boardroom", label: "Boardroom", description: "Executive dark-neutral slides with premium accent tones for serious leadership decks" },
+    { value: "corporate", label: "Corporate", description: "Clean and business-focused" },
+    { value: "creative", label: "Creative", description: "Bold and colorful layouts" },
+    { value: "editorial", label: "Editorial", description: "Magazine-style presentation with refined typography and storytelling rhythm" },
+    { value: "tech_grid", label: "Tech Grid", description: "Modern SaaS and product deck look with structured data-friendly layouts" },
+    { value: "financial_clean", label: "Financial Clean", description: "Crisp investor-style slides for finance, metrics, and reports" },
+    { value: "minimalist", label: "Minimalist", description: "Simple and spacious" },
+    { value: "dark", label: "Dark", description: "High-contrast dramatic slides" },
+    { value: "warm", label: "Warm", description: "Friendly, energetic tones" },
+    { value: "mixed", label: "Mixed", description: "Auto-mixed built-in themes" },
+] as const
+
+type PowerPointDesign = typeof POWERPOINT_DESIGN_OPTIONS[number]["value"]
 
 // ─── File helpers ─────────────────────────────────────────────────────────────
 
@@ -141,6 +162,10 @@ export default function ChatInput({
     isAuthenticated = false,
     files: propFiles,
     setFiles: propSetFiles,
+    powerPointDesigns = [],
+    onTogglePowerPointDesign,
+    onClearPowerPointDesigns,
+    layout = "floating",
 }: ChatInputProps) {
     const [internalFiles, setInternalFiles] = useState<File[]>([])
     const files = propFiles ?? internalFiles
@@ -150,6 +175,7 @@ export default function ChatInput({
     const [recognition, setRecognition] = useState<SpeechRecognition | null>(null)
     const [isDragging, setIsDragging] = useState(false)
     const [showCanvasEditor, setShowCanvasEditor] = useState(false)
+    const [showPowerPointDesigns, setShowPowerPointDesigns] = useState(false)
 
     const fileInputRef = useRef<HTMLInputElement>(null)
     const sidebarContext = useContext(SidebarContextProvider)
@@ -287,7 +313,9 @@ export default function ChatInput({
     // ── Layout classes ────────────────────────────────────────────────────────
 
     const wrapperClass = cn(
-        "absolute bottom-0 left-0 right-0 z-50 bg-gradient-to-t from-background via-background/95 to-transparent pb-5 pt-10",
+        layout === "floating"
+            ? "absolute bottom-0 left-0 right-0 z-50 bg-gradient-to-t from-background via-background/94 to-transparent pb-10 pt-8 md:pb-12"
+            : "relative w-full",
         sidebarContext?.open && isAuthenticated && "lg:left-0"
     )
 
@@ -338,120 +366,217 @@ export default function ChatInput({
                             </div>
                         )}
 
-                        {/* Input box — Claude-style clean rounded input */}
-                        <div className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden transition-colors duration-150 focus-within:border-border/80">
+                        {showPowerPointDesigns && mode === "text" && (
+                            <div className="border-b border-border/30 bg-card/30 px-3 py-3">
+                                <div className="mb-2 flex items-start justify-between gap-3">
+                                    <div>
+                                        <p className="text-xs font-semibold text-foreground">PowerPoint styles</p>
+                                        <p className="text-[11px] text-muted-foreground">
+                                            These selections apply when you ask for a PowerPoint, slide deck, or presentation.
+                                        </p>
+                                    </div>
+                                    {powerPointDesigns.length > 0 && (
+                                        <button
+                                            type="button"
+                                            onClick={onClearPowerPointDesigns}
+                                            className="text-[11px] text-muted-foreground transition-colors hover:text-foreground"
+                                        >
+                                            Clear
+                                        </button>
+                                    )}
+                                </div>
 
+                                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                    {POWERPOINT_DESIGN_OPTIONS.map((option) => {
+                                        const checked = powerPointDesigns.includes(option.value)
+
+                                        return (
+                                            <label
+                                                key={option.value}
+                                                className={cn(
+                                                    "flex cursor-pointer items-start gap-3 rounded-xl border px-3 py-2 transition-colors",
+                                                    checked
+                                                        ? "border-primary/50 bg-primary/10"
+                                                        : "border-border/50 bg-background/40 hover:border-border hover:bg-background/60"
+                                                )}
+                                            >
+                                                <Checkbox
+                                                    checked={checked}
+                                                    onCheckedChange={(nextChecked) => onTogglePowerPointDesign?.(option.value, nextChecked === true)}
+                                                    className="mt-0.5"
+                                                />
+                                                <span className="min-w-0">
+                                                    <span className="block text-xs font-medium text-foreground">{option.label}</span>
+                                                    <span className="block text-[11px] text-muted-foreground">{option.description}</span>
+                                                </span>
+                                            </label>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#202123]/95 shadow-[0_12px_40px_rgba(0,0,0,0.24)] transition-colors duration-150 focus-within:border-white/20 focus-within:shadow-[0_16px_44px_rgba(0,0,0,0.28)]">
                             <textarea
                                 ref={inputRef}
                                 onChange={autoResize}
-                                placeholder={mode === "text" ? "Message Kwati…" : "Describe the image to generate…"}
-                                className="w-full resize-none bg-transparent px-4 pt-4 pb-2 text-sm leading-relaxed focus:outline-none custom-scrollbar max-h-[200px] overflow-y-auto placeholder:text-muted-foreground/35 text-foreground"
+                                placeholder={mode === "text" ? "Message Kwati AI" : "Describe the image to generate..."}
+                                className="custom-scrollbar max-h-[200px] w-full resize-none bg-transparent px-5 pt-4 pb-3 text-[15px] leading-7 text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
                                 rows={1}
                                 onKeyDown={handleKeyDown}
                                 autoFocus
                                 disabled={is_processing}
                             />
 
-                            {/* Controls */}
-                            <div className="flex items-center justify-between px-3 pb-3 pt-1">
-                                <div className="flex items-center gap-0.5">
+                            <div className="px-3 pb-3 pt-1.5">
+                                <div className="flex flex-wrap items-center justify-between gap-2">
+                                    <div className="flex flex-wrap items-center gap-1.5">
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-9 w-9 rounded-full text-muted-foreground hover:bg-white/6 hover:text-foreground"
+                                        >
+                                            <Plus className="h-4 w-4" />
+                                        </Button>
 
-                                    {/* Attach */}
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                type="button"
-                                                variant="ghost"
-                                                size="icon"
-                                                className="h-8 w-8 relative rounded-lg text-muted-foreground/50 hover:text-foreground hover:bg-accent"
-                                                onClick={() => fileInputRef.current?.click()}
-                                            >
-                                                <Paperclip className="h-4 w-4" />
-                                                {files.length > 0 && (
-                                                    <span className="absolute -top-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-primary flex items-center justify-center text-[9px] text-primary-foreground font-bold">
-                                                        {files.length}
-                                                    </span>
-                                                )}
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>Attach files · paste image</TooltipContent>
-                                    </Tooltip>
-
-                                    {/* Image mode */}
-                                    <DropdownMenu>
                                         <Tooltip>
                                             <TooltipTrigger asChild>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button
-                                                        type="button"
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className={cn("h-8 w-8 rounded-lg text-muted-foreground/50 hover:text-foreground hover:bg-accent", mode === "image" && "text-primary bg-primary/10")}
-                                                    >
-                                                        <ImageIcon className="h-4 w-4" />
-                                                    </Button>
-                                                </DropdownMenuTrigger>
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    className="relative h-9 rounded-full px-3 text-sm text-muted-foreground hover:bg-white/6 hover:text-foreground"
+                                                    onClick={() => fileInputRef.current?.click()}
+                                                >
+                                                    <Paperclip className="mr-2 h-4 w-4" />
+                                                    Attach
+                                                    {files.length > 0 && (
+                                                        <span className="ml-2 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">
+                                                            {files.length}
+                                                        </span>
+                                                    )}
+                                                </Button>
                                             </TooltipTrigger>
-                                            <TooltipContent>Image mode</TooltipContent>
+                                            <TooltipContent>Attach files · paste image</TooltipContent>
                                         </Tooltip>
-                                        <DropdownMenuContent align="start" className="w-44">
-                                            <DropdownMenuItem asChild>
-                                                <ImageToggle mode={mode} onToggle={setMode} />
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
 
-                                    {/* Voice */}
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                type="button"
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={toggleRecording}
-                                                className={cn(
-                                                    "h-8 w-8 rounded-lg text-muted-foreground/50 hover:text-foreground hover:bg-accent",
-                                                    isRecording && "text-destructive hover:text-destructive bg-destructive/10"
-                                                )}
-                                            >
-                                                {isRecording
-                                                    ? <MicOff className="h-4 w-4 animate-pulse" />
-                                                    : <Mic className="h-4 w-4" />}
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>{isRecording ? "Stop recording" : "Voice input"}</TooltipContent>
-                                    </Tooltip>
-
-                                    {/* Image mode badge */}
-                                    {mode === "image" && (
-                                        <span className="ml-1 inline-flex items-center gap-1 text-[10px] font-semibold text-primary bg-primary/10 rounded-full px-2 py-0.5">
-                                            <ImageIcon className="h-2.5 w-2.5" />
-                                            Image
-                                        </span>
-                                    )}
-                                </div>
-
-                                {/* Send / Stop */}
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
                                         <Button
-                                            type="submit"
-                                            size="icon"
-                                            disabled={is_processing}
-                                            className={cn(
-                                                "h-8 w-8 rounded-xl transition-all",
-                                                is_processing
-                                                    ? "bg-muted text-muted-foreground hover:bg-muted/80"
-                                                    : "bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm"
-                                            )}
+                                            type="button"
+                                            variant="ghost"
+                                            className="h-9 rounded-full px-3 text-sm text-muted-foreground hover:bg-white/6 hover:text-foreground"
                                         >
-                                            {is_processing
-                                                ? <Square className="h-3 w-3" />
-                                                : <SendHorizonal className="h-3.5 w-3.5" />}
+                                            <Bot className="mr-2 h-4 w-4" />
+                                            Agent
                                         </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>{is_processing ? "Processing…" : "Send (Enter)"}</TooltipContent>
-                                </Tooltip>
+
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            className="h-9 rounded-full px-3 text-sm text-muted-foreground hover:bg-white/6 hover:text-foreground"
+                                        >
+                                            <Search className="mr-2 h-4 w-4" />
+                                            Search
+                                        </Button>
+
+                                        <DropdownMenu>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button
+                                                            type="button"
+                                                            variant="ghost"
+                                                            className={cn(
+                                                                "h-9 rounded-full px-3 text-sm text-muted-foreground hover:bg-white/6 hover:text-foreground",
+                                                                mode === "image" && "bg-white/8 text-foreground"
+                                                            )}
+                                                        >
+                                                            <ImageIcon className="mr-2 h-4 w-4" />
+                                                            Image
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                </TooltipTrigger>
+                                                <TooltipContent>Image mode</TooltipContent>
+                                            </Tooltip>
+                                            <DropdownMenuContent align="start" className="w-44">
+                                                <DropdownMenuItem asChild>
+                                                    <ImageToggle mode={mode} onToggle={setMode} />
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => setShowPowerPointDesigns((current) => !current)}
+                                                    className={cn(
+                                                        "h-9 w-9 rounded-full text-muted-foreground hover:bg-white/6 hover:text-foreground",
+                                                        (showPowerPointDesigns || powerPointDesigns.length > 0) && "bg-white/8 text-foreground hover:text-foreground"
+                                                    )}
+                                                >
+                                                    {powerPointDesigns.length > 0 ? <CheckSquare className="h-4 w-4" /> : <Palette className="h-4 w-4" />}
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>Choose PowerPoint styles</TooltipContent>
+                                        </Tooltip>
+
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={toggleRecording}
+                                                    className={cn(
+                                                        "h-9 w-9 rounded-full text-muted-foreground hover:bg-white/6 hover:text-foreground",
+                                                        isRecording && "bg-destructive/10 text-destructive hover:text-destructive"
+                                                    )}
+                                                >
+                                                    {isRecording ? <MicOff className="h-4 w-4 animate-pulse" /> : <Mic className="h-4 w-4" />}
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>{isRecording ? "Stop recording" : "Voice input"}</TooltipContent>
+                                        </Tooltip>
+
+                                        {mode === "text" && powerPointDesigns.length > 0 && (
+                                            <span className="inline-flex max-w-[180px] items-center gap-1 rounded-full bg-primary/10 px-2 py-1 text-[10px] font-semibold text-primary">
+                                                <Palette className="h-2.5 w-2.5" />
+                                                <span className="truncate">{powerPointDesigns.join(", ")}</span>
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            type="button"
+                                            className="hidden items-center gap-1 rounded-full px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-white/6 hover:text-foreground md:flex"
+                                        >
+                                            K2.6 Instant
+                                            <ChevronDown className="h-4 w-4" />
+                                        </button>
+
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    type="submit"
+                                                    size="icon"
+                                                    disabled={is_processing}
+                                                    className={cn(
+                                                        "h-9 w-9 rounded-full transition-all",
+                                                        is_processing
+                                                            ? "bg-muted text-muted-foreground hover:bg-muted/80"
+                                                            : "bg-foreground text-background hover:bg-foreground/90"
+                                                    )}
+                                                >
+                                                    {is_processing ? <Square className="h-3 w-3" /> : <SendHorizonal className="h-4 w-4" />}
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>{is_processing ? "Processing…" : "Send (Enter)"}</TooltipContent>
+                                        </Tooltip>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

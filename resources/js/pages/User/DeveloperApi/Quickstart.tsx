@@ -1,4 +1,5 @@
 import React from 'react';
+import { usePage } from '@inertiajs/react';
 import DeveloperPortalLayout from '@/layouts/developer-portal-layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -11,8 +12,10 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { Terminal, BookOpen, Copy, CheckCircle2, XCircle } from 'lucide-react';
+import { Terminal, BookOpen, Copy, CheckCircle2, XCircle, CircleAlert } from 'lucide-react';
 import toast from 'react-hot-toast';
+import type { SharedData } from '@/types';
+import { developerPortalUrl, normalizeDeveloperPortalBaseUrl } from '@/lib/developer-portal-url';
 
 interface ApiModel {
     id: string;
@@ -49,6 +52,8 @@ function CodeBlock({ code }: { code: string }) {
 }
 
 export default function DeveloperApiQuickstart({ apiBaseUrl, models }: PageProps) {
+    const { developerPortal } = usePage<SharedData>().props;
+    const baseUrl = normalizeDeveloperPortalBaseUrl(developerPortal?.base_url);
     const defaultModel = models[0]?.public_id ?? 'kwati-4';
 
     const curlExample = `curl -X POST ${apiBaseUrl}/chat/completions \\
@@ -87,23 +92,6 @@ const response = await client.chat.completions.create({
 });
 console.log(response.choices[0].message.content);`;
 
-    const streamingExample = `from openai import OpenAI
-
-client = OpenAI(
-    api_key="YOUR_API_KEY",
-    base_url="${apiBaseUrl}",
-)
-
-stream = client.chat.completions.create(
-    model="${defaultModel}",
-    messages=[{"role": "user", "content": "Tell me a story."}],
-    stream=True,
-)
-
-for chunk in stream:
-    content = chunk.choices[0].delta.content or ""
-    print(content, end="", flush=True)`;
-
     return (
         <DeveloperPortalLayout title="Quickstart">
             <div className="space-y-8">
@@ -131,7 +119,7 @@ for chunk in stream:
                     </h2>
                     <p className="text-sm text-muted-foreground">
                         Go to{' '}
-                        <a href="/developer-api/keys" className="text-primary underline underline-offset-2">
+                        <a href={developerPortalUrl(baseUrl, 'keys')} className="text-primary underline underline-offset-2">
                             API Keys
                         </a>{' '}
                         and create your first key. Store it securely — it will only be shown once.
@@ -194,16 +182,12 @@ for chunk in stream:
                 {/* Streaming */}
                 <section className="space-y-3">
                     <h2 className="text-lg font-semibold">Streaming</h2>
-                    <Card>
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-sm flex items-center gap-2">
-                                <Terminal className="w-4 h-4" /> Python — streaming
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <CodeBlock code={streamingExample} />
-                        </CardContent>
-                    </Card>
+                    <Alert>
+                        <CircleAlert className="w-4 h-4" />
+                        <AlertDescription>
+                            Streaming is not available on the Kwati Developer API yet. For now, use standard chat completion requests without <code className="text-xs bg-muted px-1 py-0.5 rounded">stream=true</code>.
+                        </AlertDescription>
+                    </Alert>
                 </section>
 
                 {/* Models table */}

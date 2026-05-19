@@ -22,7 +22,8 @@ class StreamingProcessor
         callable $callback,
         array $messages,
         string $model,
-        ?int $chatId = null
+        ?int $chatId = null,
+        array $files = [],
     ): array {
         $stream = $response->getBody();
         $buffer = '';
@@ -52,8 +53,26 @@ class StreamingProcessor
                     $decoded = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
 
                     if (isset($decoded['choices'][0]['delta']['tool_calls']) && !empty($decoded['choices'][0]['delta']['tool_calls'])) {
-                        $toolCalls = array_merge($toolCalls, $decoded['choices'][0]['delta']['tool_calls']);
-                        $callback(['tool_status' => 'tool_calls_detected', 'tool_calls' => $toolCalls], false);
+                        foreach ($decoded['choices'][0]['delta']['tool_calls'] as $delta) {
+                            $idx = $delta['index'] ?? 0;
+                            if (!isset($toolCalls[$idx])) {
+                                $toolCalls[$idx] = $delta;
+                            } else {
+                                if (isset($delta['id'])) {
+                                    $toolCalls[$idx]['id'] = $delta['id'];
+                                }
+                                if (isset($delta['type'])) {
+                                    $toolCalls[$idx]['type'] = $delta['type'];
+                                }
+                                if (isset($delta['function']['name'])) {
+                                    $toolCalls[$idx]['function']['name'] = $delta['function']['name'];
+                                }
+                                if (isset($delta['function']['arguments'])) {
+                                    $toolCalls[$idx]['function']['arguments'] = ($toolCalls[$idx]['function']['arguments'] ?? '') . $delta['function']['arguments'];
+                                }
+                            }
+                        }
+                        $callback(['tool_status' => 'tool_calls_detected', 'tool_calls' => array_values($toolCalls)], false);
                     }
 
                     if (($decoded['choices'][0]['finish_reason'] ?? null) === 'tool_calls' && !empty($toolCalls)) {
@@ -66,7 +85,8 @@ class StreamingProcessor
                             messages: $messages,
                             model: $model,
                             callback: $callback,
-                            chatId: $chatId
+                            chatId: $chatId,
+                            files: $files,
                         );
 
                         return ['output_tokens' => $this->estimateTokens([$fullResponse])];
@@ -94,6 +114,11 @@ class StreamingProcessor
             Log::debug('Processing remaining buffer: ' . $buffer);
         }
 
+        // Some upstream tool-driven responses end by closing the stream without
+        // sending a final [DONE] marker or finish_reason. In that case, emit a
+        // synthetic completion so the UI does not stay stuck in streaming state.
+        $callback(['done' => true], false);
+
         return ['output_tokens' => $this->estimateTokens([$fullResponse])];
     }
 
@@ -106,13 +131,16 @@ class StreamingProcessor
         array $messages,
         string $model,
         callable $callback,
-        ?int $chatId = null
+        ?int $chatId = null,
+        array $files = [],
     ): void {
+        $toolCalls = array_values($toolCalls);
         $shouldStopAfterTools = true;
         $callback(['tool_status' => 'executing_tools', 'count' => count($toolCalls)], false);
 
         $messages[] = [
             'role' => 'assistant',
+            'content' => null,
             'tool_calls' => $toolCalls,
         ];
 
@@ -121,6 +149,7 @@ class StreamingProcessor
 
             try {
                 $arguments = json_decode($toolCall['function']['arguments'] ?? '{}', true, 512, JSON_THROW_ON_ERROR);
+                $arguments = $this->withUploadedLogo($functionName, $arguments, $files);
 
                 $callback([
                     'tool_status' => 'executing_tool',
@@ -181,7 +210,7 @@ class StreamingProcessor
                 ], false);
             }
 
-            if (!in_array($functionName, ['generate_image', 'edit_image', 'generate_pdf_document', 'generate_word_document'], true)) {
+            if (!in_array($functionName, ['generate_image', 'edit_image', 'generate_pdf_document', 'generate_word_document', 'generate_powerpoint_presentation'], true)) {
                 $shouldStopAfterTools = false;
             }
         }
@@ -203,6 +232,31 @@ class StreamingProcessor
         );
     }
 
+    private function withUploadedLogo(string $functionName, array $arguments, array $files): array
+    {
+        if ($functionName !== 'generate_powerpoint_presentation' || !empty($arguments['logo_image'])) {
+            return $arguments;
+        }
+
+        foreach ($files as $file) {
+            $type = (string) ($file['type'] ?? '');
+            $data = (string) ($file['data'] ?? '');
+
+            if (str_starts_with($type, 'image/') && $data !== '') {
+                $arguments['logo_image'] = [
+                    'name' => $file['name'] ?? 'logo',
+                    'type' => $type,
+                    'data' => $data,
+                ];
+                $arguments['logo_position'] ??= 'top_right';
+
+                break;
+            }
+        }
+
+        return $arguments;
+    }
+
     private function continueConversationWithToolResults(
         Client $client,
         string $apiEndpoint,
@@ -219,6 +273,8 @@ class StreamingProcessor
             'model' => $model,
             'messages' => $messages,
             'stream' => true,
+            'tools' => $tools,
+            'tool_choice' => 'auto',
         ];
 
         try {
@@ -330,6 +386,7 @@ class StreamingProcessor
             'edit_image' => 'Editing images...',
             'generate_pdf_document' => 'Creating PDF document...',
             'generate_word_document' => 'Creating Word document...',
+            'generate_powerpoint_presentation' => 'Creating PowerPoint presentation...',
             default => 'Processing...',
         };
     }
@@ -341,7 +398,7 @@ class StreamingProcessor
             'web_fetch' => 'Fetched: ' . $this->truncate($result['title'] ?? 'Unknown'),
             'generate_image' => 'Generated ' . ($result['images_count'] ?? 0) . ' image' . (($result['images_count'] ?? 0) !== 1 ? 's' : ''),
             'edit_image' => 'Edited ' . ($result['output_images_count'] ?? 0) . ' image' . (($result['output_images_count'] ?? 0) !== 1 ? 's' : ''),
-            'generate_pdf_document', 'generate_word_document' => 'Created ' . ($result['format'] ?? ($toolName === 'generate_pdf_document' ? 'PDF' : 'Word')) . ': ' . $this->truncate($result['title'] ?? 'Document'),
+            'generate_pdf_document', 'generate_word_document', 'generate_powerpoint_presentation' => 'Created ' . ($result['format'] ?? ($toolName === 'generate_pdf_document' ? 'PDF' : ($toolName === 'generate_powerpoint_presentation' ? 'PowerPoint' : 'Word'))) . ': ' . $this->truncate($result['title'] ?? 'Document'),
             default => 'Tool execution completed',
         };
     }

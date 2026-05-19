@@ -20,18 +20,21 @@ class NonStreamingProcessor
         array $messages,
         string $model,
         array $tools,
-        ?int $chatId = null
+        ?int $chatId = null,
+        array $files = [],
     ): string {
         Log::info('Handling tool calls in non-streaming mode: ' . json_encode($toolCalls));
 
         $messages[] = [
             'role' => 'assistant',
+            'content' => null,
             'tool_calls' => $toolCalls,
         ];
 
         foreach ($toolCalls as $toolCall) {
             $functionName = $toolCall['function']['name'];
             $arguments = json_decode($toolCall['function']['arguments'], true);
+            $arguments = $this->withUploadedLogo($functionName, $arguments, $files);
 
             Log::info("Executing tool: {$functionName} with args: " . json_encode($arguments));
 
@@ -74,5 +77,30 @@ class NonStreamingProcessor
         $result = json_decode($response->getBody()->getContents(), true);
 
         return $result['choices'][0]['message']['content'] ?? 'Tool execution completed, but no final response received.';
+    }
+
+    private function withUploadedLogo(string $functionName, array $arguments, array $files): array
+    {
+        if ($functionName !== 'generate_powerpoint_presentation' || !empty($arguments['logo_image'])) {
+            return $arguments;
+        }
+
+        foreach ($files as $file) {
+            $type = (string) ($file['type'] ?? '');
+            $data = (string) ($file['data'] ?? '');
+
+            if (str_starts_with($type, 'image/') && $data !== '') {
+                $arguments['logo_image'] = [
+                    'name' => $file['name'] ?? 'logo',
+                    'type' => $type,
+                    'data' => $data,
+                ];
+                $arguments['logo_position'] ??= 'top_right';
+
+                break;
+            }
+        }
+
+        return $arguments;
     }
 }

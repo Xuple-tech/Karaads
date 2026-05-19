@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::imageUploads
-* @see app/Http/Controllers/Admin/DashboardController.php:183
+* @see app/Http/Controllers/Admin/DashboardController.php:187
 * @route '/admin/image-uploads'
 */
 export const imageUploads = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -60,7 +60,7 @@ imageUploads.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::imageUploads
-* @see app/Http/Controllers/Admin/DashboardController.php:183
+* @see app/Http/Controllers/Admin/DashboardController.php:187
 * @route '/admin/image-uploads'
 */
 imageUploads.url = (options?: RouteQueryOptions) => {
@@ -69,7 +69,7 @@ imageUploads.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::imageUploads
-* @see app/Http/Controllers/Admin/DashboardController.php:183
+* @see app/Http/Controllers/Admin/DashboardController.php:187
 * @route '/admin/image-uploads'
 */
 imageUploads.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -79,7 +79,7 @@ imageUploads.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::imageUploads
-* @see app/Http/Controllers/Admin/DashboardController.php:183
+* @see app/Http/Controllers/Admin/DashboardController.php:187
 * @route '/admin/image-uploads'
 */
 imageUploads.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -89,7 +89,7 @@ imageUploads.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::deleteImage
-* @see app/Http/Controllers/Admin/DashboardController.php:258
+* @see app/Http/Controllers/Admin/DashboardController.php:262
 * @route '/admin/image-uploads/{id}'
 */
 export const deleteImage = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -104,7 +104,7 @@ deleteImage.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::deleteImage
-* @see app/Http/Controllers/Admin/DashboardController.php:258
+* @see app/Http/Controllers/Admin/DashboardController.php:262
 * @route '/admin/image-uploads/{id}'
 */
 deleteImage.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -131,7 +131,7 @@ deleteImage.url = (args: { id: string | number } | [id: string | number ] | stri
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::deleteImage
-* @see app/Http/Controllers/Admin/DashboardController.php:258
+* @see app/Http/Controllers/Admin/DashboardController.php:262
 * @route '/admin/image-uploads/{id}'
 */
 deleteImage.delete = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -141,7 +141,7 @@ deleteImage.delete = (args: { id: string | number } | [id: string | number ] | s
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::userStats
-* @see app/Http/Controllers/Admin/DashboardController.php:239
+* @see app/Http/Controllers/Admin/DashboardController.php:243
 * @route '/admin/user-stats'
 */
 export const userStats = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -156,7 +156,7 @@ userStats.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::userStats
-* @see app/Http/Controllers/Admin/DashboardController.php:239
+* @see app/Http/Controllers/Admin/DashboardController.php:243
 * @route '/admin/user-stats'
 */
 userStats.url = (options?: RouteQueryOptions) => {
@@ -165,7 +165,7 @@ userStats.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::userStats
-* @see app/Http/Controllers/Admin/DashboardController.php:239
+* @see app/Http/Controllers/Admin/DashboardController.php:243
 * @route '/admin/user-stats'
 */
 userStats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -175,7 +175,7 @@ userStats.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\DashboardController::userStats
-* @see app/Http/Controllers/Admin/DashboardController.php:239
+* @see app/Http/Controllers/Admin/DashboardController.php:243
 * @route '/admin/user-stats'
 */
 userStats.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({

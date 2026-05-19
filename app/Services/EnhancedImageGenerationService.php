@@ -4,9 +4,13 @@ namespace App\Services;
 
 use App\Models\ImageGeneration;
 use App\Models\User;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
+use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Exception;
 
 class EnhancedImageGenerationService
@@ -39,6 +43,7 @@ class EnhancedImageGenerationService
         array $uploadedFiles = []
     ): array {
         $user = Auth::user();
+        $localizedPrompt = $this->localizePromptToAfrica($prompt);
 
         // Check limits first
         if ($this->subscriptionService) {
@@ -53,7 +58,7 @@ class EnhancedImageGenerationService
             'user_id' => $user?->id,
             'ip_address' => request()->ip(),
             'email' => $user?->email,
-            'prompt' => $prompt,
+            'prompt' => $localizedPrompt,
             'model' => $model,
             'size' => $size,
             'quality' => $quality,
@@ -90,7 +95,7 @@ class EnhancedImageGenerationService
             try {
                 $result = $this->generateWithProvider(
                     $provider,
-                    $prompt,
+                    $localizedPrompt,
                     $selectedModel,
                     $n,
                     $size,
@@ -101,6 +106,10 @@ class EnhancedImageGenerationService
 
                 // Save images to storage and update database (with memory optimization)
                 $savedImages = $this->saveGeneratedImages($result, $imageGeneration);
+
+                if ($this->subscriptionService && $user && count($savedImages) > 0) {
+                    $this->subscriptionService->recordImageGeneration($user, count($savedImages));
+                }
 
                 $imageGeneration->update([
                     'status' => ImageGeneration::STATUS_COMPLETED,
@@ -139,11 +148,11 @@ class EnhancedImageGenerationService
 
                 try {
                     $result = $this->generateWithProvider(
-                        $fallbackProvider,
-                        $prompt,
-                        $fallbackModel,
-                        $n,
-                        $size,
+                    $fallbackProvider,
+                    $localizedPrompt,
+                    $fallbackModel,
+                    $n,
+                    $size,
                         $quality,
                         $style,
                         $uploadedFiles
@@ -151,6 +160,10 @@ class EnhancedImageGenerationService
 
                     // Save images to storage and update database
                     $savedImages = $this->saveGeneratedImages($result, $imageGeneration);
+
+                    if ($this->subscriptionService && $user && count($savedImages) > 0) {
+                        $this->subscriptionService->recordImageGeneration($user, count($savedImages));
+                    }
 
                     $imageGeneration->update([
                         'status' => ImageGeneration::STATUS_COMPLETED,
@@ -206,6 +219,43 @@ class EnhancedImageGenerationService
 
             throw $e;
         }
+    }
+
+    private function localizePromptToAfrica(string $prompt): string
+    {
+        $normalized = Str::lower($prompt);
+
+        if ($this->mentionsAfrica($normalized) || $this->mentionsExternalRegion($normalized)) {
+            return $prompt;
+        }
+
+        return trim($prompt) . "\n\nVisual direction: When a person is shown, use natural African skin tone only. Do not change the requested setting, clothing, architecture, props, or cultural environment unless the user explicitly asks for that.";
+    }
+
+    private function mentionsAfrica(string $prompt): bool
+    {
+        return Str::contains($prompt, [
+            'africa', 'african', 'lagos', 'abuja', 'kano', 'ibadan', 'port harcourt',
+            'nairobi', 'mombasa', 'kampala', 'kigali', 'addis ababa', 'accra', 'kumasi',
+            'dakar', 'johannesburg', 'cape town', 'pretoria', 'durban', 'casablanca',
+            'marrakech', 'cairo', 'alexandria', 'khartoum', 'lusaka', 'harare', 'dar es salaam',
+            'abidjan', 'yaounde', 'douala', 'luanda', 'maputo', 'gaborone', 'windhoek',
+            'senegal', 'ghana', 'nigeria', 'kenya', 'uganda', 'rwanda', 'tanzania',
+            'south africa', 'zambia', 'zimbabwe', 'ethiopia', 'somalia', 'cameroon',
+            'ivory coast', 'cote d’ivoire', "cote d'ivoire", 'morocco', 'egypt', 'algeria'
+        ]);
+    }
+
+    private function mentionsExternalRegion(string $prompt): bool
+    {
+        return Str::contains($prompt, [
+            'new york', 'london', 'paris', 'tokyo', 'beijing', 'seoul', 'los angeles',
+            'california', 'texas', 'usa', 'united states', 'canada', 'mexico', 'brazil',
+            'europe', 'european', 'asia', 'asian', 'middle east', 'dubai', 'abu dhabi',
+            'india', 'indian', 'china', 'chinese', 'japan', 'japanese', 'korea', 'korean',
+            'france', 'french', 'germany', 'german', 'italy', 'italian', 'spain', 'spanish',
+            'uk', 'britain', 'british', 'australia', 'australian'
+        ]);
     }
 
     /**
@@ -328,9 +378,11 @@ class EnhancedImageGenerationService
                 }
 
                 if ($imageContent) {
+                    $imageContent = $this->applyKwatiLogo($imageContent);
+
                     // Save to storage
                     Storage::put($filepath, $imageContent);
-                    $url = Storage::url($filepath);
+                    $url = $this->normalizePublicStorageUrl(Storage::url($filepath));
 
                     // Only update database with first image's URL (remove base64 storage)
                     if ($index === 0) {
@@ -371,6 +423,68 @@ class EnhancedImageGenerationService
         gc_collect_cycles();
 
         return $savedImages;
+    }
+
+    private function applyKwatiLogo(string $imageContent): string
+    {
+        $logoPath = public_path('logo.png');
+        if (!is_file($logoPath)) {
+            return $imageContent;
+        }
+
+        try {
+            $driver = $this->resolveImageDriver();
+            if ($driver === null) {
+                return $imageContent;
+            }
+
+            $manager = new ImageManager($driver);
+            $image = $manager->read($imageContent);
+            $logo = $manager->read($logoPath);
+
+            $maxWidth = max(120, (int) floor($image->width() * 0.18));
+            $maxHeight = max(36, (int) floor($image->height() * 0.12));
+            $logo->scaleDown(width: $maxWidth, height: $maxHeight);
+
+            $offsetX = max(18, (int) floor($image->width() * 0.025));
+            $offsetY = max(18, (int) floor($image->height() * 0.025));
+
+            $image->place($logo, 'bottom-right', $offsetX, $offsetY, 90);
+
+            return (string) $image->encodeByMediaType('image/png');
+        } catch (\Throwable $e) {
+            Log::warning('Failed to apply Kwati logo watermark', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return $imageContent;
+        }
+    }
+
+    private function resolveImageDriver(): Driver|ImagickDriver|null
+    {
+        if (extension_loaded('gd')) {
+            return new Driver();
+        }
+
+        if (extension_loaded('imagick')) {
+            return new ImagickDriver();
+        }
+
+        Log::info('Skipping Kwati logo watermark because no supported PHP image extension is loaded.');
+
+        return null;
+    }
+
+    private function normalizePublicStorageUrl(string $url): string
+    {
+        $path = parse_url($url, PHP_URL_PATH);
+
+        if (is_string($path) && Str::startsWith($path, '/storage/')) {
+            return $path;
+        }
+
+        return $url;
     }
 
     /**

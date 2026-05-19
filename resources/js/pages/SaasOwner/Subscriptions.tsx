@@ -195,12 +195,12 @@ export default function SubscriptionsPage({
                                 <label className="text-sm font-medium mb-2 block">
                                     Status
                                 </label>
-                                <Select value={status} onValueChange={setStatus}>
+                                <Select value={status || 'all'} onValueChange={(value) => setStatus(value === 'all' ? '' : value)}>
                                     <SelectTrigger className="h-9">
                                         <SelectValue placeholder="All statuses" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="">All statuses</SelectItem>
+                                        <SelectItem value="all">All statuses</SelectItem>
                                         <SelectItem value="active">Active</SelectItem>
                                         <SelectItem value="paused">Paused</SelectItem>
                                         <SelectItem value="cancelled">Cancelled</SelectItem>

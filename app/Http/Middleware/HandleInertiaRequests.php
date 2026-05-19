@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Support\ConsoleUrl;
+use App\Support\DeveloperPortalUrl;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -61,6 +62,13 @@ class HandleInertiaRequests extends Middleware
                 'base_url' => ConsoleUrl::consoleUrl($request),
                 'docs_base_url' => ConsoleUrl::docsUrl($request),
                 'uses_path_prefix' => ConsoleUrl::usesPathPrefix(),
+            ],
+            'developerPortal' => [
+                'base_url' => DeveloperPortalUrl::baseUrl($request),
+                'login_url' => DeveloperPortalUrl::loginUrl($request),
+                'register_url' => DeveloperPortalUrl::registerUrl($request),
+                'logout_url' => DeveloperPortalUrl::logoutUrl($request),
+                'uses_subdomain' => DeveloperPortalUrl::usesSubdomain($request),
             ],
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),

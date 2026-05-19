@@ -2,6 +2,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { Download } from 'lucide-react';
+import { downloadImageWithKwatiWatermark, getKwatiWatermarkLogoUrl } from '@/lib/image-watermark';
 
 interface ImageGeneratorProps {
     className?: string;
@@ -53,6 +55,21 @@ export default function ImageGenerator({ className = '' }: ImageGeneratorProps) 
         }
     };
 
+    const handleDownload = () => {
+        if (!generatedImage) return;
+
+        void (async () => {
+            try {
+                await downloadImageWithKwatiWatermark(
+                    generatedImage,
+                    `kwati-image-${Date.now()}`,
+                );
+            } catch (error) {
+                window.open(generatedImage, '_blank');
+            }
+        })();
+    };
+
     return (
         <div className={`p-4 ${className}`}>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -84,11 +101,24 @@ export default function ImageGenerator({ className = '' }: ImageGeneratorProps) 
 
             {generatedImage && (
                 <div className="mt-6">
-                    <img
-                        src={generatedImage}
-                        alt="Generated"
-                        className="rounded-lg shadow-lg max-w-full"
-                    />
+                    <div className="relative inline-block max-w-full">
+                        <img
+                            src={generatedImage}
+                            alt="Generated"
+                            className="rounded-lg shadow-lg max-w-full"
+                        />
+                        <img
+                            src={getKwatiWatermarkLogoUrl()}
+                            alt="Kwati AI watermark"
+                            className="pointer-events-none absolute bottom-4 right-4 w-24 max-w-[28%] opacity-90 drop-shadow-md"
+                        />
+                    </div>
+                    <div className="mt-3">
+                        <Button type="button" variant="outline" onClick={handleDownload}>
+                            <Download className="mr-2 h-4 w-4" />
+                            Download Image
+                        </Button>
+                    </div>
                 </div>
             )}
         </div>

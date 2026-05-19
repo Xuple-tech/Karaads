@@ -14,24 +14,18 @@ class DeveloperApiChatService
     public function __construct(
         private readonly HttpFactory $http,
         private readonly DeveloperApiBillingService $billingService,
+        private readonly DeveloperApiModelCatalogService $modelCatalog,
     ) {
     }
 
     public function listModels()
     {
-        return ApiModel::query()
-            ->where('is_active', true)
-            ->where(fn ($q) => $q->whereNull('model_type')->orWhere('model_type', 'text'))
-            ->orderBy('public_id')
-            ->get();
+        return $this->modelCatalog->textModels();
     }
 
     public function complete(DeveloperApiKey $apiKey, array $payload, string $endpoint = '/v1/chat/completions'): array
     {
-        $model = ApiModel::query()
-            ->where('public_id', $payload['model'] ?? '')
-            ->where('is_active', true)
-            ->first();
+        $model = $this->modelCatalog->findTextModel((string) ($payload['model'] ?? ''));
 
         if (!$model) {
             throw new \InvalidArgumentException('The model `' . ($payload['model'] ?? '') . '` does not exist.');
@@ -71,7 +65,9 @@ class DeveloperApiChatService
                 ->withToken($upstreamKey)
                 ->acceptJson()
                 ->timeout(120)
-                ->withoutVerifying()
+                ->withOptions([
+                    'verify' => (bool) config('developer-api.upstream.verify_ssl', false),
+                ])
                 ->post(rtrim($baseUrl, '/') . '/chat/completions', $upstreamPayload)
                 ->throw();
         } catch (RequestException $exception) {

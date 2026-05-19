@@ -40,7 +40,7 @@ class SubscriptionPlanSeeder extends Seeder
                 'quotas' => [
                     'requests' => ['daily' => 20, 'monthly' => 500, 'total' => null],
                     'tokens' => ['daily' => 50000, 'monthly' => 1000000, 'total' => null],
-                    'images' => ['daily' => null, 'monthly' => null, 'total' => null],
+                    'images' => ['daily' => 5, 'monthly' => null, 'total' => null],
                     'voice_messages' => ['daily' => null, 'monthly' => null, 'total' => null],
                     'emails_processed' => ['daily' => null, 'monthly' => null, 'total' => null],
                     'widget_requests' => ['daily' => null, 'monthly' => null, 'total' => null],

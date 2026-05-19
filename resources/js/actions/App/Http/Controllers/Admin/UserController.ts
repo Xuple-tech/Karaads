@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:58
+* @see app/Http/Controllers/Admin/UserController.php:64
 * @route '/admin/users/create'
 */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -60,7 +60,7 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:58
+* @see app/Http/Controllers/Admin/UserController.php:64
 * @route '/admin/users/create'
 */
 create.url = (options?: RouteQueryOptions) => {
@@ -69,7 +69,7 @@ create.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:58
+* @see app/Http/Controllers/Admin/UserController.php:64
 * @route '/admin/users/create'
 */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -79,7 +79,7 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::create
-* @see app/Http/Controllers/Admin/UserController.php:58
+* @see app/Http/Controllers/Admin/UserController.php:64
 * @route '/admin/users/create'
 */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -89,7 +89,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::store
-* @see app/Http/Controllers/Admin/UserController.php:66
+* @see app/Http/Controllers/Admin/UserController.php:72
 * @route '/admin/users'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -104,7 +104,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::store
-* @see app/Http/Controllers/Admin/UserController.php:66
+* @see app/Http/Controllers/Admin/UserController.php:72
 * @route '/admin/users'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -113,7 +113,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::store
-* @see app/Http/Controllers/Admin/UserController.php:66
+* @see app/Http/Controllers/Admin/UserController.php:72
 * @route '/admin/users'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -123,7 +123,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::show
-* @see app/Http/Controllers/Admin/UserController.php:88
+* @see app/Http/Controllers/Admin/UserController.php:94
 * @route '/admin/users/{user}'
 */
 export const show = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -138,7 +138,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::show
-* @see app/Http/Controllers/Admin/UserController.php:88
+* @see app/Http/Controllers/Admin/UserController.php:94
 * @route '/admin/users/{user}'
 */
 show.url = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -171,7 +171,7 @@ show.url = (args: { user: string | { id: string } } | [user: string | { id: stri
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::show
-* @see app/Http/Controllers/Admin/UserController.php:88
+* @see app/Http/Controllers/Admin/UserController.php:94
 * @route '/admin/users/{user}'
 */
 show.get = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -181,7 +181,7 @@ show.get = (args: { user: string | { id: string } } | [user: string | { id: stri
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::show
-* @see app/Http/Controllers/Admin/UserController.php:88
+* @see app/Http/Controllers/Admin/UserController.php:94
 * @route '/admin/users/{user}'
 */
 show.head = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -191,7 +191,7 @@ show.head = (args: { user: string | { id: string } } | [user: string | { id: str
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:110
+* @see app/Http/Controllers/Admin/UserController.php:127
 * @route '/admin/users/{user}/edit'
 */
 export const edit = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -206,7 +206,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:110
+* @see app/Http/Controllers/Admin/UserController.php:127
 * @route '/admin/users/{user}/edit'
 */
 edit.url = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -239,7 +239,7 @@ edit.url = (args: { user: string | { id: string } } | [user: string | { id: stri
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:110
+* @see app/Http/Controllers/Admin/UserController.php:127
 * @route '/admin/users/{user}/edit'
 */
 edit.get = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -249,7 +249,7 @@ edit.get = (args: { user: string | { id: string } } | [user: string | { id: stri
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::edit
-* @see app/Http/Controllers/Admin/UserController.php:110
+* @see app/Http/Controllers/Admin/UserController.php:127
 * @route '/admin/users/{user}/edit'
 */
 edit.head = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -259,7 +259,7 @@ edit.head = (args: { user: string | { id: string } } | [user: string | { id: str
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::update
-* @see app/Http/Controllers/Admin/UserController.php:128
+* @see app/Http/Controllers/Admin/UserController.php:145
 * @route '/admin/users/{user}'
 */
 export const update = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -274,7 +274,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::update
-* @see app/Http/Controllers/Admin/UserController.php:128
+* @see app/Http/Controllers/Admin/UserController.php:145
 * @route '/admin/users/{user}'
 */
 update.url = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -307,7 +307,7 @@ update.url = (args: { user: string | { id: string } } | [user: string | { id: st
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::update
-* @see app/Http/Controllers/Admin/UserController.php:128
+* @see app/Http/Controllers/Admin/UserController.php:145
 * @route '/admin/users/{user}'
 */
 update.put = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -317,7 +317,7 @@ update.put = (args: { user: string | { id: string } } | [user: string | { id: st
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::update
-* @see app/Http/Controllers/Admin/UserController.php:128
+* @see app/Http/Controllers/Admin/UserController.php:145
 * @route '/admin/users/{user}'
 */
 update.patch = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -327,7 +327,7 @@ update.patch = (args: { user: string | { id: string } } | [user: string | { id: 
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::destroy
-* @see app/Http/Controllers/Admin/UserController.php:161
+* @see app/Http/Controllers/Admin/UserController.php:178
 * @route '/admin/users/{user}'
 */
 export const destroy = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -342,7 +342,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::destroy
-* @see app/Http/Controllers/Admin/UserController.php:161
+* @see app/Http/Controllers/Admin/UserController.php:178
 * @route '/admin/users/{user}'
 */
 destroy.url = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -375,7 +375,7 @@ destroy.url = (args: { user: string | { id: string } } | [user: string | { id: s
 
 /**
 * @see \App\Http\Controllers\Admin\UserController::destroy
-* @see app/Http/Controllers/Admin/UserController.php:161
+* @see app/Http/Controllers/Admin/UserController.php:178
 * @route '/admin/users/{user}'
 */
 destroy.delete = (args: { user: string | { id: string } } | [user: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Meta;
 use App\Http\Controllers\Controller;
 use App\Models\MetaAccount;
 use App\Models\MetaAutomationPreference;
+use App\Models\MetaMessageDraft;
 use App\Services\MetaApiService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -55,6 +56,10 @@ class MetaAccountController extends Controller
                 $messageCount = $account->messages()->count();
                 $conversationCount = $account->conversations()->count();
                 $unreadCount = $account->conversations()->sum('unread_count');
+                $latestDraft = MetaMessageDraft::query()
+                    ->whereIn('meta_conversation_id', $account->conversations()->pluck('id'))
+                    ->latest()
+                    ->first();
 
                 return [
                     'id' => $account->id,
@@ -75,6 +80,7 @@ class MetaAccountController extends Controller
                         'require_approval_before_send',
                         'reply_tone',
                     ]),
+                    'latest_ai_insight' => $this->formatDraftInsight($latestDraft),
                 ];
             });
 
@@ -104,6 +110,36 @@ class MetaAccountController extends Controller
         ];
 
         return response()->json($payload);
+    }
+
+    private function formatDraftInsight(?MetaMessageDraft $draft): ?array
+    {
+        if (! $draft) {
+            return null;
+        }
+
+        $analysis = $draft->ai_analysis;
+
+        if (is_string($analysis)) {
+            $decoded = json_decode($analysis, true);
+            $analysis = json_last_error() === JSON_ERROR_NONE ? $decoded : null;
+        }
+
+        if (! is_array($analysis)) {
+            return null;
+        }
+
+        return [
+            'intent' => $analysis['intent'] ?? null,
+            'priority' => $analysis['priority'] ?? null,
+            'reply_goal' => $analysis['reply_goal'] ?? null,
+            'key_points' => array_slice(array_values(array_filter($analysis['key_points'] ?? [], fn ($value) => is_string($value) && trim($value) !== '')), 0, 2),
+            'memory_hits' => $analysis['trace']['memory_hits'] ?? count($analysis['memory'] ?? []),
+            'status' => $draft->status,
+            'confidence_score' => $draft->confidence_score,
+            'sentiment' => $draft->sentiment,
+            'category' => $draft->category,
+        ];
     }
 
     /**

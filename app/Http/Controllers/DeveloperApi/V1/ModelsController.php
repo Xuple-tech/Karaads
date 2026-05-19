@@ -8,19 +8,25 @@ use Illuminate\Http\JsonResponse;
 
 class ModelsController extends Controller
 {
-    public function __construct(private readonly DeveloperApiChatService $chatService)
+    public function __construct(
+        private readonly DeveloperApiChatService $chatService,
+        private readonly \App\Services\DeveloperApiModelCatalogService $modelCatalog,
+    )
     {
     }
 
     public function index(): JsonResponse
     {
         $data = $this->chatService->listModels()->map(fn ($model) => [
-            'id' => $model->public_id,
+            'id' => $this->modelCatalog->publicModelId($model->public_id),
             'object' => 'model',
             'created' => $model->created_at?->timestamp ?? now()->timestamp,
             'owned_by' => config('app.name', 'kwati'),
+            'name' => $model->name,
+            'description' => $model->description,
             'max_context_tokens' => $model->max_context_tokens,
-            'supports_streaming' => $model->supports_streaming,
+            'supports_streaming' => $this->modelCatalog->supportsStreaming($model),
+            'supports_tools' => (bool) $model->supports_tools,
         ])->values();
 
         return response()->json([

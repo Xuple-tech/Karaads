@@ -175,6 +175,57 @@ class ToolRegistry
                     ],
                 ],
             ],
+            [
+                'type' => 'function',
+                'function' => [
+                    'name' => 'generate_powerpoint_presentation',
+                    'description' => 'Generate a Microsoft PowerPoint (.pptx) presentation. Use when the user explicitly asks for a PowerPoint, PPT, PPTX, slide deck, presentation, or slides.',
+                    'parameters' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'title' => [
+                                'type' => 'string',
+                                'description' => 'Title of the presentation',
+                            ],
+                            'content' => [
+                                'type' => 'string',
+                                'description' => 'Complete slide content in markdown. Use headings for slide titles and bullets for slide body points. For charts, create a slide heading containing "Bar Chart", "Pie Chart", or "Histogram", then list values as bullets like "- Product A: 120".',
+                            ],
+                            'document_type' => [
+                                'type' => 'string',
+                                'description' => 'Type of presentation to generate',
+                                'enum' => ['pitch_deck', 'training', 'business', 'academic', 'proposal', 'report', 'general'],
+                                'default' => 'general',
+                            ],
+                            'design_style' => [
+                                'type' => 'string',
+                                'description' => 'Primary visual design style for the PowerPoint. Use when the user picks one look; otherwise use mixed.',
+                                'enum' => ['mixed', 'business_blue', 'boardroom', 'editorial', 'tech_grid', 'financial_clean', 'corporate', 'creative', 'minimalist', 'dark', 'warm'],
+                                'default' => 'mixed',
+                            ],
+                            'design_styles' => [
+                                'type' => 'array',
+                                'description' => 'Optional list of visual design styles to combine in one PowerPoint when the user wants multiple looks.',
+                                'items' => [
+                                    'type' => 'string',
+                                    'enum' => ['mixed', 'business_blue', 'boardroom', 'editorial', 'tech_grid', 'financial_clean', 'corporate', 'creative', 'minimalist', 'dark', 'warm'],
+                                ],
+                            ],
+                            'design_description' => [
+                                'type' => 'string',
+                                'description' => 'Free-form description of the desired presentation look. Use this when the user describes a style but does not know the library names; the design library will match the closest preset(s).',
+                            ],
+                            'logo_position' => [
+                                'type' => 'string',
+                                'description' => 'Where to place an uploaded logo image on the PowerPoint slides.',
+                                'enum' => ['top_right', 'top_left', 'bottom_right', 'bottom_left'],
+                                'default' => 'top_right',
+                            ],
+                        ],
+                        'required' => ['title', 'content'],
+                    ],
+                ],
+            ],
         ];
 
         return $cachedTools;

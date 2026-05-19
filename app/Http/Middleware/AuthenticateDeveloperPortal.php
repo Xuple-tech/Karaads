@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\DeveloperPortalUrl;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,7 @@ class AuthenticateDeveloperPortal
                 return response()->json(['error' => 'Unauthenticated.'], 401);
             }
 
-            return redirect()->route('developer-api.login');
+            return redirect()->to(DeveloperPortalUrl::loginUrl($request));
         }
 
         return $next($request);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Developer;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\DeveloperPortalUrl;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class DeveloperPortalAuthController extends Controller
     public function showLogin(Request $request): Response|RedirectResponse
     {
         if (Auth::check()) {
-            return redirect()->route('developer-api.index');
+            return redirect()->to(DeveloperPortalUrl::baseUrl($request));
         }
 
         return Inertia::render('DeveloperApi/Login', [
@@ -43,7 +44,7 @@ class DeveloperPortalAuthController extends Controller
         $request->session()->regenerate();
         $request->session()->forget('url.intended');
 
-        return redirect()->route('developer-api.index');
+        return redirect()->to(DeveloperPortalUrl::baseUrl($request));
     }
 
     public function logout(Request $request): RedirectResponse
@@ -53,13 +54,13 @@ class DeveloperPortalAuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('developer-api.login');
+        return redirect()->to(DeveloperPortalUrl::loginUrl($request));
     }
 
     public function showRegister(Request $request): Response|RedirectResponse
     {
         if (Auth::check()) {
-            return redirect()->route('developer-api.index');
+            return redirect()->to(DeveloperPortalUrl::baseUrl($request));
         }
 
         return Inertia::render('DeveloperApi/Register');
@@ -84,6 +85,6 @@ class DeveloperPortalAuthController extends Controller
         Auth::login($user, true);
         $request->session()->forget('url.intended');
 
-        return redirect()->route('developer-api.index');
+        return redirect()->to(DeveloperPortalUrl::baseUrl($request));
     }
 }

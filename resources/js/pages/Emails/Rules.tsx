@@ -344,12 +344,12 @@ export default function Rules({ emailAccounts, emailRules }: Props) {
                                 </div>
                                 <div className="grid gap-2">
                                     <Label htmlFor="account">Email Account (Optional)</Label>
-                                    <Select value={ruleForm.email_account_id} onValueChange={(value) => setRuleForm({ ...ruleForm, email_account_id: value })}>
+                                    <Select value={ruleForm.email_account_id || 'all'} onValueChange={(value) => setRuleForm({ ...ruleForm, email_account_id: value === 'all' ? '' : value })}>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Apply to all accounts" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem>All accounts</SelectItem>
+                                            <SelectItem value="all">All accounts</SelectItem>
                                             {emailAccounts.map((account) => (
                                                 <SelectItem key={account.id} value={account.id.toString()}>
                                                     {account.email_address} ({account.provider})

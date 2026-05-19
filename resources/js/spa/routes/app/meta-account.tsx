@@ -64,6 +64,20 @@ type ConversationResponse = {
         id: string;
         original_message: string;
         draft_reply: string;
+        ai_analysis:
+            | {
+                  intent?: string;
+                  priority?: string;
+                  reply_goal?: string;
+                  key_points?: string[];
+                  plan?: string[];
+                  memory?: Array<{ role?: string; text?: string; score?: number }>;
+                  trace?: {
+                      memory_hits?: number;
+                  };
+              }
+            | string
+            | null;
         sentiment: string | null;
         category: string | null;
         confidence_score: number | null;
@@ -210,6 +224,9 @@ export function Component() {
     };
 
     const crmCfg = crmStatusConfig[selectedConversation?.crm_status ?? 'new'] ?? crmStatusConfig.new;
+
+    const getAnalysis = (analysis: ConversationResponse['drafts'][number]['ai_analysis']) =>
+        analysis && typeof analysis === 'object' ? analysis : null;
 
     return (
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
@@ -419,21 +436,85 @@ export function Component() {
                                         <Sparkles className="h-4 w-4 text-primary" />
                                         <h2 className="text-sm font-medium text-foreground">Pending drafts</h2>
                                     </div>
+                                    <div className="rounded-xl border border-primary/15 bg-primary/5 p-3 text-xs text-muted-foreground">
+                                        This test script does not train the AI model itself. It checks whether the upgraded service logic is improving how the AI understands messages and builds replies.
+                                    </div>
 
                                     {drafts.length ? (
                                         drafts.map((draft) => {
                                             const currentDraft = draftEdits[draft.id] ?? draft.draft_reply;
+                                            const analysis = getAnalysis(draft.ai_analysis);
+                                            const keyPoints = analysis?.key_points ?? [];
+                                            const plan = analysis?.plan ?? [];
+                                            const memory = analysis?.memory ?? [];
 
                                             return (
                                                 <div key={draft.id} className="rounded-xl border border-border/60 p-4">
                                                     <div className="flex flex-wrap items-center gap-2">
                                                         <Badge variant="secondary" className="text-xs">{draft.sentiment || 'neutral'}</Badge>
                                                         <Badge variant="outline" className="text-xs">{draft.category || 'other'}</Badge>
+                                                        {analysis?.intent && (
+                                                            <Badge variant="outline" className="text-xs capitalize">
+                                                                intent: {analysis.intent.replaceAll('_', ' ')}
+                                                            </Badge>
+                                                        )}
+                                                        {analysis?.priority && (
+                                                            <Badge variant="outline" className="text-xs capitalize">
+                                                                {analysis.priority} priority
+                                                            </Badge>
+                                                        )}
                                                         <Badge variant="outline" className="border-primary/20 bg-primary/5 text-primary text-xs">
                                                             {Math.round(Number(draft.confidence_score ?? 0))}% confident
                                                         </Badge>
                                                     </div>
                                                     <p className="mt-2 text-xs text-muted-foreground">{draft.original_message}</p>
+
+                                                    {analysis && (
+                                                        <div className="mt-3 rounded-lg border border-border/50 bg-muted/30 p-3">
+                                                            <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                                                                {analysis.reply_goal && <span>Goal: {analysis.reply_goal}</span>}
+                                                                <span>Memory hits: {analysis.trace?.memory_hits ?? memory.length}</span>
+                                                            </div>
+
+                                                            {keyPoints.length > 0 && (
+                                                                <div className="mt-2">
+                                                                    <p className="text-xs font-medium text-foreground">Key points</p>
+                                                                    <div className="mt-1 flex flex-wrap gap-1.5">
+                                                                        {keyPoints.map((point) => (
+                                                                            <Badge key={point} variant="secondary" className="text-xs">
+                                                                                {point}
+                                                                            </Badge>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+
+                                                            {plan.length > 0 && (
+                                                                <div className="mt-2">
+                                                                    <p className="text-xs font-medium text-foreground">Plan</p>
+                                                                    <div className="mt-1 space-y-1 text-xs text-muted-foreground">
+                                                                        {plan.map((step, index) => (
+                                                                            <p key={`${draft.id}-plan-${index}`}>{index + 1}. {step}</p>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+
+                                                            {memory.length > 0 && (
+                                                                <div className="mt-2">
+                                                                    <p className="text-xs font-medium text-foreground">Relevant memory</p>
+                                                                    <div className="mt-1 space-y-1 text-xs text-muted-foreground">
+                                                                        {memory.slice(0, 2).map((item, index) => (
+                                                                            <p key={`${draft.id}-memory-${index}`}>
+                                                                                {(item.role ?? 'Context')}: {item.text}
+                                                                            </p>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
+
                                                     <Textarea
                                                         value={currentDraft}
                                                         onChange={(event) => setDraftEdits((current) => ({ ...current, [draft.id]: event.target.value }))}

@@ -23,6 +23,7 @@ class ToolRegistryTest extends TestCase
             'edit_image',
             'generate_pdf_document',
             'generate_word_document',
+            'generate_powerpoint_presentation',
         ], $names);
     }
 }

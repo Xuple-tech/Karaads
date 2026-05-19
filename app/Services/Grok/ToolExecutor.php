@@ -25,6 +25,7 @@ class ToolExecutor
                 'edit_image' => $this->assetWorkflowService->handleImageEdit($arguments, $chatId),
                 'generate_pdf_document' => $this->assetWorkflowService->generatePdfDocument($arguments, $chatId),
                 'generate_word_document' => $this->assetWorkflowService->generateWordDocument($arguments, $chatId),
+                'generate_powerpoint_presentation' => $this->assetWorkflowService->generatePowerPointPresentation($arguments, $chatId),
                 default => $this->executeDynamicTool($functionName, $arguments),
             };
         } catch (\Throwable $e) {

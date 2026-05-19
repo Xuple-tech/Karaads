@@ -1,12 +1,19 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import { ArrowLeft, Edit, Check, X, Calendar, Mail, User } from 'lucide-react';
+import { ArrowLeft, Edit, Check, X, Calendar, Mail, User, Gift, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
 import AdminLayout from '@/layouts/AdminLayout';
+
+interface Referral {
+  id: string;
+  name: string;
+  email: string;
+  joined_at: string;
+}
 
 interface User {
   id: string;
@@ -17,6 +24,10 @@ interface User {
   google_id: string | null;
   avatar: string | null;
   language: string | null;
+  referral_code: string | null;
+  referred_by_name: string | null;
+  referred_by_email: string | null;
+  referrals: Referral[];
   created_at: string;
   updated_at: string;
 }
@@ -174,6 +185,64 @@ export default function Show({ user }: ShowProps) {
             </CardContent>
           </Card>
         )}
+
+        {/* Referral Information */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Gift className="h-5 w-5" />
+              Referral Information
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <Label className="text-sm font-medium text-muted-foreground">Referral Code</Label>
+                <p className="mt-1 font-mono text-sm tracking-wider">
+                  {user.referral_code ?? '—'}
+                </p>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-muted-foreground">Referred By</Label>
+                {user.referred_by_name ? (
+                  <div className="mt-1">
+                    <p className="text-sm font-medium">{user.referred_by_name}</p>
+                    <p className="text-xs text-muted-foreground">{user.referred_by_email}</p>
+                  </div>
+                ) : (
+                  <p className="mt-1 text-sm text-muted-foreground">Direct sign-up</p>
+                )}
+              </div>
+            </div>
+
+            <Separator />
+
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <Users className="h-4 w-4 text-muted-foreground" />
+                <Label className="text-sm font-medium">
+                  People Referred ({user.referrals.length})
+                </Label>
+              </div>
+
+              {user.referrals.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No referrals yet.</p>
+              ) : (
+                <div className="divide-y rounded-md border">
+                  {user.referrals.map((referral) => (
+                    <div key={referral.id} className="flex items-center justify-between px-4 py-2.5">
+                      <div>
+                        <p className="text-sm font-medium">{referral.name}</p>
+                        <p className="text-xs text-muted-foreground">{referral.email}</p>
+                      </div>
+                      <span className="text-xs text-muted-foreground">{referral.joined_at}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </AdminLayout>
   );

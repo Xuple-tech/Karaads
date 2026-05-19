@@ -387,14 +387,14 @@ export default function PersonalizationSettings() {
               </CardHeader>
               <CardContent>
                 <Select
-                  value={formData.preferred_ai_mode_id ? String(formData.preferred_ai_mode_id) : ''}
-                  onValueChange={(v) => updatePreference('preferred_ai_mode_id', v ? parseInt(v) : null)}
+                  value={formData.preferred_ai_mode_id ? String(formData.preferred_ai_mode_id) : 'default'}
+                  onValueChange={(v) => updatePreference('preferred_ai_mode_id', v === 'default' ? null : parseInt(v))}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select an AI mode" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Default Mode</SelectItem>
+                    <SelectItem value="default">Default Mode</SelectItem>
                     {aiModes.map(mode => (
                       <SelectItem key={mode.id} value={String(mode.id)}>
                         {mode.emoji} {mode.name}

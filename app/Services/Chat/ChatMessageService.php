@@ -9,6 +9,8 @@ use App\Models\ChatMessageSource;
 use App\Models\ChatToolRun;
 use App\Models\Conversation;
 use App\Models\User;
+use App\Services\SubscriptionService;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -21,6 +23,7 @@ class ChatMessageService
         private readonly ChatConversationService $conversationService,
         private readonly ChatMigrationService $migrationService,
         private readonly ChatMarkdownComposer $composer,
+        private readonly SubscriptionService $subscriptionService,
     ) {
     }
 
@@ -180,12 +183,15 @@ class ChatMessageService
                     }
 
                     foreach (($data['generated_images'] ?? []) as $image) {
+                        $attachmentName = $image['filename'] ?? ('kwati-image-' . now()->format('Ymd-His') . '.png');
+
                         $attachment = ChatMessageAttachment::create([
                             'chat_message_id' => $assistantMessage->id,
                             'kind' => 'image',
-                            'name' => $image['revised_prompt'] ?? 'Generated image',
+                            'name' => $attachmentName,
                             'mime_type' => 'image/png',
                             'url' => $image['url'] ?? null,
+                            'path' => $image['path'] ?? null,
                             'payload' => $image,
                         ]);
 
@@ -197,7 +203,8 @@ class ChatMessageService
                                 'name' => $attachment->name,
                                 'mime_type' => $attachment->mime_type,
                                 'size' => $attachment->size,
-                                'url' => $attachment->url,
+                                'url' => $this->normalizeAttachmentUrl($attachment->url),
+                                'download_url' => route('chat.file.download', ['file' => $attachment->id]),
                             ],
                         ]);
                     }
@@ -211,7 +218,8 @@ class ChatMessageService
                                 'name' => $attachment->name,
                                 'mime_type' => $attachment->mime_type,
                                 'size' => $attachment->size,
-                                'url' => $attachment->url,
+                                'url' => $this->normalizeAttachmentUrl($attachment->url),
+                                'download_url' => route('chat.file.download', ['file' => $attachment->id]),
                             ],
                         ]);
                     }
@@ -251,6 +259,20 @@ class ChatMessageService
                         $conversation->fresh(),
                         $assistantMessage->fresh(['replyTo'])
                     );
+
+                    if ($conversation->user) {
+                        $tokensEstimate = (int) ceil(mb_strlen($assistantMessage->content_text ?: $finalMarkdown) / 4);
+                        $this->subscriptionService->recordRequest(
+                            $conversation->user,
+                            $tokensEstimate,
+                            [
+                                'model' => $assistantMessage->model,
+                                'message_type' => $assistantMessage->type,
+                                'provider' => $assistantMessage->provider,
+                                'stream' => true,
+                            ]
+                        );
+                    }
                 }
 
                 $emit($eventName, array_merge($data, ['message_id' => $assistantMessage->id]));
@@ -278,6 +300,20 @@ class ChatMessageService
             'tool_name' => $toolName,
             'status' => 'started',
         ]);
+    }
+
+    private function normalizeAttachmentUrl(?string $url): ?string
+    {
+        if (!$url) {
+            return $url;
+        }
+
+        $path = parse_url($url, PHP_URL_PATH);
+        if (is_string($path) && Str::startsWith($path, '/storage/')) {
+            return $path;
+        }
+
+        return $url;
     }
 
     private function serializeToolRun(ChatToolRun $toolRun): array
@@ -365,7 +401,7 @@ class ChatMessageService
 
     private function createDocumentAttachment(ChatMessage $message, ?string $toolName, mixed $result): ?ChatMessageAttachment
     {
-        if (!in_array($toolName, ['generate_pdf_document', 'generate_word_document'], true) || !is_array($result)) {
+        if (!in_array($toolName, ['generate_pdf_document', 'generate_word_document', 'generate_powerpoint_presentation'], true) || !is_array($result)) {
             return null;
         }
 
@@ -373,7 +409,7 @@ class ChatMessageService
             return null;
         }
 
-        return ChatMessageAttachment::create([
+        $attachment = ChatMessageAttachment::create([
             'chat_message_id' => $message->id,
             'kind' => 'file',
             'name' => $result['filename'],
@@ -385,9 +421,19 @@ class ChatMessageService
                 'title' => $result['title'] ?? null,
                 'format' => $result['format'] ?? null,
                 'document_type' => $result['document_type'] ?? null,
+                'design_style' => $result['design_style'] ?? null,
+                'design_styles' => $result['design_styles'] ?? null,
+                'design_description' => $result['design_description'] ?? null,
+                'has_logo' => $result['has_logo'] ?? false,
                 'generated_at' => $result['generated_at'] ?? null,
             ],
         ]);
+
+        $attachment->update([
+            'url' => url('/api/chat/files/' . $attachment->id),
+        ]);
+
+        return $attachment;
     }
 
     private function buildAssistantPayload(ChatMessage $assistantMessage): array
@@ -406,19 +452,220 @@ class ChatMessageService
 
     private function buildProviderMessages(Conversation $conversation): array
     {
-        return ChatMessage::query()
+        $messages = ChatMessage::query()
             ->where('conversation_id', $conversation->id)
+            ->with('toolRuns')
             ->orderBy('created_at')
             ->get()
+            ->values();
+
+        $latestUserMessage = $messages->last(fn (ChatMessage $message) => $message->role === 'user');
+        $latestImageFollowUpContext = $latestUserMessage instanceof ChatMessage
+            ? $this->resolveRelativeImagePromptContext($messages, $latestUserMessage)
+            : null;
+
+        return $messages
             ->map(fn (ChatMessage $message) => [
                 'role' => $message->role,
-                'content' => $message->role === 'assistant'
-                    ? ($message->content_text ?: $message->content_markdown ?: '')
-                    : ($message->content_markdown ?: $message->content_text ?: ''),
+                'content' => $this->buildProviderMessageContent(
+                    $message,
+                    $latestUserMessage?->id === $message->id ? $latestImageFollowUpContext : null
+                ),
             ])
             ->filter(fn (array $message) => $message['content'] !== '')
             ->values()
             ->all();
+    }
+
+    private function buildProviderMessageContent(ChatMessage $message, ?array $relativeImageContext = null): string
+    {
+        $content = $message->role === 'assistant'
+            ? ($message->content_text ?: $message->content_markdown ?: '')
+            : ($message->content_markdown ?: $message->content_text ?: '');
+
+        if ($message->role === 'user' && $relativeImageContext !== null) {
+            return $this->augmentRelativeImagePrompt($content, $relativeImageContext);
+        }
+
+        if ($message->role !== 'assistant') {
+            return $content;
+        }
+
+        $powerPointContext = $this->buildPowerPointToolContext($message);
+
+        if ($powerPointContext === '') {
+            return $content;
+        }
+
+        return trim($content."\n\n".$powerPointContext);
+    }
+
+    private function resolveRelativeImagePromptContext(Collection $messages, ChatMessage $latestUserMessage): ?array
+    {
+        $currentPrompt = trim((string) ($latestUserMessage->content_markdown ?: $latestUserMessage->content_text ?: ''));
+
+        if (! $this->isRelativeImageFollowUpPrompt($currentPrompt)) {
+            return null;
+        }
+
+        $latestUserIndex = $messages->search(fn (ChatMessage $message) => $message->id === $latestUserMessage->id);
+
+        if (! is_int($latestUserIndex) || $latestUserIndex <= 0) {
+            return null;
+        }
+
+        /** @var ChatMessage|null $previousAssistant */
+        $previousAssistant = $messages
+            ->slice(0, $latestUserIndex)
+            ->reverse()
+            ->first(function (ChatMessage $message): bool {
+                return $message->role === 'assistant'
+                    && $message->toolRuns->contains(
+                        fn (ChatToolRun $toolRun): bool => $toolRun->tool_name === 'generate_image'
+                            && $toolRun->status === 'completed'
+                    );
+            });
+
+        if (! $previousAssistant instanceof ChatMessage) {
+            return null;
+        }
+
+        /** @var ChatToolRun|null $imageToolRun */
+        $imageToolRun = $previousAssistant->toolRuns
+            ->reverse()
+            ->first(fn (ChatToolRun $toolRun): bool => $toolRun->tool_name === 'generate_image' && $toolRun->status === 'completed');
+
+        if (! $imageToolRun instanceof ChatToolRun) {
+            return null;
+        }
+
+        $previousPrompt = trim((string) data_get($imageToolRun->arguments, 'user_prompt', data_get($imageToolRun->result, 'prompt', '')));
+
+        if ($previousPrompt === '') {
+            return null;
+        }
+
+        return [
+            'previous_prompt' => $previousPrompt,
+            'model' => data_get($imageToolRun->arguments, 'model'),
+            'size' => data_get($imageToolRun->arguments, 'size'),
+        ];
+    }
+
+    private function augmentRelativeImagePrompt(string $prompt, array $context): string
+    {
+        $prompt = trim($prompt);
+        $previousPrompt = trim((string) ($context['previous_prompt'] ?? ''));
+
+        if ($prompt === '' || $previousPrompt === '') {
+            return $prompt;
+        }
+
+        $details = array_filter([
+            isset($context['model']) ? 'Previous model: ' . $context['model'] : null,
+            isset($context['size']) ? 'Previous size: ' . $context['size'] : null,
+        ]);
+
+        $detailsBlock = $details === [] ? '' : "\n".implode("\n", $details);
+
+        return trim(
+            $prompt
+            . "\n\nReference for this follow-up image request:"
+            . "\nPrevious successful image prompt: " . $previousPrompt
+            . $detailsBlock
+            . "\nIf the user is asking for another, similar, or same-style image, keep the main subject from the previous prompt and apply the new request as a variation."
+        );
+    }
+
+    private function isRelativeImageFollowUpPrompt(string $prompt): bool
+    {
+        $normalized = Str::lower(trim($prompt));
+
+        if ($normalized === '') {
+            return false;
+        }
+
+        $explicitFollowUps = [
+            'create another image',
+            'generate another image',
+            'make another image',
+            'another image',
+            'another one',
+            'one more image',
+            'same image',
+            'same style',
+            'same prompt',
+            'like the last image',
+            'like the previous image',
+            'similar image',
+            'another version',
+        ];
+
+        if (Str::contains($normalized, $explicitFollowUps)) {
+            return true;
+        }
+
+        $hasRelativeWord = Str::contains($normalized, ['another', 'same', 'again', 'similar', 'more']);
+        $hasImageWord = Str::contains($normalized, ['image', 'photo', 'picture', 'portrait', 'version']);
+
+        return $hasRelativeWord && $hasImageWord;
+    }
+
+    private function buildPowerPointToolContext(ChatMessage $message): string
+    {
+        $contexts = $message->toolRuns
+            ->filter(fn (ChatToolRun $toolRun) => $toolRun->tool_name === 'generate_powerpoint_presentation'
+                && $toolRun->status === 'completed')
+            ->map(function (ChatToolRun $toolRun): ?string {
+                $arguments = $this->sanitizePowerPointToolArguments($toolRun->arguments ?? []);
+
+                if ($arguments === []) {
+                    return null;
+                }
+
+                $result = array_intersect_key($toolRun->result ?? [], array_flip([
+                    'title',
+                    'filename',
+                    'format',
+                    'mime_type',
+                    'document_type',
+                    'design_style',
+                    'design_styles',
+                    'design_description',
+                    'has_logo',
+                ]));
+
+                $context = [
+                    'tool' => 'generate_powerpoint_presentation',
+                    'instruction' => 'If the user asks to add an uploaded logo to this PowerPoint later, call generate_powerpoint_presentation again using these same arguments and the new uploaded logo.',
+                    'arguments' => $arguments,
+                ];
+
+                if ($result !== []) {
+                    $context['result'] = $result;
+                }
+
+                return "Previous PowerPoint generation context:\n"
+                    .json_encode($context, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            })
+            ->filter()
+            ->values();
+
+        if ($contexts->isEmpty()) {
+            return '';
+        }
+
+        return $contexts->implode("\n\n");
+    }
+
+    private function sanitizePowerPointToolArguments(array $arguments): array
+    {
+        unset($arguments['logo_image'], $arguments['files']);
+
+        return array_filter(
+            $arguments,
+            fn ($value) => ! ($value === null || $value === ''),
+        );
     }
 
     private function buildProviderFilesFromMessage(ChatMessage $message): array

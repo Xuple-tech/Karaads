@@ -6,6 +6,7 @@ type WidgetMessage = {
     content: string;
     status?: 'streaming' | 'completed' | 'failed';
     toolRuns?: WidgetToolRun[];
+    attachments?: WidgetAttachment[];
 };
 
 type WidgetToolRun = {
@@ -18,6 +19,14 @@ type WidgetToolRun = {
     error_message?: string | null;
 };
 
+type WidgetAttachment = {
+    id?: string;
+    kind?: 'image' | 'file' | 'audio' | 'video';
+    url?: string | null;
+    name?: string | null;
+    mime_type?: string | null;
+};
+
 type StreamPayload = {
     message?: { id?: string };
     message_id?: string;
@@ -28,7 +37,42 @@ type StreamPayload = {
     result?: unknown;
     error?: string;
     tool_message?: string | null;
+    attachment?: WidgetAttachment;
 };
+
+function mergeAttachments(existing: WidgetAttachment[] | undefined, incoming: WidgetAttachment): WidgetAttachment[] {
+    const current = existing ?? [];
+    const matchIndex = current.findIndex((attachment) => {
+        if (incoming.id && attachment.id === incoming.id) {
+            return true;
+        }
+
+        if (
+            attachment.kind === incoming.kind
+            && attachment.name
+            && incoming.name
+            && attachment.name === incoming.name
+            && (attachment.mime_type ?? null) === (incoming.mime_type ?? null)
+        ) {
+            return true;
+        }
+
+        return Boolean(
+            attachment.kind === incoming.kind
+            && attachment.url
+            && incoming.url
+            && attachment.url === incoming.url
+        );
+    });
+
+    if (matchIndex === -1) {
+        return [...current, incoming];
+    }
+
+    return current.map((attachment, index) =>
+        index === matchIndex ? { ...attachment, ...incoming } : attachment
+    );
+}
 
 const getStorageKey = (token: string) => `kwati_widget_session_${token}`;
 const getMessagesStorageKey = (token: string) => `kwati_widget_messages_${token}`;
@@ -214,7 +258,7 @@ export function useWidgetChat({ token, greeting }: { token: string; greeting?: s
                     const id = payload.message?.id || payload.message_id || `assistant-${Date.now()}`;
                     setMessages((current) => [
                         ...current.filter((message) => message.id !== id),
-                        { id, role: 'assistant', content: '', status: 'streaming', toolRuns: [] },
+                        { id, role: 'assistant', content: '', status: 'streaming', toolRuns: [], attachments: [] },
                     ]);
                 }
 
@@ -261,6 +305,16 @@ export function useWidgetChat({ token, greeting }: { token: string; greeting?: s
                         current.map((message) =>
                             message.id === payload.message_id
                                 ? { ...message, toolRuns: updateToolRuns(message.toolRuns, payload, 'failed') }
+                                : message
+                        )
+                    );
+                }
+
+                if (eventName === 'attachment.created' && payload.message_id && payload.attachment) {
+                    setMessages((current) =>
+                        current.map((message) =>
+                            message.id === payload.message_id
+                                ? { ...message, attachments: mergeAttachments(message.attachments, payload.attachment as WidgetAttachment) }
                                 : message
                         )
                     );

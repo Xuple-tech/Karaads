@@ -138,7 +138,16 @@ export default function DeveloperApiUsage({ usage, stats }: PageProps) {
                                             <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
                                                 {new Date(r.created_at).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}
                                             </TableCell>
-                                            <TableCell className="font-mono text-xs">{r.model?.public_id ?? '—'}</TableCell>
+                                            <TableCell>
+                                                {r.model ? (
+                                                    <div>
+                                                        <p className="text-sm font-medium">{r.model.name}</p>
+                                                        <p className="font-mono text-xs text-muted-foreground">{r.model.public_id}</p>
+                                                    </div>
+                                                ) : (
+                                                    <span className="font-mono text-xs">—</span>
+                                                )}
+                                            </TableCell>
                                             <TableCell>
                                                 <Badge
                                                     variant={r.status === 'success' ? 'default' : 'destructive'}

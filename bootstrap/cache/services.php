@@ -37,9 +37,10 @@
     33 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
     34 => 'Termwind\\Laravel\\TermwindServiceProvider',
     35 => 'Pest\\Laravel\\PestServiceProvider',
-    36 => 'Torann\\GeoIP\\GeoIPServiceProvider',
-    37 => 'App\\Providers\\AppServiceProvider',
+    36 => 'Tighten\\Ziggy\\ZiggyServiceProvider',
+    37 => 'Torann\\GeoIP\\GeoIPServiceProvider',
     38 => 'App\\Providers\\AppServiceProvider',
+    39 => 'App\\Providers\\AppServiceProvider',
   ),
   'eager' => 
   array (
@@ -63,9 +64,10 @@
     17 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
     18 => 'Termwind\\Laravel\\TermwindServiceProvider',
     19 => 'Pest\\Laravel\\PestServiceProvider',
-    20 => 'Torann\\GeoIP\\GeoIPServiceProvider',
-    21 => 'App\\Providers\\AppServiceProvider',
+    20 => 'Tighten\\Ziggy\\ZiggyServiceProvider',
+    21 => 'Torann\\GeoIP\\GeoIPServiceProvider',
     22 => 'App\\Providers\\AppServiceProvider',
+    23 => 'App\\Providers\\AppServiceProvider',
   ),
   'deferred' => 
   array (

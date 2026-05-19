@@ -27,6 +27,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import toast from 'react-hot-toast';
+import type { SharedData } from '@/types';
+import { developerPortalUrl, normalizeDeveloperPortalBaseUrl } from '@/lib/developer-portal-url';
 
 interface ApiKey {
     id: string;
@@ -80,11 +82,13 @@ function CreateKeyDialog({
     onClose,
     models,
     newPlaintextKey,
+    baseUrl,
 }: {
     open: boolean;
     onClose: () => void;
     models: ApiModel[];
     newPlaintextKey: string | null;
+    baseUrl: string;
 }) {
     const [name, setName] = useState('');
     const [notes, setNotes] = useState('');
@@ -101,7 +105,7 @@ function CreateKeyDialog({
     function submit() {
         if (!name.trim()) { toast.error('Key name is required'); return; }
         setLoading(true);
-        router.post('/developer-api/keys', {
+        router.post(developerPortalUrl(baseUrl, 'keys'), {
             name,
             notes: notes || null,
             allowed_model_ids: allowedModels.length > 0 ? allowedModels : null,
@@ -192,16 +196,17 @@ function CreateKeyDialog({
 }
 
 export default function DeveloperApiKeys({ apiKeys, models }: PageProps) {
-    const { props } = usePage<{ flash?: { success?: string; error?: string; developer_plaintext_key?: string } }>();
+    const { props } = usePage<SharedData & { flash?: { success?: string; error?: string; developer_plaintext_key?: string } }>();
     const flash = props.flash ?? {};
     const newPlaintextKey = flash.developer_plaintext_key ?? null;
+    const baseUrl = normalizeDeveloperPortalBaseUrl(props.developerPortal?.base_url);
 
     const [createOpen, setCreateOpen] = useState(!!newPlaintextKey);
     const [revokeId, setRevokeId] = useState<string | null>(null);
 
     function handleRevoke() {
         if (!revokeId) return;
-        router.post(`/developer-api/keys/${revokeId}/revoke`, {}, {
+        router.post(developerPortalUrl(baseUrl, `keys/${revokeId}/revoke`), {}, {
             onSuccess: () => { setRevokeId(null); toast.success('Key revoked.'); },
             onError: () => toast.error('Failed to revoke key.'),
         });
@@ -209,7 +214,7 @@ export default function DeveloperApiKeys({ apiKeys, models }: PageProps) {
 
     function handleRegenerate(id: string) {
         if (!confirm('Regenerate this key? The current key will stop working immediately.')) return;
-        router.post(`/developer-api/keys/${id}/regenerate`, {}, {
+        router.post(developerPortalUrl(baseUrl, `keys/${id}/regenerate`), {}, {
             onError: () => toast.error('Failed to regenerate key.'),
         });
     }
@@ -247,6 +252,7 @@ export default function DeveloperApiKeys({ apiKeys, models }: PageProps) {
                     onClose={() => setCreateOpen(false)}
                     models={models}
                     newPlaintextKey={createOpen ? newPlaintextKey : null}
+                    baseUrl={baseUrl}
                 />
 
                 {/* Confirm revoke dialog */}

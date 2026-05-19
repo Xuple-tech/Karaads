@@ -6,6 +6,11 @@ import { defineConfig } from 'vite';
 import { wayfinder } from '@laravel/vite-plugin-wayfinder';
 
 export default defineConfig({
+    server: {
+        watch: {
+            ignored: ['**/vendor/**', '**/node_modules/**', '**/storage/**', '**/.git/**'],
+        },
+    },
     plugins: [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.tsx', 'resources/js/spa.tsx', 'resources/js/widget/index.tsx'],

@@ -72,9 +72,6 @@ class GrokApiService
         $this->toolRegistry = $toolRegistry;
 
         $this->apiKey = config('services.grok.api_key');
-        if (empty($this->apiKey)) {
-            throw new \Exception('Grok API key is not configured');
-        }
         $this->client = new Client([
             'timeout' => 0,
             'connect_timeout' => 30,
@@ -115,6 +112,9 @@ class GrokApiService
      */
     private function getCurrentApiKey(): string
     {
+        if (empty($this->apiKey)) {
+            throw new \Exception('Grok API key is not configured. Add GROK_API_KEY to your .env file.');
+        }
         return $this->apiKey;
     }
 
@@ -204,11 +204,13 @@ class GrokApiService
         ?string $userName = null,
         ?string $chatId = null
     ): void {
+        $filesForMessages = $this->filesForModelMessages($prompt, $files, $history);
+        $model = $this->ensureVisionCapableModel($model, $filesForMessages);
         $this->tools = is_array($tools) && !empty($tools) ? $tools : ($autoTools ? $this->getTools() : []);
         $detectedLanguage = $this->detectLanguage($prompt);
         $this->applyDetectedLanguage($detectedLanguage, 'this message');
 
-        $messages = $this->formatMessages($prompt, $history, $files, 'text', $customSystemPrompt);
+        $messages = $this->formatMessages($prompt, $history, $filesForMessages, 'text', $customSystemPrompt);
 
         $this->chatTransportService->generateStreamingChat(
             client: $this->client,
@@ -232,13 +234,15 @@ class GrokApiService
      */
     public function generateChat(string $prompt, string $model = 'grok-4', array $history = [], array $tools = [], ?array $format = null, array $files = [], ?string $customSystemPrompt = null, ?bool $callByName = false, ?string $userName = null, ?int $chatId = null): string
     {
+        $filesForMessages = $this->filesForModelMessages($prompt, $files, $history);
+        $model = $this->ensureVisionCapableModel($model, $filesForMessages);
         $detectedLanguage = $this->detectLanguage($prompt);
         $this->applyDetectedLanguage($detectedLanguage, 'this message');
 
         // Chat personalization is enabled. Custom system prompt from user preferences is used if provided.
         // Default system prompt is used only if no custom prompt is provided.
 
-        $messages = $this->formatMessages($prompt, $history, $files, 'text', $customSystemPrompt);
+        $messages = $this->formatMessages($prompt, $history, $filesForMessages, 'text', $customSystemPrompt);
         $toolsToUse = is_array($tools) && !empty($tools) ? $tools : $this->getTools();
 
         return $this->chatTransportService->generateChat(
@@ -262,6 +266,67 @@ class GrokApiService
         $this->languageDetector->setLanguage($this->defaultLanguage);
 
         return $this->messageFormatter->formatMessages($prompt, $history, $files, $mode, $customSystemPrompt);
+    }
+
+    private function ensureVisionCapableModel(string $model, array $files): string
+    {
+        $hasImage = collect($files)->contains(
+            fn (array $file): bool => str_starts_with((string) ($file['type'] ?? ''), 'image/')
+        );
+
+        if (!$hasImage) {
+            return $model;
+        }
+
+        return (self::GROK_MODELS[$model]['supports_vision'] ?? false) ? $model : 'grok-4';
+    }
+
+    private function filesForModelMessages(string $prompt, array $files, array $history = []): array
+    {
+        if (!$this->isPowerPointLogoRequest($prompt, $files, $history)) {
+            return $files;
+        }
+
+        // The PowerPoint tool receives the original files separately and embeds the
+        // logo itself. Sending logos to the vision API can reject valid branding
+        // assets before the tool has a chance to run.
+        return collect($files)
+            ->reject(fn (array $file): bool => str_starts_with((string) ($file['type'] ?? ''), 'image/'))
+            ->values()
+            ->all();
+    }
+
+    private function isPowerPointLogoRequest(string $prompt, array $files, array $history = []): bool
+    {
+        $hasImage = collect($files)->contains(
+            fn (array $file): bool => str_starts_with((string) ($file['type'] ?? ''), 'image/')
+        );
+
+        if (!$hasImage) {
+            return false;
+        }
+
+        $normalizedPrompt = strtolower($prompt);
+        $historyText = strtolower(collect($history)
+            ->pluck('content')
+            ->filter(fn ($content): bool => is_string($content))
+            ->implode("\n"));
+
+        $mentionsPresentation = str_contains($normalizedPrompt, 'powerpoint')
+            || str_contains($normalizedPrompt, 'ppt')
+            || str_contains($normalizedPrompt, 'slide')
+            || str_contains($normalizedPrompt, 'presentation')
+            || str_contains($normalizedPrompt, 'deck')
+            || str_contains($historyText, 'previous powerpoint generation context')
+            || str_contains($historyText, 'generate_powerpoint_presentation')
+            || str_contains($historyText, '.pptx');
+
+        $mentionsLogo = str_contains($normalizedPrompt, 'logo')
+            || str_contains($normalizedPrompt, 'brand')
+            || str_contains($normalizedPrompt, 'branding')
+            || str_contains($normalizedPrompt, 'add it up');
+
+        return $mentionsPresentation && $mentionsLogo;
     }
 
     /**

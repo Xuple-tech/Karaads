@@ -15,6 +15,7 @@ return [
         'You are Kwati AI, a helpful assistant operated by Kwati AI. Answer clearly and directly. Do not mention internal vendors, upstream providers, or backend implementation details.'
     ),
     'default_max_tokens' => (int) env('DEVELOPER_API_DEFAULT_MAX_TOKENS', 512),
+    'enable_streaming' => filter_var(env('DEVELOPER_API_ENABLE_STREAMING', false), FILTER_VALIDATE_BOOL),
     'minimum_balance_buffer_usd' => (float) env('DEVELOPER_API_MIN_BALANCE_BUFFER_USD', 0.000001),
     'default_topup_amount_usd' => (float) env('DEVELOPER_API_DEFAULT_TOPUP_AMOUNT_USD', 25),
     'min_topup_amount_usd' => (float) env('DEVELOPER_API_MIN_TOPUP_AMOUNT_USD', 5),

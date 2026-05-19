@@ -9,6 +9,7 @@ import SaasOwnerController from './SaasOwnerController'
 import AdminDashboardController from './AdminDashboardController'
 import GrokApiController from './GrokApiController'
 import PromptController from './PromptController'
+import PresentationTemplateAdminController from './PresentationTemplateAdminController'
 import PersonalizationController from './PersonalizationController'
 import DeveloperApiController from './DeveloperApiController'
 import SubscriptionPlanFeaturesController from './SubscriptionPlanFeaturesController'
@@ -25,6 +26,7 @@ const Admin = {
     AdminDashboardController: Object.assign(AdminDashboardController, AdminDashboardController),
     GrokApiController: Object.assign(GrokApiController, GrokApiController),
     PromptController: Object.assign(PromptController, PromptController),
+    PresentationTemplateAdminController: Object.assign(PresentationTemplateAdminController, PresentationTemplateAdminController),
     PersonalizationController: Object.assign(PersonalizationController, PersonalizationController),
     DeveloperApiController: Object.assign(DeveloperApiController, DeveloperApiController),
     SubscriptionPlanFeaturesController: Object.assign(SubscriptionPlanFeaturesController, SubscriptionPlanFeaturesController),

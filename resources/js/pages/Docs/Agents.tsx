@@ -97,7 +97,7 @@ export default function AgentsDocs({ appName }: PageProps) {
                     </div>
                     <div className="flex items-center gap-3">
                         <Link
-                            href="/docs/api"
+                            href="/developer-docs/api"
                             className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                         >
                             API Reference
@@ -412,7 +412,7 @@ export default function AgentsDocs({ appName }: PageProps) {
                         </div>
                         <div className="flex gap-3">
                             <Button variant="outline" asChild>
-                                <Link href="/docs/api">View API docs</Link>
+                                <Link href="/developer-docs/api">View API docs</Link>
                             </Button>
                             <Button asChild>
                                 <Link href="/automations">

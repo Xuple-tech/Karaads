@@ -1,11 +1,13 @@
 import React, { FormEventHandler, useState } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import InputError from '@/components/input-error';
 import { Eye, EyeOff, LoaderCircle, Terminal } from 'lucide-react';
+import type { SharedData } from '@/types';
+import { developerPortalUrl, normalizeDeveloperPortalBaseUrl } from '@/lib/developer-portal-url';
 
 interface LoginProps {
     status?: string;
@@ -13,6 +15,8 @@ interface LoginProps {
 
 export default function DeveloperApiLogin({ status }: LoginProps) {
     const [showPassword, setShowPassword] = useState(false);
+    const { developerPortal } = usePage<SharedData>().props;
+    const baseUrl = normalizeDeveloperPortalBaseUrl(developerPortal?.base_url);
 
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
@@ -22,7 +26,7 @@ export default function DeveloperApiLogin({ status }: LoginProps) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post('/developer-api/login', {
+        post(developerPortalUrl(baseUrl, 'login'), {
             onFinish: () => reset('password'),
         });
     };
@@ -134,7 +138,7 @@ export default function DeveloperApiLogin({ status }: LoginProps) {
                 <div className="mt-6 text-xs text-zinc-600 text-center space-y-2">
                     <p>
                         Don't have an account?{' '}
-                        <a href="/developer-api/register" className="text-zinc-400 hover:text-white transition-colors">
+                        <a href={developerPortalUrl(baseUrl, 'register')} className="text-zinc-400 hover:text-white transition-colors">
                             Create one free
                         </a>
                     </p>

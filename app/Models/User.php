@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -45,7 +46,21 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at',
         'stripe_id',
         'current_plan',
+        'referral_code',
+        'referred_by',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (User $user) {
+            if (empty($user->referral_code)) {
+                do {
+                    $code = strtoupper(Str::random(8));
+                } while (self::where('referral_code', $code)->exists());
+                $user->referral_code = $code;
+            }
+        });
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -77,6 +92,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function aiMode(): BelongsTo
     {
         return $this->belongsTo(AIMode::class, 'ai_mode_id');
+    }
+
+    public function referrals(): HasMany
+    {
+        return $this->hasMany(User::class, 'referred_by');
+    }
+
+    public function referrer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'referred_by');
     }
 
     /**

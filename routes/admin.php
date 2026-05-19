@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\GrokApiController;
 use App\Http\Controllers\Admin\PromptController;
 use App\Http\Controllers\Admin\AIModeController;
 use App\Http\Controllers\Admin\PersonalizationController;
+use App\Http\Controllers\Admin\PresentationTemplateAdminController;
 use App\Http\Controllers\Admin\DeveloperApiController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\AdminOrStaffMiddleware;
@@ -80,6 +81,16 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->name('admin.')->gr
         Route::delete('/{prompt}', [PromptController::class, 'destroy'])->name('destroy');
     });
 
+    // PowerPoint Slide Templates
+    Route::prefix('slide-templates')->name('slide-templates.')->group(function () {
+        Route::get('/', [PresentationTemplateAdminController::class, 'index'])->name('index');
+        Route::get('/create', [PresentationTemplateAdminController::class, 'create'])->name('create');
+        Route::post('/', [PresentationTemplateAdminController::class, 'store'])->name('store');
+        Route::get('/{template}/edit', [PresentationTemplateAdminController::class, 'edit'])->name('edit');
+        Route::put('/{template}', [PresentationTemplateAdminController::class, 'update'])->name('update');
+        Route::delete('/{template}', [PresentationTemplateAdminController::class, 'destroy'])->name('destroy');
+    });
+
     // AI Modes Management
     Route::prefix('ai-modes')->name('ai-modes.')->group(function () {
         Route::get('/', [AIModeController::class, 'index'])->name('index');
@@ -124,4 +135,3 @@ Route::middleware([AdminMiddleware::class])->prefix('admin')->name('admin.')->gr
         Route::post('/wallets/{user}/adjust', [DeveloperApiController::class, 'adjustWallet'])->name('wallets.adjust');
     });
 });
-

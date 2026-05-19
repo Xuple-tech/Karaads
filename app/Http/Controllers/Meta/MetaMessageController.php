@@ -448,11 +448,18 @@ class MetaMessageController extends Controller
      */
     private function formatDraft(MetaMessageDraft $draft)
     {
+        $analysis = $draft->ai_analysis;
+
+        if (is_string($analysis)) {
+            $decoded = json_decode($analysis, true);
+            $analysis = json_last_error() === JSON_ERROR_NONE ? $decoded : $analysis;
+        }
+
         return [
             'id' => $draft->id,
             'original_message' => $draft->original_message,
             'draft_reply' => $draft->draft_reply,
-            'ai_analysis' => $draft->ai_analysis,
+            'ai_analysis' => $analysis,
             'sentiment' => $draft->sentiment,
             'category' => $draft->category,
             'confidence_score' => $draft->confidence_score,
