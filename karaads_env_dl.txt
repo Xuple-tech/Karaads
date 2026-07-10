@@ -1,0 +1,1 @@
+﻿SITE_MAINTENANCE_ENABLED=trueSITE_MAINTENANCE_TITLE="Scheduled Maintenance"SITE_MAINTENANCE_MESSAGE="KaraAds is currently under maintenance to improve performance. We will be back shortly. Thank you for your patience."

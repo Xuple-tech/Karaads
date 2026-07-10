@@ -1,0 +1,14 @@
+[Unit]
+Description=KaraAds Reverb Server
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+Restart=always
+RestartSec=5
+WorkingDirectory=/var/www/karaads
+ExecStart=/usr/bin/php artisan reverb:start --host=0.0.0.0 --port=8080
+
+[Install]
+WantedBy=multi-user.target

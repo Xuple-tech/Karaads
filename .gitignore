@@ -1,0 +1,51 @@
+/.phpunit.cache
+/bootstrap/ssr
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
+/vendor
+.env
+.env.*
+!.env.example
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
+
+# Local caches / generated files
+/storage/framework/cache/*
+!/storage/framework/cache/.gitignore
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitignore
+/storage/framework/views/*
+!/storage/framework/views/.gitignore
+/storage/logs/*
+!/storage/logs/.gitignore
+/storage/app/public/*
+!/storage/app/public/.gitignore
+
+# Native mobile build artifacts
+/android/app/build
+/android/.gradle
+/android/local.properties
+/ios/App/Pods
+/ios/App/build
+/ios/App/DerivedData
+
+# Packaging leftovers from the VPS transfer
+*.tgz
+karaads-db-dump.sql.gz
+routes.zip
+
+# Built mobile app binary (too large for git, rebuild via cap:build)
+public/assets/v1/KaraAds-7.apk

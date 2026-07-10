@@ -1,0 +1,14 @@
+[Unit]
+Description=KaraAds Inertia SSR
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+Restart=always
+RestartSec=5
+WorkingDirectory=/var/www/karaads
+ExecStart=/usr/bin/php artisan inertia:start-ssr
+
+[Install]
+WantedBy=multi-user.target
