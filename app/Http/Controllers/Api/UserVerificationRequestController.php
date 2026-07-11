@@ -76,6 +76,17 @@ class UserVerificationRequestController extends Controller
                     'reference' => $pendingRequest->payment_reference,
                     'error' => $e->getMessage(),
                 ]);
+
+                // We couldn't confirm the old attempt's outcome with Paystack (network
+                // blip, API error, unrecognized reference, etc). Don't leave the user
+                // blocked for up to 30 minutes on a status we can't verify — let them
+                // retry now. If the original payment did succeed, the Paystack webhook
+                // reconciles and approves it independently of this record's status.
+                $pendingRequest = $this->badgePaymentService->markPaymentFailed(
+                    $pendingRequest,
+                    'abandoned',
+                    'Could not verify the previous payment attempt with Paystack. The user was allowed to start a new payment.'
+                );
             }
 
             if ($pendingRequest && $pendingRequest->payment_status === 'paid') {
@@ -255,11 +266,21 @@ class UserVerificationRequestController extends Controller
             return response()->json(['message' => 'Unable to initialize Paystack payment.'], 502);
         }
 
+        $authorizationUrl = $init->json('data.authorization_url');
+        $accessCode = $init->json('data.access_code');
+
         return response()->json([
             'message' => 'Paystack payment initialized.',
             'reference' => $reference,
-            'authorization_url' => $init->json('data.authorization_url'),
-            'data' => $this->payload($verificationRequest),
+            'authorization_url' => $authorizationUrl,
+            'access_code' => $accessCode,
+            'data' => array_merge($this->payload($verificationRequest), [
+                // Mobile API clients unwrap the data envelope. Keep checkout
+                // fields in both locations so web and mobile receive them.
+                'reference' => $reference,
+                'authorization_url' => $authorizationUrl,
+                'access_code' => $accessCode,
+            ]),
         ], 201);
     }
 

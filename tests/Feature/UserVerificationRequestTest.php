@@ -35,7 +35,8 @@ class UserVerificationRequestTest extends TestCase
         $response->assertStatus(201)
             ->assertJsonPath('data.status', 'pending')
             ->assertJsonPath('data.payment_status', 'pending')
-            ->assertJsonPath('authorization_url', 'https://checkout.paystack.test/pay');
+            ->assertJsonPath('authorization_url', 'https://checkout.paystack.test/pay')
+            ->assertJsonPath('data.authorization_url', 'https://checkout.paystack.test/pay');
 
         $this->assertDatabaseHas('verification_requests', [
             'user_id' => $user->id,
@@ -48,6 +49,13 @@ class UserVerificationRequestTest extends TestCase
 
     public function test_user_cannot_submit_second_pending_verification_request(): void
     {
+        Http::fake([
+            'https://api.paystack.co/transaction/verify/*' => Http::response([
+                'status' => true,
+                'data' => ['status' => 'pending'],
+            ]),
+        ]);
+
         $user = User::factory()->create();
 
         VerificationRequest::query()->create([
@@ -59,6 +67,9 @@ class UserVerificationRequestTest extends TestCase
             'contact_email' => $user->email,
             'reason' => 'A prior pending request already exists for review.',
             'followers_count_snapshot' => 0,
+            'payment_provider' => 'paystack',
+            'payment_status' => 'pending',
+            'payment_reference' => 'kara_verified_pending_reference',
         ]);
 
         $response = $this->actingAs($user)->postJson('/api/users/verification-request', [
