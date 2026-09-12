@@ -1,0 +1,69 @@
+{
+  "expo": {
+    "name": "KaraAds",
+    "slug": "kara-ads-",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/favicon.png",
+    "splash": {
+      "image": "./assets/images/android-icon-foreground.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#00000000"
+    },
+    "scheme": "karaads",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "KaraAds uses your camera for video calls.",
+        "NSMicrophoneUsageDescription": "KaraAds uses your microphone for calls.",
+        "NSLocationWhenInUseUsageDescription": "KaraAds uses your location when you choose to share it in chat.",
+        "NSContactsUsageDescription": "KaraAds uses your contacts when you choose to share a contact in chat.",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.karaads.app"
+    },
+    "android": {
+      "googleServicesFile": "./google-services.json",
+      "adaptiveIcon": {
+        "backgroundColor": "#07111F",
+        "foregroundImage": "./assets/images/karaads-icon-foreground-v2.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "MODIFY_AUDIO_SETTINGS",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "READ_CONTACTS"
+      ],
+      "package": "ng.karaads.app"
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/android-icon-foreground.png"
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/android-icon-foreground.png",
+          "color": "#0A84FF"
+        }
+      ]
+    ],
+    "experiments": {
+      "reactCompiler": false
+    },
+    "extra": {
+      "eas": {
+        "projectId": "440f2f3e-50e0-4094-ac78-a366c3701f46"
+      }
+    },
+    "owner": "tmantmanious"
+  }
+}

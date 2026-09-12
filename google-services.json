@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "542024856735",
+    "project_id": "kara-ads-2d474",
+    "storage_bucket": "kara-ads-2d474.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542024856735:android:903e930a39fa72c9badeaa",
+        "android_client_info": {
+          "package_name": "ng.karaads.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCk45_ORaihnSkRjsmhXX8pNlhrvje3sXM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

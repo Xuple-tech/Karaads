@@ -1,0 +1,1554 @@
+openapi: 3.1.0
+info:
+  title: KaraAds Mobile API
+  version: "1.2.0"
+  description: |
+    Canonical machine-readable contract for KaraAds mobile integrations.
+    v1.2 introduces a normalized envelope:
+      - Success: { "success": true, "data": ..., "meta"?: ... }
+      - Error: { "success": false, "error": { "code": "...", "message": "...", "details"?: ... } }
+servers:
+  - url: https://karaads.com/api/open-labs/oyibo/v1.2
+    description: Production
+security:
+  - bearerAuth: []
+tags:
+  - name: Auth
+  - name: Posts
+  - name: Users
+  - name: Stories
+  - name: Calls
+  - name: Realtime
+paths:
+  /auth/login:
+    post:
+      tags: [Auth]
+      security: []
+      summary: Login with email/password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+                two_factor_code: { type: string }
+      responses:
+        "200":
+          description: Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessAuthResponse"
+        "403":
+          description: Setup required for imported account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountSetupRequiredErrorResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/register:
+    post:
+      tags: [Auth]
+      security: []
+      summary: Register and receive token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, username, password, password_confirmation]
+              properties:
+                name: { type: string }
+                email: { type: string, format: email }
+                username: { type: string }
+                password: { type: string }
+                password_confirmation: { type: string }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessAuthResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Revoke current access token
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessMessageResponse"
+        "401":
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessUserResponse"
+  /auth/account-activation/send-code:
+    post:
+      tags: [Auth]
+      security: []
+      summary: Send activation code for imported account setup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+      responses:
+        "200":
+          description: Activation code sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessActivationCodeSentResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/account-activation/verify-code:
+    post:
+      tags: [Auth]
+      security: []
+      summary: Verify activation code and return activation token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, code]
+              properties:
+                email: { type: string, format: email }
+                code: { type: string, minLength: 8, maxLength: 8 }
+      responses:
+        "200":
+          description: Activation code verified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessActivationVerifyResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/account-activation/set-password:
+    post:
+      tags: [Auth]
+      security: []
+      summary: Set password using activation token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [activation_token, password, password_confirmation]
+              properties:
+                activation_token: { type: string }
+                password: { type: string }
+                password_confirmation: { type: string }
+      responses:
+        "200":
+          description: Password set for imported account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessActivationSetPasswordResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/password/forgot:
+    post:
+      tags: [Auth]
+      security: []
+      summary: Request password reset link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+      responses:
+        "200":
+          description: Password reset link sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessPasswordResetLinkResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/password/reset:
+    post:
+      tags: [Auth]
+      security: []
+      summary: Reset password with token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, token, password, password_confirmation]
+              properties:
+                email: { type: string, format: email }
+                token: { type: string }
+                password: { type: string }
+                password_confirmation: { type: string }
+      responses:
+        "200":
+          description: Password reset completed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessPasswordResetResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/verify-email/otp/send-code:
+    post:
+      tags: [Auth]
+      summary: Send email verification OTP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+      responses:
+        "200":
+          description: Verification code sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessEmailVerificationOtpResponse"
+        "401":
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/verify-email/otp/verify-code:
+    post:
+      tags: [Auth]
+      summary: Verify email OTP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, code]
+              properties:
+                email: { type: string, format: email }
+                code: { type: string, minLength: 8, maxLength: 8 }
+      responses:
+        "200":
+          description: Email verified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessEmailVerificationOtpResponse"
+        "401":
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/password/change:
+    post:
+      tags: [Auth]
+      summary: Change password for authenticated user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [current_password, password, password_confirmation]
+              properties:
+                current_password: { type: string }
+                password: { type: string }
+                password_confirmation: { type: string }
+      responses:
+        "200":
+          description: Password updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessPasswordChangeResponse"
+        "401":
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/2fa/enable:
+    post:
+      tags: [Auth]
+      summary: Enable two-factor authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [current_password]
+              properties:
+                current_password: { type: string }
+                force: { type: boolean }
+      responses:
+        "200":
+          description: Two-factor setup payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessTwoFactorEnableResponse"
+        "401":
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/2fa/confirm:
+    post:
+      tags: [Auth]
+      summary: Confirm two-factor authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code: { type: string }
+      responses:
+        "200":
+          description: Two-factor confirmed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessTwoFactorConfirmResponse"
+        "401":
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/2fa/disable:
+    post:
+      tags: [Auth]
+      summary: Disable two-factor authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [current_password]
+              properties:
+                current_password: { type: string }
+      responses:
+        "200":
+          description: Two-factor disabled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessTwoFactorDisableResponse"
+        "401":
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/2fa/recovery-codes:
+    post:
+      tags: [Auth]
+      summary: Fetch or regenerate two-factor recovery codes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [current_password]
+              properties:
+                current_password: { type: string }
+                regenerate: { type: boolean, default: false }
+      responses:
+        "200":
+          description: Recovery codes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessTwoFactorRecoveryCodesResponse"
+        "401":
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /posts/feed:
+    get:
+      tags: [Posts]
+      summary: Get authenticated feed
+      parameters:
+        - in: query
+          name: page
+          schema: { type: integer, minimum: 1, default: 1 }
+      responses:
+        "200":
+          description: Feed list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessPostListResponse"
+  /users/profile:
+    get:
+      tags: [Users]
+      summary: Get current user profile
+      responses:
+        "200":
+          description: Current user profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessUserResponse"
+  /stories:
+    get:
+      tags: [Stories]
+      summary: Get active story groups for the authenticated user
+      parameters:
+        - in: query
+          name: feed
+          schema:
+            type: string
+            enum: [for-you, following]
+            default: for-you
+      responses:
+        "200":
+          description: Story groups
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessStoryGroupListResponse"
+    post:
+      tags: [Stories]
+      summary: Create a story with one or more media items
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [media]
+              properties:
+                caption:
+                  type: string
+                  maxLength: 1000
+                  nullable: true
+                media:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                    format: binary
+                duration_seconds:
+                  type: array
+                  items:
+                    type: number
+                    minimum: 0
+                    maximum: 60
+      responses:
+        "201":
+          description: Story created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessStoryResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /stories/{storyId}:
+    get:
+      tags: [Stories]
+      summary: Get a single story with navigation metadata
+      parameters:
+        - in: path
+          name: storyId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Story details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessStoryDetailsResponse"
+        "403":
+          description: Viewer is not allowed to access this story
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Story not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      tags: [Stories]
+      summary: Delete a story owned by the authenticated user
+      parameters:
+        - in: path
+          name: storyId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Story deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessStoryDeletedResponse"
+        "403":
+          description: Viewer is not allowed to delete this story
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Story not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /stories/{storyId}/view:
+    post:
+      tags: [Stories]
+      summary: Mark a story as viewed
+      parameters:
+        - in: path
+          name: storyId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: View recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessStoryViewedResponse"
+        "403":
+          description: Viewer is not allowed to access this story
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /stories/{storyId}/reaction:
+    post:
+      tags: [Stories]
+      summary: Add or update the viewer reaction for a story
+      parameters:
+        - in: path
+          name: storyId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [emoji]
+              properties:
+                emoji:
+                  type: string
+                  maxLength: 16
+      responses:
+        "200":
+          description: Reaction recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessStoryReactionResponse"
+        "403":
+          description: Viewer is not allowed to access this story
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /conversations/{conversationId}/attachments:
+    post:
+      tags: [Messages]
+      summary: Upload image attachment for a conversation
+      parameters:
+        - in: path
+          name: conversationId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: Attachment uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, data]
+                properties:
+                  success: { type: boolean, const: true }
+                  data:
+                    type: object
+                    required: [attachment]
+                    properties:
+                      attachment:
+                        type: object
+                        required: [id, url, name, mime_type, size]
+                        properties:
+                          id: { type: string, format: uuid }
+                          url: { type: string }
+                          thumbnail_url: { type: string, nullable: true }
+                          name: { type: string }
+                          mime_type: { type: string }
+                          size: { type: integer }
+                          width: { type: integer, nullable: true }
+                          height: { type: integer, nullable: true }
+  /conversations/{conversationId}/calls:
+    post:
+      tags: [Calls]
+      summary: Start a call (private or group)
+      parameters:
+        - in: path
+          name: conversationId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mode:
+                  type: string
+                  enum: [video, audio]
+                  default: video
+      responses:
+        "201":
+          description: Call created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessStartCallResponse"
+        "409":
+          description: A participant is already in a call
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Conversation does not allow calling or exceeds participant limit
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /calls/active:
+    get:
+      tags: [Calls]
+      summary: Fetch active call for current user
+      responses:
+        "200":
+          description: Active call or null
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, data]
+                properties:
+                  success: { type: boolean, const: true }
+                  data:
+                    type: object
+                    required: [call]
+                    properties:
+                      call:
+                        anyOf:
+                          - type: "null"
+                          - $ref: "#/components/schemas/CallState"
+  /calls/{callId}:
+    get:
+      tags: [Calls]
+      summary: Fetch call state by id
+      parameters:
+        - in: path
+          name: callId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Call state
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, data]
+                properties:
+                  success: { type: boolean, const: true }
+                  data:
+                    $ref: "#/components/schemas/CallState"
+        "403":
+          description: Not a call participant
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Call not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /calls/{callId}/accept:
+    post:
+      tags: [Calls]
+      summary: Accept ringing call
+      parameters:
+        - in: path
+          name: callId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Call accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessCallStatusResponse"
+        "409":
+          description: Call not ringing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /calls/{callId}/decline:
+    post:
+      tags: [Calls]
+      summary: Decline ringing or accepted call
+      parameters:
+        - in: path
+          name: callId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Call declined
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessCallStatusResponse"
+  /calls/{callId}/end:
+    post:
+      tags: [Calls]
+      summary: End a ringing/accepted call
+      parameters:
+        - in: path
+          name: callId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Call ended
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessCallStatusResponse"
+  /calls/{callId}/leave:
+    post:
+      tags: [Calls]
+      summary: Leave the current call without forcing global end (group-safe)
+      parameters:
+        - in: path
+          name: callId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Participant removed or call ended if too few participants remain
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessObjectResponse"
+  /calls/{callId}/heartbeat:
+    post:
+      tags: [Calls]
+      summary: Refresh active call/session TTL
+      parameters:
+        - in: path
+          name: callId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: TTL refreshed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessObjectResponse"
+  /calls/{callId}/offer:
+    post:
+      tags: [Calls]
+      summary: Submit SDP offer
+      parameters:
+        - in: path
+          name: callId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [to_user_id, sdp]
+              properties:
+                to_user_id: { type: string, format: uuid }
+                sdp: { type: string, maxLength: 50000 }
+      responses:
+        "200":
+          description: Offer accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessOkResponse"
+  /calls/{callId}/answer:
+    post:
+      tags: [Calls]
+      summary: Submit SDP answer
+      parameters:
+        - in: path
+          name: callId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [to_user_id, sdp]
+              properties:
+                to_user_id: { type: string, format: uuid }
+                sdp: { type: string, maxLength: 50000 }
+      responses:
+        "200":
+          description: Answer accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessOkResponse"
+  /calls/{callId}/ice:
+    post:
+      tags: [Calls]
+      summary: Submit ICE candidate
+      parameters:
+        - in: path
+          name: callId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [to_user_id, candidate]
+              properties:
+                to_user_id: { type: string, format: uuid }
+                candidate:
+                  type: object
+                  additionalProperties: true
+      responses:
+        "200":
+          description: Candidate accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessOkResponse"
+  /calls/{callId}/invite:
+    post:
+      tags: [Calls]
+      summary: Invite a followed user into the current call (initiator only)
+      parameters:
+        - in: path
+          name: callId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [user_id]
+              properties:
+                user_id: { type: string, format: uuid }
+      responses:
+        "200":
+          description: User invited
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessObjectResponse"
+        "403":
+          description: Inviter does not follow target user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Target user already in active call or already in this call
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /calls/{callId}/kick:
+    post:
+      tags: [Calls]
+      summary: Remove a participant from the current call (initiator only)
+      parameters:
+        - in: path
+          name: callId
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [user_id]
+              properties:
+                user_id: { type: string, format: uuid }
+      responses:
+        "200":
+          description: User removed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessObjectResponse"
+  /calls/{callId}/signals/{type}/{signalId}:
+    get:
+      tags: [Calls]
+      summary: Fetch cached SDP signal payload
+      parameters:
+        - in: path
+          name: callId
+          required: true
+          schema: { type: string, format: uuid }
+        - in: path
+          name: type
+          required: true
+          schema:
+            type: string
+            enum: [offer, answer]
+        - in: path
+          name: signalId
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Signal payload
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, data]
+                properties:
+                  success: { type: boolean, const: true }
+                  data:
+                    type: object
+                    required: [call_id, type, signal_id, sdp]
+                    properties:
+                      call_id: { type: string, format: uuid }
+                      type: { type: string, enum: [offer, answer] }
+                      signal_id: { type: string, format: uuid }
+                      sdp: { type: string }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Sanctum
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [success, error]
+      properties:
+        success:
+          type: boolean
+          const: false
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              enum:
+                - VALIDATION_ERROR
+                - UNAUTHENTICATED
+                - FORBIDDEN
+                - NOT_FOUND
+                - RATE_LIMITED
+                - CONFLICT
+                - HTTP_ERROR
+                - ACCOUNT_SETUP_REQUIRED
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
+    AccountSetupRequiredDetails:
+      type: object
+      required:
+        - requires_email_verification
+        - requires_password_setup
+        - next_actions
+      properties:
+        requires_email_verification:
+          type: boolean
+        requires_password_setup:
+          type: boolean
+          const: true
+        next_actions:
+          type: array
+          minItems: 2
+          items:
+            type: string
+            enum: [verify_email_code, set_password]
+          example: [verify_email_code, set_password]
+    AccountSetupRequiredErrorResponse:
+      type: object
+      required: [success, error]
+      properties:
+        success:
+          type: boolean
+          const: false
+        error:
+          type: object
+          required: [code, message, details]
+          properties:
+            code:
+              type: string
+              const: ACCOUNT_SETUP_REQUIRED
+            message:
+              type: string
+              example: Account setup required. Use the 8-character code sent to your email, then set your password.
+            details:
+              $ref: "#/components/schemas/AccountSetupRequiredDetails"
+    User:
+      type: object
+      required: [id, name, username, email]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        username: { type: string }
+        email: { type: string, format: email, nullable: true }
+        avatar: { type: string, nullable: true }
+        bio: { type: string, nullable: true }
+        followers_count: { type: integer }
+        following_count: { type: integer }
+    StoryMedia:
+      type: object
+      required: [id, path, type, display_order, processing_status]
+      properties:
+        id: { type: string, format: uuid }
+        path: { type: string, nullable: true }
+        thumbnail: { type: string, nullable: true }
+        type:
+          type: string
+          enum: [image, video]
+        mime_type: { type: string, nullable: true }
+        duration_seconds: { type: number, nullable: true }
+        display_order: { type: integer }
+        processing_status:
+          type: string
+          enum: [queued, processing, ready, failed, skipped]
+        variants:
+          type: object
+          nullable: true
+          additionalProperties:
+            type: string
+            nullable: true
+    Story:
+      type: object
+      required: [id, visibility, expires_at, created_at, user, media, can_delete]
+      properties:
+        id: { type: string, format: uuid }
+        caption: { type: string, nullable: true }
+        visibility:
+          type: string
+          enum: [followers]
+        expires_at: { type: string, format: date-time }
+        created_at: { type: string, format: date-time }
+        user:
+          $ref: "#/components/schemas/User"
+        media:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoryMedia"
+        is_viewed: { type: boolean }
+        viewer_reaction: { type: string, nullable: true }
+        reaction_summary:
+          type: object
+          additionalProperties:
+            type: integer
+        view_count: { type: integer }
+        can_delete: { type: boolean }
+    StoryGroup:
+      type: object
+      required: [user, has_unseen, latest_story_at, stories]
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        has_unseen: { type: boolean }
+        latest_story_at: { type: string, format: date-time, nullable: true }
+        stories:
+          type: array
+          items:
+            $ref: "#/components/schemas/Story"
+    StoryDetails:
+      type: object
+      required: [story, prev_story_id, next_story_id]
+      properties:
+        story:
+          $ref: "#/components/schemas/Story"
+        prev_story_id: { type: string, format: uuid, nullable: true }
+        next_story_id: { type: string, format: uuid, nullable: true }
+    Post:
+      type: object
+      required: [id, content, type, like_count, comment_count, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        content: { type: string, nullable: true }
+        type: { type: string }
+        visibility: { type: string }
+        like_count: { type: integer }
+        comment_count: { type: integer }
+        repost_count: { type: integer }
+        save_count: { type: integer }
+        user_liked: { type: boolean }
+        user_saved: { type: boolean }
+        user_reshared: { type: boolean }
+        created_at: { type: string, format: date-time }
+        user:
+          $ref: "#/components/schemas/User"
+    CallState:
+      type: object
+      required: [id, conversation_id, caller_id, callee_id, initiator_id, participant_ids, status, mode, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        conversation_id: { type: string, format: uuid }
+        caller_id: { type: string, format: uuid }
+        callee_id: { type: string, format: uuid }
+        initiator_id: { type: string, format: uuid }
+        participant_ids:
+          type: array
+          items: { type: string, format: uuid }
+        accepted_user_ids:
+          type: array
+          items: { type: string, format: uuid }
+        status: { type: string, enum: [ringing, accepted, declined, ended] }
+        mode: { type: string, enum: [video, audio] }
+        created_at: { type: string, format: date-time }
+    SuccessAuthResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [user, token]
+          properties:
+            user:
+              $ref: "#/components/schemas/User"
+            token:
+              type: string
+    SuccessActivationCodeSentResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [status]
+          properties:
+            status: { type: string, example: activation-code-sent }
+    SuccessActivationVerifyResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [activation_token, expires_in]
+          properties:
+            activation_token: { type: string }
+            expires_in: { type: integer, example: 900 }
+    SuccessActivationSetPasswordResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [status, next_action]
+          properties:
+            status: { type: string, example: password-set }
+            next_action: { type: string, example: login }
+    SuccessPasswordResetLinkResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [status]
+          properties:
+            status: { type: string, example: reset-link-sent }
+    SuccessPasswordResetResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [status]
+          properties:
+            status: { type: string, example: password-reset }
+    SuccessEmailVerificationOtpResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [status]
+          properties:
+            status: { type: string, example: email-verified }
+            redirect: { type: string, nullable: true }
+    SuccessPasswordChangeResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [status]
+          properties:
+            status: { type: string, example: password-updated }
+    SuccessTwoFactorEnableResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [qr_svg, otp_url, recovery_codes, requires_confirmation]
+          properties:
+            qr_svg: { type: string }
+            otp_url: { type: string }
+            recovery_codes:
+              type: array
+              items: { type: string }
+            requires_confirmation: { type: boolean }
+    SuccessTwoFactorConfirmResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [status]
+          properties:
+            status: { type: string, example: 2fa-confirmed }
+    SuccessTwoFactorDisableResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [status]
+          properties:
+            status: { type: string, example: 2fa-disabled }
+    SuccessTwoFactorRecoveryCodesResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [recovery_codes]
+          properties:
+            recovery_codes:
+              type: array
+              items: { type: string }
+    SuccessUserResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          $ref: "#/components/schemas/User"
+    SuccessStoryGroupListResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoryGroup"
+    SuccessStoryResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          $ref: "#/components/schemas/Story"
+    SuccessStoryDetailsResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          $ref: "#/components/schemas/StoryDetails"
+    SuccessStoryViewedResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [story_id, viewed]
+          properties:
+            story_id: { type: string, format: uuid }
+            viewed: { type: boolean, const: true }
+    SuccessStoryReactionResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [story_id, emoji]
+          properties:
+            story_id: { type: string, format: uuid }
+            emoji: { type: string }
+    SuccessStoryDeletedResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [deleted]
+          properties:
+            deleted: { type: boolean, const: true }
+    SuccessPostListResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Post"
+        meta:
+          type: object
+          additionalProperties: true
+    SuccessStartCallResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [call_id, conversation_id, status, mode, participant_ids, initiator_id]
+          properties:
+            call_id: { type: string, format: uuid }
+            conversation_id: { type: string, format: uuid }
+            status: { type: string, enum: [ringing, accepted, declined, ended] }
+            mode: { type: string, enum: [video, audio] }
+            participant_ids:
+              type: array
+              items: { type: string, format: uuid }
+            initiator_id: { type: string, format: uuid }
+            callee:
+              type: object
+              nullable: true
+              properties:
+                id: { type: string, format: uuid }
+                name: { type: string }
+                username: { type: string, nullable: true }
+                avatar: { type: string, nullable: true }
+    SuccessCallStatusResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [status]
+          properties:
+            status:
+              type: string
+              enum: [accepted, declined, ended]
+            participant_ids:
+              type: array
+              items: { type: string, format: uuid }
+            accepted_user_ids:
+              type: array
+              items: { type: string, format: uuid }
+            max_participants:
+              type: integer
+    SuccessOkResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [ok]
+          properties:
+            ok: { type: boolean, const: true }
+    SuccessMessageResponse:
+      type: object
+      required: [success, message]
+      properties:
+        success: { type: boolean, const: true }
+        message: { type: string }
+    SuccessObjectResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          additionalProperties: true
